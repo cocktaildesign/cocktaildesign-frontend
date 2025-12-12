@@ -1,0 +1,9 @@
+.card {
+  background-color: aqua;
+	max-width: 300px;
+}
+
+.image {
+  width: 300px;
+  aspect-ratio: 1 / 1;
+}

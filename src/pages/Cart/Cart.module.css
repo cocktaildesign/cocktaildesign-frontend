@@ -1,0 +1,10 @@
+.cartItem {
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+}
+
+.images {
+  width: 150px;
+  aspect-ratio: 1 / 1;
+}

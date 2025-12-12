@@ -1,0 +1,7 @@
+.headerNavigation {
+  height: 80px;
+  background: cadetblue;
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+}

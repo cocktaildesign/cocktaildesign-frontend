@@ -1,0 +1,9 @@
+.containerProductDetail {
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+}
+
+.image {
+  max-width: 200px;
+}
