@@ -1,0 +1,337 @@
+/* ==========================================================================
+   SEARCH CONTAINER
+   Корневой контейнер поиска (позиционирование панели относительно него).
+   ========================================================================== */
+
+.searchContainer {
+  flex: 1;
+  position: relative;
+}
+
+/* ==========================================================================
+   OVERLAY
+   Затемнение экрана при открытой панели.
+   ========================================================================== */
+
+.overlay,
+.overlayOpen {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-overlay);
+
+  background: rgba(50, 50, 51, 0.7);
+  transition: opacity 160ms ease;
+}
+
+.overlay {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.overlayOpen {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* ==========================================================================
+   SEARCH FORM
+   Каркас формы: input + button и ниже зона чипов (подсказки).
+   ========================================================================== */
+
+.search {
+  display: grid;
+  gap: 8px;
+
+  width: 100%;
+  background-color: #fff;
+  border-radius: 12px;
+  position: relative;
+  z-index: var(--z-search-panel);
+  border: 1px solid var(--color-border-strong);
+}
+
+.inputRow {
+  display: flex;
+  align-items: stretch;
+  width: 100%;
+  height: 44px;
+  gap: 8px;
+}
+
+/* ==========================================================================
+   INPUT + BUTTON
+   Поле ввода и кнопка сабмита.
+   ========================================================================== */
+
+.input:focus,
+.button:focus {
+  outline: none;
+}
+
+.input:focus-visible {
+  border-color: var(--color-accent-strong);
+}
+
+.button:focus-visible {
+  border: 2px solid var(--color-accent-strong);
+}
+
+.input {
+  display: block;
+  flex: 1;
+  min-width: 0;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0 16px;
+  border-radius: 12px;
+  height: 100%;
+  border: 0px solid transparent;
+}
+
+.input::placeholder {
+  color: rgba(28, 15, 15, 0.45);
+}
+
+.button {
+  margin: 2px;
+  border-radius: 9px;
+  border: 2px solid transparent; /* важно */
+  padding: 0 16px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-bg);
+  background: var(--color-border-strong);
+  cursor: pointer;
+}
+
+/* ==========================================================================
+   CHIPS
+   Автодополнение текущего слова (чипы подсказок).
+   ========================================================================== */
+
+.chipsRow {
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+
+  padding: 0px 0px 8px 8px;
+  scrollbar-width: none; /* Firefox */
+}
+
+.chipsRow::-webkit-scrollbar {
+  display: none; /* Chrome/Safari */
+}
+
+.chip {
+  flex: 0 0 auto;
+  padding: 10px 12px;
+  border-radius: 12px;
+
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  background: #fff;
+
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.chip:hover {
+  background: var(--color-accent);
+  border: 1px solid transparent;
+}
+
+.chip:focus-visible {
+  outline: 2px solid var(--color-accent-strong);
+  outline-offset: 2px;
+}
+
+/* ==========================================================================
+   SEARCH PANEL
+   Панель результатов под полем поиска.
+   ========================================================================== */
+
+.searchPanel,
+.searchPanelOpen {
+  position: absolute;
+  top: calc(100% + 10px);
+  left: 0;
+  width: 100%;
+  z-index: var(--z-search-panel);
+
+  border-radius: 12px;
+  background: var(--color-bg);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.18);
+
+  transition:
+    opacity 160ms ease,
+    transform 160ms ease;
+}
+
+.searchPanel {
+  opacity: 0;
+  transform: translateY(-6px);
+  pointer-events: none;
+}
+
+.searchPanelOpen {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.searchPanelContent {
+  padding: 12px;
+  height: max-content;
+}
+
+/* ==========================================================================
+   PANEL CONTENT
+   Заголовки секций, списки, состояния.
+   ========================================================================== */
+
+.sectionTitle {
+  font-size: 12px;
+  font-weight: 700;
+  opacity: 0.7;
+  margin-bottom: 8px;
+}
+
+.list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+
+  display: grid;
+  gap: 6px;
+}
+
+.listButton {
+  width: 100%;
+  text-align: left;
+  padding: 10px 10px;
+  border-radius: 10px;
+
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+}
+
+.listButton:hover {
+  background: rgba(0, 0, 0, 0.06);
+}
+
+.listButton:focus-visible {
+  outline: 2px solid var(--color-accent-strong);
+  outline-offset: 2px;
+}
+
+.empty {
+  padding: 12px;
+  opacity: 0.6;
+}
+
+/* ==========================================================================
+   PRODUCTS LIST
+   Результаты поиска (товары) + превью изображения.
+   ========================================================================== */
+
+.productsList {
+  list-style: none;
+  margin: 8px 0 0;
+  padding: 0;
+  display: grid;
+  gap: 8px;
+}
+
+.productButton {
+  width: 100%;
+  text-align: left;
+  padding: 10px 10px;
+  border-radius: 12px;
+
+  display: grid;
+  grid-template-columns: 48px 1fr;
+  gap: 12px;
+  align-items: center;
+
+  background: transparent;
+  border: 0;
+  cursor: pointer;
+}
+
+.productButtonActive {
+  background-color: #f3f3f7;
+  outline-offset: 2px;
+}
+
+.productButton:focus-visible {
+  outline: 2px solid var(--color-accent-strong);
+  outline-offset: 2px;
+}
+
+.productButton:hover {
+  background-color: #f3f3f7;
+}
+
+.previewImage {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  background: rgba(0, 0, 0, 0.08);
+}
+
+.previewImageImg {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  object-fit: cover;
+  display: block;
+}
+
+.productInfo {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+}
+
+.productTitle {
+  font-size: 14px;
+  font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.productCategory {
+  font-size: 12px;
+  opacity: 0.65;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.productPrice {
+  font-size: 14px;
+  font-weight: 800;
+}
+
+/* Убираем стандартный “крестик очистки” у input type="search" */
+.input::-webkit-search-cancel-button {
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+/* крестик в импуте когда пользователь ввел что то */
+.resetButton {
+  background-color: transparent;
+  border: 0px solid transparent;
+}
+
+.resetIcon {
+  color: #b0b0b4;
+}
+.resetButton:hover .resetIcon {
+  color: rgb(126, 120, 120);
+}

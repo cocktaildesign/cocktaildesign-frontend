@@ -1,0 +1,21 @@
+.main {
+  padding: 32px 0;
+}
+
+.title {
+  font-size: var(--text-2xl);
+  line-height: var(--lh-tight);
+  margin-bottom: 12px;
+  font-family: var(--font-display);
+}
+
+.text {
+  color: var(--color-text-muted);
+  margin-bottom: 16px;
+  line-height: var(--lh-relaxed);
+}
+
+.link {
+  display: inline-block;
+  color: var(--color-link);
+}

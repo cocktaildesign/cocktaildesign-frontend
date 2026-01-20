@@ -1,0 +1,245 @@
+/* =========================
+   HERO SECTION
+========================= */
+
+.hero {
+  position: relative;
+  width: 100%;
+}
+
+/* Карточка внизу справа */
+.weeklyProduct {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  z-index: 2;
+}
+
+/* фикс ширина, чтобы не прыгала */
+.weeklyProductShell {
+  width: 400px;
+}
+
+/* =========================
+   TRIGGER BUTTON (native)
+========================= */
+
+.weeklyProductTrigger {
+  position: relative;
+  overflow: hidden;
+
+  /* button reset */
+  display: block;
+  width: 100%;
+  padding: 14px 16px;
+  border: 0;
+  background: transparent;
+  font: inherit;
+  text-align: left;
+
+  cursor: pointer;
+  user-select: none;
+  border-radius: 12px;
+  background-color: #334155;
+
+  transition: transform 180ms ease, border-color 180ms ease;
+}
+
+.weeklyProductTrigger:focus-visible {
+  outline: 2px solid rgba(255, 255, 255, 0.6);
+  outline-offset: 2px;
+}
+
+/* красивый блик */
+.weeklyProductTrigger::before {
+  content: "";
+  position: absolute;
+  inset: -30%;
+  pointer-events: none;
+
+  background: radial-gradient(closest-side, rgba(255, 255, 255, 0.16), rgba(255, 255, 255, 0) 70%);
+  transform: translate(-14%, -28%) rotate(-12deg);
+}
+
+/* =========================
+   HEADER LINE
+========================= */
+
+.triggerTop {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+
+.triggerTitleGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.triggerTitle {
+  color: var(--color-bg);
+  font-size: 16px;
+  font-weight: 900;
+  white-space: nowrap;
+}
+
+.triggerBrand {
+  color: var(--color-bg);
+  font-size: 12px;
+  opacity: 0.6;
+  font-weight: 900;
+  font-family: var(--font-display);
+  white-space: nowrap;
+}
+
+/* бейдж скидки */
+.triggerBadge {
+  color: var(--color-bg);
+  font-size: 16px;
+  font-weight: 900;
+
+  padding: 5px 10px;
+  border-radius: 999px;
+
+  background: rgba(255, 255, 255, 0.14);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+}
+
+/* =========================
+   EXPAND AREA (ANIMATION)
+========================= */
+
+.triggerBody {
+  overflow: hidden;
+
+  max-height: 0;
+  opacity: 0;
+  transform: translateY(-6px);
+
+  pointer-events: none;
+
+  transition: max-height 260ms ease, opacity 200ms ease, transform 260ms ease;
+}
+
+.weeklyProductShell[data-open="1"] .triggerBody {
+  max-height: 400px;
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+/* =========================
+   EXPANDED CONTENT
+========================= */
+
+.triggerContent {
+  display: flex;
+  align-items: stretch;
+  gap: 16px;
+}
+
+/* левая часть */
+.weeklyProductText {
+  margin-top: 5px;
+  flex: 1;
+  padding: 14px 16px;
+
+  border-radius: 12px;
+  background-color: #334155;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.weeklyProductMain {
+  display: flex;
+  flex-direction: row;
+  gap: 16px;
+  align-items: stretch;
+}
+
+.weeklyProductDescription {
+  margin: 0;
+  font-size: 15px;
+  line-height: 1.4;
+  color: rgba(255, 255, 255, 0.92);
+}
+
+/* цены */
+.weeklyProductPriceSection {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  color: #fff;
+}
+
+.weeklyProductPrice {
+  font-size: 20px;
+  font-weight: 900;
+  letter-spacing: -0.2px;
+}
+
+.weeklyProductOldPrice {
+  font-size: 13px;
+  text-decoration: line-through;
+  color: rgba(255, 255, 255, 0.45);
+}
+
+/* кнопка покупки */
+.weeklyProductButton {
+  width: 100%;
+  padding: 12px 14px;
+
+  font-size: 14px;
+  font-weight: 900;
+
+  border-radius: 12px;
+  cursor: pointer;
+
+  color: rgba(255, 255, 255, 0.96);
+  background: rgba(255, 255, 255, 0.14);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+
+  transition: transform 160ms ease, background 160ms ease, border-color 160ms ease;
+}
+
+.weeklyProductButton:hover {
+  transform: translateY(-1px);
+  background: rgba(255, 255, 255, 0.18);
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
+/* правая часть - картинка */
+.weeklyProductImageWrapper {
+  width: 100%;
+  height: 100%;
+  max-width: 100px;
+
+  aspect-ratio: 1 / 1;
+  flex-shrink: 0;
+
+  border-radius: 18px;
+  overflow: hidden;
+
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.weeklyProductImage {
+  width: 100%;
+  height: 100%;
+
+  object-fit: cover;
+  display: block;
+
+  transform: scale(1.04);
+}

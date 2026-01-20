@@ -1,0 +1,167 @@
+/* ===========================
+   SLIDER
+=========================== */
+
+.slider {
+  position: relative;
+  width: 100%;
+  height: calc(100vh - 158.5px);
+  overflow: hidden;
+
+  border-radius: 20px;
+  margin-bottom: 10px;
+  margin-top: 15px;
+  z-index: 2;
+  background-color: #f0f0f0;
+}
+
+/* Контейнер для абсолютных слайдов */
+.slides {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+/* ===========================
+   SLIDES
+=========================== */
+
+/* Слайд — по умолчанию скрыт */
+.slide,
+.slideActive {
+  position: absolute;
+  inset: 0;
+
+  opacity: 0;
+  transition: opacity 350ms ease;
+  pointer-events: none;
+}
+
+/* Активный слайд — видим */
+.slideActive {
+  opacity: 1;
+}
+
+/* Изображение внутри слайда */
+.image {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+  pointer-events: none;
+}
+
+/* ===========================
+   HOTZONES (button)
+=========================== */
+
+.hotZoneLeft,
+.hotZoneRight {
+  position: absolute;
+  top: 0;
+
+  width: 100px;
+  height: 100%;
+
+  cursor: pointer;
+
+  background: transparent;
+  border: 0;
+  padding: 0;
+}
+
+.hotZoneLeft {
+  left: 0;
+}
+
+.hotZoneRight {
+  right: 0;
+}
+
+/* Видимый фокус для клавиатуры */
+.hotZoneLeft:focus-visible,
+.hotZoneRight:focus-visible {
+  outline: 2px solid rgba(255, 255, 255, 0.75);
+  outline-offset: 2px;
+}
+
+/* ===========================
+   NAV BUTTONS (span)
+=========================== */
+
+.prevButton,
+.nextButton {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+
+  width: 50px;
+  height: 50px;
+
+  display: grid;
+  place-items: center;
+
+  background-color: rgba(255, 255, 255, 0.8);
+  border-radius: 50%;
+
+  font-size: 24px;
+
+  opacity: 0;
+  transition: all 0.3s ease;
+
+  user-select: none;
+}
+
+.prevButton {
+  left: 20px;
+}
+
+.nextButton {
+  right: 20px;
+}
+
+/* Появление кнопок по hover зоны */
+.hotZoneLeft:hover .prevButton,
+.hotZoneRight:hover .nextButton {
+  background-color: rgba(255, 255, 255, 1);
+  transform: translateY(-50%) scale(1.1);
+  opacity: 1;
+}
+
+/* Эффект нажатия */
+.hotZoneLeft:active .prevButton,
+.hotZoneRight:active .nextButton {
+  transform: translateY(-50%) scale(0.95);
+  opacity: 1;
+}
+
+/* ===========================
+   PROGRESS BAR
+=========================== */
+
+.progressBar {
+  position: absolute;
+  bottom: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+
+  width: 200px;
+  display: flex;
+  gap: 2px;
+  padding: 4px;
+}
+
+.progressItem,
+.progressItemActive {
+  flex: 1;
+  height: 3px;
+  border-radius: 2px;
+}
+
+.progressItem {
+  background-color: rgba(159, 159, 159, 0.4);
+}
+
+.progressItemActive {
+  background-color: rgb(89, 89, 89);
+}

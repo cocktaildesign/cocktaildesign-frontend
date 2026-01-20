@@ -1,0 +1,8 @@
+.footer {
+  border-bottom: 1px solid #ddd;
+  padding: 24px 0;
+  min-height: 460px; /* чтобы сетка была видна */
+
+  font-size: 48px;
+  font-family: var(--font-display);
+}

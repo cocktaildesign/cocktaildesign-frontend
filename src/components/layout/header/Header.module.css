@@ -1,0 +1,392 @@
+/* ==========================================================================
+   HEADER
+   Обёртка хедера. Статичная версия: без fixed/sticky и без spacer.
+   ========================================================================== */
+
+.header {
+  position: static; /* обычный поток документа */
+  width: 100%;
+  background: #fff;
+  border-bottom: 1px solid #e5e7e8;
+}
+
+/* ==========================================================================
+   COMMON LINKS
+   Общие стили для ссылок и интерактивных элементов внутри хедера.
+   ========================================================================== */
+
+.linkBase {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  text-decoration: none;
+  transition: color 160ms ease;
+}
+
+.linkBase:hover {
+  color: var(--color-accent-strong);
+}
+
+/* ==========================================================================
+   TOP BAR
+   Первая строка: “Написать нам”, соцсети, верхнее меню, телефон.
+   ========================================================================== */
+
+.topBar {
+  padding-top: 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.topBarLeft {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.topBarLeftText {
+  font-size: 14px;
+}
+
+.topBarLeftSocial {
+  display: flex;
+  gap: 6px;
+}
+
+/* ==========================================================================
+   TOP NAV
+   Верхнее меню + dropdown.
+   ========================================================================== */
+
+.topBarNav {
+  min-width: 0;
+}
+
+.topNavList {
+  display: flex;
+  gap: 24px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.topNavItem {
+  position: relative;
+}
+
+.topNavLink {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.chevron {
+  font-size: 12px;
+  opacity: 0.7;
+}
+
+/* Dropdown: скрыт по умолчанию, показывается на hover/focus-within */
+.dropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  min-width: 200px;
+
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.14);
+  padding: 10px;
+  z-index: 9011;
+
+  opacity: 0;
+  transform: translateY(-6px);
+  pointer-events: none;
+  transition:
+    opacity 140ms ease,
+    transform 140ms ease;
+}
+
+.topNavItem:hover .dropdown,
+.topNavItem:focus-within .dropdown {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+/* Буфер для удобства: курсор может “провалиться” между ссылкой и dropdown */
+.topNavItem::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 100%;
+  width: 100%;
+  height: 15px;
+}
+
+.dropdownList {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.dropdownLink {
+  display: flex;
+  align-items: center;
+  height: 40px;
+  padding: 0 10px;
+  border-radius: 10px;
+
+  text-decoration: none;
+  font-size: 14px;
+  color: inherit;
+  transition: background-color 140ms ease;
+}
+
+.dropdownLink:hover {
+  background: rgba(0, 0, 0, 0.06);
+}
+
+.dropdownLink:focus-visible {
+  outline: 2px solid var(--color-accent-strong);
+  outline-offset: -2px;
+}
+
+/* ==========================================================================
+   TOP BAR CONTACT
+   Телефон и tooltip с графиком работы.
+   ========================================================================== */
+
+.topBarContact {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+  font-style: normal;
+}
+
+.phoneLink {
+  text-decoration: none;
+  white-space: nowrap;
+  font-weight: 700;
+}
+
+/* Tooltip: контейнер иконки и выпадающей подсказки */
+.infoTooltip {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.infoIcon {
+  width: 10px;
+  color: #434343;
+  cursor: pointer;
+}
+
+.infoDropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 50%;
+  min-width: 240px;
+
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.14);
+  padding: 16px;
+  z-index: 9011;
+
+  opacity: 0;
+  transform: translateX(-50%) translateY(-6px);
+  pointer-events: none;
+  transition:
+    opacity 140ms ease,
+    transform 140ms ease;
+}
+
+.infoTooltip:hover .infoDropdown {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+  pointer-events: auto;
+}
+
+/* Буфер для удобства наведения мышью */
+.infoTooltip::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 100%;
+  width: 100%;
+  height: 8px;
+}
+
+.infoDropdownContent {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.infoDropdownTitle {
+  margin: 0;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.infoDropdownSubtitle {
+  margin: 0;
+  font-size: 13px;
+  color: #666;
+  line-height: 1.3;
+}
+
+.infoDropdownPhone {
+  text-decoration: none;
+  color: var(--color-accent-strong);
+  font-weight: 600;
+  font-size: 14px;
+  transition: color 160ms ease;
+}
+
+.infoDropdownPhone:hover {
+  color: var(--color-accent);
+}
+
+/* ==========================================================================
+   MAIN BAR
+   Вторая строка: логотип, кнопка каталога, поиск, избранное, корзина.
+   ========================================================================== */
+
+.mainBar {
+  display: flex;
+  align-items: flex-start;
+  gap: 24px;
+  width: 100%;
+  padding: 10px 0;
+}
+
+.mainBarLeft {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.logo {
+  display: inline-flex;
+  align-items: center;
+  flex: 0 0 auto;
+  text-decoration: none;
+  line-height: 0;
+}
+
+.mainBarCenter {
+  display: flex;
+  gap: 8px;
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.rightMainBar {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex: 0 0 auto;
+  position: relative;
+  top: 4px;
+}
+
+/* Иконки действий: избранное/корзина */
+.actionLink {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-decoration: none;
+  color: inherit;
+  transition: color 160ms ease;
+}
+
+.actionLink:hover {
+  color: var(--color-accent-strong);
+}
+
+.actionIcon {
+  color: currentColor;
+}
+
+.actionText {
+  font-size: 14px;
+  color: currentColor;
+}
+
+/* ==========================================================================
+   NAV BAR
+   Третья строка: категории + кнопка “Акции”.
+   ========================================================================== */
+
+.navBar {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  width: 100%;
+  flex-wrap: nowrap;
+  white-space: nowrap;
+  padding-bottom: 10px;
+}
+
+.categoryList {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  list-style: none;
+  flex: 1 1 auto;
+  white-space: nowrap;
+  margin: 0;
+  padding: 0;
+  scrollbar-width: none;
+}
+
+.categoryList::-webkit-scrollbar {
+  display: none;
+}
+
+.categoryItem {
+  flex: 0 0 auto;
+}
+
+.categoryLink {
+  display: inline-flex;
+  align-items: center;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+/* Кнопка “Акции” */
+.sale {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  font-weight: 700;
+  text-decoration: none;
+  color: var(--color-accent-contrast);
+  background-color: var(--color-accent);
+  border-radius: 12px;
+  padding: 5px 16px;
+  font-size: 12px;
+  cursor: pointer;
+  transition: background-color 160ms ease;
+}
+
+.sale:hover {
+  background-color: var(--color-accent-strong);
+}
+
+.sale:focus-visible {
+  outline: 2px solid var(--color-accent-strong);
+  outline-offset: 2px;
+}

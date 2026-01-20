@@ -1,0 +1,33 @@
+.copyButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 26px;
+  height: 26px;
+
+  border: 0px solid transparent;
+
+  background: transparent;
+  color: var(--color-border);
+  cursor: pointer;
+}
+
+.copyButton:hover {
+  color: var(--color-text);
+}
+
+.copyButton:focus-visible {
+  outline: 2px solid var(--color-accent-strong);
+  outline-offset: 2px;
+}
+
+.iconSuccess {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 19px;
+  height: 19px;
+  color: var(--color-accent-strong);
+  font-weight: 700;
+}

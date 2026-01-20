@@ -1,0 +1,61 @@
+.section {
+  margin: 24px auto 0;
+  max-width: 880px;
+}
+
+.h1 {
+  margin: 0 0 16px;
+  font-size: 28px;
+}
+
+/* Карточка  */
+.card {
+  display: grid;
+  grid-template-columns: 200px 1fr;
+  gap: 24px;
+  padding: 24px;
+  border-radius: 12px;
+  background: #f6f7f8;
+}
+
+/* Левая “иконка” */
+.media {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 2 / 3;
+  pointer-events: none;
+}
+
+.mediaImage {
+  object-fit: cover;
+}
+
+.title {
+  margin: 0 0 14px;
+  font-size: 16px;
+  color: var(--color-text);
+}
+
+.list {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  column-gap: 10px;
+  row-gap: 10px;
+}
+
+.term {
+  font-weight: 500;
+  color: var(--color-text-muted, rgba(0, 0, 0, 0.55));
+  font-size: 16px;
+}
+
+.desc {
+  color: var(--color-text, rgba(0, 0, 0, 0.82));
+  word-break: break-word;
+  font-size: 16px;
+
+  display: flex;
+  gap: 4px;
+  flex-direction: row;
+  align-items: center;
+}
