@@ -10,6 +10,10 @@ const LABELS: { [path: string]: string } = {
   "/help": "Помощь",
   "/legal": "Правовая информация",
   "/legal/requisites": "Реквизиты",
+  "/legal/privacy-policy": "Политика конфиденциальности",
+  "/legal/terms": "Пользовательское соглашение",
+  "/legal/offer": "Публичная оферта",
+  "/legal/returns": "Условия возврата товара",
 };
 
 type Crumb = { href: string; label: string };

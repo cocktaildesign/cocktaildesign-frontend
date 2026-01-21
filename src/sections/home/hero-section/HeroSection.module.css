@@ -42,7 +42,9 @@
   border-radius: 12px;
   background-color: #334155;
 
-  transition: transform 180ms ease, border-color 180ms ease;
+  transition:
+    transform 180ms ease,
+    border-color 180ms ease;
 }
 
 .weeklyProductTrigger:focus-visible {
@@ -121,7 +123,10 @@
 
   pointer-events: none;
 
-  transition: max-height 260ms ease, opacity 200ms ease, transform 260ms ease;
+  transition:
+    max-height 260ms ease,
+    opacity 200ms ease,
+    transform 260ms ease;
 }
 
 .weeklyProductShell[data-open="1"] .triggerBody {
@@ -205,7 +210,10 @@
   background: rgba(255, 255, 255, 0.14);
   border: 1px solid rgba(255, 255, 255, 0.22);
 
-  transition: transform 160ms ease, background 160ms ease, border-color 160ms ease;
+  transition:
+    transform 160ms ease,
+    background 160ms ease,
+    border-color 160ms ease;
 }
 
 .weeklyProductButton:hover {

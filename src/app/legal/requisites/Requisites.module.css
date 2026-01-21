@@ -3,7 +3,7 @@
   max-width: 880px;
 }
 
-.h1 {
+.sectionTitle {
   margin: 0 0 16px;
   font-size: 28px;
 }
@@ -13,7 +13,7 @@
   display: grid;
   grid-template-columns: 200px 1fr;
   gap: 24px;
-  padding: 24px;
+  padding: 32px 40px;
   border-radius: 12px;
   background: #f6f7f8;
 }
@@ -22,7 +22,7 @@
 .media {
   position: relative;
   width: 100%;
-  aspect-ratio: 2 / 3;
+  aspect-ratio: 1 / 1;
   pointer-events: none;
 }
 
@@ -58,4 +58,129 @@
   gap: 4px;
   flex-direction: row;
   align-items: center;
+}
+
+/* =========================
+   Адаптивный
+   Breakpoints:
+   1) Desktop: 1025–1440
+   2) Tablet: 601–1024
+   3) Mobile: 320–600
+   ========================= */
+
+/* Desktop (1025–1440) */
+@media (min-width: 1025px) and (max-width: 1440px) {
+  .section {
+    max-width: 880px; /* оставляем как есть */
+    padding: 0 16px;
+  }
+
+  .card {
+    grid-template-columns: 200px 1fr;
+    gap: 24px;
+    padding: 32px 40px;
+  }
+
+  .sectionTitle {
+    font-size: 28px;
+    margin-bottom: 16px;
+  }
+
+  .list {
+    grid-template-columns: 1fr 2fr;
+    row-gap: 10px;
+  }
+}
+
+/* Tablet (601–1024) */
+@media (min-width: 601px) and (max-width: 1024px) {
+  .section {
+    max-width: 880px;
+    padding: 0 16px;
+  }
+
+  .sectionTitle {
+    font-size: 24px;
+    margin-bottom: 14px;
+  }
+
+  .card {
+    grid-template-columns: 160px 1fr;
+    gap: 20px;
+    padding: 24px 24px;
+    border-radius: 12px;
+  }
+
+  .title {
+    font-size: 16px;
+    margin-bottom: 12px;
+  }
+
+  .list {
+    grid-template-columns: 1fr 2fr;
+    column-gap: 10px;
+    row-gap: 10px;
+  }
+
+  .term,
+  .desc {
+    font-size: 15px;
+  }
+}
+
+/* Mobile (320–600) */
+@media (max-width: 600px) {
+  .section {
+    max-width: 100%;
+    padding: 0 16px;
+    margin-top: 16px;
+  }
+
+  .sectionTitle {
+    font-size: 20px;
+    margin-bottom: 12px;
+    text-align: left;
+  }
+
+  .card {
+    grid-template-columns: 1fr;
+    gap: 16px;
+    padding: 16px;
+    border-radius: 12px;
+  }
+
+  /* медиа блок больше не растягивается на всю ширину */
+  .media {
+    width: 88px; /* стабильно */
+    height: 88px; /* стабильно */
+    aspect-ratio: auto; /* выключаем прыжки из-за ratio */
+    margin: 0; /* без автоцентрирования */
+  }
+
+  .title {
+    margin: 0 0 10px;
+    font-size: 16px;
+    text-align: left;
+  }
+
+  /* список в 1 колонку, но каждая пара “термин/значение” — как блок */
+  .list {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .term {
+    font-size: 13px;
+    font-weight: 600;
+    margin: 0 0 4px;
+    color: var(--color-text-muted, rgba(0, 0, 0, 0.55));
+  }
+
+  .desc {
+    font-size: 14px;
+    margin: 0;
+    align-items: flex-start; /* чтобы иконки/кнопки не центровались */
+    justify-content: flex-start;
+  }
 }

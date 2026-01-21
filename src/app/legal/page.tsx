@@ -2,7 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import PageLayout from "@/components/layout/PageLayout";
 import { pageMetadata } from "@/lib/seo/metadata";
-import styles from "./Legal.module.css";
+import styles from "./LegalPage.module.css";
 
 export const metadata = pageMetadata({
   title: "Правовая информация",

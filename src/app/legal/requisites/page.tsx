@@ -14,13 +14,13 @@ export default function RequisitesPage() {
   return (
     <PageLayout>
       <section className={styles.section}>
-        <h1 className={styles.h1}>Реквизиты</h1>
+        <h1 className={styles.sectionTitle}>Реквизиты</h1>
 
         <div className={styles.card}>
           <div className={styles.media} aria-hidden="true">
             <Image
-              src="/images/legal/requisites.webp"
-              alt=""
+              src="/images/legal/requisites.png"
+              alt="иконка Реквизитов"
               fill
               priority={false}
               sizes="(max-width: 768px) 96px, 140px"
