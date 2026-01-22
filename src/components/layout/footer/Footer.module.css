@@ -1,8 +1,298 @@
-.footer {
-  border-bottom: 1px solid #ddd;
-  padding: 24px 0;
-  min-height: 460px; /* чтобы сетка была видна */
+.feedbackBar {
+  height: 60px;
+  background: #94a3b8;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  justify-content: center;
 
-  font-size: 48px;
-  font-family: var(--font-display);
+  border: 0;
+  padding: 0 16px;
+  width: 100%;
+}
+
+.feedbackBarIcon {
+  color: var(--color-accent-contrast);
+  transition: color 160ms ease;
+}
+
+.feedbackBarText {
+  font-size: 14px;
+  text-decoration: underline;
+  color: var(--color-text);
+  transition: color 160ms ease;
+}
+
+.feedbackBar:has(.feedbackBarText:hover) .feedbackBarIcon,
+.feedbackBar:has(.feedbackBarText:hover) .feedbackBarText {
+  color: var(--color-bgс);
+}
+
+.feedbackBar:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+.footerSection {
+  background-color: var(--color-accent-contrast);
+  padding: 40px 0;
+}
+
+.footerGrid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 16px;
+}
+
+.footerColumn {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  overflow: hidden;
+}
+
+.footerNav {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.footerTitle {
+  color: #fff;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.footerList {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+
+  list-style: none;
+}
+
+.footerLink {
+  color: #b7b9bf;
+  font-size: 14px;
+  transition: color 160ms ease;
+}
+
+.footerLink:hover {
+  color: var(--color-accent);
+}
+
+/* ==========================================================================
+1 колонка из 6
+   ========================================================================== */
+
+.footerRating {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  align-items: center;
+}
+
+.footerRatingContent {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.footerRatingContentText {
+  color: #fff;
+  font-size: 14px;
+  font-family: var(--font-sans);
+  opacity: 1;
+  transition: color 160ms ease;
+}
+.footerRatingContent:hover .footerRatingContentText {
+  color: var(--color-accent);
+}
+
+.starRow {
+  display: flex;
+  flex-direction: row;
+}
+
+.footerRatingIcon {
+  color: #ffdd00;
+}
+
+.footerMarketplaces {
+  display: flex;
+  gap: 4px;
+  flex-direction: column;
+}
+
+.footerMarketplacesTitle {
+  font-size: 16px;
+  font-weight: 600;
+  color: #fff;
+}
+
+.footerMarketplacesList {
+  display: flex;
+  flex-direction: row;
+  gap: 5px;
+}
+
+.footerYandexIcon {
+  opacity: 1;
+  transition: opacity 160ms ease;
+}
+
+.footerRating:hover .footerYandexIcon {
+  opacity: 0.7;
+}
+
+.footerMarketplacesItem {
+  opacity: 1;
+  transition: opacity 160ms ease;
+}
+.footerMarketplacesItem:hover {
+  opacity: 0.7;
+}
+
+/* ==========================================================================
+6 колонка из 6
+   ========================================================================== */
+
+.footerColumnSocial {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 60px;
+  overflow: hidden;
+}
+.socialList {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.socialLink {
+  color: #b7b9bf;
+  transition: color 160ms ease;
+}
+
+.socialItem:hover .socialLink {
+  color: var(--color-accent);
+}
+
+.tgCard {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  border: 1px solid #b7b9bf;
+  padding: 20px;
+  border-radius: 12px;
+}
+.tgHeader {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.tgHeader {
+  font-size: 16px;
+  color: #fff;
+}
+
+.tgHeaderSubTitle {
+  font-size: 12px;
+  color: #fff;
+}
+.tgActions {
+  width: 100%;
+}
+
+.tgButton {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+
+  justify-content: center;
+  align-items: center;
+
+  background: #245ca5;
+  color: #fff;
+  border-radius: 8px;
+  padding: 10px 0;
+
+  font-size: 14px;
+  width: 100%;
+  transition: background 160ms ease;
+}
+
+.line {
+  width: 100%;
+  display: block;
+  height: 1px;
+  background-color: #b7b9bf;
+  margin: 20px 0;
+}
+
+.tgButton:hover {
+  background: #1a4e91;
+}
+
+/* ==========================================================================
+нижняя часть футера
+   ========================================================================== */
+
+.footerBottomGrid {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 24px;
+  align-items: start;
+}
+
+.footerBottomLeft {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.footerBottomText {
+  font-size: 12px;
+  color: #b7b9bf;
+}
+
+.footerInlineLink {
+  color: inherit;
+  text-decoration: underline;
+  transition: color 160ms ease;
+}
+
+.footerInlineLink:hover {
+  color: var(--color-accent);
+}
+
+.footerBottomRight {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  gap: 10px;
+  text-align: right;
+  display: grid;
+  gap: 10px;
+}
+
+.footerDev {
+  color: #b7b9bf;
+  font-size: 14px;
+}
+.footerDevName {
+  color: #4000ff;
+  font-weight: 700;
+}
+
+.footerCopyright {
+  color: #b7b9bf;
+  font-size: 12px;
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-end;
 }

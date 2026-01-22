@@ -16,7 +16,7 @@ export default function PageLayout({ children, showBreadcrumbs = true }: PageLay
         {showBreadcrumbs && <Breadcrumbs />}
         {children}
       </Container>
-      {/* <GridOverlay /> */}
+      <GridOverlay />
     </main>
   );
 }
