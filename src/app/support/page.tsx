@@ -30,7 +30,7 @@ export default function SupportPage() {
   return (
     <PageLayout>
       <section className={styles.section}>
-        <h1 className={styles.title}>Поддержка</h1>
+        <h1 className={styles.title}>Сервис и поддержка</h1>
 
         <div className={styles.grid}>
           {CARDS.map((card) => (
