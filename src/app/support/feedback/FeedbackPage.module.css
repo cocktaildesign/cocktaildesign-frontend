@@ -1,0 +1,12 @@
+.section {
+  padding: 0;
+  max-width: 880px;
+  margin: 0 auto;
+}
+
+.card {
+  border-radius: 12px;
+  background-color: #f9f9f9;
+  border: 1px solid rgb(229, 229, 229);
+  padding: 22px;
+}

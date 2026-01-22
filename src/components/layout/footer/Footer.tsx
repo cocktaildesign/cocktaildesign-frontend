@@ -333,7 +333,8 @@ export default function Footer() {
                 Разработка сайта <span className={styles.footerDevName}>MazalovAlex</span>
               </a>
               <p className={styles.footerCopyright}>
-                © 2015—{new Date().getFullYear()}. Cocktail Design. Все права защищены.
+                © 2015—{new Date().getFullYear()}. Cocktail Design. Все права защищены. При полном или частичном
+                использовании материалов с сайта ссылка на источник обязательна.
               </p>
             </div>
           </div>
