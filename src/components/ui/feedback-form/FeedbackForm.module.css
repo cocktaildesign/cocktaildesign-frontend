@@ -76,8 +76,8 @@
   letter-spacing: 0.06em;
   text-transform: uppercase;
 
-  background: #f5c400;
-  color: #0b1020;
+  background: var(--color-accent-strong);
+  color: #fff;
 
   transition:
     transform 120ms ease,

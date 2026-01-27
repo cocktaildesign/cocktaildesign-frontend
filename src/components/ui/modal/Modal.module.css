@@ -13,14 +13,11 @@
 }
 
 .content {
+  position: relative;
+
   width: min(720px, 100%);
   background: #fff;
   border-radius: 12px;
-  padding: 16px;
-}
-
-.content {
-  position: relative;
   padding: 40px 44px 32px;
 }
 
@@ -49,4 +46,32 @@
 .closeButton:focus-visible {
   outline: none;
   box-shadow: 0 0 0 4px rgba(0, 128, 128, 0.18);
+}
+
+@keyframes modalOverlayIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes modalContentIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.overlay {
+  animation: modalOverlayIn 200ms ease;
+}
+
+.content {
+  animation: modalContentIn 220ms ease;
 }

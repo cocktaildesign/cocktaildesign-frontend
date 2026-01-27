@@ -1,0 +1,35 @@
+/* ===== Страница базы знаний (/knowledge) ===== */
+.knowledgePage {
+  min-height: 100vh;
+  margin-bottom: 50px;
+}
+
+.pageHeader {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.pageHeaderDescription {
+  width: 700px;
+  font-size: 14px;
+}
+
+.line {
+  width: 100%;
+  border: none;
+  border-top: 1px dashed #dedede;
+  margin: 20px 0;
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr; /* 1 колонка меню + 3 колонки контент */
+  gap: 16px;
+  margin-top: 24px;
+}
+
+.sidebar {
+  grid-column: 1 / 2;
+}

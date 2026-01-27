@@ -1,0 +1,155 @@
+/* ===== Контейнер сайдбара ===== */
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  position: sticky;
+  top: 145px;
+}
+
+/* ===== Разделы ===== */
+.categoryCard {
+  background-color: #f7f8fa;
+  padding: 20px;
+  border-radius: 12px;
+}
+
+.sectionHeader {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.sectionHeaderTitle {
+  font-size: 22px;
+  font-weight: 600;
+}
+
+.resetLink {
+  font-size: 12px;
+  color: #606060;
+  text-decoration: underline;
+  transition: color 160ms ease;
+}
+
+.resetLink:hover {
+  color: var(--color-text);
+}
+
+.divider {
+  width: 100%;
+  border: none;
+  margin: 10px 0 5px 0;
+  border: 0.1px dashed #dedede;
+}
+
+.sectionLabel {
+  color: #717171;
+  font-size: 12px;
+  margin-bottom: 10px;
+  display: block;
+}
+
+.categoryList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 5px;
+}
+
+.categoryItem {
+  margin: 0;
+}
+
+.categoryLink {
+  display: inline-block;
+  text-decoration: none;
+  color: rgba(11, 16, 32, 0.7);
+  transition: color 160ms ease;
+}
+
+.categoryLink:hover {
+  color: rgba(11, 16, 32, 1);
+}
+
+.categoryLinkActive {
+  color: var(--color-text);
+  font-weight: 600;
+}
+
+/* ===== Фильтры (форматы) ===== */
+.filtersCard {
+  background-color: #f7f8fa;
+  padding: 20px;
+  border-radius: 12px;
+}
+
+.formatNav {
+  /* контейнер для nav форматов — при необходимости расширишь */
+}
+
+.formatList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.formatItem {
+  margin: 0;
+  padding: 3px 15px;
+  border: 1px solid #808080;
+  border-radius: 6px;
+  font-size: 14px;
+
+  transition:
+    border-color 160ms ease,
+    background-color 260ms ease;
+}
+
+.formatItem:hover {
+  border-color: var(--color-accent-contrast);
+}
+
+.formatItemActive {
+  border: 1px solid var(--color-accent-contrast);
+  background-color: var(--color-accent-contrast);
+}
+
+.formatItemActive:hover {
+  border-color: var(--color-accent-contrast);
+}
+
+.formatLink {
+  color: #808080;
+  transition: color 160ms ease;
+}
+
+.formatLink:hover {
+  color: var(--color-border-strong);
+}
+
+.formatLinkActive {
+  color: var(--color-bg);
+}
+
+.formatItemActive .formatLink:hover {
+  color: var(--color-bg);
+}
+
+/* ===== A11y утилиты ===== */
+.visuallyHidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}

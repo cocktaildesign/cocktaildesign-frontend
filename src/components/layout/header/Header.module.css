@@ -4,7 +4,9 @@
    ========================================================================== */
 
 .header {
-  position: static; /* обычный поток документа */
+  position: sticky; /* обычный поток документа */
+  top: 0px;
+  z-index: 9000;
   width: 100%;
   background: #fff;
   border-bottom: 1px solid #e5e7e8;
