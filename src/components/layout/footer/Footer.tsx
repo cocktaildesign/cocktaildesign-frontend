@@ -63,10 +63,11 @@ export const footerLegalLinks: FooterLink[] = [{ label: "Правовая инф
 export const footerCustomLinks = [{ label: "Брендинг и Гравировка", href: "/branding" }];
 
 export const footerKnowledgeLinks: FooterLink[] = [
-  { label: "Видео", href: "/knowledge/video" },
-  { label: "Лекции и теория", href: "/knowledge/lectures" },
-  { label: "Статьи", href: "/knowledge/articles" },
-  { label: "Полезные материалы", href: "/knowledge/resources" },
+  { label: "Техники и фишки", href: "/knowledge?tab=techniques" },
+  { label: "Обучение", href: "/knowledge?tab=education" },
+  { label: "Подкасты и интервью", href: "/knowledge?tab=podcasts" },
+  { label: "Индустрия и культура", href: "/knowledge?tab=industry" },
+  { label: "Материалы и ресурсы", href: "/knowledge?tab=resources" },
 ];
 
 type FooterSocialLink = {

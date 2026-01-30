@@ -5,6 +5,7 @@ import { getKnowledgeItems } from "./data";
 
 import KnowledgeContent from "./knowledge-content/KnowledgeContent";
 import KnowledgeFilters from "./knowledge-filters/KnowledgeFilters";
+import TelegramBanner from "@/sections/telegram-cta/TelegramCta";
 
 export const metadata = pageMetadata({
   title: "База знаний",
@@ -52,13 +53,12 @@ export default async function KnowledgePage({ searchParams }: KnowledgePageProps
         <hr className={styles.line} />
 
         <div className={styles.layout}>
-          <aside className={styles.sidebar} aria-label="Разделы знаний">
-            <KnowledgeFilters />
-          </aside>
+          <KnowledgeFilters />
 
           <KnowledgeContent items={filteredItems} />
         </div>
       </section>
+      <TelegramBanner />
     </PageLayout>
   );
 }

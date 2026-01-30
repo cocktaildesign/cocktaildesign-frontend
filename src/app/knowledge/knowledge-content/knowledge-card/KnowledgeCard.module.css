@@ -15,7 +15,7 @@
 .card:hover {
   background: #f3f3f3;
   border: 1px solid transparent;
-  transform: translateY(-4px);
+  transform: translateY(-2px);
 }
 .imageWrapper {
   position: relative;
@@ -45,6 +45,13 @@
   flex-direction: row;
   justify-content: space-between;
 }
+
+.metaRowClock {
+  display: flex;
+  flex-direction: row;
+  gap: 5px;
+}
+
 .cardLink {
   display: block;
   padding: 0px;
@@ -74,12 +81,14 @@
   background-color: var(--color-accent-strong);
   color: var(--color-bg);
   padding: 3px 8px;
+  position: absolute;
+  top: 10px;
+  left: 10px;
 }
 
 .meta {
   font-size: 12px;
   color: rgba(11, 16, 32, 0.6);
-  background-color: aqua;
   background-color: #ebebeb;
   color: #8d8d8d;
   padding: 2px 10px;
@@ -90,7 +99,6 @@
 .cardTitle {
   margin: 0;
   font-size: 18px;
-  height: 70px;
   line-height: 1.35;
 }
 

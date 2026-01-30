@@ -1,0 +1,20 @@
+.detailPage {
+  background-color: aqua;
+  /* max-width: 680px; */
+  max-width: 870px;
+  margin: 0 auto;
+}
+
+.detailHeader {
+  background-color: orange;
+}
+
+.detailHeaderMeta {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.detailBody {
+  background-color: blue;
+}

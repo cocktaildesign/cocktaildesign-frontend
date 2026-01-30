@@ -1,10 +1,11 @@
 /* ===== Контейнер сайдбара ===== */
-.container {
+.containerR {
   display: flex;
   flex-direction: column;
   gap: 20px;
   position: sticky;
   top: 145px;
+  height: fit-content;
 }
 
 /* ===== Разделы ===== */

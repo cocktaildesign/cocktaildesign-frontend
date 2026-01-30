@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useId, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Container from "@/components/layout/Container";
 import Slider from "@/components/ui/slider/Slider";
@@ -28,7 +28,7 @@ const WEEKLY_PRODUCT = {
 export default function HeroSection() {
   const [isOpen, setIsOpen] = useState(false);
   const rootRef = useRef<HTMLElement | null>(null);
-  const contentId = useId();
+  const weeklyProductPanelId = "weekly-product-panel";
 
   useEffect(() => {
     if (!isOpen) return;
@@ -76,7 +76,7 @@ export default function HeroSection() {
               type="button"
               className={styles.weeklyProductTrigger}
               aria-expanded={isOpen}
-              aria-controls={contentId}
+              aria-controls={weeklyProductPanelId}
               onClick={toggle}
               onKeyDown={handleTriggerKeyDown}>
               <span className={styles.triggerTop}>
@@ -89,7 +89,7 @@ export default function HeroSection() {
               </span>
             </button>
 
-            <div id={contentId} className={styles.triggerBody} aria-hidden={!isOpen}>
+            <div id={weeklyProductPanelId} className={styles.triggerBody} aria-hidden={!isOpen}>
               <div className={styles.triggerContent}>
                 <div className={styles.weeklyProductText}>
                   <div className={styles.weeklyProductMain}>

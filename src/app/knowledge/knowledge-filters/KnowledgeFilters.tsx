@@ -33,7 +33,6 @@ type FormatItem = {
 const FORMAT_ITEMS: FormatItem[] = [
   { label: "Видео", value: "video" },
   { label: "Статья", value: "article" },
-  { label: "Подкаст", value: "podcast" },
   { label: "Материал", value: "material" },
 ];
 
@@ -58,7 +57,7 @@ export default function KnowledgeFilters() {
   const resetFormatHref = activeTab ? `/knowledge?tab=${activeTab}` : "/knowledge";
 
   return (
-    <aside className={styles.container}>
+    <aside className={styles.containerR} aria-label="Разделы знаний">
       {/* ===== Разделы ===== */}
       <div className={styles.categoryCard}>
         <div className={styles.sectionHeader}>

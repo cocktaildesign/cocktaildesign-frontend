@@ -1,0 +1,53 @@
+.videoPage {
+  max-width: 870px;
+  margin: 0 auto;
+}
+
+.header {
+  margin-bottom: 16px;
+}
+
+.title {
+  margin: 0 0 10px;
+}
+
+.metaRow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+
+.meta {
+  margin: 0;
+  font-size: 14px;
+  color: rgba(11, 16, 32, 0.7);
+}
+
+.separator {
+  opacity: 0.5;
+}
+
+/* Контейнер плеера: всегда 16:9 и на всю ширину */
+.player {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #f3f5f9;
+  margin-bottom: 16px;
+}
+
+
+
+.body {
+  display: grid;
+  gap: 10px;
+}
+
+.iframe {
+  width: 100%;
+  height: 100%;
+  border: 0;
+  display: block;
+}

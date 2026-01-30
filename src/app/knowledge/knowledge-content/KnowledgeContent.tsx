@@ -1,12 +1,12 @@
 import KnowledgeCard from "./knowledge-card/KnowledgeCard";
 
 import styles from "./KnowledgeContent.module.css";
-import type { KnowledgeItem } from "../types";
+import type { KnowledgeItemPreview } from "../types";
 
 // ===== Props компонента =====
 // Получаем список отфильтрованных материалов
 type KnowledgeContentProps = {
-  items: KnowledgeItem[];
+  items: KnowledgeItemPreview[];
 };
 
 // ===== Основной компонент =====
