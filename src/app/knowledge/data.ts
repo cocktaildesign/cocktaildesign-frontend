@@ -132,7 +132,6 @@ export function getKnowledgeItemBySlug(slug: string): KnowledgeItemPreview | nul
   return KNOWLEDGE_ITEMS.find((item) => item.slug === slug) ?? null;
 }
 
-
 // ДАННЫЕ ДЛЯ ВИДЕО СТРАНИЦЫ!
 
 const KNOWLEDGE_VIDEO_DETAILS_BY_SLUG: Record<string, KnowledgeVideoDetail> = {
@@ -146,6 +145,51 @@ const KNOWLEDGE_VIDEO_DETAILS_BY_SLUG: Record<string, KnowledgeVideoDetail> = {
     coverSrc: "/test-cover.png",
     duration: "2:43",
     description: "Разбираем базовые формулы баланса вкуса и то, как они применяются в коктейлях.",
+
+    embedUrl: "https://vk.com/video_ext.php?oid=-72675133&id=456239770&autoplay=0",
+    externalUrl: "https://vk.com/video-72675133_456239770",
+  },
+
+  "fat-washing-fast": {
+    id: "k2",
+    title: "Техника: быстрый фэт-вошинг дома",
+    tab: "techniques",
+    format: "video",
+    slug: "fat-washing-fast",
+    date: "2026-01-12",
+    coverSrc: "/test-cover.png",
+    duration: "5:23",
+    description: "Показываем простой и быстрый способ фэт-вошинга без профессионального оборудования.",
+
+    embedUrl: "https://vk.com/video_ext.php?oid=-72675133&id=456239770&autoplay=0",
+    externalUrl: "https://vk.com/video-72675133_456239770",
+  },
+
+  "ice-selection-guide": {
+    id: "k4",
+    title: "Видео: как выбирать лёд для разных напитков",
+    tab: "techniques",
+    format: "video",
+    slug: "ice-selection-guide",
+    date: "2026-01-18",
+    coverSrc: "/test-cover.png",
+    duration: "15:23",
+    description: "Разбираем типы льда и объясняем, какой лёд подходит для разных коктейлей.",
+
+    embedUrl: "https://vk.com/video_ext.php?oid=-72675133&id=456239770&autoplay=0",
+    externalUrl: "https://vk.com/video-72675133_456239770",
+  },
+
+  "shake-vs-stir": {
+    id: "k6",
+    title: "Лекция: шейк vs стир — когда и почему",
+    tab: "education",
+    format: "video",
+    slug: "shake-vs-stir",
+    date: "2026-01-22",
+    coverSrc: "/test-cover.png",
+    duration: "12 мин",
+    description: "Разбираем разницу между шейком и стиром и объясняем, когда использовать каждый метод.",
 
     embedUrl: "https://vk.com/video_ext.php?oid=-72675133&id=456239770&autoplay=0",
     externalUrl: "https://vk.com/video-72675133_456239770",

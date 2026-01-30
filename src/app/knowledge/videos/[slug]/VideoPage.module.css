@@ -1,21 +1,44 @@
-.header {
-  padding: 12px 24px;
+.videoPage {
+  margin: 0 auto;
+  max-width: 870px;
 }
 
-.videoPage {
-  max-width: 870px;
-  margin: 0 auto;
+.content {
   background-color: #222222;
   border-radius: 12px;
   padding-bottom: 16px;
   color: #fff;
 }
 
+.player {
+  width: 100%;
+  aspect-ratio: 16 / 9;
+  border-radius: 12px 12px 0 0;
+  overflow: hidden;
+  background: #f3f5f9;
+}
+
+.iframe {
+  width: 100%;
+  height: 100%;
+  border: 0;
+  display: block;
+}
+
+.header {
+  padding: 12px 24px;
+  margin-bottom: 5px;
+}
+
+.title {
+  font-size: 20px;
+}
+
 .metaRow {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  align-items: end;
+  align-items: flex-start;
   flex-wrap: wrap;
 }
 
@@ -25,17 +48,9 @@
   color: #919191;
 }
 
-.separator {
-  opacity: 0.5;
-}
-
-/* Контейнер плеера: всегда 16:9 и на всю ширину */
-.player {
-  width: 100%;
-  aspect-ratio: 16 / 9;
-  border-radius: 12px 12px 0 0;
-  overflow: hidden;
-  background: #f3f5f9;
+.actions {
+  display: flex;
+  align-items: flex-start;
 }
 
 .body {
@@ -49,15 +64,6 @@
   color: #b5b5b5;
 }
 
-.title {
-  font-size: 20px;
-}
-
-.iframe {
-  width: 100%;
-  height: 100%;
-  border: 0;
-  display: block;
-}
 .description {
+  margin: 0;
 }

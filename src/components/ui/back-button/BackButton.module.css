@@ -1,0 +1,24 @@
+.button {
+  background: none;
+  border: none;
+
+  padding: 0;
+  margin-bottom: 12px;
+
+  font-size: 14px;
+  color: rgba(11, 16, 32, 0.8);
+
+  text-decoration: underline;
+  text-underline-offset: 2px;
+
+  cursor: pointer;
+}
+
+.button:hover {
+  color: rgba(11, 16, 32, 1);
+}
+
+.button:focus-visible {
+  outline: 2px solid rgba(11, 16, 32, 0.6);
+  outline-offset: 2px;
+}
