@@ -4,7 +4,8 @@ import { pageMetadata } from "@/lib/seo/metadata";
 import PageLayout from "@/components/layout/PageLayout";
 import { getKnowledgeVideoDetailBySlug } from "../../data";
 import styles from "./VideoPage.module.css";
-import { title } from "process";
+import { formatRelativeFromIsoDate } from "@/lib/date/relativeDate";
+import ShareButton from "@/components/ui/share-button/ShareButton";
 
 type Params = {
   slug: string; // /knowledge/videos/[slug]
@@ -52,23 +53,6 @@ export default async function KnowledgeVideoPage({ params }: PageProps) {
         { href: `/knowledge/videos/${item.slug}`, label: item.title },
       ]}>
       <article className={styles.videoPage}>
-        <header className={styles.header}>
-          <h1 className={styles.title}>{item.title}</h1>
-
-          <div className={styles.metaRow}>
-            <p className={styles.meta}>
-              <time dateTime={item.date}>{item.date}</time>
-            </p>
-
-            <span className={styles.separator} aria-hidden="true">
-              •
-            </span>
-
-            <p className={styles.meta}>{item.duration}</p>
-          </div>
-        </header>
-
-        {/* Пока заглушка — позже подставим iframe VK/YouTube */}
         <div className={styles.player} role="group" aria-label="Видео">
           <iframe
             // Источник плеера: берём только URL из данных, без HTML из CMS.
@@ -85,6 +69,28 @@ export default async function KnowledgeVideoPage({ params }: PageProps) {
           />
         </div>
 
+        <header className={styles.header}>
+          {/* Заголовок страницы */}
+          <h1 className={styles.title}>{item.title}</h1>
+
+          {/* Ряд меты + действий */}
+          <div className={styles.metaRow}>
+            <p className={styles.meta}>
+              <time dateTime={item.date} title={item.date}>
+                {formatRelativeFromIsoDate(item.date)}
+              </time>
+            </p>
+
+            <div className={styles.actions}>
+              <ShareButton
+                url={`${process.env.NEXT_PUBLIC_SITE_URL}/knowledge/videos/${item.slug}`}
+                title={item.title}
+              />
+            </div>
+          </div>
+        </header>
+
+        {/* Контент/описание — отдельно от меты */}
         <div className={styles.body}>{item.description ? <p>{item.description}</p> : null}</div>
       </article>
     </PageLayout>
