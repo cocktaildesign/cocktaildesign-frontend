@@ -1,20 +1,145 @@
-.detailPage {
-  background-color: aqua;
-  /* max-width: 680px; */
-  max-width: 870px;
-  margin: 0 auto;
-}
-
-.detailHeader {
-  background-color: orange;
-}
-
-.detailHeaderMeta {
+.up {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
 }
 
+.detailPage {
+  max-width: 870px;
+  margin: 0 auto;
+
+  margin-bottom: 80px;
+}
+
+.detailHeader {
+  display: grid;
+  gap: 30px;
+  margin-bottom: 16px;
+  font-family: var(--font-display);
+  color: var(--color-accent-contrast);
+  margin: 20px 0 20px 0;
+  border-radius: 12px;
+}
+
+.detailTitle {
+  margin: 0;
+  font-size: 60px;
+  line-height: 1.2;
+}
+
+.metaRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  font-size: 14px;
+}
+
+.actions {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 100%;
+  align-items: center;
+  gap: 12px;
+}
+
+.detailMeta {
+  margin: 0;
+  font-size: 14px;
+}
+
 .detailBody {
-  background-color: blue;
+  display: grid;
+
+  /* Ритм между блоками — чуть больше, чем 12px */
+  gap: 16px;
+
+  /* Оптимальная читабельность */
+  font-size: 16px;
+  line-height: 1.7;
+
+  /* Цвет текста статьи */
+  color: var(--color-text-primary);
+}
+
+/* ✅ чтобы \n в рецептах сохраняли переносы */
+.paragraph {
+  margin: 0;
+  white-space: pre-line;
+}
+
+.figure {
+  margin: 0;
+}
+
+.image {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 12px;
+}
+
+.heading {
+  margin: 28px 0 8px; /* больше отступ сверху, чтобы секции читались */
+  font-size: 40px;
+  line-height: 1.25;
+  font-weight: 800;
+  color: inherit;
+  color: #343434;
+}
+
+.list {
+  margin: 0;
+  padding-left: 20px;
+  display: grid;
+  gap: 6px;
+}
+
+.listItem {
+  margin: 0;
+}
+
+.caption {
+  margin-top: 4px;
+  font-size: 12px;
+  color: rgba(0, 0, 0, 0.7);
+  text-align: center;
+}
+
+.heading2 {
+  font-size: 30px;
+  font-weight: 600;
+}
+
+.heading3 {
+  margin: 10px 0;
+  font-size: 24px;
+  font-weight: 600;
+}
+
+.list {
+  margin: 0;
+  padding-left: 20px;
+  color: #444444;
+
+  display: grid;
+  gap: 6px;
+
+  list-style-type: disc; /* ● точки */
+  list-style-position: outside; /* по умолчанию, можно и не писать */
+}
+
+.listItem {
+  margin: 0;
+  line-height: 1.6;
+}
+.paragraph {
+  margin: 0;
+  white-space: pre-line;
+  color: #444444;
+}
+.figure {
+  margin: 8px 0;
 }

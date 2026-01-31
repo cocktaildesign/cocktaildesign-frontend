@@ -1,21 +1,24 @@
 .button {
   background: none;
   border: none;
-
+  display: flex;
+  flex-direction: row;
+  gap: 5px;
+  align-items: center;
   padding: 0;
   margin-bottom: 12px;
-
+  color: inherit;
   font-size: 14px;
-  color: rgba(11, 16, 32, 0.8);
 
-  text-decoration: underline;
+  font-weight: 500;
   text-underline-offset: 2px;
-
+  width: fit-content;
   cursor: pointer;
+  transition: color 260ms ease;
 }
 
 .button:hover {
-  color: rgba(11, 16, 32, 1);
+  color: rgb(101, 101, 101);
 }
 
 .button:focus-visible {

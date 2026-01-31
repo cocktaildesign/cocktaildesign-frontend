@@ -43,7 +43,6 @@ const TOP_NAV_ITEMS: TopNavItem[] = [
       { label: "Контакты", href: "/about/contacts" },
     ],
   },
-  { label: "Для юрлиц", href: "/b2b" },
 ];
 
 /**

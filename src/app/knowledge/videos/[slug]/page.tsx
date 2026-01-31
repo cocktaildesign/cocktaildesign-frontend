@@ -9,6 +9,7 @@ import { getKnowledgeVideoDetailBySlug } from "../../data"; // Данные им
 import styles from "./VideoPage.module.css"; // CSS Modules: стили только для этой страницы
 import { formatRelativeFromIsoDate } from "@/lib/date/relativeDate"; // Утилита: "2 месяца назад"
 import ShareButton from "@/components/ui/share-button/ShareButton"; // UI: поделиться (client component)
+import ReadMoreText from "../read-more-text/ReadMoreText";
 
 type Params = {
   slug: string; // Динамический сегмент маршрута: /knowledge/videos/[slug]
@@ -118,10 +119,7 @@ export default async function KnowledgeVideoPage({ params }: PageProps) {
             </div>
           </header>
 
-          {/* Основной текст/описание материала */}
-          <div className={styles.body}>
-            {item.description ? <p className={styles.description}>{item.description}</p> : null}
-          </div>
+          {item.description ? <ReadMoreText text={item.description} /> : null}
         </div>
       </article>
     </PageLayout>

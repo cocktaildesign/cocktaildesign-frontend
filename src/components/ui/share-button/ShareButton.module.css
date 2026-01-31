@@ -3,22 +3,21 @@
   flex-direction: row;
   gap: 5px;
   align-items: center;
-  background: #6d6d6d;
+  background-color: #333333;
   border: 0px solid transparent;
   padding: 6px 12px;
   border-radius: 8px;
-	color: #bcbcbc;
+  color: #dddddd;
 
   font-size: 14px;
   font-weight: 600;
   cursor: pointer;
 
-  transition:
-    background 260ms ease,
+  transition: background 260ms ease;
 }
 
 .button:hover {
-  background: #7d7d7d;
+  background-color: #484848;
 }
 
 .button:focus-visible {
