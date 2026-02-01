@@ -8,11 +8,11 @@ import PageLayout from "@/components/layout/PageLayout";
 import BackButton from "@/components/ui/back-button/BackButton";
 import ShareButton from "@/components/ui/share-button/ShareButton";
 import TelegramBanner from "@/sections/telegram-cta/TelegramCta";
-import { getKnowledgeArticleDetailBySlug } from "../../data";
-import styles from "./ArticlePage.module.css";
+import { getKnowledgeMaterialDetailBySlug } from "../../data";
+import styles from "./MaterialPage.module.css";
 
 type Params = {
-  slug: string; // slug из сегмента /knowledge/articles/[slug]
+  slug: string; // slug из сегмента /knowledge/material/[slug]
 };
 
 type PageProps = {
@@ -26,7 +26,7 @@ function assertNever(value: never): never {
 export async function generateMetadata({ params }: PageProps) {
   const { slug } = await params;
 
-  const item = getKnowledgeArticleDetailBySlug(slug);
+  const item = getKnowledgeMaterialDetailBySlug(slug);
 
   if (!item) {
     return {};
@@ -35,14 +35,14 @@ export async function generateMetadata({ params }: PageProps) {
   return pageMetadata({
     title: item.title,
     description: item.description,
-    canonical: `/knowledge/articles/${item.slug}`,
+    canonical: `/knowledge/materials/${item.slug}`,
   });
 }
 
-export default async function KnowledgeArticlePage({ params }: PageProps) {
+export default async function KnowledgeMaterialPage({ params }: PageProps) {
   const { slug } = await params;
 
-  const item = getKnowledgeArticleDetailBySlug(slug);
+  const item = getKnowledgeMaterialDetailBySlug(slug);
 
   if (!item) {
     notFound();
@@ -53,7 +53,7 @@ export default async function KnowledgeArticlePage({ params }: PageProps) {
       breadcrumbsItems={[
         { href: "/", label: "Главная" },
         { href: "/knowledge", label: "Знания" },
-        { href: `/knowledge/articles/${item.slug}`, label: item.title },
+        { href: `/knowledge/materials/${item.slug}`, label: item.title },
       ]}>
       <article className={styles.detailPage}>
         <div className={styles.up}>
@@ -72,10 +72,10 @@ export default async function KnowledgeArticlePage({ params }: PageProps) {
 
           <div className={styles.metaRow}>
             <div className={styles.actions}>
-              <p className={styles.detailMeta}>{item.readTime}</p>
+              <p className={styles.detailMeta}>{item.label}</p>
 
               <ShareButton
-                url={`${process.env.NEXT_PUBLIC_SITE_URL}/knowledge/articles/${item.slug}`}
+                url={`${process.env.NEXT_PUBLIC_SITE_URL}/knowledge/materials/${item.slug}`}
                 title={item.title}
               />
             </div>

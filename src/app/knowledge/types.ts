@@ -66,10 +66,10 @@ export type KnowledgeMaterialPreview = KnowledgePreviewBase & {
    Блоки контента статьи
 ============================================================ */
 
-/** Контент статьи хранится блоками */
-
+/** Контент статьи и материалосв хранится блоками */
 export type KnowledgeArticleBlock =
   | {
+      id: string; // уникальный идентификатор блока внутри статьи
       /** Заголовок секции внутри статьи */
       type: "heading";
       /** Уровень заголовка (h2 | h3) */
@@ -77,30 +77,41 @@ export type KnowledgeArticleBlock =
       content: string;
     }
   | {
+      id: string;
       /** Абзац текста (может содержать переносы строк через \n) */
       type: "text";
       content: string;
     }
   | {
+      id: string;
       /** Изображение внутри статьи */
       type: "image";
       src: string;
 
       /** alt для доступности (если нет — считаем изображение декоративным) */
       alt?: string;
-
       /** Подпись под изображением (рендерим через figcaption) */
       caption?: string;
     }
   | {
+      id: string;
       /** Список (для ингредиентов/шагов/чеклистов) */
       type: "list";
-
       /** Элементы списка — без разметки, просто строки */
       items: string[];
-
       /** true = <ol>, false/undefined = <ul> */
       ordered?: boolean;
+    }
+  | {
+      id: string;
+      /** Ссылка/ресурс (будет использоваться в material, но тип блоков общий) */
+      type: "link";
+      /** Название ссылки (что это за ресурс) */
+      title: string;
+      /** Адрес (лучше абсолютный: https://...) */
+      url: string;
+      /** Короткое описание (опционально) */
+      description?: string;
     };
 
 /* ============================================================
@@ -122,6 +133,12 @@ export type KnowledgeArticleDetail = KnowledgeArticlePreview & {
   blocks: KnowledgeArticleBlock[];
 };
 
+/** Материал — детальная страница */
+export type KnowledgeMaterialDetail = KnowledgeMaterialPreview & {
+  /** Полный контент материала блоками (как у статьи) */
+  blocks: KnowledgeArticleBlock[];
+};
+
 /* ============================================================
    Union-типы
 ============================================================ */
@@ -132,4 +149,4 @@ export type KnowledgeItemPreview = KnowledgeVideoPreview | KnowledgeArticlePrevi
 /**
  * Детальные данные.
  */
-export type KnowledgeItemDetail = KnowledgeVideoDetail | KnowledgeArticleDetail;
+export type KnowledgeItemDetail = KnowledgeVideoDetail | KnowledgeArticleDetail | KnowledgeMaterialDetail;

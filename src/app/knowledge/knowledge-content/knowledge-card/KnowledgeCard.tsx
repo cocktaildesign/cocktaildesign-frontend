@@ -14,10 +14,10 @@ type KnowledgeCardProps = {
 };
 
 // Единая точка правды: какой URL-сегмент соответствует формату.
-const formatToSegment: Record<KnowledgeFormat, "videos" | "articles"> = {
+const formatToSegment: Record<KnowledgeFormat, "videos" | "articles" | "materials"> = {
   video: "videos",
   article: "articles",
-  material: "articles",
+  material: "materials",
 };
 
 // Строим URL детальной страницы элемента

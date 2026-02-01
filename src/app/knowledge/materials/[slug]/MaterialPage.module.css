@@ -1,0 +1,192 @@
+.up {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+/* ===== Layout ===== */
+
+.detailPage {
+  max-width: 870px;
+  margin: 0 auto;
+  margin-bottom: 80px;
+}
+
+.detailHeader {
+  display: grid;
+  gap: 30px;
+  margin-bottom: 16px;
+
+  font-family: var(--font-display);
+  color: var(--color-accent-contrast);
+
+  margin: 20px 0 20px 0;
+  border-radius: 12px;
+}
+
+.detailTitle {
+  margin: 0;
+  font-size: 60px;
+  line-height: 1.2;
+}
+
+.metaRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+  font-size: 14px;
+}
+
+.actions {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 100%;
+  align-items: center;
+  gap: 12px;
+}
+
+.detailMeta {
+  margin: 0;
+  font-size: 14px;
+}
+
+/* ===== Content ===== */
+
+.detailBody {
+  display: grid;
+  gap: 16px;
+
+  font-size: 16px;
+  line-height: 1.7;
+
+  color: var(--color-text-primary);
+}
+
+/* ✅ чтобы \n сохраняли переносы */
+.paragraph {
+  margin: 0;
+  white-space: pre-line;
+  color: #444444;
+}
+
+/* ===== Headings ===== */
+
+.heading2 {
+  margin: 28px 0 8px;
+  font-size: 30px;
+  font-weight: 600;
+  line-height: 1.25;
+  color: #343434;
+}
+
+.heading3 {
+  margin: 10px 0 6px;
+  font-size: 24px;
+  font-weight: 600;
+  line-height: 1.3;
+  color: #343434;
+}
+
+/* ===== Lists ===== */
+
+.list {
+  margin: 0;
+  padding-left: 20px;
+
+  display: grid;
+  gap: 6px;
+
+  color: #444444;
+
+  list-style-type: disc;
+  list-style-position: outside;
+}
+
+.listItem {
+  margin: 0;
+  line-height: 1.6;
+}
+
+/* ===== Images ===== */
+
+.figure {
+  margin: 8px 0;
+}
+
+.image {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 12px;
+}
+
+.caption {
+  margin-top: 4px;
+  font-size: 12px;
+  color: rgba(0, 0, 0, 0.7);
+  text-align: center;
+}
+
+/* ===== Link block (material) ===== */
+
+.linkBlock {
+  border-radius: 12px;
+  padding: 14px 16px;
+  background: rgba(0, 0, 0, 0.03);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+
+  display: grid;
+  gap: 6px;
+}
+
+.link {
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 18px;
+  line-height: 1.3;
+
+  color: #343434;
+  text-decoration: none;
+
+  /* если заголовок длинный */
+  word-break: break-word;
+}
+
+.link:hover {
+  text-decoration: underline;
+}
+
+.link:focus-visible {
+  outline: 2px solid rgba(0, 0, 0, 0.35);
+  outline-offset: 2px;
+  border-radius: 10px;
+}
+
+.linkDescription {
+  margin: 0;
+  color: #444444;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+/* Небольшая адаптация для мобилок */
+@media (max-width: 640px) {
+  .detailTitle {
+    font-size: 40px;
+  }
+
+  .heading2 {
+    font-size: 24px;
+  }
+
+  .heading3 {
+    font-size: 20px;
+  }
+
+  .link {
+    font-size: 16px;
+  }
+}
