@@ -156,7 +156,7 @@
 .officeImage {
   position: relative;
   width: 100%;
-  height: 240px;
+  height: 100%;
   overflow: hidden;
   border-radius: 12px;
 }
