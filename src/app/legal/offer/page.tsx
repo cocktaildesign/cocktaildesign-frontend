@@ -2,6 +2,7 @@ import styles from "./Offer.module.css";
 import PageLayout from "@/components/layout/PageLayout";
 import { pageMetadata } from "@/lib/seo/metadata";
 import Image from "next/image";
+import BackButton from "@/components/ui/back-button/BackButton";
 
 export const metadata = pageMetadata({
   title: "Публичная оферта",
@@ -13,6 +14,8 @@ export default function OfferPage() {
   return (
     <PageLayout>
       <section className={styles.section}>
+        <BackButton />
+
         <h1 className={styles.sectionTitle}>Публичная оферта</h1>
 
         <div className={styles.card}>

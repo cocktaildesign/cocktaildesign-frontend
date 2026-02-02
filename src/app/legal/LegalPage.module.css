@@ -1,11 +1,10 @@
 .legalSection {
-  padding: 20px 0;
   min-height: 70vh;
 }
 
 .legalTitle {
   margin: 0 0 24px;
-  font-size: 36px;
+  font-size: 24px;
 }
 
 /* Grid */

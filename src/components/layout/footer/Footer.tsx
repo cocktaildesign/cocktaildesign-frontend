@@ -44,14 +44,16 @@ export const footerCategories: FooterLink[] = [
 
 export const footerCompanyLinks: FooterLink[] = [
   { label: "О нас", href: "/about" },
-  { label: "Контакты", href: "/contacts" },
   { label: "Отзывы", href: "/reviews" },
   { label: "Реквизиты", href: "/legal/requisites" },
 ];
 
 export const footerPromosLinks: FooterLink[] = [{ label: "Наши акции", href: "/promos" }];
 
-export const footerSupportLinks: FooterLink[] = [{ label: "Обратная связь", href: "/support/feedback" }];
+export const footerSupportLinks: FooterLink[] = [
+  { label: "Обратная связь", href: "/support/feedback" },
+  { label: "Контакты", href: "/about/contacts" },
+];
 
 export const footerDeliveryPaymentLinks: FooterLink[] = [
   { label: "Способы оплаты", href: "/payment" },

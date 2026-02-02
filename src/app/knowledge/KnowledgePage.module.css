@@ -11,9 +11,16 @@
   gap: 8px;
 }
 
+.pageHeaderTitle {
+  font-size: 36px;
+  font-weight: 600;
+}
+
 .pageHeaderDescription {
   width: 700px;
   font-size: 14px;
+  text-align: end;
+  text-wrap: balance;
 }
 
 .line {

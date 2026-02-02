@@ -42,7 +42,7 @@ export default async function KnowledgePage({ searchParams }: KnowledgePageProps
     <PageLayout>
       <section className={styles.knowledgePage}>
         <div className={styles.pageHeader}>
-          <h1>База знаний</h1>
+          <h1 className={styles.pageHeaderTitle}>База знаний</h1>
 
           <p className={styles.pageHeaderDescription}>
             В этом блоке мы делимся своими лекциями, исследованиями и наработками. Здесь вы сможете найти информацию по

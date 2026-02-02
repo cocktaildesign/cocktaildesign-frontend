@@ -2,6 +2,7 @@ import styles from "./Returns.module.css";
 import PageLayout from "@/components/layout/PageLayout";
 import { pageMetadata } from "@/lib/seo/metadata";
 import Image from "next/image";
+import BackButton from "@/components/ui/back-button/BackButton";
 
 export const metadata = pageMetadata({
   title: "Условия возврата товара",
@@ -13,6 +14,8 @@ export default function ReturnsPage() {
   return (
     <PageLayout>
       <section className={styles.section}>
+        <BackButton />
+
         <h1 className={styles.sectionTitle}>Условия возврата товара</h1>
 
         <div className={styles.card}>
