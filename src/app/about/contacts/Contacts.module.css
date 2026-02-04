@@ -7,9 +7,9 @@
 }
 
 .contactsPageTitle {
-  font-size: 36px;
-  font-weight: 600;
-  margin-bottom: 24px;
+  margin: 0 0 24px;
+  font-size: var(--text-2xl);
+  font-weight: 500;
 }
 
 .contactGrid {
@@ -19,7 +19,7 @@
 }
 
 .contactSection {
-  background: #f5f5f5;
+  background: var(--color-light-soft);
   border-radius: 12px;
   padding: 24px;
 }
@@ -35,26 +35,26 @@
 
 .itemTitle {
   font-size: 16px;
-  font-weight: 700;
+  font-weight: 500;
   text-wrap: balance;
   margin-bottom: 10px;
 }
 
 .itemLink {
-  font-size: 16px;
+  font-size: 14px;
 }
 
 .itemText {
-  font-size: 16px;
+  font-size: 14px;
 }
 
 .feedbackButton {
-  background-color: var(--color-accent);
+  background-color: var(--color-dark-blue);
   padding: 12px 20px;
   border-radius: 12px;
   font-size: 14px;
-  font-weight: 600;
-  color: var(--color-accent-contrast);
+  font-weight: 500;
+  color: var(--color-white);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -65,7 +65,7 @@
     color 260ms ease;
 }
 .feedbackButton:hover {
-  background-color: #6baba2;
+  background-color: var(--color-dark-blue-hover);
 }
 
 .contactRequisites {
@@ -76,9 +76,9 @@
 
 .requisitesOwner {
   margin-bottom: 10px;
-  font-size: 14px;
-  color: var(--color-text);
-  font-weight: 400;
+  font-size: var(--text-sm);
+  color: var(--color-black);
+  font-weight: 500;
 }
 
 .requisitesList {
@@ -91,12 +91,13 @@
 
 .requisitesTerm {
   font-weight: 500;
-  color: var(--color-text-muted, rgba(0, 0, 0, 0.55));
+  color: var(--color-black);
   font-size: 14px;
 }
 
 .requisitesDesc {
-  color: var(--color-text, rgba(0, 0, 0, 0.82));
+  color: var(--color-black);
+  font-weight: 400;
   word-break: break-word;
   font-size: 14px;
   text-wrap: balance;
@@ -170,7 +171,7 @@
   min-height: 100px;
   overflow: hidden;
   border-radius: 12px;
-  background: #e9eef5;
+  background: var(--color-light);
 }
 
 .mapIframe {

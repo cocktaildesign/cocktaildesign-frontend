@@ -4,12 +4,11 @@
   ========================= */
   --container-max: 1360px;
   --container-pad: 24px;
-
   /* =========================
      Typography
   ========================= */
-  --font-sans: Manrope, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Noto Sans", sans-serif;
-  --font-display: Jura, var(--font-sans);
+  --font-sans: Montserrat, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Noto Sans", sans-serif;
+  --font-display: "Hikasami Sans", var(--font-sans);
 
   --text-xs: 12px;
   --text-sm: 14px;
@@ -22,21 +21,26 @@
   --lh-normal: 1.4;
   --lh-relaxed: 1.6;
 
-  --color-bg: #ffffff;
-  /* Основной фон сайта (кристально белый) */
+  --color-black: #0b0f14;
+  /* Почти чёрный с холодным подтоном*/
+  --color-dark-blue: #0f172a;
+  --color-dark-blue-hover: #273449;
 
-  --color-text: #0f172a;
-  /* Основной текст (заголовки / важный текст) */
-
-  --color-text-muted: #334155;
-  /* Вторичный текст: подписи, описания, второстепенная инфа */
-
-  --color-border: #94a3b8;
-  /* Границы/разделители: линии, карточки, input */
-
-  --color-border-strong: #334155;
-  /* Усиленный бордер: активные состояния, hover, таблицы */
-
+  /* Тёмно-синий (navy/slate).*/
+  --color-dark-blue-soft: #1c2230;
+  /* Мягкий тёмно-синий. */
+  --color-gray: #3a3f4b;
+  --color-gray-hover: #273449;
+  /* Нейтральный тёмный серый 
+	вторичынй текст, хлебные крошки*/
+  --color-gray-light: #bfc7d1;
+  /* Светло-серый холодный ближе к синему. */
+  --color-light: #e0e7ef;
+  /* Очень светлый холодный серый ближе к синему (off-white). */
+  --color-light-soft: #f6f7f8;
+  /* Почти белый (серый) мягкий оттенок. */
+  --color-white: #fff;
+  /* белый оттенок. */
   /* =========================
 		z-index
   ========================= */
@@ -44,35 +48,15 @@
   --z-search-panel: 9010;
   --z-modal: 10000;
   /* =========================
-     Accent — Mint / Teal
-  ========================= */
-
-  --color-accent: #9ae1d8;
-  /* Главный акцент: CTA-кнопки, активные элементы, подсветки */
-
-  --color-accent-strong: #3b7f77;
-  /* Тёмный акцент: текст/иконки на бирюзовом, hover/pressed */
-
-  --color-accent-contrast: #0f172a;
-  /* Цвет текста на акцентной кнопке (контрастный) */
-
-  /* =========================
      Radius
   ========================= */
   --radius-sm: 10px;
   --radius: 12px;
   --radius-lg: 20px;
-
-  /* =========================
-     Shadow
-  ========================= */
-  --shadow-sm: 0 1px 0 rgba(0, 0, 0, 0.35);
-  --shadow: 0 12px 30px rgba(0, 0, 0, 0.35);
-
   /* =========================
      Motion
   ========================= */
   --ease: cubic-bezier(0.2, 0.8, 0.2, 1);
-  --dur-fast: 140ms;
-  --dur: 220ms;
+  --dur-fast: 160ms;
+  --dur: 300ms;
 }

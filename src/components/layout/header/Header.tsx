@@ -175,10 +175,20 @@ export default function Header() {
 
               <div className={styles.infoDropdown}>
                 <div className={styles.infoDropdownContent}>
-                  <p className={styles.infoDropdownTitle}>Звонок бесплатный 07:00 – 22:00</p>
-                  <p className={styles.infoDropdownSubtitle}>Дополнительный телефон</p>
-                  <a href="tel:+74956471000" className={styles.infoDropdownPhone}>
-                    +7 (495) 647-10-00
+                  <p className={styles.infoDropdownText}>Звонок бесплатный</p>
+
+                  <ul className={styles.infoDropdownSchedule}>
+                    <li>
+                      Пн–Пт: <time>10:00–18:00</time>
+                    </li>
+                    <li>
+                      Сб–Вс: <time>10:00–17:00</time>
+                    </li>
+                  </ul>
+
+                  <p className={styles.infoDropdownTitle}>Email</p>
+                  <a href="mailto:cocktaildesign@yandex.ru" className={styles.infoDropdownEmail}>
+                    cocktaildesign@yandex.ru
                   </a>
                 </div>
               </div>
@@ -186,7 +196,7 @@ export default function Header() {
 
             {/* Основной телефон */}
             <a className={`${styles.linkBase} ${styles.phoneLink}`} href="tel:+78002221100">
-              8 800 222-11-00
+              8 (995) 622-62-02
             </a>
           </address>
         </div>

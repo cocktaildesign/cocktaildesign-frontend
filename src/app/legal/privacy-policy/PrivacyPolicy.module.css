@@ -1,11 +1,13 @@
 .section {
   margin: 0 auto;
   max-width: 870px;
+  margin-bottom: 60px;
 }
 
 .sectionTitle {
-  margin: 0 0 16px;
-  font-size: 28px;
+  margin: 20px 0 16px;
+  font-size: 24px;
+  font-weight: 450;
 }
 
 .card {

@@ -10,9 +10,9 @@
 
 /* ===== Разделы ===== */
 .categoryCard {
-  background-color: #f7f8fa;
+  background-color: var(--color-light-soft);
   padding: 20px;
-  border-radius: 12px;
+  border-radius: var(--radius);
 }
 
 .sectionHeader {
@@ -23,31 +23,31 @@
 }
 
 .sectionHeaderTitle {
-  font-size: 22px;
-  font-weight: 600;
+  font-size: var(--text-lg);
+  font-weight: 500;
 }
 
 .resetLink {
   font-size: 12px;
-  color: #606060;
+  color: var(--color-gray);
   text-decoration: underline;
-  transition: color 160ms ease;
+  transition: color var(--dur) var(--ease);
 }
 
 .resetLink:hover {
-  color: var(--color-text);
+  color: var(--color-black);
 }
 
 .divider {
   width: 100%;
   border: none;
   margin: 10px 0 5px 0;
-  border: 0.1px dashed #dedede;
+  border: 0.5px dashed var(--color-light);
 }
 
 .sectionLabel {
-  color: #717171;
-  font-size: 12px;
+  color: var(--color-gray);
+  font-size: var(--text-xs);
   margin-bottom: 10px;
   display: block;
 }
@@ -67,24 +67,29 @@
 .categoryLink {
   display: inline-block;
   text-decoration: none;
-  color: rgba(11, 16, 32, 0.7);
-  transition: color 160ms ease;
+  color: var(--color-gray);
+  transition: color var(--dur) var(--ease);
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 16px;
+  color: var(--color-black);
 }
 
 .categoryLink:hover {
-  color: rgba(11, 16, 32, 1);
+  color: var(--color-gray);
 }
 
 .categoryLinkActive {
   color: var(--color-text);
-  font-weight: 600;
+  font-weight: 500;
+  background-color: var(--color-light);
 }
 
 /* ===== Фильтры (форматы) ===== */
 .filtersCard {
-  background-color: #f7f8fa;
+  background-color: var(--color-light-soft);
   padding: 20px;
-  border-radius: 12px;
+  border-radius: var(--radius);
 }
 
 .formatNav {
@@ -103,9 +108,9 @@
 .formatItem {
   margin: 0;
   padding: 3px 15px;
-  border: 1px solid #808080;
+  border: 1px solid var(--color-light);
   border-radius: 6px;
-  font-size: 14px;
+  font-size: 16px;
 
   transition:
     border-color 160ms ease,
@@ -113,33 +118,34 @@
 }
 
 .formatItem:hover {
-  border-color: var(--color-accent-contrast);
+  border-color: var(--color-gray-light);
 }
 
 .formatItemActive {
-  border: 1px solid var(--color-accent-contrast);
-  background-color: var(--color-accent-contrast);
+  border: 1px solid var(--color-light);
+  background-color: var(--color-light);
 }
 
 .formatItemActive:hover {
-  border-color: var(--color-accent-contrast);
+  border-color: var(--color-light);
 }
 
 .formatLink {
-  color: #808080;
-  transition: color 160ms ease;
+  color: var(--color-black);
+  transition: color var(--dur) var(--ease);
 }
 
 .formatLink:hover {
-  color: var(--color-border-strong);
+  color: var(--color-black);
 }
 
 .formatLinkActive {
-  color: var(--color-bg);
+  color: var(--color-black);
+  font-weight: 500;
 }
 
 .formatItemActive .formatLink:hover {
-  color: var(--color-bg);
+  color: var(--color-black);
 }
 
 /* ===== A11y утилиты ===== */

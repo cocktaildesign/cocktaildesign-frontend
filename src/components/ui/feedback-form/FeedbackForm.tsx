@@ -34,8 +34,7 @@ export default function FeedbackForm(props: FeedbackFormProps) {
   return (
     <form className={styles.form} onSubmit={handleSubmit}>
       <header className={styles.header}>
-        <h2 className={styles.title}>Поделитесь мнением</h2>
-        <p className={styles.subtitle}>Это помогает сделать наш сайт лучше.</p>
+        <h2 className={styles.title}>Помогите нам стать лучше</h2>
       </header>
 
       <label className={styles.field}>

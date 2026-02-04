@@ -12,7 +12,7 @@ html,
 body {
   height: 100%;
   font-family: var(--font-sans);
-  background-color: var(--color-bg);
+  background-color: var(--color-white);
   color: var(--color-text);
   margin: 0;
   text-rendering: optimizeLegibility;
@@ -75,8 +75,9 @@ p {
 
 /* Focus */
 :focus-visible {
-  outline: 2px solid var(--color-accent);
+  outline: 1px solid #67b7fd;
   outline-offset: 2px;
+  border-radius: var(--radius-sm);
 }
 
 /* Motion accessibility */

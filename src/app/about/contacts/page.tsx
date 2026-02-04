@@ -35,11 +35,6 @@ export default function Contacts() {
               </a>
             </div>
 
-            <div className={styles.infoItem}>
-              <h2 className={styles.itemTitle}>Прием звонков</h2>
-              <p className={styles.itemText}>Пн – вс: с 07:00 – 22:00</p>
-            </div>
-
             <Link href="/support/feedback" className={styles.feedbackButton}>
               Обратная связь
             </Link>

@@ -22,31 +22,31 @@ const CARDS: LegalCard[] = [
     href: "/legal/requisites",
     title: "Реквизиты",
     description: "Банковские реквизиты и данные продавца для оплаты и договоров.",
-    imageSrc: "/images/legal/requisites.webp",
+    imageSrc: "/images/legal/requisites.png",
   },
   {
     href: "/legal/privacy-policy",
     title: "Политика конфиденциальности",
     description: "Какие данные мы собираем, как используем и как храним.",
-    imageSrc: "/images/legal/privacy-policy.webp",
+    imageSrc: "/images/legal/privacy-policy.png",
   },
   {
     href: "/legal/returns",
     title: "Условия возврата товара",
     description: "Порядок возврата и обмена, сроки, условия и исключения.",
-    imageSrc: "/images/legal/returns.webp",
+    imageSrc: "/images/legal/returns.png",
   },
   {
     href: "/legal/offer",
     title: "Публичная оферта",
     description: "Условия продажи, оплаты, доставки и оформления заказов.",
-    imageSrc: "/images/legal/offer.webp",
+    imageSrc: "/images/legal/offer.png",
   },
   {
     href: "/legal/terms",
     title: "Пользовательское соглашение",
     description: "Правила пользования сайтом и ответственность сторон.",
-    imageSrc: "/images/legal/terms.webp",
+    imageSrc: "/images/legal/terms.png",
   },
 ];
 

@@ -1,6 +1,6 @@
 .feedbackBar {
   height: 60px;
-  background: #94a3b8;
+  background: #e0e7ef;
   display: flex;
   gap: 8px;
   align-items: center;
@@ -34,7 +34,7 @@
 }
 
 .footerSection {
-  background-color: var(--color-accent-contrast);
+  background-color: #0f172a;
   padding: 40px 0;
 }
 
@@ -78,7 +78,7 @@
 }
 
 .footerLink:hover {
-  color: var(--color-accent);
+  color: #e0e7ef;
 }
 
 /* ==========================================================================
@@ -106,7 +106,7 @@
   transition: color 160ms ease;
 }
 .footerRatingContent:hover .footerRatingContentText {
-  color: var(--color-accent);
+  color: #e0e7ef;
 }
 
 .starRow {
@@ -177,7 +177,7 @@
 }
 
 .socialItem:hover .socialLink {
-  color: var(--color-accent);
+  color: #e0e7ef;
 }
 
 .tgCard {

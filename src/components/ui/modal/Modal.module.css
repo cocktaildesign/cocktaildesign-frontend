@@ -15,7 +15,7 @@
 .content {
   position: relative;
 
-  width: min(720px, 100%);
+  width: min(650px, 100%);
   background: #fff;
   border-radius: 12px;
   padding: 40px 44px 32px;

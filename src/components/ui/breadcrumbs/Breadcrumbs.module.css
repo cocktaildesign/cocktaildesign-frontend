@@ -21,12 +21,12 @@
 }
 
 .link {
-  color: var(--color-border);
+  color: var(--color-gray);
   text-decoration: none;
 }
 
 .link:hover {
-  color: var(--color-accent-contrast);
+  color: var(--color-black);
 }
 
 .link:focus-visible {
@@ -36,11 +36,10 @@
 }
 
 .current {
-  color: var(--color-accent-contrast);
+  color: var(--color-black);
 }
 
 .separator {
   padding: 0 7px;
-  color: var(--color-border-strong);
-
+  color: var(--color-gray);
 }

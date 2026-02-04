@@ -4,7 +4,8 @@
 
 .legalTitle {
   margin: 0 0 24px;
-  font-size: 24px;
+  font-size: var(--text-2xl);
+  font-weight: 500;
 }
 
 /* Grid */
@@ -18,34 +19,35 @@
 .legalCard {
   text-decoration: none;
   color: inherit;
-  border-radius: 12px;
+  border-radius: var(--radius);
 }
 
 .legalCardMedia {
   position: relative;
   width: 100%;
   aspect-ratio: 1 / 1;
-  border-radius: 12px;
+  border-radius: var(--radius);
   overflow: hidden;
   pointer-events: none;
-  background-color: #f9f9f9;
-  border: 1px solid rgb(229, 229, 229);
+  background-color: var(--color-light-soft);
+  border: 1px solid var(--color-light);
+
   transition:
-    box-shadow 160ms ease,
-    transform 160ms ease,
-    border-color 160ms ease;
+    box-shadow var(--dur-fast) var(--ease),
+    transform var(--dur-fast) var(--ease),
+    border-color var(--dur-fast) var(--ease);
 }
 
 .legalCard:hover .legalCardMedia {
   transform: translateY(-1px);
-  box-shadow: 0 14px 40px rgba(0, 0, 0, 0.1);
-  border: 1px solid var(--color-border);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+  border: 1px solid var(--color-gray-light);
 }
 
 .legalCard:focus-visible .legalCardMedia {
   border-color: transparent;
-  transform: translateY(-2px);
-  box-shadow: 0 14px 40px rgba(0, 0, 0, 0.12);
+  transform: translateY(-1px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
 }
 
 .legalCard:focus-visible {
@@ -54,29 +56,25 @@
 
 .legalCardImage {
   object-fit: cover;
-  padding: 0;
+  padding: 40px;
 }
 
 .legalCardBody {
-  padding: 16px 5px 5px;
+  padding: 16px 5px;
 }
 
 .legalCardTitle {
   margin: 0 0 8px;
-  font-size: 18px;
+  font-size: 16px;
+  font-weight: 500;
   line-height: 1.25;
-  color: rgba(0, 0, 0, 0.85);
+  width: 95%;
 }
 
 .legalCardDesc {
   margin: 0;
   font-size: 14px;
   line-height: 1.35;
-  color: rgba(0, 0, 0, 0.6);
-  max-width: 36ch;
-}
-
-/* Hover / focus */
-.legalCard:hover .legalCardTitle {
-  color: rgba(0, 0, 0, 0.95);
+  color: var(--color-gray);
+  text-wrap: balance;
 }

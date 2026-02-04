@@ -1,11 +1,13 @@
 .section {
   margin: 0 auto;
   max-width: 870px;
+  margin-bottom: 60px;
 }
 
 .sectionTitle {
-  margin: 0 0 16px;
-  font-size: 28px;
+  margin: 20px 0 16px;
+  font-size: 24px;
+  font-weight: 450;
 }
 
 /* Карточка  */
@@ -33,6 +35,8 @@
 .title {
   margin: 0 0 14px;
   font-size: 16px;
+  font-weight: 500;
+  text-wrap: balance;
   color: var(--color-text);
 }
 
@@ -45,13 +49,14 @@
 
 .term {
   font-weight: 500;
-  color: var(--color-text-muted, rgba(0, 0, 0, 0.55));
+  color: var(--color-text);
   font-size: 16px;
 }
 
 .desc {
-  color: var(--color-text, rgba(0, 0, 0, 0.82));
+  color: var(--color-text);
   word-break: break-word;
+  font-weight: 300;
   font-size: 16px;
 
   display: flex;

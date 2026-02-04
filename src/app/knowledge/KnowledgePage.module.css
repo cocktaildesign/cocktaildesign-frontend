@@ -12,13 +12,13 @@
 }
 
 .pageHeaderTitle {
-  font-size: 36px;
-  font-weight: 600;
+  font-size: var(--text-2xl);
+  font-weight: 450;
 }
 
 .pageHeaderDescription {
   width: 700px;
-  font-size: 14px;
+  font-size: var(--text-sm);
   text-align: end;
   text-wrap: balance;
 }
@@ -26,7 +26,7 @@
 .line {
   width: 100%;
   border: none;
-  border-top: 1px dashed #dedede;
+  border-top: 1px dashed var(--color-light);
   margin: 20px 0;
 }
 

@@ -5,13 +5,13 @@ import GridOverlay from "@/components/layout/GridOverlay";
 import ScrollToTopInstant from "@/components/layout/ScrollToTopInstant";
 
 export { rootMetadata as metadata } from "@/lib/seo/metadata";
-import { jura, manrope } from "@/lib/fonts";
+import { hikasamiSans, montserrat } from "@/lib/fonts";
 
 import "./globals.css";
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="ru" className={`${manrope.variable} ${jura.variable}`}>
+    <html lang="ru" className={`${montserrat.variable} ${hikasamiSans.variable}`}>
       <body>
         <ScrollToTopInstant />
         <Header />

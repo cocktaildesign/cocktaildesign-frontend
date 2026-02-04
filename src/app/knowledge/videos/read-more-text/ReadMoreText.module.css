@@ -1,17 +1,16 @@
 .container {
   display: grid;
-
   gap: 8px;
-  background-color: #333333;
+  background-color: var(--color-gray);
   margin: 0 24px;
   padding: 12px;
-  border-radius: 12px;
+  border-radius: var(--radius);
 }
 
 .text {
   margin: 0;
   white-space: pre-line; /* сохраняет \n как перенос строки */
-  font-size: 14px;
+  font-size: var(--text-sm);
 }
 
 /* Свернуто: 4 строки */

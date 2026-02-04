@@ -1,7 +1,7 @@
 .banner {
-  border: 1px solid #dfdfdf;
+  border: 1px solid var(--color-gray-light);
   padding: 50px 220px;
-  border-radius: 12px;
+  border-radius: var(--radius);
   display: flex;
   flex-direction: row;
   gap: 20px;
@@ -16,24 +16,34 @@
 
 .title {
   font-size: 40px;
+  font-family: var(--font-display);
+  font-weight: 600;
   text-wrap: balance;
   line-height: 1.2;
 }
 
 .description {
-  font-size: 14px;
+  font-size: var(--text-sm);
   text-wrap: balance;
+  color: var(--color-gray);
 }
 
 .ctaButton {
   display: flex;
   flex-direction: row;
+  align-items: center;
   gap: 10px;
   background-color: #4c8ce2;
-  color: var(--color-bg);
+  color: var(--color-white);
   width: fit-content;
   padding: 10px 30px;
-  border-radius: 22px;
+  border-radius: var(--radius);
+  font-size: var(--text-base);
+  transition: background-color var(--dur) var(--ease);
+}
+
+.ctaButton:hover {
+  background-color: #3b7ad1;
 }
 
 .qrBlock {
@@ -41,7 +51,8 @@
   flex-direction: column;
   align-items: center;
   gap: 10px;
-  background-color: var(--color-bg);
+  background-color: var(--color-white);
+  border: 1px solid var(--color-gray-light);
   padding: 15px;
   border-radius: 12px;
 }
@@ -57,5 +68,6 @@
 }
 
 .qrHint {
-  font-size: 13px;
+  font-size: 11px;
+  color: var(--color-gray);
 }
