@@ -69,7 +69,7 @@ export default function KnowledgeFilters() {
         </div>
 
         <hr className={styles.divider} />
-        <span className={styles.sectionLabel}>По теме</span>
+        <span className={styles.sectionLabel}>Тематика материалов</span>
 
         <nav aria-label="Разделы знаний">
           <ul className={styles.categoryList}>
@@ -112,7 +112,7 @@ export default function KnowledgeFilters() {
         </div>
 
         <hr className={styles.divider} />
-        <span className={styles.sectionLabel}>Фильтры</span>
+        <span className={styles.sectionLabel}>Тип контента</span>
 
         <nav className={styles.formatNav} aria-label="Форматы материалов">
           <ul className={styles.formatList}>

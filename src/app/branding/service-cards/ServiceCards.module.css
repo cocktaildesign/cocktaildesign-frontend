@@ -1,0 +1,76 @@
+.servicesGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.serviceCard {
+  position: relative;
+  padding: 30px;
+  min-height: 275px;
+  border-radius: 12px;
+  cursor: pointer;
+  display: flex;
+  border: none;
+}
+
+.serviceCardContent {
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
+  height: 100%;
+}
+
+.servicesGridTitle {
+  align-self: flex-start;
+  text-align: start;
+  font-size: 28px;
+  font-weight: 500;
+  font-family: var(--font-display);
+  width: 50%;
+}
+
+.servicesGridDescription {
+  align-self: flex-end;
+  text-align: left;
+  max-width: 70%;
+  font-size: 14px;
+  color: var(--color-gray);
+}
+
+.serviceCardLaser {
+  background: linear-gradient(82.1deg, #f6f7f8 4.77%, #e0e7ef 96.54%);
+}
+
+.serviceCardCustom {
+  background: linear-gradient(180deg, #f6f7f8 0%, #e0e7ef 100%);
+}
+
+.cardOverlay {
+  position: absolute; /* позиционируем поверх карточки */
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%); /* центрируем по обеим осям */
+  height: 100%;
+  width: 100%;
+  font-size: 16px;
+  font-family: var(--font-display);
+  font-weight: 400;
+  color: var(--color-gray);
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--dur) var(--ease);
+
+  background: rgba(229, 231, 237, 0.1);
+  backdrop-filter: blur(10px);
+}
+
+.serviceCard:hover .cardOverlay {
+  opacity: 1;
+  border: 1px solid var(--color-gray-light);
+}

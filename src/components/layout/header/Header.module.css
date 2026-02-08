@@ -3,15 +3,19 @@
    Обёртка хедера. Статичная версия: без fixed/sticky и без spacer.
    ========================================================================== */
 .header {
-  position: sticky; /* обычный поток документа */
-  top: 0px;
+  position: sticky;
+  top: 0;
   z-index: 9000;
   width: 100%;
-  background-color: var(--color-white);
-  border-bottom: 1px solid var(--color-light);
+
+  background: rgba(255, 255, 255, 0.45);
+  backdrop-filter: blur(25px);
+
+  will-change: transform;
+  transform: translateZ(0);
 }
+
 /* ==========================================================================
-   COMMON LINKS
    Общие стили для ссылок и интерактивных элементов внутри хедера.
    ========================================================================== */
 .linkBase {
@@ -362,15 +366,15 @@
   flex: 0 0 auto;
   display: flex;
   align-items: center;
-  font-weight: 450;
+  font-weight: 650;
   text-decoration: none;
   color: var(--color-light-soft);
   background-color: var(--color-dark-blue);
   border-radius: var(--radius);
-  padding: 5px 16px;
+  padding: 8px 18px;
   font-size: var(--text-xs);
   cursor: pointer;
-  transition: background-color 160ms ease;
+  transition: background-color var(--dur) var(--ease);
 }
 
 .sale:hover {

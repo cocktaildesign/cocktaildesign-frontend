@@ -17,6 +17,7 @@ const LABELS: Record<string, string> = {
   "/support": "Сервис и поддержка",
   "/support/feedback": "Обратная связь",
   "/knowledge": "База знаний",
+  "/branding": "Брендинг барного инвентаря и аксессуаров",
 };
 
 type Crumb = { href: string; label: string };
