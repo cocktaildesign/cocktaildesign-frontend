@@ -216,7 +216,7 @@ export default function Header() {
             ))}
           </ul>
 
-          <Link className={styles.sale} href="/sale">
+          <Link className={styles.sale} href="/promotions">
             % Акции
           </Link>
         </nav>

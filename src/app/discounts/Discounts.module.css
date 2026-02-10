@@ -1,0 +1,16 @@
+.discountsSection {
+  min-height: 70vh;
+}
+
+.discountsSectionTitle {
+  margin: 0 0 24px;
+  font-size: var(--text-2xl);
+  font-weight: 450;
+}
+
+/* Сетка списка акций — принадлежит странице, не карточке */
+.discountsList {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+}

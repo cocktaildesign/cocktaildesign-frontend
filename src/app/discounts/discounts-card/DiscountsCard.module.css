@@ -1,0 +1,36 @@
+.card {
+  border-radius: 12px;
+  cursor: pointer;
+  box-shadow: 0 1px 20px #0000001a;
+	min-height: 290px;
+}
+
+.cardButton {
+  background: none;
+  padding: 0;
+  border: none;
+}
+
+.card:hover .cardImage {
+  scale: 0.99;
+}
+
+.cardTitle {
+  font-size: var(--text-lg);
+  font-weight: 500;
+  padding: 15px;
+  margin-bottom: 10px;
+  text-align: start;
+}
+
+.cardImageButton {
+  border: none;
+  padding: 0;
+  background: transparent;
+}
+
+.cardImage {
+  border-radius: 12px;
+  width: 100%;
+  transition: scale var(--dur) var(--ease);
+}

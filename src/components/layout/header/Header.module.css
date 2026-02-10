@@ -8,11 +8,16 @@
   z-index: 9000;
   width: 100%;
 
-  background: rgba(255, 255, 255, 0.45);
-  backdrop-filter: blur(25px);
+  /* background: rgba(255, 255, 255, 0.45); */
+  background: rgba(255, 255, 255, 0.92);
 
-  will-change: transform;
-  transform: translateZ(0);
+  /* backdrop-filter: blur(25px); */
+
+  /* background-color: #fff; */
+
+  /* 
+  will-change: transform; */
+  /* transform: translateZ(0); */
 }
 
 /* ==========================================================================

@@ -3,7 +3,9 @@
   inset: 0;
   z-index: 9011;
 
-  background: rgba(0, 0, 0, 0.7);
+  background: rgba(50, 50, 51, 0.5);
+  backdrop-filter: blur(3px);
+
   cursor: pointer;
 
   padding: 16px;
