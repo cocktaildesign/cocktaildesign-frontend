@@ -8,7 +8,7 @@ import CopyButton from "@/components/ui/copy-button/CopyButton";
 export const metadata = pageMetadata({
   title: "Контакты",
   description: "Контактная информация CocktailDesign",
-  canonical: "/about/contacts",
+  canonical: "/contacts",
 });
 
 export default function Contacts() {

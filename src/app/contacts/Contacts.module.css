@@ -1,9 +1,6 @@
 .contactsPage {
-  min-height: fit-content;
+  min-height: 60vh;
   margin-bottom: 50px;
-}
-
-.contactsPageHeader {
 }
 
 .contactsPageTitle {
@@ -28,9 +25,6 @@
   display: grid;
   gap: 24px;
   grid-template-columns: 1fr 1fr;
-}
-
-.infoItem {
 }
 
 .itemTitle {
@@ -66,12 +60,6 @@
 }
 .feedbackButton:hover {
   background-color: var(--color-dark-blue-hover);
-}
-
-.contactRequisites {
-}
-
-.requisitesContent {
 }
 
 .requisitesOwner {
@@ -125,9 +113,6 @@
   grid-template-columns: 1fr 1fr;
 }
 
-.detailsSection {
-}
-
 .hoursList {
   margin: 0;
 }
@@ -138,9 +123,6 @@
   list-style: none;
   display: grid;
   gap: 16px;
-}
-
-.routeItem {
 }
 
 .routeFrom {

@@ -21,6 +21,7 @@
   background: #fff;
   cursor: pointer;
   transition: all 0.2s;
+	border-radius: 12px;
 }
 
 .tabButton:hover {

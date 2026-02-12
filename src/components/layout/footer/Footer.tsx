@@ -53,7 +53,7 @@ export const footerPromosLinks: FooterLink[] = [{ label: "Наши акции", 
 
 export const footerSupportLinks: FooterLink[] = [
   { label: "Обратная связь", href: "/support/feedback" },
-  { label: "Контакты", href: "/about/contacts" },
+  { label: "Контакты", href: "/contacts" },
 ];
 
 export const footerDeliveryPaymentLinks: FooterLink[] = [
