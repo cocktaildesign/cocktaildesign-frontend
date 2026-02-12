@@ -108,10 +108,10 @@
   padding: 0 12px;
   cursor: pointer;
   text-align: left;
-
   color: var(--color-black);
   font-size: 14px;
-  font-weight: 450;
+  font-weight: 500;
+  font-family: var(--font-display);
 
   transition: background-color 160ms ease;
 }
@@ -154,10 +154,10 @@
 .subSection {
   background-color: var(--color-light-soft);
   border-radius: 6px;
-  padding: 10px;
+  padding: 20px;
   transition: background-color var(--dur) var(--ease);
   cursor: pointer;
-  min-height: 60px;
+  min-height: 55px;
 }
 
 .subSectionTitle {
