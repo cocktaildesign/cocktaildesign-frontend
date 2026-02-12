@@ -46,6 +46,7 @@ export const footerCompanyLinks: FooterLink[] = [
   { label: "О нас", href: "/about" },
   { label: "Отзывы", href: "/reviews" },
   { label: "Реквизиты", href: "/legal/requisites" },
+  { label: "Каталог", href: "/catalog" },
 ];
 
 export const footerPromosLinks: FooterLink[] = [{ label: "Наши акции", href: "/promos" }];

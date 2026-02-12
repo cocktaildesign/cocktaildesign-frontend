@@ -16,7 +16,8 @@
 
 .tabButton {
   padding: 15px;
-  border: 1px solid transparent;
+	text-align: start;
+  border: 0px solid transparent;
   background: #fff;
   cursor: pointer;
   transition: all 0.2s;

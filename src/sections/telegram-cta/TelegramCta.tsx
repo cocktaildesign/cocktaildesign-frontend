@@ -25,18 +25,14 @@ export default function TelegramBanner() {
         </a>
       </div>
 
-      <div className={styles.qrBlock}>
-        <div className={styles.qrFrame}>
-          <Image
-            src="/images/qr/tgQrNoBackGround.png"
-            alt="QR-код Telegram канала Cocktail Design"
-            fill
-            className={styles.qrImage}
-            sizes="160px"
-          />
-        </div>
-
-        <p className={styles.qrHint}>Или отсканируйте QR-код</p>
+      <div className={styles.qrFrame}>
+        <Image
+          src="/images/qr/iphoneTgQr.png"
+          alt="QR-код Telegram канала Cocktail Design"
+          fill
+          className={styles.qrImage}
+          sizes="160px"
+        />
       </div>
     </section>
   );
