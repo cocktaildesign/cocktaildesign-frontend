@@ -9,7 +9,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-
+  cursor: pointer;
   padding: 16px;
 }
 
@@ -22,7 +22,7 @@
   padding: 40px 44px 32px;
 
   max-height: 90vh;
-
+  cursor: auto;
   overflow-y: auto;
 }
 

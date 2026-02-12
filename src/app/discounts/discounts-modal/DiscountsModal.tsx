@@ -76,11 +76,13 @@ export default function DiscountModal({ title, blocks }: DiscountModalProps) {
           case "link":
             return (
               <div key={block.id} className={styles.linkBlock}>
-                href={block.url}
-                className={styles.link}
-                target={block.url.startsWith("http") ? "_blank" : undefined}
-                rel={block.url.startsWith("http") ? "noopener noreferrer" : undefined}
-                <a>{block.title}</a>
+                <a
+                  href={block.url}
+                  className={styles.link}
+                  target={block.url.startsWith("http") ? "_blank" : undefined}
+                  rel={block.url.startsWith("http") ? "noopener noreferrer" : undefined}>
+                  {block.title}
+                </a>
                 {/* Описание ссылки — если есть */}
                 {block.description && <p className={styles.linkDescription}>{block.description}</p>}
               </div>

@@ -6,7 +6,11 @@
 
 .contentLeft {
   height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
+
 .intro {
   display: flex;
   flex-direction: column;
@@ -93,6 +97,7 @@
   flex-direction: column;
   gap: 15px;
   margin-bottom: 40px;
+  margin-top: 20px;
 }
 
 .lazerTitleH2 {

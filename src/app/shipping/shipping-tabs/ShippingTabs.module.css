@@ -1,0 +1,130 @@
+.tabs {
+  margin-top: 20px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  padding: 20px 0px;
+  border: 1px solid transparent;
+  border-radius: 12px;
+}
+
+.tabButtons {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.tabButton {
+  padding: 15px;
+  border: 1px solid transparent;
+  background: #fff;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.tabButton:hover {
+  background: var(--color-light-soft);
+}
+
+.tabButton.active {
+  border-color: var(--color-light-soft);
+  background: var(--color-light);
+  color: var(--color-dark-blue);
+  border-radius: 6px;
+  font-weight: 500;
+  padding: 25px;
+}
+
+.tabContent {
+  grid-column: 2 / span 2;
+  background-color: var(--color-light-soft);
+  box-shadow: 0 2px 8px var(--color-light);
+
+  padding: 20px;
+  border-radius: 12px;
+}
+
+.tabTitle {
+  font-family: var(--font-display);
+  font-weight: 500;
+  margin-bottom: 20px;
+}
+
+.tabText {
+  font-size: var(--text-base);
+  color: var(--color-gray);
+}
+
+/* Контейнер блока вкладки */
+.tabPane {
+  padding: 20px;
+  height: 100%;
+  background-color: #fff;
+  border-radius: 6px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+}
+
+/* Заголовок блока */
+.tabTitle {
+  font-size: var(--text-xl);
+  font-weight: 500;
+  margin-bottom: 16px;
+  color: var(--color-black);
+}
+
+/* Название региона */
+.deliveryRegion {
+  font-size: var(--text-base);
+  font-weight: 500;
+  margin-top: 12px;
+  margin-bottom: 4px;
+  color: var(--color-black);
+}
+
+.deliveryMethod {
+  margin-left: 16px;
+  font-size: var(--text-base);
+  margin-bottom: 8px;
+  color: var(--color-gray);
+}
+
+/* Контейнер блока контактов */
+.contactInfo {
+  margin-top: 20px;
+  padding: 16px;
+  background-color: #f9f9f9; /* лёгкий фон, можно под цвет табов */
+  border-radius: 6px;
+}
+
+/* Обычный текст внутри блока */
+.contactText {
+  font-size: var(--text-base);
+  color: var(--color-gray);
+  margin-bottom: 12px;
+}
+
+/* Каждый контакт (телефон, e-mail) */
+.contactItem {
+  font-size: var(--text-base);
+  margin-bottom: 8px;
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+/* Метка контакта (Телефон, E-mail) */
+.contactLabel {
+  font-weight: 500;
+  color: var(--color-dark-blue);
+}
+
+/* Ссылка на контакт */
+.contactLink {
+  color: var(--color-blue);
+  text-decoration: underline;
+  transition: color 0.2s;
+}
+
+.contactLink:hover {
+  color: var(--color-dark-blue);
+}

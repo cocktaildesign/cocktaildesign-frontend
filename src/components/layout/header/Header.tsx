@@ -31,7 +31,14 @@ const CATALOG_ITEMS: CatalogItem[] = [
 // Пункты верхнего меню (в TopBar). У некоторых пунктов есть выпадающий список.
 const TOP_NAV_ITEMS: TopNavItem[] = [
   { label: "Знания", href: "/knowledge" },
-  { label: "Оплата и доставка", href: "/shipping" },
+  {
+    label: "Получение и оплата",
+    href: "/shipping",
+    children: [
+      { label: "Способы оплаты", href: "/payment-methods" },
+      { label: "Доставка", href: "/shipping" },
+    ],
+  },
   { label: "Брендинг", href: "/branding" },
   { label: "Система скидок", href: "/discounts" },
   {
@@ -61,14 +68,22 @@ function TopNav() {
           return (
             <li key={item.href} className={styles.topNavItem}>
               {/* Пункт меню (с индикатором, если есть подпункты) */}
-              <Link href={item.href} className={`${styles.linkBase} ${styles.topNavLink}`}>
-                {item.label}
-                {hasChildren && (
+
+              {hasChildren ? (
+                <button
+                  type="button"
+                  className={`${styles.linkBase} ${styles.topNavLink} ${styles.dropdownTrigger}`}
+                  aria-haspopup="true">
+                  {item.label}
                   <span className={styles.chevron} aria-hidden="true">
                     ▾
                   </span>
-                )}
-              </Link>
+                </button>
+              ) : (
+                <Link href={item.href} className={`${styles.linkBase} ${styles.topNavLink}`}>
+                  {item.label}
+                </Link>
+              )}
 
               {/* Dropdown: рендерим только если есть подпункты */}
               {hasChildren && (

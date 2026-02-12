@@ -1,0 +1,9 @@
+.shippingPage {
+  min-height: 60vh;
+  margin-bottom: 50px;
+}
+
+.shippingPageTitle {
+  font-size: var(--text-2xl);
+  font-weight: 450;
+}

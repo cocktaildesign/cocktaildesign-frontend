@@ -17,7 +17,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         <Header />
         {children}
         <Footer />
-					{/* <GridOverlay /> */}
+        {/* <GridOverlay /> */}
       </body>
     </html>
   );

@@ -28,7 +28,7 @@ export default function DiscountCard({ discount }: DiscountsCardProps) {
             src={discount.image}
             alt="" // оставляем пустым, так как описание уже в aria-label кнопки
             width={400}
-            height={200}
+            height={190}
           />
           <h2 className={styles.cardTitle}>{discount.title}</h2>
         </button>
