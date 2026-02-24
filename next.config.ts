@@ -3,31 +3,26 @@ import type { NextConfig } from "next";
 const nextConfig: NextConfig = {
   images: {
     remotePatterns: [
+      // dev: локальный Strapi
       {
-        // локальный Strapi для разработки
         protocol: "http",
         hostname: "localhost",
         port: "1337",
-
-        // pathname не обязателен, но можно добавить:
-        // pathname: "/uploads/**",
+        pathname: "/uploads/**",
       },
 
+      // prod: Strapi на VM через HTTPS + поддомен
       {
-        // продакшен Strapi на твоей VM
-        protocol: "http",
-        hostname: "89.108.66.180",
-
-        // важно: разрешаем только uploads (безопаснее)
+        protocol: "https",
+        hostname: "api.cocktaildesign.ru",
         pathname: "/uploads/**",
       },
     ],
 
-    // SVG запрещаем (безопасная практика)
     dangerouslyAllowSVG: false,
 
-    // unoptimized=true отключает optimization next/image
-    // Это нормально для Strapi, чтобы избежать проблем с proxy и Vercel optimization.
+    // Пока оставляем как есть (у тебя уже работает локально).
+    // Позже решим, включать ли оптимизацию на проде.
     unoptimized: true,
   },
 };
