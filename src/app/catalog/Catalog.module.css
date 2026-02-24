@@ -1,0 +1,20 @@
+.catalogPage {
+  margin-bottom: 50px;
+}
+
+.catalogPageTitle {
+  margin: 0 0 24px;
+  font-size: var(--text-2xl);
+  font-weight: 450;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 16px;
+}
+.card {
+  background-color: var(--color-light-soft);
+  border-radius: 6px;
+  padding: 16px;
+}

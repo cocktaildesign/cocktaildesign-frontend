@@ -1,8 +1,11 @@
-import { pageMetadata } from "@/lib/seo/metadata";
-import PageLayout from "@/components/layout/PageLayout";
-import styles from "./Catalog.module.css";
-import { getTopCategoriesFromStrapi } from "@/lib/api/catalog";
 import Image from "next/image";
+import Link from "next/link";
+
+import PageLayout from "@/components/layout/PageLayout";
+import { getTopCategoriesFromStrapi } from "@/lib/api/catalog";
+import { pageMetadata } from "@/lib/seo/metadata";
+
+import styles from "./Catalog.module.css";
 
 export const metadata = pageMetadata({
   title: "Каталог",
@@ -17,26 +20,23 @@ export default async function CatalogPage() {
 
   return (
     <PageLayout>
-      <h1>Каталог</h1>
+      <section className={styles.catalogPage}>
+        <div className={styles.catalogPageHeader}>
+          <h1 className={styles.catalogPageTitle}>Каталог</h1>
+        </div>
 
-      <ul>
-        {categories.map((category) => (
-          <li key={category.id}>
-            {category.imageSrc && (
-              <Image
-                src={category.imageSrc}
-                alt={category.alt ?? category.name}
-                width={120}
-                height={120}
-                // небольшой UX: чтобы картинка не "растягивалась"
-                style={{ objectFit: "cover", display: "block" }}
-              />
-            )}
-
-            <div>{category.name}</div>
-          </li>
-        ))}
-      </ul>
+        <ul className={styles.grid}>
+          {categories.map((category) => (
+            <li key={category.id} className={styles.card}>
+              <Link href={`/catalog/c/${category.slug}`} className={styles.cardLink}>
+                {/* Название категории */}
+                <span className={styles.name}>{category.name}</span>
+                <span className={styles.name}>{category.productsCount}</span>
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </section>
     </PageLayout>
   );
 }

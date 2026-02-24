@@ -14,32 +14,25 @@ import type { CatalogCategoryPreview, StrapiCategoryItem } from "./types";
 //    Превращает одну категорию из Strapi в объект, удобный UI.
 
 export function mapCategoryPreview(item: StrapiCategoryItem): CatalogCategoryPreview | null {
-  // Достаём поля из Strapi-структуры.
   const source = item.attributes ?? item;
 
   const name = source.name?.trim() ?? "";
   const slug = source.slug?.trim() ?? "";
-
-  // name и slug обязаны быть непустыми.
   if (!name || !slug) return null;
 
-  // image в твоём API: либо объект, либо null, либо вообще отсутствует.
   const image = source.image;
 
-  // Выбираем "лучший" путь картинки:
-  // medium → small → thumbnail → оригинальный url.
-  // (Это удобно: на /catalog обычно не нужна full-size картинка.)
   const imagePath =
     image?.formats?.medium?.url ?? image?.formats?.small?.url ?? image?.formats?.thumbnail?.url ?? image?.url ?? null;
 
-  // Strapi отдаёт относительный путь "/uploads/..."
-  // Превращаем его в абсолютный URL через helper.
   const imageUrl = imagePath ? getStrapiMediaUrl(imagePath) : null;
 
-  // alt берём из Strapi, если он есть, иначе используем name.
-  // Это полезно для a11y и для случаев, когда картинка не загрузилась.
   const altFromStrapi = image?.alternativeText?.trim() ?? "";
   const alt = altFromStrapi || name;
+
+  // ✅ productsCount: приводим к числу, отрицательные/NaN → 0
+  const rawCount = source.productsCount;
+  const productsCount = typeof rawCount === "number" && Number.isFinite(rawCount) && rawCount > 0 ? rawCount : 0;
 
   return {
     id: String(item.id),
@@ -47,5 +40,6 @@ export function mapCategoryPreview(item: StrapiCategoryItem): CatalogCategoryPre
     slug,
     imageSrc: imageUrl,
     alt,
+    productsCount,
   };
 }

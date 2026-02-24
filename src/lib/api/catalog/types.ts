@@ -35,6 +35,8 @@ export type StrapiCategoryAttributes = {
   name: string;
   slug: string;
   image?: StrapiMediaField | null;
+
+  productsCount?: number | null;
 };
 
 //    StrapiCategoryItem — один элемент массива `data` из Strapi.
@@ -48,6 +50,8 @@ export type StrapiCategoryItem = {
   name?: string;
   slug?: string;
   image?: StrapiMediaField;
+
+  productsCount?: number | null;
 };
 
 //   StrapiCategoryListResponse — ответ /api/moysklad-categories (список).
@@ -67,4 +71,6 @@ export type CatalogCategoryPreview = {
   slug: string;
   imageSrc: string | null;
   alt?: string;
+
+  productsCount: number;
 };
