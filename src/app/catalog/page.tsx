@@ -2,6 +2,7 @@ import { pageMetadata } from "@/lib/seo/metadata";
 import PageLayout from "@/components/layout/PageLayout";
 import styles from "./Catalog.module.css";
 import { getTopCategoriesFromStrapi } from "@/lib/api/catalog";
+import Image from "next/image";
 
 export const metadata = pageMetadata({
   title: "Каталог",
@@ -19,24 +20,20 @@ export default async function CatalogPage() {
       <h1>Каталог</h1>
 
       <ul>
-        {categories.map((c) => (
-          <li key={c.id}>
-            {/* Показываем картинку только если она есть */}
-            {c.imageSrc && (
-              <img
-                src={c.imageSrc}
-                alt={c.alt ?? c.name}
+        {categories.map((category) => (
+          <li key={category.id}>
+            {category.imageSrc && (
+              <Image
+                src={category.imageSrc}
+                alt={category.alt ?? category.name}
                 width={120}
                 height={120}
-                style={{
-                  objectFit: "cover",
-                  display: "block",
-                }}
+                // небольшой UX: чтобы картинка не "растягивалась"
+                style={{ objectFit: "cover", display: "block" }}
               />
             )}
 
-            {/* Название категории */}
-            <div>{c.name}</div>
+            <div>{category.name}</div>
           </li>
         ))}
       </ul>
