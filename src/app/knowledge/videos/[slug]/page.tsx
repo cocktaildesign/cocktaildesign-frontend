@@ -5,7 +5,7 @@ import { pageMetadata } from "@/lib/seo/metadata"; // Внутренняя ут�
 import BackButton from "@/components/ui/back-button/BackButton"; // UI: кнопка "назад" (client component)
 
 import PageLayout from "@/components/layout/PageLayout"; // Общий лэйаут страницы + хлебные крошки
-import { getKnowledgeVideoDetailBySlug } from "../../data"; // Данные именно для видео-детали (embedUrl и т.д.)
+import { getKnowledgeVideoBySlugFromStrapi } from "@/lib/api/knowledge";
 import styles from "./VideoPage.module.css"; // CSS Modules: стили только для этой страницы
 import { formatRelativeFromIsoDate } from "@/lib/date/relativeDate"; // Утилита: "2 месяца назад"
 import ShareButton from "@/components/ui/share-button/ShareButton"; // UI: поделиться (client component)
@@ -25,18 +25,14 @@ type PageProps = {
  * Здесь нельзя вызывать notFound() — просто возвращаем {} если данных нет.
  */
 export async function generateMetadata({ params }: PageProps) {
-  // 1) Получаем slug (обязателен await из-за Promise)
   const { slug } = await params;
 
-  // 2) Берём детальные данные видео по slug
-  const item = getKnowledgeVideoDetailBySlug(slug);
+  const item = await getKnowledgeVideoBySlugFromStrapi(slug);
 
-  // 3) Если видео не найдено — метаданные не отдаём
   if (!item) {
     return {};
   }
 
-  // 4) Возвращаем SEO данные
   return pageMetadata({
     title: item.title,
     description: item.description,
@@ -52,13 +48,12 @@ export default async function KnowledgeVideoPage({ params }: PageProps) {
   const { slug } = await params;
 
   // 2) Берём детальные данные видео (embedUrl обязателен на этой странице)
-  const item = getKnowledgeVideoDetailBySlug(slug);
+  const item = await getKnowledgeVideoBySlugFromStrapi(slug);
 
-  // 3) Если нет данных — отдаём 404
-  // (Проверка format оставлена как "защитная" — структуру не меняю)
-  if (!item || item.format !== "video") {
-    notFound();
-  }
+  // 3) Если видео по slug не найдено (или нет embedUrl) — отдаём 404
+  if (!item) notFound();
+
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "";
 
   return (
     <PageLayout
@@ -112,7 +107,7 @@ export default async function KnowledgeVideoPage({ params }: PageProps) {
               <div className={styles.actions}>
                 <ShareButton
                   // Абсолютный URL (чтобы корректно копировалось/шарилось)
-                  url={`${process.env.NEXT_PUBLIC_SITE_URL}/knowledge/videos/${item.slug}`}
+                  url={`${siteUrl}/knowledge/videos/${item.slug}`}
                   title={item.title}
                 />
               </div>

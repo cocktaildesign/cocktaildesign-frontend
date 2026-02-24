@@ -1,3 +1,5 @@
+// frontend/src/app/knowledge/materials/[slug]/page.tsx
+
 import { notFound } from "next/navigation";
 import Image from "next/image";
 
@@ -8,11 +10,13 @@ import PageLayout from "@/components/layout/PageLayout";
 import BackButton from "@/components/ui/back-button/BackButton";
 import ShareButton from "@/components/ui/share-button/ShareButton";
 import TelegramBanner from "@/sections/telegram-cta/TelegramCta";
-import { getKnowledgeMaterialDetailBySlug } from "../../data";
+
+import { getKnowledgeMaterialBySlugFromStrapi } from "@/lib/api/knowledge";
+
 import styles from "./MaterialPage.module.css";
 
 type Params = {
-  slug: string; // slug из сегмента /knowledge/material/[slug]
+  slug: string;
 };
 
 type PageProps = {
@@ -26,11 +30,9 @@ function assertNever(value: never): never {
 export async function generateMetadata({ params }: PageProps) {
   const { slug } = await params;
 
-  const item = getKnowledgeMaterialDetailBySlug(slug);
+  const item = await getKnowledgeMaterialBySlugFromStrapi(slug);
 
-  if (!item) {
-    return {};
-  }
+  if (!item) return {};
 
   return pageMetadata({
     title: item.title,
@@ -42,11 +44,9 @@ export async function generateMetadata({ params }: PageProps) {
 export default async function KnowledgeMaterialPage({ params }: PageProps) {
   const { slug } = await params;
 
-  const item = getKnowledgeMaterialDetailBySlug(slug);
+  const item = await getKnowledgeMaterialBySlugFromStrapi(slug);
 
-  if (!item) {
-    notFound();
-  }
+  if (!item) notFound();
 
   return (
     <PageLayout
@@ -72,7 +72,8 @@ export default async function KnowledgeMaterialPage({ params }: PageProps) {
 
           <div className={styles.metaRow}>
             <div className={styles.actions}>
-              <p className={styles.detailMeta}>{item.label}</p>
+              {/* label у материала опциональный */}
+              {item.label ? <p className={styles.detailMeta}>{item.label}</p> : null}
 
               <ShareButton
                 url={`${process.env.NEXT_PUBLIC_SITE_URL}/knowledge/materials/${item.slug}`}
@@ -108,8 +109,8 @@ export default async function KnowledgeMaterialPage({ params }: PageProps) {
 
                 return (
                   <ListTag key={block.id} className={styles.list}>
-                    {block.items.map((itemText) => (
-                      <li key={`${block.id}-${itemText}`} className={styles.listItem}>
+                    {block.items.map((itemText, idx) => (
+                      <li key={`${block.id}-${idx}`} className={styles.listItem}>
                         {itemText}
                       </li>
                     ))}
@@ -133,7 +134,6 @@ export default async function KnowledgeMaterialPage({ params }: PageProps) {
                       {block.title}
                     </a>
 
-                    {/* Описание (необязательно) */}
                     {block.description ? <p className={styles.linkDescription}>{block.description}</p> : null}
                   </div>
                 );

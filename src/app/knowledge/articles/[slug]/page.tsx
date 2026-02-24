@@ -1,3 +1,4 @@
+//frontend/src/app/knowledge/articles/[slug]/page.tsx
 import { notFound } from "next/navigation";
 import Image from "next/image";
 
@@ -8,7 +9,7 @@ import PageLayout from "@/components/layout/PageLayout";
 import BackButton from "@/components/ui/back-button/BackButton";
 import ShareButton from "@/components/ui/share-button/ShareButton";
 import TelegramBanner from "@/sections/telegram-cta/TelegramCta";
-import { getKnowledgeArticleDetailBySlug } from "../../data";
+import { getKnowledgeArticleBySlugFromStrapi } from "@/lib/api/knowledge";
 import styles from "./ArticlePage.module.css";
 
 type Params = {
@@ -26,7 +27,7 @@ function assertNever(value: never): never {
 export async function generateMetadata({ params }: PageProps) {
   const { slug } = await params;
 
-  const item = getKnowledgeArticleDetailBySlug(slug);
+  const item = await getKnowledgeArticleBySlugFromStrapi(slug);
 
   if (!item) {
     return {};
@@ -42,7 +43,7 @@ export async function generateMetadata({ params }: PageProps) {
 export default async function KnowledgeArticlePage({ params }: PageProps) {
   const { slug } = await params;
 
-  const item = getKnowledgeArticleDetailBySlug(slug);
+  const item = await getKnowledgeArticleBySlugFromStrapi(slug);
 
   if (!item) {
     notFound();

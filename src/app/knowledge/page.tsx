@@ -1,7 +1,8 @@
 import PageLayout from "@/components/layout/PageLayout";
 import { pageMetadata } from "@/lib/seo/metadata";
 import styles from "./KnowledgePage.module.css";
-import { getKnowledgeItems } from "./data";
+// import { getKnowledgeItems } from "./data";
+import { getKnowledgeItemsFromStrapi } from "@/lib/api/knowledge";
 
 import KnowledgeContent from "./knowledge-content/KnowledgeContent";
 import KnowledgeFilters from "./knowledge-filters/KnowledgeFilters";
@@ -14,7 +15,7 @@ export const metadata = pageMetadata({
   canonical: "/knowledge",
 });
 
-const items = getKnowledgeItems();
+// const items = getKnowledgeItems();
 
 type KnowledgePageProps = {
   searchParams: Promise<{
@@ -26,17 +27,11 @@ type KnowledgePageProps = {
 export default async function KnowledgePage({ searchParams }: KnowledgePageProps) {
   // Получаем параметры фильтрации из URL
   const { tab, format } = await searchParams;
-
   const activeTab = tab ?? null;
   const activeFormat = format ?? null;
 
   // Фильтруем материалы по выбранному разделу и формату
-  const filteredItems = items.filter((item) => {
-    const matchesTab = activeTab ? item.tab === activeTab : true;
-    const matchesFormat = activeFormat ? item.format === activeFormat : true;
-
-    return matchesTab && matchesFormat;
-  });
+  const filteredItems = await getKnowledgeItemsFromStrapi(activeTab, activeFormat);
 
   return (
     <PageLayout>
