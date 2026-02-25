@@ -7,6 +7,7 @@ import { getCategoryBySlugFromStrapi } from "@/lib/api/catalog";
 import { notFound } from "next/navigation";
 import { Metadata } from "next";
 import CatalogSidebar from "./catalog-sidebar/CatalogSidebar";
+import ProductGrid from "../product-grid/ProductGrid";
 import { getTopCategoriesFromStrapi } from "@/lib/api/catalog";
 
 type Params = {
@@ -59,8 +60,8 @@ export default async function CatalogCategoryPage({ params }: PageProps) {
             <CatalogSidebar items={categories} activeSlug={category.slug} />
           </aside>
 
-          <section className={styles.content} aria-label="Контент">
-            Контент
+          <section className={styles.content} aria-label="Список товаров">
+            <ProductGrid />
           </section>
         </div>
       </section>
