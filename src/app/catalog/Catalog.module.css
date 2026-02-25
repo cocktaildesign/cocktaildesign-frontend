@@ -28,7 +28,7 @@
 
 .card:hover {
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-  transform: scale(1.02);
+  transform: scale(1.01);
   background-color: var(--color-light);
 }
 
@@ -74,7 +74,7 @@
 }
 
 .card:hover .imageWrapper {
-  transform: scale(1.05);
+  transform: scale(1.02);
 }
 
 .image {
