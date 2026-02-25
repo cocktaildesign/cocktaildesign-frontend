@@ -28,7 +28,8 @@
 
 .card:hover {
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-  border: 1px solid var(--color-gray-light);
+  transform: scale(1.02);
+  background-color: var(--color-light);
 }
 
 .cardLink {
