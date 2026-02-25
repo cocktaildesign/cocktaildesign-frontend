@@ -17,4 +17,66 @@
   background-color: var(--color-light-soft);
   border-radius: 6px;
   padding: 16px;
+  aspect-ratio: 1 / 1;
+  border: 1px solid transparent;
+
+  transition:
+    box-shadow var(--dur-fast) var(--ease),
+    transform var(--dur-fast) var(--ease),
+    border-color var(--dur-fast) var(--ease);
+}
+
+.card:hover {
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+  border: 1px solid var(--color-gray-light);
+}
+
+.cardLink {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  height: 100%;
+}
+
+.cardLink {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.cardText {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  height: 120px;
+}
+
+.title {
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 450;
+  color: var(--color-dark-blue);
+  text-wrap: balance;
+}
+
+.count {
+  font-size: 14px;
+  color: var(--color-gray);
+}
+
+.imageWrapper {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  transition: transform var(--dur-fast) var(--ease);
+}
+
+.card:hover .imageWrapper {
+  transform: scale(1.05);
+}
+
+.image {
+  object-fit: contain;
+  object-position: center;
 }
