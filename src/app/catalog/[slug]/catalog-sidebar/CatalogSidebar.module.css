@@ -1,0 +1,49 @@
+/* src/app/catalog/[slug]/catalog-sidebar/CatalogSidebar.module.css */
+
+.sidebar {
+  padding: 16px;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 12px;
+  background: #fff;
+}
+
+.title {
+  margin: 0 0 12px;
+  font-size: var(--text-lg);
+  font-weight: 450;
+  color: var(--color-gray-light);
+}
+
+.list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.item {
+  margin: 0;
+}
+
+.link {
+  display: block;
+  padding: 10px 12px;
+  border-radius: 12px;
+  color: var(--color-dark-blue);
+  transition: background-color var(--dur) var(--ease);
+}
+
+/* hover — для мыши */
+.link:hover {
+  background-color: var(--color-light);
+}
+
+.link:focus-visible {
+  outline: 1px solid rgba(0, 0, 0, 0.35);
+  outline-offset: 1px;
+}
+
+/* активная категория */
+.linkActive {
+  background-color: var(--color-light-soft);
+  font-weight: 550;
+}

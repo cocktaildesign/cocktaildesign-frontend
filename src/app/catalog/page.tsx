@@ -50,7 +50,7 @@ export default async function CatalogPage() {
         <ul className={styles.grid}>
           {categories.map((category) => (
             <li key={category.id} className={styles.card}>
-              <Link href={`/catalog/c/${category.slug}`} className={styles.cardLink}>
+              <Link href={`/catalog/${category.slug}`} className={styles.cardLink}>
                 {/* Название категории */}
                 <div className={styles.cardText}>
                   <h3 className={styles.title}>{category.name}</h3>

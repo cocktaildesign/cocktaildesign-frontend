@@ -1,0 +1,20 @@
+.headerTitle {
+  margin: 0 0 24px;
+  font-size: var(--text-2xl);
+  font-weight: 450;
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: 16px;
+}
+
+.sidebar {
+  grid-column: 1 / 4;
+}
+
+.content {
+  grid-column: 4 / 13;
+  background-color: aquamarine;
+}

@@ -48,3 +48,20 @@ export async function getTopCategoriesFromStrapi(): Promise<CatalogCategoryPrevi
   // Возвращаем готовый массив.
   return result;
 }
+
+// Получить одну категорию по slug (для страницы /catalog/[slug]).
+export async function getCategoryBySlugFromStrapi(slug: string): Promise<CatalogCategoryPreview | null> {
+  const safeSlug = slug.trim();
+  if (!safeSlug) return null;
+
+  const params: Record<string, string> = {
+    "filters[slug][$eq]": safeSlug,
+  };
+
+  const response: StrapiCategoryListResponse = await fetchStrapi("/api/moysklad-categories", params);
+
+  const first = response.data[0];
+  if (!first) return null;
+
+  return mapCategoryPreview(first);
+}
