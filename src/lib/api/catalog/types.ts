@@ -67,6 +67,37 @@ export type StrapiCategoryListResponse = {
   data: StrapiCategoryItem[];
 };
 
+export type StrapiProductAttributes = {
+  name?: string;
+  moyskladId?: string;
+  price?: number | null;
+
+  // В Strapi у тебя image: multiple: true
+  // Формат может быть:
+  // 1) упрощённый: массив файлов
+  // 2) стандартный Strapi: { data: [{ attributes: файл }] }
+  image?:
+    | StrapiMediaFile[]
+    | {
+        data?: Array<{
+          id: number;
+          attributes?: StrapiMediaFile;
+        }>;
+      }
+    | null;
+};
+
+export type StrapiProductItem = {
+  id: number;
+  attributes?: StrapiProductAttributes;
+
+  // На случай плоского ответа (без attributes)
+  name?: string;
+  moyskladId?: string;
+  price?: number | null;
+  image?: StrapiProductAttributes["image"];
+};
+
 //  ============================================================
 //    2) Domain types (то, что отдаём в UI)
 // ============================================================
@@ -82,4 +113,33 @@ export type CatalogCategoryPreview = {
 
   productsCount: number;
   children?: CatalogCategoryPreview[];
+};
+
+//  ============================================================
+//    3) Domain types — товары (то, что отдаём в UI)
+// ============================================================
+
+// CatalogProductPreview — минимальная модель товара для списка/грида.
+// Важно: это НЕ детальная карточка товара, а "превью" для каталога.
+export type CatalogProductPreview = {
+  id: string; // Strapi id
+  moyskladId: string; // внешний стабильный id
+  slug: string; // URL
+
+  name: string; //загаловок карточки
+  price: number; // Цена
+  imageUrl: string | null; // Картинка карточки.
+};
+
+// Ответ API для infinite scroll.
+// offset/limit — классическая пагинация "как у маркетплейсов".
+
+export type CatalogProductsResponse = {
+  items: CatalogProductPreview[];
+
+  total: number; // всего товаров по фильтру (может пригодиться для "Найдено N")
+  limit: number; // сколько попросили
+  offset: number; // с какого смещения
+
+  hasMore: boolean; // есть ли следующая порция (ключ для infinite scroll)
 };

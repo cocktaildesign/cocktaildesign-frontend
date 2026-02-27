@@ -22,6 +22,14 @@
   color: var(--color-dark-blue);
 }
 
+.itemTop {
+  border-bottom: 1px solid var(--color-light);
+}
+
+.list > .itemTop:last-child {
+  border-bottom: none;
+}
+
 .item:hover {
   color: var(--color-gray);
 }
@@ -42,7 +50,7 @@
 
 .link {
   font-size: 16px;
-  font-weight: 450;
+  font-weight: 400;
   width: 100%;
 }
 
@@ -60,23 +68,28 @@
 .count {
   font-size: 14px;
   color: #adadad;
-  font-weight: 450;
+  font-weight: 400;
 }
 
 .toggleButton {
   border: 0px solid transparent;
   background-color: transparent;
   height: 100%;
+
+  flex-shrink: 0;
 }
 
 .toggleIcon {
   color: #adadad;
   display: block;
-  transform: rotate(-90deg);
 
   width: 12px;
   height: 12px;
-  transition: color var(--dur) var(--ease);
+
+  transform: rotate(-90deg);
+  transition:
+    transform var(--dur) var(--ease),
+    color var(--dur) var(--ease);
 }
 
 .toggleButton:hover .toggleIcon {
@@ -96,7 +109,10 @@
   gap: 6px;
 }
 
-.subLink {
+
+
+.itemNested {
+  padding: 2px 0;
   font-size: 16px;
-  font-weight: 400;
+	color: var(--color-gray);
 }
