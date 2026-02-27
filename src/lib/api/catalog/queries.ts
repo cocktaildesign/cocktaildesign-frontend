@@ -18,6 +18,8 @@ const TOP_CATEGORIES_PARAMS: Record<string, string> = {
   sort: "name:asc",
   // Важно: медиа не возвращается автоматически, нужно populate.
   "populate[image]": "true",
+  "populate[children][sort]": "name:asc",
+
   // Фильтр: только верхний уровень (1)
   "filters[parent][id][$eq]": String(CATALOG_ROOT_PARENT_ID),
 };

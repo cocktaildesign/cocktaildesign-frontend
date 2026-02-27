@@ -5,6 +5,7 @@ import Link from "next/link";
 type CatalogSidebarItem = {
   slug: string;
   name: string;
+  children?: CatalogSidebarItem[];
 };
 
 type CatalogSidebarProps = {
@@ -32,6 +33,19 @@ export default function CatalogSidebar({ items, activeSlug }: CatalogSidebarProp
                   aria-current={isActive ? "page" : undefined}>
                   {item.name}
                 </Link>
+
+                {/* 2-й уровень: показываем только у активной категории */}
+                {isActive && item.children && item.children.length > 0 ? (
+                  <ul className={styles.subList} aria-label={`Подкатегории: ${item.name}`}>
+                    {item.children.map((child) => (
+                      <li key={child.slug} className={styles.subItem}>
+                        <Link href={`/catalog/${child.slug}`} scroll={false} className={styles.subLink}>
+                          {child.name}
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                ) : null}
               </li>
             );
           })}

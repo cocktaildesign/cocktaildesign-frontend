@@ -40,6 +40,7 @@ export default async function CatalogCategoryPage({ params }: PageProps) {
   }
 
   const categories = await getTopCategoriesFromStrapi();
+  const withChildrenCount = categories.filter((c) => (c.children?.length ?? 0) > 0).length;
 
   return (
     <PageLayout
@@ -57,6 +58,9 @@ export default async function CatalogCategoryPage({ params }: PageProps) {
         {/* 12-колоночная сетка: sidebar (3) + content (9) */}
         <div className={styles.layout}>
           <aside className={styles.sidebar} aria-label="Фильтры и категории">
+            <p style={{ fontSize: 12, opacity: 0.7 }}>
+              top: {categories.length}, with children: {withChildrenCount}
+            </p>
             <CatalogSidebar items={categories} activeSlug={category.slug} />
           </aside>
 

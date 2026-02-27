@@ -30,9 +30,21 @@ export function mapCategoryPreview(item: StrapiCategoryItem): CatalogCategoryPre
   const altFromStrapi = image?.alternativeText?.trim() ?? "";
   const alt = altFromStrapi || name;
 
-  // ✅ productsCount: приводим к числу, отрицательные/NaN → 0
+  // productsCount: приводим к числу, отрицательные/NaN → 0
   const rawCount = source.productsCount;
   const productsCount = typeof rawCount === "number" && Number.isFinite(rawCount) && rawCount > 0 ? rawCount : 0;
+
+  //  2-й уровень: children (только один уровень глубины)
+  const childrenData = source.children?.data ?? [];
+  const children: CatalogCategoryPreview[] = [];
+
+  for (const child of childrenData) {
+    const mappedChild = mapCategoryPreview(child);
+
+    if (mappedChild) {
+      children.push({ ...mappedChild, children: undefined });
+    }
+  }
 
   return {
     id: String(item.id),
@@ -41,5 +53,6 @@ export function mapCategoryPreview(item: StrapiCategoryItem): CatalogCategoryPre
     imageSrc: imageUrl,
     alt,
     productsCount,
+    children: children.length > 0 ? children : undefined,
   };
 }

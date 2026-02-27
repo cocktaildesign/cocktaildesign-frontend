@@ -37,6 +37,11 @@ export type StrapiCategoryAttributes = {
   image?: StrapiMediaField | null;
 
   productsCount?: number | null;
+
+  // children (2-й уровень)
+  children?: {
+    data?: StrapiCategoryItem[];
+  };
 };
 
 //    StrapiCategoryItem — один элемент массива `data` из Strapi.
@@ -52,6 +57,9 @@ export type StrapiCategoryItem = {
   image?: StrapiMediaField;
 
   productsCount?: number | null;
+  children?: {
+    data?: StrapiCategoryItem[];
+  };
 };
 
 //   StrapiCategoryListResponse — ответ /api/moysklad-categories (список).
@@ -73,4 +81,5 @@ export type CatalogCategoryPreview = {
   alt?: string;
 
   productsCount: number;
+  children?: CatalogCategoryPreview[];
 };
