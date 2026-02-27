@@ -67,3 +67,99 @@ export async function getCategoryBySlugFromStrapi(slug: string): Promise<Catalog
 
   return mapCategoryPreview(first);
 }
+// ----------------------------------------------------------------------------
+// Дерево категорий для sidebar / mega-menu (любая глубина)
+// ----------------------------------------------------------------------------
+
+// FlatCategory — один элемент из /api/catalog/categories-flat
+type FlatCategory = {
+  id: string;
+  slug: string;
+  name: string;
+  productsCount: number;
+  parentId: string | null;
+};
+
+// normalizeCount
+// Приводим счётчик к безопасному числу для UI.
+function normalizeCount(value: unknown): number {
+  // Если не число — 0
+  if (typeof value !== "number") return 0;
+
+  // Если NaN/Infinity — 0
+  if (!Number.isFinite(value)) return 0;
+
+  // Если отрицательное или 0 — 0 (для витрины так проще)
+  if (value <= 0) return 0;
+
+  return value;
+}
+
+// buildCatalogTree
+// Собираем дерево любой глубины из плоского списка.
+function buildCatalogTree(flat: FlatCategory[]): CatalogCategoryPreview[] {
+  // Map: ключ -> значение
+  // ключ = id категории
+  // значение = готовый узел для UI
+  const byId = new Map<string, CatalogCategoryPreview>();
+
+  // 1) Создаём все узлы заранее (без children)
+  for (const item of flat) {
+    // Без id/slug/name нельзя построить ссылку и отрисовать пункт меню
+    if (!item.id || !item.slug || !item.name) continue;
+
+    byId.set(item.id, {
+      id: item.id,
+      slug: item.slug,
+      name: item.name,
+
+      // categories-flat не отдаёт картинки
+      imageSrc: null,
+
+      productsCount: normalizeCount(item.productsCount),
+
+      // children появится только если реально есть дети
+      children: undefined,
+    });
+  }
+
+  // 2) Связываем parent -> children
+  const roots: CatalogCategoryPreview[] = [];
+
+  for (const item of flat) {
+    const node = byId.get(item.id);
+    if (!node) continue;
+
+    // Корень
+    if (!item.parentId) {
+      roots.push(node);
+      continue;
+    }
+
+    const parent = byId.get(item.parentId);
+
+    // Если родителя нет — не теряем узел
+    if (!parent) {
+      roots.push(node);
+      continue;
+    }
+
+    // Ленивая инициализация массива детей
+    if (!parent.children) parent.children = [];
+    parent.children.push(node);
+  }
+
+  // 3) Скрываем "технический root", если он один
+  if (roots.length === 1) {
+    return roots[0].children ?? [];
+  }
+
+  return roots;
+}
+
+// getCatalogTreeFromStrapi
+// Публичная функция для UI: грузит flat и строит дерево.
+export async function getCatalogTreeFromStrapi(): Promise<CatalogCategoryPreview[]> {
+  const flat: FlatCategory[] = await fetchStrapi("/api/catalog/categories-flat");
+  return buildCatalogTree(flat);
+}

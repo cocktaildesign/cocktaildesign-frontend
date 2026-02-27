@@ -3,12 +3,11 @@
 import PageLayout from "@/components/layout/PageLayout";
 import styles from "./CategoryPage.module.css";
 import { pageMetadata } from "@/lib/seo/metadata";
-import { getCategoryBySlugFromStrapi } from "@/lib/api/catalog";
 import { notFound } from "next/navigation";
 import { Metadata } from "next";
 import CatalogSidebar from "./catalog-sidebar/CatalogSidebar";
 import ProductGrid from "../product-grid/ProductGrid";
-import { getTopCategoriesFromStrapi } from "@/lib/api/catalog";
+import { getCatalogTreeFromStrapi, getCategoryBySlugFromStrapi } from "@/lib/api/catalog";
 
 type Params = {
   slug: string; //catalog/[slug]
@@ -39,8 +38,7 @@ export default async function CatalogCategoryPage({ params }: PageProps) {
     notFound();
   }
 
-  const categories = await getTopCategoriesFromStrapi();
-  const withChildrenCount = categories.filter((c) => (c.children?.length ?? 0) > 0).length;
+  const categories = await getCatalogTreeFromStrapi();
 
   return (
     <PageLayout
@@ -58,9 +56,6 @@ export default async function CatalogCategoryPage({ params }: PageProps) {
         {/* 12-колоночная сетка: sidebar (3) + content (9) */}
         <div className={styles.layout}>
           <aside className={styles.sidebar} aria-label="Фильтры и категории">
-            <p style={{ fontSize: 12, opacity: 0.7 }}>
-              top: {categories.length}, with children: {withChildrenCount}
-            </p>
             <CatalogSidebar items={categories} activeSlug={category.slug} />
           </aside>
 
