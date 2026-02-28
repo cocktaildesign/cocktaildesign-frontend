@@ -60,7 +60,7 @@ export default async function CatalogCategoryPage({ params }: PageProps) {
           </aside>
 
           <section className={styles.content} aria-label="Список товаров">
-            <ProductGrid categorySlug={category.slug} />{" "}
+            <ProductGrid />
           </section>
         </div>
       </section>
