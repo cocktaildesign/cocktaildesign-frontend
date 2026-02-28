@@ -2,4 +2,12 @@
 // Публичный вход каталога: экспортируем только функции (API).
 // Типы импортируем напрямую из "./types" при необходимости.
 
-export { getTopCategoriesFromStrapi, getCategoryBySlugFromStrapi, getCatalogTreeFromStrapi } from "./queries";
+export {
+  // Категории
+  getTopCategoriesFromStrapi,
+  getCategoryBySlugFromStrapi,
+  getCatalogTreeFromStrapi,
+
+  // Товары (категория + все потомки, пагинация)
+  getProductsByCategorySlugFromStrapi,
+} from "./queries";

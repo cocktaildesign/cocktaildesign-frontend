@@ -1,28 +1,20 @@
-// src/components/catalog/product-card/ProductCard.tsx
-
+// src/app/catalog/product-card/ProductCard.tsx
 import styles from "./ProductCard.module.css";
+import type { CatalogProductPreview } from "@/lib/api/catalog/types";
 
-/**
- * ProductCard (заглушка)
- *
- * Сейчас это просто UI-каркас.
- * Позже добавим:
- * - image
- * - price
- * - Link
- * - hover states
- */
-export default function ProductCard() {
+type ProductCardProps = {
+  product: CatalogProductPreview;
+};
+
+export default function ProductCard({ product }: ProductCardProps) {
   return (
     <article className={styles.card}>
-      {/* Изображение */}
+      {/* Картинки пока не трогаем: просто заглушка */}
       <div className={styles.thumb} />
 
-      {/* Название */}
-      <h3 className={styles.title}>Название товара</h3>
+      <h3 className={styles.title}>{product.name}</h3>
 
-      {/* Цена / мета */}
-      <p className={styles.meta}>1 990 ₽</p>
+      <p className={styles.meta}>{product.price} ₽</p>
     </article>
   );
 }
