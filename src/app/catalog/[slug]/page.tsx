@@ -53,7 +53,7 @@ export default async function CatalogCategoryPage({ params }: PageProps) {
           <h1 className={styles.headerTitle}>{category.name}</h1>
         </header>
 
-        {/* 12-колоночная сетка: sidebar (3) + content (9) */}
+        {/* 12-колоночная сетка sidebar (3) + content (9) */}
         <div className={styles.layout}>
           <aside className={styles.sidebar} aria-label="Фильтры и категории">
             <CatalogSidebar items={categories} activeSlug={category.slug} />
