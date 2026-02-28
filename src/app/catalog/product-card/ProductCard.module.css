@@ -1,29 +1,209 @@
 .card {
+  display: flex;
+  flex-direction: column;
+
   border: 1px solid rgba(0, 0, 0, 0.08);
   border-radius: 12px;
-
   padding: 12px;
+  overflow: hidden;
+  cursor: pointer;
+  transition:
+    border var(--dur) var(--ease),
+    box-shadow var(--dur) var(--ease);
+}
+.card:hover {
+  border: 1px solid transparent;
+  box-shadow: 0 2px 8px #ededed;
 }
 
 .thumb {
-  height: 140px;
-  border-radius: 10px;
-
-  background: rgba(0, 0, 0, 0.04);
-
-  margin-bottom: 12px;
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  aspect-ratio: 1 / 1;
 }
 
-.title {
-  margin: 0 0 6px;
-
-  font-size: var(--text-base);
-  font-weight: 500;
+.image {
+  object-fit: cover;
+  border-radius: 12px;
 }
 
-.meta {
+.priceBlock {
+  padding-top: 10px;
+}
+.price {
   margin: 0;
+  font-size: 26px;
+  font-weight: 550;
+}
 
-  font-size: var(--text-sm);
-  opacity: 0.7;
+.productName {
+  padding-top: 10px;
+}
+.title {
+  font-size: var(--text-base);
+  font-weight: 400;
+}
+
+.quantityControl {
+  display: flex;
+  flex: 1;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 0px;
+  border: 1px solid #ebeaea;
+  border-radius: 12px;
+  width: fit-content;
+  padding: 2px;
+}
+
+.quantityButton {
+  width: 24px;
+  height: 24px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+
+  font-size: 32px;
+  font-weight: 300;
+  color: var(--color-gray);
+  transition: color var(--dur) var(--ease);
+}
+
+.quantityButton:hover {
+  color: var(--color-dark-blue);
+}
+
+.quantityInput {
+  border: none;
+
+  /* flex: 1;
+  min-width: 40px; */
+
+  width: 30px;
+  background-color: transparent;
+  text-align: center;
+  font-weight: 450;
+  font-size: var(--text-base);
+  font-family: var(--font-sans);
+}
+
+.quantityInput::-webkit-outer-spin-button,
+.quantityInput::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.quantityInput {
+  -moz-appearance: textfield;
+}
+
+.productActions {
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.engravingControl {
+  position: relative;
+  display: flex;
+  flex: 0 0 auto;
+  min-width: 0;
+  justify-content: flex-start;
+  flex-direction: row;
+  align-items: center;
+  border: 1px solid #ebeaea;
+  border-radius: 12px;
+  gap: 10px;
+  cursor: pointer;
+  user-select: none;
+  padding: 10px 12px;
+  background-color: #fdfdfd;
+  overflow: hidden;
+}
+
+.engravingCheckbox {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.switch {
+  position: relative;
+  flex: 0 0 auto;
+  width: 46px;
+  height: 26px;
+  border-radius: 999px;
+  background-color: var(--color-white);
+  border: 1px solid #ebeaea;
+}
+
+.switch::before {
+  position: absolute;
+  content: "";
+  top: 2px;
+  left: 2px;
+  width: 20px;
+  height: 20px;
+  border-radius: 999px;
+  background-color: #a4a4a4;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.18);
+  transition:
+    transform var(--dur) var(--ease),
+    background-color var(--dur) var(--ease);
+}
+
+.engravingCheckbox:checked + .switch::before {
+  transform: translateX(20px);
+  background-color: var(--color-dark-blue);
+}
+.engravingCheckbox:checked + .switch {
+  border: 1px solid var(--color-dark-blue);
+  background-color: rgba(0, 102, 255, 0.03);
+}
+
+.label {
+  white-space: nowrap;
+  font-size: 18x;
+  text-overflow: ellipsis;
+}
+
+.addToCartButton {
+  background-color: var(--color-dark-blue);
+  color: var(--color-white);
+  border: none;
+  width: fit-content;
+  padding: 10px 20px;
+  border-radius: 12px;
+  margin-top: 10px;
+  height: 48px;
+  font-weight: 450;
+  transition: background-color var(--dur) var(--ease);
+}
+
+.addToCartButton:hover {
+  background-color: var(--color-dark-blue-hover);
+}
+
+.productBody {
+  display: flex;
+  gap: 20px;
+  flex: 1;
+  min-height: 0;
+  flex-direction: column;
+}
+
+.productInfo {
+}
+
+.purchaseSection {
+  border-top: 1px solid var(--color-light);
+  margin-top: auto;
 }
