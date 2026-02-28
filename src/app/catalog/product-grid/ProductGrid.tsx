@@ -8,6 +8,7 @@ import ProductCard from "../product-card/ProductCard";
 
 import { getProductsByCategorySlugFromStrapi } from "@/lib/api/catalog";
 import type { CatalogProductPreview } from "@/lib/api/catalog/types";
+console.log("NEXT_PUBLIC_STRAPI_URL =", process.env.NEXT_PUBLIC_STRAPI_URL);
 
 type ProductGridProps = {
   categorySlug: string;
