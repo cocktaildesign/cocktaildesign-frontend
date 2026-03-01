@@ -1,5 +1,6 @@
 "use client";
 
+import { useFavoritesStore } from "@/lib/favorites/favoritesStore";
 import Link from "next/link";
 import Container from "@/components/layout/Container";
 import styles from "./Header.module.css";
@@ -113,31 +114,33 @@ function TopNav() {
  * Логики состояния здесь нет: это чистая разметка.
  */
 function MainBar() {
+  const hasHydrated = useFavoritesStore((s) => s.hasHydrated);
+  const favoritesCount = useFavoritesStore((s) => Object.keys(s.ids).length);
+
+  const badgeCount = hasHydrated ? favoritesCount : 0;
+
   return (
     <div className={styles.mainBar}>
       {/* Логотип */}
       <div className={styles.mainBarLeft}>
         <Logo className={styles.logo} />
       </div>
-
       {/* Каталог + поиск */}
       <div className={styles.mainBarCenter}>
-        <CatalogMenu />
-
-        {/* SearchBar может быть интерактивным компонентом (поэтому Header остаётся client). */}
+        <CatalogMenu /> {/* SearchBar может быть интерактивным компонентом (поэтому Header остаётся client). */}
         <SearchBar />
       </div>
-
       {/* Действия: избранное и корзина */}
       <div className={styles.rightMainBar}>
         <Link href="/favorites" className={styles.actionLink}>
-          <HeartIcon className={styles.actionIcon} />
+          <div className={styles.iconWrapper}>
+            <HeartIcon className={styles.actionIcon} />
+            {badgeCount > 0 && <span className={styles.badge}>{badgeCount}</span>}
+          </div>
           <span className={styles.actionText}>Избранное</span>
         </Link>
-
         <Link href="/cart" className={styles.actionLink}>
-          <CartIcon className={styles.actionIcon} />
-          <span className={styles.actionText}>Корзина</span>
+          <CartIcon className={styles.actionIcon} /> <span className={styles.actionText}>Корзина</span>
         </Link>
       </div>
     </div>

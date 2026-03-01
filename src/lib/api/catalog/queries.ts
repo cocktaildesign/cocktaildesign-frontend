@@ -219,3 +219,57 @@ export async function getProductsByCategorySlugFromStrapi(params: GetProductsPar
     hasMore: response.hasMore,
   };
 }
+
+// ============================================================================
+// ИЗБРАННОЕ: ТОВАРЫ ПО ID
+// ============================================================================
+
+type StrapiCatalogProductsByIdsResponse = {
+  items: StrapiProductItem[];
+  // total/limit/offset/hasMore могут отсутствовать — это нормально для этого endpoint
+  total?: number;
+};
+
+// ----------------------------------------------------------------------------
+// Получить список товаров по массиву Strapi id.
+// GET /api/catalog/products-by-ids?ids=867,866,848
+//
+// Возвращаем в формате CatalogProductsResponse, чтобы UI мог переиспользовать
+// уже существующий подход (items/total/...)
+// ----------------------------------------------------------------------------
+export async function getProductsByIdsFromStrapi(productIds: string[]): Promise<CatalogProductsResponse> {
+  // 1) Если ids пустой — сразу пустой результат (без запроса)
+  if (productIds.length === 0) {
+    return { items: [], total: 0, limit: 0, offset: 0, hasMore: false };
+  }
+
+  // 2) Нормализуем ids: trim + удаляем пустые
+  const normalizedIds = productIds.map((id) => id.trim()).filter(Boolean);
+
+  if (normalizedIds.length === 0) {
+    return { items: [], total: 0, limit: 0, offset: 0, hasMore: false };
+  }
+
+  // 3) Query-параметр "ids" = "867,866"
+  const idsParam = normalizedIds.join(",");
+
+  const query: Record<string, string> = {
+    ids: idsParam,
+  };
+
+  // 4) Запрос
+  const response: StrapiCatalogProductsByIdsResponse = await fetchStrapi("/api/catalog/products-by-ids", query);
+
+  // 5) Маппинг Strapi → Domain (как в остальных запросах)
+  const items = (response.items ?? [])
+    .map(mapProductPreview)
+    .filter((item): item is NonNullable<typeof item> => item !== null);
+
+  return {
+    items,
+    total: typeof response.total === "number" ? response.total : items.length,
+    limit: normalizedIds.length,
+    offset: 0,
+    hasMore: false,
+  };
+}

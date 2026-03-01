@@ -10,7 +10,7 @@ export default function HeartIcon({ title, ...props }: Props) {
       width="21"
       height="19"
       viewBox="0 0 21 19"
-      fill="none"
+      fill="currentColor"
       xmlns="http://www.w3.org/2000/svg"
       role={title ? "img" : "presentation"}
       aria-hidden={title ? undefined : true}

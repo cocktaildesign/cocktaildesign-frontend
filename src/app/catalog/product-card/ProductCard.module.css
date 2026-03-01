@@ -1,7 +1,6 @@
 .card {
   display: flex;
   flex-direction: column;
-
   border: 1px solid rgba(0, 0, 0, 0.08);
   border-radius: 12px;
   padding: 12px;
@@ -43,6 +42,11 @@
 .title {
   font-size: var(--text-base);
   font-weight: 400;
+  color: var(--color-gray);
+}
+
+.title:hover {
+  color: var(--color-dark-blue);
 }
 
 .quantityControl {
@@ -101,6 +105,7 @@
 
 .quantityInput {
   -moz-appearance: textfield;
+  appearance: textfield;
 }
 
 .productActions {
@@ -138,8 +143,8 @@
 .switch {
   position: relative;
   flex: 0 0 auto;
-  width: 46px;
-  height: 26px;
+  width: 42px;
+  height: 22px;
   border-radius: 999px;
   background-color: var(--color-white);
   border: 1px solid #ebeaea;
@@ -150,8 +155,8 @@
   content: "";
   top: 2px;
   left: 2px;
-  width: 20px;
-  height: 20px;
+  width: 16px;
+  height: 16px;
   border-radius: 999px;
   background-color: #a4a4a4;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.18);
@@ -183,8 +188,9 @@
   padding: 10px 20px;
   border-radius: 12px;
   margin-top: 10px;
-  height: 48px;
-  font-weight: 450;
+  height: 46px;
+  font-weight: 400;
+  font-size: 16px;
   transition: background-color var(--dur) var(--ease);
 }
 
@@ -200,10 +206,42 @@
   flex-direction: column;
 }
 
-.productInfo {
-}
-
 .purchaseSection {
   border-top: 1px solid var(--color-light);
   margin-top: auto;
+}
+
+.favoriteButton {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  border: 0px solid transparent;
+  background-color: transparent;
+  color: var(--color-gray-light);
+  width: 36px;
+  height: 36px;
+  transition:
+    color var(--dur) var(--ease),
+    transform var(--dur) var(--ease);
+  cursor: pointer;
+}
+
+.favoriteButton:hover {
+  color: #d60001;
+  transform: scale(1.05);
+}
+
+.favoriteButton:hover .favoriteIcon {
+  transform: scale(1.05);
+}
+.favoriteIcon {
+  fill: transparent; /* обычное — без заливки */
+}
+
+.favoriteButtonActive {
+  color: #d60001;
+}
+
+.favoriteButtonActive .favoriteIcon {
+  fill: currentColor;
 }

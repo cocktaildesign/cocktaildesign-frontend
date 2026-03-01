@@ -1,0 +1,60 @@
+.favoritesPage {
+  min-height: 60vh;
+  margin-bottom: 50px;
+  display: flex;
+  flex-direction: column;
+  display: flex;
+  flex-direction: column;
+
+  /* важно: страница занимает доступную высоту */
+  flex: 1;
+}
+
+.favoritesPageTitle {
+  margin: 0 0 24px;
+  font-size: var(--text-2xl);
+  font-weight: 450;
+}
+
+.favoritesState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  gap: 10px;
+}
+
+.favoritesStateIcon {
+  color: #d60001;
+}
+
+.favoritesStateTitle {
+  font-family: var(--font-display);
+  font-weight: 500;
+}
+.favoritesStateDescroption {
+  font-size: var(--text-base);
+  color: var(--color-gray);
+}
+.favoritesStateButtons {
+  background-color: var(--color-dark-blue);
+  height: 48px;
+  color: var(--color-white);
+  font-family: var(--font-display);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 20px;
+  border-radius: 12px;
+  margin-top: 20px;
+}
+
+.favoritesLoading {
+  flex: 1;
+  color: var(--color-gray-light);
+  font-size: var(--text-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

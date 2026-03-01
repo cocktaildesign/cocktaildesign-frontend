@@ -25,6 +25,7 @@ const LABELS: Record<string, string> = {
   "/shipping": "Доставка",
   "/payment-methods": "Способы оплаты",
   "/promotions": "Акции",
+  "/favorites": "Избранное",
 };
 
 type Crumb = { href: string; label: string };

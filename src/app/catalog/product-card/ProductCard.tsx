@@ -3,6 +3,8 @@ import styles from "./ProductCard.module.css";
 import type { CatalogProductPreview } from "@/lib/api/catalog/types";
 import Image from "next/image";
 import { useState } from "react";
+import HeartIcon from "@/components/icons/HeartIcon";
+import { useFavorite } from "@/lib/favorites/useFavorite";
 
 type ProductCardProps = {
   product: CatalogProductPreview;
@@ -11,6 +13,7 @@ type ProductCardProps = {
 export default function ProductCard({ product }: ProductCardProps) {
   const [quantity, setQuantity] = useState<number>(1);
   const [engravingEnabled, setEngravingEnabled] = useState<boolean>(false);
+  const { isFavorite, toggleFavorite } = useFavorite(product.id);
 
   function increment() {
     setQuantity((prev) => prev + 1);
@@ -22,11 +25,6 @@ export default function ProductCard({ product }: ProductCardProps) {
       if (prev <= 1) return 1;
       return prev - 1;
     });
-  }
-
-  //функция переключения
-  function toggleEngtaving() {
-    setEngravingEnabled((prev) => !prev);
   }
 
   const imageSrc = product.imageUrl?.trim() ? product.imageUrl : "/images/catalog/product-placeholder.webp";
@@ -41,7 +39,21 @@ export default function ProductCard({ product }: ProductCardProps) {
           fill
           className={styles.image}
           sizes="(max-width: 768px) 50vw, 25vw"></Image>
+
+        {/* Иконка избранное */}
+
+        <button
+          className={`${styles.favoriteButton} ${isFavorite ? styles.favoriteButtonActive : ""}`}
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            toggleFavorite();
+          }}
+          aria-pressed={isFavorite}>
+          <HeartIcon className={styles.favoriteIcon} />
+        </button>
       </div>
+
       <div className={styles.productBody}>
         <div className={styles.productInfo}>
           <div className={styles.priceBlock}>
