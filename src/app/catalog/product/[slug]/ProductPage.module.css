@@ -1,0 +1,126 @@
+.productPage {
+  margin-bottom: 50px;
+}
+
+.productPageTitle {
+  margin: 0 0 24px;
+  font-size: var(--text-2xl);
+  font-weight: 450;
+}
+
+.productMeta {
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+}
+
+.productSku {
+  font-size: var(--text-sm);
+  color: var(--color-gray);
+}
+.productLayout {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  gap: 16px;
+}
+
+.productGallery {
+  height: 500px;
+}
+
+.productGallery {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+}
+
+.image {
+  object-fit: contain;
+  border-radius: 12px;
+}
+
+.productInfo {
+  height: 100px;
+  background-color: antiquewhite;
+}
+
+.productPurchase {
+  background-color: var(--color-white);
+  padding: 24px;
+  border-radius: 12px;
+  box-shadow: 0 6px 12px #e5e7e8;
+  position: sticky;
+  top: 160px;
+}
+
+.productPurchasePrice {
+  font-size: var(--text-2xl);
+  font-weight: 550;
+  margin-bottom: 10px;
+
+  width: fit-content;
+}
+
+.productActions {
+  display: flex;
+  flex-direction: row;
+  gap: 8px;
+}
+
+.addToCartButton {
+  background-color: var(--color-dark-blue);
+  color: var(--color-white);
+  border-radius: 12px;
+  width: fit-content;
+  border: none;
+  font-size: var(--text-base);
+  display: flex;
+  flex: 1;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  padding: 10px 30px;
+  height: 46px;
+  transition: background-color var(--dur) var(--ease);
+}
+
+.addToCartButton:hover {
+  background-color: var(--color-dark-blue-hover);
+}
+
+.quickOrderButton {
+  background-color: var(--color-light);
+  color: var(--color-dark-blue);
+  border-radius: 12px;
+  width: 100%;
+  font-size: var(--text-base);
+
+  margin-top: 10px;
+  border: none;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  padding: 10px 30px;
+  height: 46px;
+  transition: background-color var(--dur) var(--ease);
+}
+
+.quickOrderButton:hover {
+  background-color: var(--color-light);
+}
+.favoriteButton {
+  width: 48px;
+  background-color: var(--color-light);
+  border-radius: 12px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.favoriteIcon {
+  width: 40px;
+}

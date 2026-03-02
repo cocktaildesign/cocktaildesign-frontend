@@ -72,10 +72,11 @@ export type StrapiProductAttributes = {
   moyskladId?: string;
   price?: number | null;
 
-  // В Strapi у тебя image: multiple: true
-  // Формат может быть:
-  // 1) упрощённый: массив файлов
-  // 2) стандартный Strapi: { data: [{ attributes: файл }] }
+  // Детальная страница товара
+  slug?: string | null;
+  priceOld?: number | null;
+  description?: string | null;
+
   image?:
     | StrapiMediaFile[]
     | {
@@ -142,4 +143,37 @@ export type CatalogProductsResponse = {
   offset: number; // с какого смещения
 
   hasMore: boolean; // есть ли следующая порция (ключ для infinite scroll)
+};
+
+// ============================================================
+//    4) Товар: детальная страница (/catalog/product/[slug])
+// ============================================================
+
+// Категория для хлебных крошек (приходит из backend как breadcrumbsCategories)
+export type BreadcrumbCategory = {
+  id: string;
+  slug: string;
+  name: string;
+};
+
+// Детальная модель товара для страницы товара.
+// Это не превью для грида, тут есть description и priceOld.
+export type CatalogProductDetail = {
+  id: string; // Strapi id
+  moyskladId: string;
+  slug: string;
+
+  name: string;
+  price: number;
+  priceOld: number;
+  description: string | null;
+
+  imageUrl: string | null;
+};
+
+// Сырой ответ backend:
+// GET /api/catalog/product?slug=ms-xxxxxxx
+export type StrapiCatalogProductBySlugResponse = {
+  item: StrapiProductItem; // Strapi-like { id, attributes }
+  breadcrumbsCategories: BreadcrumbCategory[];
 };

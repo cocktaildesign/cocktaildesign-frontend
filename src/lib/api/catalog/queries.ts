@@ -7,13 +7,16 @@
 import { fetchStrapi } from "@/lib/api/strapi/client";
 
 import type {
+  BreadcrumbCategory,
   CatalogCategoryPreview,
+  CatalogProductDetail,
   CatalogProductsResponse,
+  StrapiCatalogProductBySlugResponse,
   StrapiCategoryListResponse,
   StrapiProductItem,
 } from "./types";
 
-import { mapCategoryPreview, mapProductPreview } from "./mappers";
+import { mapCategoryPreview, mapProductDetail, mapProductPreview } from "./mappers";
 
 // ============================================================================
 // КАТЕГОРИИ
@@ -105,7 +108,7 @@ function normalizeCount(value: unknown): number {
 function buildCatalogTree(flat: FlatCategory[]): CatalogCategoryPreview[] {
   const byId = new Map<string, CatalogCategoryPreview>();
 
-  // 1. создаём узлы
+  // 1) создаём узлы
   for (const item of flat) {
     if (!item.id || !item.slug || !item.name) continue;
 
@@ -119,7 +122,7 @@ function buildCatalogTree(flat: FlatCategory[]): CatalogCategoryPreview[] {
     });
   }
 
-  // 2. связываем parent → children
+  // 2) связываем parent → children
   const roots: CatalogCategoryPreview[] = [];
 
   for (const item of flat) {
@@ -142,7 +145,7 @@ function buildCatalogTree(flat: FlatCategory[]): CatalogCategoryPreview[] {
     parent.children.push(node);
   }
 
-  // 3. скрываем технический root
+  // 3) скрываем технический root
   if (roots.length === 1) {
     return roots[0].children ?? [];
   }
@@ -160,7 +163,7 @@ export async function getCatalogTreeFromStrapi(): Promise<CatalogCategoryPreview
 }
 
 // ============================================================================
-// ТОВАРЫ
+// ТОВАРЫ (список / грид)
 // ============================================================================
 
 type GetProductsParams = {
@@ -218,6 +221,51 @@ export async function getProductsByCategorySlugFromStrapi(params: GetProductsPar
     offset: response.offset,
     hasMore: response.hasMore,
   };
+}
+
+// ============================================================================
+// ТОВАР (детальная страница /catalog/product/[slug])
+// ============================================================================
+
+export type CatalogProductPageData = {
+  product: CatalogProductDetail;
+  breadcrumbsCategories: BreadcrumbCategory[];
+};
+// ----------------------------------------------------------------------------
+// Товар по slug (детальная страница)
+// ----------------------------------------------------------------------------
+export async function getProductBySlugFromStrapi(slug: string): Promise<CatalogProductPageData | null> {
+  const rawSlug = slug.trim();
+  if (!rawSlug) return null;
+
+  // 1) Нормализуем slug:
+  //    принимаем "ms-xxxxxxxx-любая-строка" и режем до "ms-xxxxxxxx"
+  //    чтобы совпасть с тем, что хранится в Strapi.
+  const stableSlug = rawSlug.startsWith("ms-") ? rawSlug.slice(0, 11) : rawSlug;
+
+  try {
+    // 2) Запрашиваем backend по стабильному slug
+    const response: StrapiCatalogProductBySlugResponse = await fetchStrapi("/api/catalog/product", {
+      slug: stableSlug,
+    });
+
+    // 3) Маппим Strapi → Domain
+    //    ВАЖНО: изображения не трогаем — маппер уже умеет.
+    const product = mapProductDetail(response.item);
+    if (!product) return null;
+
+    return {
+      product,
+      breadcrumbsCategories: response.breadcrumbsCategories ?? [],
+    };
+  } catch (e) {
+    // 404 = не найдено → вернём null, страница покажет notFound()
+    const message = e instanceof Error ? e.message : "";
+    if (message.includes(" 404 ") || message.includes("Not Found")) return null;
+
+    // Любая другая ошибка — это реально проблема
+    throw e;
+  }
 }
 
 // ============================================================================

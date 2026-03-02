@@ -43,6 +43,8 @@
   color: var(--color-white);
   font-family: var(--font-display);
   display: flex;
+  font-size: var(--text-base);
+
   align-items: center;
   justify-content: center;
   padding: 10px 20px;

@@ -1,0 +1,45 @@
+.favoriteButton {
+  /* базовый reset */
+  border: none;
+  background-color: transparent;
+
+  /* размер кнопки */
+  width: 36px;
+  height: 36px;
+
+  /* центрируем иконку */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  /* цвет по умолчанию */
+  color: var(--color-gray-light);
+
+  /* анимации */
+  cursor: pointer;
+  transition:
+    color var(--dur) var(--ease),
+    transform var(--dur) var(--ease);
+}
+
+/* hover состояние */
+.favoriteButton:hover {
+  color: #d60001;
+  transform: scale(1.05);
+}
+
+/* сама иконка */
+.favoriteIcon {
+  fill: transparent;
+  transition: fill var(--dur) var(--ease);
+}
+
+/* активное состояние */
+.favoriteButtonActive {
+  color: #d60001;
+}
+
+/* заливка сердечка в активном состоянии */
+.favoriteButtonActive .favoriteIcon {
+  fill: currentColor;
+}

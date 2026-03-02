@@ -11,6 +11,7 @@
 import { getStrapiMediaUrl } from "@/lib/api/strapi/media";
 import type {
   CatalogCategoryPreview,
+  CatalogProductDetail,
   CatalogProductPreview,
   StrapiCategoryItem,
   StrapiMediaFile,
@@ -228,6 +229,67 @@ export function mapProductPreview(item: StrapiProductItem): CatalogProductPrevie
     slug,
     name,
     price,
+    imageUrl,
+  };
+}
+
+// ----------------------------------------------------------------------------
+// mapProductDetail
+// Превращает Strapi товар в детальную модель для страницы товара.
+// Отличия от preview:
+// - slug приходит с бэка (уже стабильный: ms-xxxxxxxx)
+// - есть priceOld и description
+//
+// Важно про типы:
+// - StrapiProductItem в твоих типах для "плоского" варианта не содержит slug/priceOld/description
+// - но backend отдаёт их внутри attributes → поэтому здесь читаем именно attributes
+// ----------------------------------------------------------------------------
+export function mapProductDetail(item: StrapiProductItem): CatalogProductDetail | null {
+  const source = item.attributes;
+
+  // Для детальной страницы ожидаем, что данные лежат в attributes
+  if (!source) return null;
+
+  const name = source.name?.trim() ?? "";
+  const moyskladId = source.moyskladId?.trim() ?? "";
+  const slug = source.slug?.trim() ?? "";
+
+  // Если чего-то нет — страницу лучше считать "не найдено"
+  if (!name || !moyskladId || !slug) return null;
+
+  // price: нормализуем (NaN/<=0 → 0)
+  const rawPrice = source.price;
+  const price = typeof rawPrice === "number" && Number.isFinite(rawPrice) && rawPrice > 0 ? rawPrice : 0;
+
+  // priceOld: допускаем 0 (это значит "нет старой цены")
+  const rawPriceOld = source.priceOld;
+  const priceOld = typeof rawPriceOld === "number" && Number.isFinite(rawPriceOld) && rawPriceOld > 0 ? rawPriceOld : 0;
+
+  // description: строка или null
+  const description = typeof source.description === "string" ? source.description : null;
+
+  // image: используем ТУ ЖЕ логику, что и в preview (через pickFirstProductImage)
+  const firstImage = pickFirstProductImage(source.image ?? null);
+
+  const imagePath =
+    firstImage?.formats?.medium?.url ??
+    firstImage?.formats?.small?.url ??
+    firstImage?.formats?.thumbnail?.url ??
+    firstImage?.url ??
+    null;
+
+  const imageUrl = imagePath ? getStrapiMediaUrl(imagePath) : null;
+
+  return {
+    id: String(item.id),
+    moyskladId,
+    slug,
+
+    name,
+    price,
+    priceOld,
+    description,
+
     imageUrl,
   };
 }

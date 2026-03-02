@@ -1,7 +1,3 @@
-// src/lib/api/catalog/index.ts
-// Публичный вход каталога: экспортируем только функции (API).
-// Типы импортируем напрямую из "./types" при необходимости.
-
 export {
   // Категории
   getTopCategoriesFromStrapi,
@@ -10,4 +6,7 @@ export {
 
   // Товары (категория + все потомки, пагинация)
   getProductsByCategorySlugFromStrapi,
+
+  // Товар (детальная страница)
+  getProductBySlugFromStrapi,
 } from "./queries";
