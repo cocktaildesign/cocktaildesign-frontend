@@ -11,12 +11,13 @@ import type {
   CatalogCategoryPreview,
   CatalogProductDetail,
   CatalogProductsResponse,
+  CatalogVariant,
   StrapiCatalogProductBySlugResponse,
   StrapiCategoryListResponse,
   StrapiProductItem,
 } from "./types";
 
-import { mapCategoryPreview, mapProductDetail, mapProductPreview } from "./mappers";
+import { mapCategoryPreview, mapProductDetail, mapProductPreview, mapVariants } from "./mappers";
 
 // ============================================================================
 // КАТЕГОРИИ
@@ -229,8 +230,10 @@ export async function getProductsByCategorySlugFromStrapi(params: GetProductsPar
 
 export type CatalogProductPageData = {
   product: CatalogProductDetail;
+  variants: CatalogVariant[];
   breadcrumbsCategories: BreadcrumbCategory[];
 };
+
 // ----------------------------------------------------------------------------
 // Товар по slug (детальная страница)
 // ----------------------------------------------------------------------------
@@ -250,12 +253,15 @@ export async function getProductBySlugFromStrapi(slug: string): Promise<CatalogP
     });
 
     // 3) Маппим Strapi → Domain
-    //    ВАЖНО: изображения не трогаем — маппер уже умеет.
     const product = mapProductDetail(response.item);
     if (!product) return null;
 
+    // 4) variants: маппим в безопасный Domain-формат
+    const variants = mapVariants(response.variants);
+
     return {
       product,
+      variants,
       breadcrumbsCategories: response.breadcrumbsCategories ?? [],
     };
   } catch (e) {

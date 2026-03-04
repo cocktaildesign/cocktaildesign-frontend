@@ -13,9 +13,12 @@ import type {
   CatalogCategoryPreview,
   CatalogProductDetail,
   CatalogProductPreview,
+  CatalogVariant,
+  CatalogVariantCharacteristic,
   StrapiCategoryItem,
   StrapiMediaFile,
   StrapiProductItem,
+  StrapiVariantItem,
 } from "./types";
 
 // ============================================================================
@@ -192,10 +195,6 @@ function pickFirstProductImage(image: StrapiProductItem["image"]): StrapiMediaFi
 // ----------------------------------------------------------------------------
 // mapProductPreview
 // Превращает Strapi товар в "карточку" для грида.
-// Правила:
-// - если нет name или moyskladId → товар пропускаем (null)
-// - slug генерируем через makeProductSlug (id + читабельный хвост)
-// - imageUrl берём из первой картинки, выбираем лучший формат
 // ----------------------------------------------------------------------------
 export function mapProductPreview(item: StrapiProductItem): CatalogProductPreview | null {
   const source = item.attributes ?? item;
@@ -236,13 +235,6 @@ export function mapProductPreview(item: StrapiProductItem): CatalogProductPrevie
 // ----------------------------------------------------------------------------
 // mapProductDetail
 // Превращает Strapi товар в детальную модель для страницы товара.
-// Отличия от preview:
-// - slug приходит с бэка (уже стабильный: ms-xxxxxxxx)
-// - есть priceOld и description
-//
-// Важно про типы:
-// - StrapiProductItem в твоих типах для "плоского" варианта не содержит slug/priceOld/description
-// - но backend отдаёт их внутри attributes → поэтому здесь читаем именно attributes
 // ----------------------------------------------------------------------------
 export function mapProductDetail(item: StrapiProductItem): CatalogProductDetail | null {
   const source = item.attributes;
@@ -292,4 +284,85 @@ export function mapProductDetail(item: StrapiProductItem): CatalogProductDetail 
 
     imageUrl,
   };
+}
+
+// ============================================================================
+// ВАРИАНТЫ (variants)
+// Пока делаем максимально простой маппинг:
+// - берём name/value как есть
+// - meta игнорируем
+// ============================================================================
+
+// ----------------------------------------------------------------------------
+// mapVariantCharacteristics
+// Превращаем "сырой массив" characteristics в безопасный список { name, value }.
+// ----------------------------------------------------------------------------
+function mapVariantCharacteristics(raw: unknown): CatalogVariantCharacteristic[] {
+  if (!Array.isArray(raw)) return [];
+
+  const result: CatalogVariantCharacteristic[] = [];
+
+  for (const item of raw) {
+    if (!item || typeof item !== "object") continue;
+
+    const obj = item as { name?: unknown; value?: unknown };
+
+    const name = typeof obj.name === "string" ? obj.name.trim() : "";
+    const value = typeof obj.value === "string" ? obj.value.trim() : "";
+
+    // Для UI нам важна пара name/value. Пустое — выкидываем.
+    if (!name || !value) continue;
+
+    result.push({ name, value });
+  }
+
+  return result;
+}
+
+// ----------------------------------------------------------------------------
+// mapVariant
+// Один Strapi-variant → Domain-variant для UI.
+// ----------------------------------------------------------------------------
+export function mapVariant(item: StrapiVariantItem): CatalogVariant | null {
+  const source = item.attributes;
+  if (!source) return null;
+
+  const name = typeof source.name === "string" ? source.name.trim() : "";
+  const moyskladId = typeof source.moyskladId === "string" ? source.moyskladId.trim() : "";
+
+  if (!name || !moyskladId) return null;
+
+  const rawPrice = source.price;
+  const price = typeof rawPrice === "number" && Number.isFinite(rawPrice) && rawPrice > 0 ? rawPrice : 0;
+
+  const rawPriceOld = source.priceOld;
+  const priceOld = typeof rawPriceOld === "number" && Number.isFinite(rawPriceOld) && rawPriceOld > 0 ? rawPriceOld : 0;
+
+  const characteristics = mapVariantCharacteristics(source.characteristics);
+
+  return {
+    id: String(item.id),
+    moyskladId,
+    name,
+    price,
+    priceOld,
+    characteristics,
+  };
+}
+
+// ----------------------------------------------------------------------------
+// mapVariants
+// Маппим массив variants, отбрасываем мусорные/битые элементы.
+// ----------------------------------------------------------------------------
+export function mapVariants(items: StrapiVariantItem[] | undefined): CatalogVariant[] {
+  if (!items || items.length === 0) return [];
+
+  const result: CatalogVariant[] = [];
+
+  for (const v of items) {
+    const mapped = mapVariant(v);
+    if (mapped) result.push(mapped);
+  }
+
+  return result;
 }

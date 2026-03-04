@@ -44,9 +44,7 @@ export type StrapiCategoryAttributes = {
   };
 };
 
-//    StrapiCategoryItem — один элемент массива `data` из Strapi.
-//      { data: [ { id, attributes }, ... ] }
-
+// StrapiCategoryItem — один элемент массива `data` из Strapi.
 export type StrapiCategoryItem = {
   id: number;
   attributes?: StrapiCategoryAttributes;
@@ -62,10 +60,14 @@ export type StrapiCategoryItem = {
   };
 };
 
-//   StrapiCategoryListResponse — ответ /api/moysklad-categories (список).
+// StrapiCategoryListResponse — ответ /api/moysklad-categories (список).
 export type StrapiCategoryListResponse = {
   data: StrapiCategoryItem[];
 };
+
+// ============================================================
+//    1.1) Strapi types — товары
+// ============================================================
 
 export type StrapiProductAttributes = {
   name?: string;
@@ -99,12 +101,41 @@ export type StrapiProductItem = {
   image?: StrapiProductAttributes["image"];
 };
 
+// ============================================================
+//    1.2) Strapi types — варианты (variants)
+//    meta НЕ типизируем (не усложняем) — оставляем unknown
+// ============================================================
+
+export type StrapiVariantCharacteristic = {
+  id?: string;
+  meta?: unknown;
+  name?: string; // например: "цвет"
+  value?: string; // например: "желтый"
+};
+
+export type StrapiVariantAttributes = {
+  name?: string | null;
+  moyskladId?: string | null;
+
+  price?: number | null;
+  priceOld?: number | null;
+
+  characteristics?: StrapiVariantCharacteristic[] | null;
+
+  // (позже) можно добавить image, если решишь хранить фото у варианта
+  // image?: ...
+};
+
+export type StrapiVariantItem = {
+  id: number;
+  attributes?: StrapiVariantAttributes;
+};
+
 //  ============================================================
 //    2) Domain types (то, что отдаём в UI)
 // ============================================================
 
-//    CatalogCategoryPreview — это то, что получит UI (/catalog).
-
+// CatalogCategoryPreview — это то, что получит UI (/catalog).
 export type CatalogCategoryPreview = {
   id: string;
   name: string;
@@ -121,28 +152,25 @@ export type CatalogCategoryPreview = {
 // ============================================================
 
 // CatalogProductPreview — минимальная модель товара для списка/грида.
-// Важно: это НЕ детальная карточка товара, а "превью" для каталога.
 export type CatalogProductPreview = {
   id: string; // Strapi id
   moyskladId: string; // внешний стабильный id
   slug: string; // URL
 
-  name: string; //загаловок карточки
-  price: number; // Цена
-  imageUrl: string | null; // Картинка карточки.
+  name: string; // заголовок карточки
+  price: number; // цена
+  imageUrl: string | null; // картинка карточки
 };
 
 // Ответ API для infinite scroll.
-// offset/limit — классическая пагинация "как у маркетплейсов".
-
 export type CatalogProductsResponse = {
   items: CatalogProductPreview[];
 
-  total: number; // всего товаров по фильтру (может пригодиться для "Найдено N")
-  limit: number; // сколько попросили
-  offset: number; // с какого смещения
+  total: number;
+  limit: number;
+  offset: number;
 
-  hasMore: boolean; // есть ли следующая порция (ключ для infinite scroll)
+  hasMore: boolean;
 };
 
 // ============================================================
@@ -157,9 +185,8 @@ export type BreadcrumbCategory = {
 };
 
 // Детальная модель товара для страницы товара.
-// Это не превью для грида, тут есть description и priceOld.
 export type CatalogProductDetail = {
-  id: string; // Strapi id
+  id: string;
   moyskladId: string;
   slug: string;
 
@@ -171,9 +198,28 @@ export type CatalogProductDetail = {
   imageUrl: string | null;
 };
 
+// Упрощённая характеристика (для UI): просто name/value как текст
+export type CatalogVariantCharacteristic = {
+  name: string;
+  value: string;
+};
+
+// Вариант для UI (детальная страница)
+export type CatalogVariant = {
+  id: string; // Strapi id варианта
+  moyskladId: string;
+
+  name: string;
+  price: number;
+  priceOld: number;
+
+  characteristics: CatalogVariantCharacteristic[];
+};
+
 // Сырой ответ backend:
 // GET /api/catalog/product?slug=ms-xxxxxxx
 export type StrapiCatalogProductBySlugResponse = {
-  item: StrapiProductItem; // Strapi-like { id, attributes }
-  breadcrumbsCategories: BreadcrumbCategory[];
+  item: StrapiProductItem;
+  variants?: StrapiVariantItem[]; // <-- добавили (как в Postman)
+  breadcrumbsCategories?: BreadcrumbCategory[];
 };
