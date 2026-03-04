@@ -30,7 +30,7 @@ export async function fetchStrapi<T>(path: string, params?: Record<string, strin
 
   const response = await fetch(url.toString(), {
     // На клиенте будет проигнорировано — ок
-    next: { revalidate: 60 },
+    next: { revalidate: 3600 },
   });
 
   if (!response.ok) {

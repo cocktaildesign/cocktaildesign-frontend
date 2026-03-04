@@ -1,27 +1,19 @@
 /* ==========================================================================
    HEADER
-   Обёртка хедера. Статичная версия: без fixed/sticky и без spacer.
+   Корневой контейнер хедера.
+   Sticky-позиционирование + фон.
    ========================================================================== */
 .header {
   position: sticky;
   top: 0;
   z-index: 9000;
   width: 100%;
-
-  /* background: rgba(255, 255, 255, 0.45); */
   background: rgba(255, 255, 255, 0.92);
-
-  /* backdrop-filter: blur(25px); */
-
-  /* background-color: #fff; */
-
-  /* 
-  will-change: transform; */
-  /* transform: translateZ(0); */
 }
 
 /* ==========================================================================
-   Общие стили для ссылок и интерактивных элементов внутри хедера.
+   LINK BASE
+   Базовые стили для ссылок и интерактивных элементов хедера.
    ========================================================================== */
 .linkBase {
   font-size: var(--text-sm);
@@ -36,9 +28,8 @@
 
 /* ==========================================================================
    TOP BAR
-   Первая строка: “Написать нам”, соцсети, верхнее меню, телефон.
+   Первая строка: “Написать нам”, соцсети, верхнее меню, контакты.
    ========================================================================== */
-
 .topBar {
   padding-top: 8px;
   display: flex;
@@ -66,7 +57,6 @@
    TOP NAV
    Верхнее меню + dropdown.
    ========================================================================== */
-
 .topBarNav {
   min-width: 0;
 }
@@ -96,13 +86,12 @@
   opacity: 0.7;
 }
 
-/* Dropdown: скрыт по умолчанию, показывается на hover/focus-within */
+/* Dropdown контейнер */
 .dropdown {
   position: absolute;
   top: calc(100% + 8px);
   left: 0;
   min-width: 200px;
-
   background: #fff;
   border-radius: var(--radius);
   box-shadow: 0 12px 30px rgba(0, 0, 0, 0.14);
@@ -124,7 +113,7 @@
   pointer-events: auto;
 }
 
-/* Буфер для удобства: курсор может “провалиться” между ссылкой и dropdown */
+/* Hover-буфер между триггером и dropdown */
 .topNavItem::after {
   content: "";
   position: absolute;
@@ -172,7 +161,6 @@
    TOP BAR CONTACT
    Телефон и tooltip с графиком работы.
    ========================================================================== */
-
 .topBarContact {
   display: flex;
   align-items: center;
@@ -188,7 +176,7 @@
   font-size: var(--text-sm);
 }
 
-/* Tooltip: контейнер иконки и выпадающей подсказки */
+/* Tooltip контейнер */
 .infoTooltip {
   position: relative;
   display: flex;
@@ -201,6 +189,7 @@
   cursor: pointer;
 }
 
+/* Tooltip dropdown */
 .infoDropdown {
   position: absolute;
   top: calc(100% + 8px);
@@ -226,7 +215,7 @@
   pointer-events: auto;
 }
 
-/* Буфер для удобства наведения мышью */
+/* Hover-буфер для tooltip */
 .infoTooltip::after {
   content: "";
   position: absolute;
@@ -242,12 +231,6 @@
   gap: 8px;
 }
 
-.infoDropdownTitle {
-  margin: 0;
-  font-size: 14px;
-  font-weight: 500;
-}
-
 .infoDropdownText {
   margin: 0;
   font-size: 14px;
@@ -260,15 +243,20 @@
   font-size: 12px;
 }
 
+.infoDropdownTitle {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 500;
+}
+
 .infoDropdownEmail {
   font-size: 12px;
 }
 
 /* ==========================================================================
    MAIN BAR
-   Вторая строка: логотип, кнопка каталога, поиск, избранное, корзина.
+   Вторая строка: логотип, каталог, поиск, избранное, корзина.
    ========================================================================== */
-
 .mainBar {
   display: flex;
   align-items: flex-start;
@@ -305,16 +293,15 @@
   top: 4px;
 }
 
-/* Иконки действий: избранное/корзина */
+/* Action links: избранное / корзина */
 .actionLink {
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   text-decoration: none;
-  color: inherit;
-  font-weight: 450;
   color: var(--color-black);
+  font-weight: 450;
   transition: color var(--dur) var(--ease);
 }
 
@@ -322,9 +309,37 @@
   color: var(--color-gray);
 }
 
+.iconWrapper {
+  position: relative;
+  display: inline-flex;
+}
+
 .actionIcon {
   color: var(--color-black);
   fill: transparent;
+}
+
+.badge {
+  position: absolute;
+  top: -6px;
+  right: -10px;
+
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 11px;
+  font-weight: 600;
+
+  color: #fff;
+  background: #e53935;
+  border-radius: 999px;
+
+  pointer-events: none;
 }
 
 .actionText {
@@ -336,7 +351,6 @@
    NAV BAR
    Третья строка: категории + кнопка “Акции”.
    ========================================================================== */
-
 .navBar {
   display: flex;
   align-items: center;
@@ -398,35 +412,4 @@
 .sale:focus-visible {
   outline: 2px solid var(--color-accent-strong);
   outline-offset: 2px;
-}
-
-.iconWrapper {
-  position: relative;
-  display: inline-flex;
-}
-
-.badge {
-  position: absolute;
-
-  top: -6px;
-  right: -10px;
-
-  min-width: 18px;
-  height: 18px;
-
-  padding: 0 5px;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  font-size: 11px;
-  font-weight: 600;
-
-  color: white;
-  background: #e53935;
-
-  border-radius: 999px;
-
-  pointer-events: none;
 }
