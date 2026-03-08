@@ -1,41 +1,74 @@
 // frontend/src/app/catalog/product-card/ProductCard.tsx
 "use client";
-import QuantityControl from "@/components/ui/quantity/QuantityControl";
-import EngravingToggle from "@/components/ui/engraving/EngravingToggle";
+
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+
+import QuantityControl from "@/components/ui/quantity/QuantityControl";
+import EngravingToggle from "@/components/ui/engraving/EngravingToggle";
 import FavoriteButton from "@/components/ui/favorites/FavoriteButton";
-import styles from "./ProductCard.module.css";
 
 import type { CatalogProductPreview } from "@/lib/api/catalog/types";
+import styles from "./ProductCard.module.css";
 
 type ProductCardProps = {
   product: CatalogProductPreview;
 };
 
 export default function ProductCard({ product }: ProductCardProps) {
-  // Количество (пока локально для UI)
+  // Количество товара — локальный стейт, пока не подключена корзина
   const [quantity, setQuantity] = useState<number>(1);
-  // Флаг гравировки (пока локально для UI)
-  const [engravingEnabled, setEngravingEnabled] = useState<boolean>(false);
-  // Избранное (local storage / store)
 
-  // URL на страницу товара которая показывает добавялем кол-во и гравировка если есть
+  // Включена ли гравировка — локальный стейт
+  const [engravingChecked, setEngravingChecked] = useState<boolean>(false);
+
+  // Индекс активной картинки для hover scrub
+  // Меняется когда мышь двигается по изображению
+  const [activeImageIndex, setActiveImageIndex] = useState<number>(0);
+
+  // Ссылка на детальную страницу товара
   const productHref = `/catalog/product/${product.slug}`;
 
-  // Картинка (с фолбэком)
-  const imageSrc = product.imageUrl?.trim() ? product.imageUrl : "/images/catalog/product-placeholder.webp";
+  // Берём активную картинку из массива.
+  // Если массив пустой — фолбэк на imageUrl, потом на плейсхолдер
+  const imageSrc = product.images[activeImageIndex] ?? product.imageUrl ?? "/images/catalog/product-placeholder.webp";
 
-  //URL
+  // Вызывается при движении мыши над картинкой.
+  // Делим ширину картинки на зоны по количеству фото —
+  // мышь в левой зоне = первое фото, в правой = последнее.
+  function handleMouseMove(event: React.MouseEvent<HTMLDivElement>) {
+    // Если картинка одна — скраб не нужен
+    if (product.images.length <= 1) return;
+
+    // Размеры и позиция блока картинки на экране
+    const rect = event.currentTarget.getBoundingClientRect();
+
+    // Позиция мыши внутри блока (0 = левый край)
+    const mouseX = event.clientX - rect.left;
+
+    // Доля от 0 до 1 (где мышь относительно ширины)
+    const fraction = mouseX / rect.width;
+
+    // Переводим долю в индекс картинки
+    const index = Math.min(Math.floor(fraction * product.images.length), product.images.length - 1);
+
+    setActiveImageIndex(index);
+  }
+
+  // Мышь ушла с картинки — возвращаем первое фото
+  function handleMouseLeave() {
+    setActiveImageIndex(0);
+  }
+
   return (
     <article className={styles.card}>
-      {/* ====================================================================
-          Кликабельное превью 
-          ==================================================================== */}
+      {/* ================================================================
+          КЛИКАБЕЛЬНАЯ ЗОНА: картинка + название + цена
+          ================================================================ */}
       <Link href={productHref} className={styles.previewLink}>
-        <div className={styles.thumb}>
-          {/* Основное изображение товара */}
+        {/* Картинка с hover scrub */}
+        <div className={styles.thumb} onMouseMove={handleMouseMove} onMouseLeave={handleMouseLeave}>
           <Image
             src={imageSrc}
             alt={product.name}
@@ -44,33 +77,41 @@ export default function ProductCard({ product }: ProductCardProps) {
             sizes="(max-width: 768px) 50vw, 25vw"
           />
 
-          {/* Кнопка избранного поверх изображения */}
+          {/* Кнопка избранного поверх картинки */}
           <FavoriteButton productId={product.id} className={styles.favoriteButtonOverlay} />
+
+          {/* Точки-индикаторы — только если картинок больше одной */}
+          {product.images.length > 1 && (
+            <div className={styles.dots}>
+              {product.images.map((_, index) => (
+                <span key={index} className={index === activeImageIndex ? styles.dotActive : styles.dot} />
+              ))}
+            </div>
+          )}
         </div>
 
+        {/* Цена и название */}
         <div className={styles.productBody}>
-          <div className={styles.productInfo}>
-            <div className={styles.priceBlock}>
-              <p className={styles.price}>{product.price} ₽</p>
-            </div>
+          <div className={styles.priceBlock}>
+            <p className={styles.price}>{product.price} ₽</p>
+          </div>
 
-            <div className={styles.productName}>
-              <h3 className={styles.title}>{product.name}</h3>
-            </div>
+          <div className={styles.productName}>
+            <h3 className={styles.title}>{product.name}</h3>
           </div>
         </div>
       </Link>
 
-      {/* ====================================================================
-          Некликабельная зона действий: количество / гравировка / в корзину
-          ==================================================================== */}
+      {/* ================================================================
+          НЕКЛИКАБЕЛЬНАЯ ЗОНА: количество / гравировка / корзина
+          ================================================================ */}
       <div className={styles.purchaseSection}>
         {product.engravingEnabled ? (
-          // Гравировка есть — два ряда: [кол-во + гравировка] и [корзина]
+          // Гравировка есть — два ряда: [кол-во + гравировка] потом [корзина]
           <>
             <div className={styles.productActions}>
               <QuantityControl value={quantity} onChange={setQuantity} />
-              <EngravingToggle checked={engravingEnabled} onChange={(checked) => setEngravingEnabled(checked)} />
+              <EngravingToggle checked={engravingChecked} onChange={(checked) => setEngravingChecked(checked)} />
             </div>
 
             <button type="button" className={styles.addToCartButton}>
@@ -80,10 +121,11 @@ export default function ProductCard({ product }: ProductCardProps) {
         ) : (
           // Гравировки нет — один ряд: [кол-во + корзина]
           <div className={styles.actionsRow}>
+            <QuantityControl value={quantity} onChange={setQuantity} />
+
             <button type="button" className={styles.addToCartButtonFull}>
               В корзину
-            </button>	
-            <QuantityControl value={quantity} onChange={setQuantity} />
+            </button>
           </div>
         )}
       </div>

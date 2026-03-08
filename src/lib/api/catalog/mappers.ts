@@ -21,6 +21,8 @@ import type {
   StrapiMediaFile,
   StrapiProductItem,
   StrapiVariantItem,
+  StrapiWeeklyProductBlockResponse,
+  WeeklyProductBlock,
 } from "./types";
 
 // ============================================================================
@@ -158,7 +160,14 @@ export function makeProductSlug(moyskladId: string, name?: string): string {
 function pickBestImagePath(file: StrapiMediaFile | null): string | null {
   if (!file) return null;
 
-  return file.formats?.medium?.url ?? file.formats?.small?.url ?? file.formats?.thumbnail?.url ?? file.url ?? null;
+  return (
+    file.formats?.large?.url ??
+    file.formats?.medium?.url ??
+    file.formats?.small?.url ??
+    file.formats?.thumbnail?.url ??
+    file.url ??
+    null
+  );
 }
 
 // ============================================================================
@@ -181,24 +190,19 @@ export function mapProductPreview(item: StrapiProductItem): CatalogProductPrevie
   const imagePath = pickBestImagePath(firstImage);
   const imageUrl = imagePath ? (getStrapiMediaUrl(imagePath) ?? null) : null;
 
-  // Берём до 4 картинок для hover scrub
-  // Используем medium если есть, иначе оригинал
   const images: string[] = [];
 
   if (Array.isArray(source.image)) {
-    // берём максимум 4 фото
     const sliced = source.image.slice(0, 4);
 
     for (const file of sliced) {
       const path = pickBestImagePath(file);
       const url = path ? (getStrapiMediaUrl(path) ?? null) : null;
 
-      // добавляем только валидные URL
       if (url) images.push(url);
     }
   }
 
-  // Гравировка — если поле не задано в Strapi, считаем false
   const engravingEnabled = source.engravingEnabled === true;
   const slug = makeProductSlug(moyskladId, name);
 
@@ -279,7 +283,6 @@ export function mapProductDetail(item: StrapiProductItem): CatalogProductDetail 
   const code = typeof rawCode === "string" && rawCode.trim() ? rawCode.trim() : null;
   const engravingEnabled = source.engravingEnabled === true;
 
-  // вариант 1 — массив файлов
   if (Array.isArray(rawImages)) {
     for (const file of rawImages) {
       const imagePath = pickBestImagePath(file);
@@ -294,7 +297,6 @@ export function mapProductDetail(item: StrapiProductItem): CatalogProductDetail 
     }
   }
 
-  // вариант 2 — стандартный Strapi
   if (!Array.isArray(rawImages) && rawImages?.data) {
     for (const item of rawImages.data) {
       const file = item?.attributes ?? null;
@@ -391,4 +393,98 @@ export function mapVariants(items: StrapiVariantItem[] | undefined): CatalogVari
   }
 
   return result;
+}
+
+// ============================================================================
+// WEEKLY PRODUCT BLOCK
+// ============================================================================
+
+export function mapWeeklyProductBlock(response: StrapiWeeklyProductBlockResponse): WeeklyProductBlock | null {
+  const data = response.data;
+
+  if (!data) return null;
+
+  const product = data.product;
+
+  if (!product) {
+    return {
+      isEnabled: data.isEnabled === true,
+      product: null,
+    };
+  }
+
+  const source = product.attributes ?? product;
+
+  const name = source.name?.trim() ?? "";
+  const slug = source.slug?.trim() ?? "";
+  const rawDisplayTitle = source.displayTitle;
+  const displayTitle = typeof rawDisplayTitle === "string" && rawDisplayTitle.trim() ? rawDisplayTitle.trim() : null;
+
+  if (!name || !slug) {
+    return {
+      isEnabled: data.isEnabled === true,
+      product: null,
+    };
+  }
+
+  const rawPrice = source.price;
+  const price = typeof rawPrice === "number" && Number.isFinite(rawPrice) && rawPrice > 0 ? rawPrice : 0;
+
+  const rawPriceOld = source.priceOld;
+  const priceOld = typeof rawPriceOld === "number" && Number.isFinite(rawPriceOld) && rawPriceOld > 0 ? rawPriceOld : 0;
+
+  const description = typeof source.description === "string" ? source.description : null;
+
+  const rawCode = source.code;
+  const code = typeof rawCode === "string" && rawCode.trim() ? rawCode.trim() : null;
+
+  const engravingEnabled = source.engravingEnabled === true;
+
+  const images: CatalogProductImage[] = [];
+  const rawImages = source.image;
+
+  if (Array.isArray(rawImages)) {
+    for (const file of rawImages) {
+      const imagePath = pickBestImagePath(file);
+      const imageUrl = imagePath ? getStrapiMediaUrl(imagePath) : null;
+
+      if (!imageUrl) continue;
+
+      images.push({
+        src: imageUrl,
+        alt: file?.alternativeText?.trim() || name,
+      });
+    }
+  }
+
+  if (!Array.isArray(rawImages) && rawImages?.data) {
+    for (const item of rawImages.data) {
+      const file = item?.attributes ?? null;
+      const imagePath = pickBestImagePath(file);
+      const imageUrl = imagePath ? getStrapiMediaUrl(imagePath) : null;
+
+      if (!imageUrl) continue;
+
+      images.push({
+        src: imageUrl,
+        alt: file?.alternativeText?.trim() || name,
+      });
+    }
+  }
+
+  return {
+    isEnabled: data.isEnabled === true,
+    product: {
+      id: String(product.id),
+      name,
+      displayTitle,
+      slug,
+      price,
+      priceOld,
+      description,
+      images,
+      engravingEnabled,
+      code,
+    },
+  };
 }

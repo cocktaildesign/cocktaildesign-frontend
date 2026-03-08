@@ -319,6 +319,7 @@
   display: flex;
   flex-direction: row;
   gap: 8px;
+  min-height: 44px;
 }
 
 /* ─── Кнопка "В корзину" ────────────────────────────────── */
@@ -434,6 +435,13 @@
   gap: 16px;
 
   border-radius: 12px;
+}
+
+.productMetaSku {
+  display: flex;
+  flex-direction: row;
+  gap: 3px;
+  align-items: center;
 }
 
 .productDescription {

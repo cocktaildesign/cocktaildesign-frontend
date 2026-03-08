@@ -24,6 +24,7 @@ export type StrapiMediaFile = {
     medium?: StrapiMediaFormat;
     small?: StrapiMediaFormat;
     thumbnail?: StrapiMediaFormat;
+    large?: StrapiMediaFormat;
   };
 };
 
@@ -88,6 +89,7 @@ export type StrapiProductAttributes = {
   engravingEnabled?: boolean | null;
   specifications?: StrapiProductSpecification[] | null;
   code?: string | null;
+  displayTitle?: string | null;
   image?:
     | StrapiMediaFile[]
     | {
@@ -107,9 +109,14 @@ export type StrapiProductItem = {
   name?: string;
   moyskladId?: string;
   price?: number | null;
-  image?: StrapiProductAttributes["image"];
-  specifications?: StrapiProductSpecification[] | null;
+  slug?: string | null;
+  priceOld?: number | null;
+  description?: string | null;
   engravingEnabled?: boolean | null;
+  specifications?: StrapiProductSpecification[] | null;
+  code?: string | null;
+  displayTitle?: string | null;
+  image?: StrapiProductAttributes["image"];
 };
 
 // ============================================================
@@ -250,4 +257,36 @@ export type StrapiCatalogProductBySlugResponse = {
   item: StrapiProductItem;
   variants?: StrapiVariantItem[];
   breadcrumbsCategories?: BreadcrumbCategory[];
+};
+
+// ============================================================
+//    5) Товар недели (главная страница)
+// ============================================================
+
+// Сырой ответ Strapi:
+// GET /api/weekly-product-block?populate[product][populate]=image
+export type StrapiWeeklyProductBlockResponse = {
+  data: {
+    id: number;
+    isEnabled?: boolean | null;
+    product?: StrapiProductItem | null;
+  } | null;
+};
+
+// Domain-модель для UI главной страницы
+export type WeeklyProductBlock = {
+  isEnabled: boolean;
+
+  product: {
+    id: string;
+    name: string;
+    displayTitle: string | null;
+    slug: string;
+    price: number;
+    priceOld: number;
+    description: string | null;
+    images: CatalogProductImage[];
+    engravingEnabled: boolean;
+    code: string | null;
+  } | null;
 };

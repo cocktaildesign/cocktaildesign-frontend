@@ -13,6 +13,7 @@ import { getProductBySlugFromStrapi } from "@/lib/api/catalog";
 import ProductPurchaseControls from "./ProductPurchaseControls";
 import MouseScrollIcon from "@/components/icons/product-page/MouseScrollIcon";
 import ArrowBackIcon from "@/components/icons/ArrowBackIcon";
+import CopyButton from "@/components/ui/copy-button/CopyButton";
 
 import styles from "./ProductPage.module.css";
 
@@ -184,9 +185,12 @@ export default async function ProductPage({ params }: PageProps) {
         {/* Основная сетка: галерея | характеристики | сайдбар с ценой */}
         <div className={styles.productLayout}>
           <div className={styles.productMeta}>
-            <p className={styles.productMetaSku}>
-              Артикул: <span>{product.moyskladId}</span>
-            </p>
+            <div className={styles.productMetaSku}>
+              <p className={styles.productMetaSkuTitle}>
+                Артикул: <span>{product.code}</span>
+              </p>
+              <CopyButton value={product.code ?? ""} label="Артикул" />
+            </div>
           </div>
           {/* ── /ГАЛЕРЕЯ ──────────────────────────────────────────────────── */}
           <ProductGallery images={images} />
@@ -253,7 +257,7 @@ export default async function ProductPage({ params }: PageProps) {
                 Всё интерактивное (счётчик, гравировка, корзина) живёт там.
                 Сюда передаём только id, чтобы знать какой товар добавлять.
               */}
-              <ProductPurchaseControls productId={product.id} engravingEnabled={product.engravingEnabled} />{" "}
+              <ProductPurchaseControls productId={product.id} engravingEnabled={product.engravingEnabled} />
             </div>
           </div>
           {/* ── /САЙДБАР ──────────────────────────────────────────────────── */}
