@@ -38,6 +38,23 @@ export function normalizeTab(tab: string): KnowledgeItemPreview["tab"] {
   return "industry";
 }
 
+// Всегда возвращаем строку для обложки.
+// Даже если getStrapiMediaUrl вернёт undefined, UI получит fallback.
+function resolveCoverSrc(url?: string | null): string {
+  if (!url) return FALLBACK_COVER_SRC;
+
+  return getStrapiMediaUrl(url) ?? FALLBACK_COVER_SRC;
+}
+
+// Для контентных изображений тоже полезно иметь отдельный helper.
+// Здесь fallback не используем, потому что отсутствие картинки
+// для блока лучше обработать выше через null.
+function resolveMediaSrc(url?: string | null): string | null {
+  if (!url) return null;
+
+  return getStrapiMediaUrl(url) ?? null;
+}
+
 /* ============================================================
    Preview
 ============================================================ */
@@ -55,7 +72,7 @@ export function mapKnowledgePreview(item: StrapiKnowledgeItem): KnowledgeItemPre
 
     date: item.date,
 
-    coverSrc: item.cover?.url ? getStrapiMediaUrl(item.cover.url) : FALLBACK_COVER_SRC,
+    coverSrc: resolveCoverSrc(item.cover?.url),
 
     description: item.description ?? undefined,
   };
@@ -101,7 +118,7 @@ export function mapKnowledgeVideoDetail(item: StrapiKnowledgeItem): KnowledgeVid
 
     date: item.date,
 
-    coverSrc: item.cover?.url ? getStrapiMediaUrl(item.cover.url) : FALLBACK_COVER_SRC,
+    coverSrc: resolveCoverSrc(item.cover?.url),
 
     description: item.description ?? undefined,
 
@@ -135,12 +152,13 @@ function mapTextBlock(block: StrapiTextBlock): KnowledgeContentBlock {
 }
 
 function mapImageBlock(block: StrapiImageBlock): KnowledgeContentBlock | null {
-  if (!block.image?.url) return null;
+  const src = resolveMediaSrc(block.image?.url);
+  if (!src) return null;
 
   return {
     id: String(block.id),
     type: "image",
-    src: getStrapiMediaUrl(block.image.url),
+    src,
     alt: block.alt ?? undefined,
     caption: block.caption ?? undefined,
   };
