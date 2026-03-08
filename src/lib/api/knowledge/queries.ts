@@ -18,6 +18,19 @@ import { mapKnowledgePreview, mapKnowledgeVideoDetail, mapKnowledgeBlocks, norma
 const FALLBACK_COVER_SRC = "/test-cover.png";
 
 /* ============================================================
+   Helpers
+============================================================ */
+
+// Всегда возвращаем строку для coverSrc.
+// Это защищает нас от ситуации, когда getStrapiMediaUrl(...)
+// вернёт undefined.
+function resolveCoverSrc(url?: string | null): string {
+  if (!url) return FALLBACK_COVER_SRC;
+
+  return getStrapiMediaUrl(url) ?? FALLBACK_COVER_SRC;
+}
+
+/* ============================================================
    Populate profiles (конфигурация запросов)
    Один источник правды для populate-параметров.
 ============================================================ */
@@ -128,7 +141,7 @@ export async function getKnowledgeArticleBySlugFromStrapi(slug: string): Promise
 
     date: item.date,
 
-    coverSrc: item.cover?.url ? getStrapiMediaUrl(item.cover.url) : FALLBACK_COVER_SRC,
+    coverSrc: resolveCoverSrc(item.cover?.url),
 
     description: item.description ?? undefined,
 
@@ -166,7 +179,7 @@ export async function getKnowledgeMaterialBySlugFromStrapi(slug: string): Promis
 
     date: item.date,
 
-    coverSrc: item.cover?.url ? getStrapiMediaUrl(item.cover.url) : FALLBACK_COVER_SRC,
+    coverSrc: resolveCoverSrc(item.cover?.url),
 
     description: item.description ?? undefined,
 
