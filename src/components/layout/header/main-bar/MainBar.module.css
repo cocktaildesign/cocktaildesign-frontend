@@ -1,0 +1,95 @@
+/* ==========================================================================
+   MAIN BAR
+   Вторая строка: логотип, каталог, поиск, избранное, корзина.
+   ========================================================================== */
+.mainBar {
+  display: flex;
+  align-items: flex-start;
+  gap: 24px;
+  width: 100%;
+  padding: 10px 0;
+}
+
+.mainBarLeft {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.logo {
+  display: inline-flex;
+  align-items: center;
+  flex: 0 0 auto;
+}
+
+.mainBarCenter {
+  display: flex;
+  gap: 8px;
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+/* ==========================================================================
+   RIGHT — избранное и корзина
+   ========================================================================== */
+.mainBarRight {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex: 0 0 auto;
+  position: relative;
+  top: 4px;
+}
+
+.actionLink {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-decoration: none;
+  color: var(--color-black);
+  font-weight: 450;
+  transition: color var(--dur) var(--ease);
+}
+
+.actionLink:hover {
+  color: var(--color-gray);
+}
+
+.iconWrapper {
+  position: relative;
+  display: inline-flex;
+}
+
+.actionIcon {
+  color: var(--color-black);
+  fill: transparent;
+}
+
+.badge {
+  position: absolute;
+  top: -6px;
+  right: -10px;
+
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 11px;
+  font-weight: 600;
+
+  color: #fff;
+  background: #e53935;
+  border-radius: 999px;
+
+  pointer-events: none;
+}
+
+.actionText {
+  font-size: var(--text-sm);
+  color: currentColor;
+}

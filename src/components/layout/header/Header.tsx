@@ -1,8 +1,9 @@
 // src/components/layout/header/Header.tsx
-import { getTopCategoriesFromStrapi } from "@/lib/api/catalog";
+
 import HeaderClient from "./HeaderClient";
+import { getCatalogTreeFromStrapi } from "@/lib/api/catalog";
 
 export default async function Header() {
-  const categories = await getTopCategoriesFromStrapi();
+  const categories = await getCatalogTreeFromStrapi();
   return <HeaderClient categories={categories} />;
 }

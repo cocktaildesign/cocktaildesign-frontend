@@ -5,11 +5,13 @@ import Link from "next/link";
 import Image from "next/image";
 import { useEffect, useId, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-
+import { getStrapiMediaUrl } from "@/lib/api/strapi/media";
 import styles from "./SearchBar.module.css";
 import ResetIcon from "@/components/icons/ResetIcon";
 
 import type { CatalogCategoryPreview } from "@/lib/api/catalog/types";
+
+const PLACEHOLDER_IMG = "/images/catalog/product-placeholder.webp";
 
 // ============================================================================
 // Types
@@ -58,13 +60,15 @@ const SEARCH_DEBOUNCE_MS = 250;
 // ============================================================================
 
 function mapApiProductToProduct(item: ApiProductItem): Product {
+  const raw = item.attributes.image?.[0]?.url ?? undefined;
+
   return {
     id: String(item.id),
     title: item.attributes.name ?? "",
     priceRub: item.attributes.price ?? 0,
     categoryTitle: item.attributes.categoryName ?? undefined,
     slug: item.attributes.slug ?? undefined,
-    imageUrl: item.attributes.image?.[0]?.url ?? undefined,
+    imageUrl: getStrapiMediaUrl(raw),
   };
 }
 
@@ -419,9 +423,7 @@ export default function SearchBar({ placeholder = "Поиск в CocktailDesign"
                           onClick={closePanel}>
                           <div className={styles.thumb}>
                             <Image
-                              src={
-                                product.imageUrl?.trim() ? product.imageUrl : "/images/catalog/product-placeholder.webp"
-                              }
+                              src={product.imageUrl ?? PLACEHOLDER_IMG}
                               alt={product.title}
                               fill
                               className={styles.image}
@@ -489,18 +491,14 @@ export default function SearchBar({ placeholder = "Поиск в CocktailDesign"
                       aria-current={index === activeIndex ? "true" : undefined}
                       onMouseEnter={() => setActiveIndex(index)}
                       onClick={() => goToProduct(product)}>
-                      {product.imageUrl ? (
-                        <Image
-                          className={styles.previewImageImg}
-                          src={product.imageUrl}
-                          alt={product.title}
-                          width={48}
-                          height={48}
-                          loading="lazy"
-                        />
-                      ) : (
-                        <span className={styles.previewImage} aria-hidden="true" />
-                      )}
+                      <Image
+                        className={styles.previewImageImg}
+                        src={product.imageUrl ?? PLACEHOLDER_IMG}
+                        alt={product.title}
+                        width={48}
+                        height={48}
+                        loading="lazy"
+                      />
 
                       <span className={styles.productInfo}>
                         <span className={styles.productTitle}>{product.title}</span>

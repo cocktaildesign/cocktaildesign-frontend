@@ -1,6 +1,7 @@
 // frontend/src/app/catalog/product-card/ProductCard.tsx
 "use client";
-
+import QuantityControl from "@/components/ui/quantity/QuantityControl";
+import EngravingToggle from "@/components/ui/engraving/EngravingToggle";
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
@@ -20,28 +21,17 @@ export default function ProductCard({ product }: ProductCardProps) {
   const [engravingEnabled, setEngravingEnabled] = useState<boolean>(false);
   // Избранное (local storage / store)
 
-  // URL на страницу товара
+  // URL на страницу товара которая показывает добавялем кол-во и гравировка если есть
   const productHref = `/catalog/product/${product.slug}`;
 
   // Картинка (с фолбэком)
   const imageSrc = product.imageUrl?.trim() ? product.imageUrl : "/images/catalog/product-placeholder.webp";
 
-  function increment() {
-    setQuantity((prev) => prev + 1);
-  }
-
-  function decrement() {
-    setQuantity((prev) => {
-      // Защита: нельзя меньше 1
-      if (prev <= 1) return 1;
-      return prev - 1;
-    });
-  }
-
+  //URL
   return (
     <article className={styles.card}>
       {/* ====================================================================
-          Кликабельное превью (вариант A): картинка + цена + название
+          Кликабельное превью 
           ==================================================================== */}
       <Link href={productHref} className={styles.previewLink}>
         <div className={styles.thumb}>
@@ -76,63 +66,14 @@ export default function ProductCard({ product }: ProductCardProps) {
           ==================================================================== */}
       <div className={styles.purchaseSection}>
         <div className={styles.productActions}>
-          <div className={styles.quantityControl}>
-            <button
-              type="button"
-              className={styles.quantityButton}
-              aria-label="Уменьшить количество"
-              onClick={decrement}>
-              -
-            </button>
+          <QuantityControl value={quantity} onChange={setQuantity} />
 
-            <input
-              type="number"
-              className={styles.quantityInput}
-              aria-label="Количество"
-              min={1}
-              value={quantity}
-              onChange={(changeEvent) => {
-                const raw = changeEvent.target.value;
-
-                // Когда пользователь удалил значение (пустая строка)
-                if (raw === "") {
-                  setQuantity(1);
-                  return;
-                }
-
-                const next = Number(raw);
-
-                // Защита от NaN и значений меньше 1
-                if (!Number.isFinite(next) || next < 1) {
-                  setQuantity(1);
-                  return;
-                }
-
-                setQuantity(next);
-              }}
-            />
-
-            <button
-              type="button"
-              className={styles.quantityButton}
-              aria-label="Увеличить количество"
-              onClick={increment}>
-              +
-            </button>
-          </div>
-
-          <label className={styles.engravingControl}>
-            <input
-              type="checkbox"
-              checked={engravingEnabled}
-              className={styles.engravingCheckbox}
-              onChange={(eventChange) => {
-                setEngravingEnabled(eventChange.target.checked);
-              }}
-            />
-            <span className={styles.switch} aria-hidden="true" />
-            <span className={styles.label}>Гравировка</span>
-          </label>
+          <EngravingToggle
+            checked={engravingEnabled}
+            onChange={(nextChecked) => {
+              setEngravingEnabled(nextChecked);
+            }}
+          />
         </div>
 
         <button type="button" className={styles.addToCartButton}>

@@ -12,7 +12,9 @@ import { getStrapiMediaUrl } from "@/lib/api/strapi/media";
 import type {
   CatalogCategoryPreview,
   CatalogProductDetail,
+  CatalogProductImage,
   CatalogProductPreview,
+  CatalogProductSpecification,
   CatalogVariant,
   CatalogVariantCharacteristic,
   StrapiCategoryItem,
@@ -22,11 +24,9 @@ import type {
 } from "./types";
 
 // ============================================================================
-// Таблица транслитерации RU → LAT.
-// Вынесена на уровень модуля, чтобы:
-// - не пересоздавалась на каждый вызов функции
-// - была легко переиспользуема
+// Таблица транслитерации RU → LAT
 // ============================================================================
+
 const RU_TO_LAT: Record<string, string> = {
   а: "a",
   б: "b",
@@ -65,36 +65,29 @@ const RU_TO_LAT: Record<string, string> = {
 
 // ============================================================================
 // mapCategoryPreview
-// Превращает Strapi категорию в Domain-объект для UI.
 // ============================================================================
+
 export function mapCategoryPreview(item: StrapiCategoryItem): CatalogCategoryPreview | null {
-  // Strapi может вернуть либо attributes, либо "плоский" объект
   const source = item.attributes ?? item;
 
-  // Название и slug обязательны для UI
   const name = source.name?.trim() ?? "";
   const slug = source.slug?.trim() ?? "";
+
   if (!name || !slug) return null;
 
-  // Изображение может быть null / undefined
   const image = source.image;
 
-  // Выбираем лучший доступный размер
   const imagePath =
     image?.formats?.medium?.url ?? image?.formats?.small?.url ?? image?.formats?.thumbnail?.url ?? image?.url ?? null;
 
-  // Превращаем относительный путь Strapi → абсолютный URL
-  const imageUrl = imagePath ? getStrapiMediaUrl(imagePath) : null;
+  const imageUrl = imagePath ? (getStrapiMediaUrl(imagePath) ?? null) : null;
 
-  // alt текст (важно для accessibility)
   const altFromStrapi = image?.alternativeText?.trim() ?? "";
   const alt = altFromStrapi || name;
 
-  // productsCount: нормализация
   const rawCount = source.productsCount;
   const productsCount = typeof rawCount === "number" && Number.isFinite(rawCount) && rawCount > 0 ? rawCount : 0;
 
-  // Дети (второй уровень)
   const childrenData = source.children?.data ?? [];
   const children: CatalogCategoryPreview[] = [];
 
@@ -104,7 +97,7 @@ export function mapCategoryPreview(item: StrapiCategoryItem): CatalogCategoryPre
     if (mappedChild) {
       children.push({
         ...mappedChild,
-        children: undefined, // ограничиваем глубину
+        children: undefined,
       });
     }
   }
@@ -121,11 +114,9 @@ export function mapCategoryPreview(item: StrapiCategoryItem): CatalogCategoryPre
 }
 
 // ============================================================================
-// Генерация slug товара
+// SLUG
 // ============================================================================
 
-// Стабильная часть slug из moyskladId
-// Пример: "28953401-6aa6-..." → "ms-28953401"
 function makeStableIdPart(moyskladId: string): string {
   if (!moyskladId) return "ms-unknown";
 
@@ -135,32 +126,23 @@ function makeStableIdPart(moyskladId: string): string {
   return `ms-${short}`;
 }
 
-// Генерация "красивого хвоста" из имени
-// Пример: "Шейкер Boston 800 мл" → "shejker-boston-800-ml"
 function makeNameTail(name?: string): string {
   if (!name) return "";
 
-  // 1) нижний регистр
   const lower = name.toLowerCase();
 
-  // 2) транслитерация RU → LAT
   const transliterated = lower
     .split("")
     .map((char) => RU_TO_LAT[char] ?? char)
     .join("");
 
-  // 3) удаляем мусор (оставляем латиницу/цифры/пробел/дефис)
   const cleaned = transliterated.replace(/[^a-z0-9\s-]/gi, " ");
 
-  // 4) пробелы → дефисы, убираем повторяющиеся дефисы
   const compact = cleaned.trim().replace(/\s+/g, "-").replace(/-+/g, "-");
 
-  // 5) ограничиваем длину хвоста
   return compact.slice(0, 60);
 }
 
-// Главная функция генерации slug товара:
-// stable id + optional name tail
 export function makeProductSlug(moyskladId: string, name?: string): string {
   const stable = makeStableIdPart(moyskladId);
   const tail = makeNameTail(name);
@@ -170,56 +152,35 @@ export function makeProductSlug(moyskladId: string, name?: string): string {
 }
 
 // ============================================================================
-// Маппинг товаров (Strapi → Domain)
+// IMAGE helpers
 // ============================================================================
 
-// ----------------------------------------------------------------------------
-// pickFirstProductImage
-// Достаём "первую картинку" товара из разных возможных форматов Strapi.
-// Почему нужно:
-// - у товара image: multiple
-// - разные контроллеры могут отдавать разные формы (массив или { data })
-// ----------------------------------------------------------------------------
-function pickFirstProductImage(image: StrapiProductItem["image"]): StrapiMediaFile | null {
-  // Вариант 1: упрощённый формат — массив файлов
-  if (Array.isArray(image)) {
-    const first = image[0] ?? null;
-    return first ?? null;
-  }
+function pickBestImagePath(file: StrapiMediaFile | null): string | null {
+  if (!file) return null;
 
-  // Вариант 2: стандартный формат Strapi — { data: [{ attributes: файл }] }
-  const firstFromData = image?.data?.[0]?.attributes ?? null;
-  return firstFromData;
+  return file.formats?.medium?.url ?? file.formats?.small?.url ?? file.formats?.thumbnail?.url ?? file.url ?? null;
 }
 
-// ----------------------------------------------------------------------------
+// ============================================================================
 // mapProductPreview
-// Превращает Strapi товар в "карточку" для грида.
-// ----------------------------------------------------------------------------
+// ============================================================================
+
 export function mapProductPreview(item: StrapiProductItem): CatalogProductPreview | null {
   const source = item.attributes ?? item;
 
   const name = source.name?.trim() ?? "";
   const moyskladId = source.moyskladId?.trim() ?? "";
+
   if (!name || !moyskladId) return null;
 
-  // price: приводим к нормальному числу (NaN/<=0 → 0)
   const rawPrice = source.price;
   const price = typeof rawPrice === "number" && Number.isFinite(rawPrice) && rawPrice > 0 ? rawPrice : 0;
 
-  // image: берём первую картинку
-  const firstImage = pickFirstProductImage(source.image ?? null);
+  const firstImage = Array.isArray(source.image) ? source.image[0] : (source.image?.data?.[0]?.attributes ?? null);
 
-  const imagePath =
-    firstImage?.formats?.medium?.url ??
-    firstImage?.formats?.small?.url ??
-    firstImage?.formats?.thumbnail?.url ??
-    firstImage?.url ??
-    null;
+  const imagePath = pickBestImagePath(firstImage);
+  const imageUrl = imagePath ? (getStrapiMediaUrl(imagePath) ?? null) : null;
 
-  const imageUrl = imagePath ? getStrapiMediaUrl(imagePath) : null;
-
-  // slug: уже "правильный" (латиница), но ключ остаётся стабильным ms-<8>
   const slug = makeProductSlug(moyskladId, name);
 
   return {
@@ -232,71 +193,118 @@ export function mapProductPreview(item: StrapiProductItem): CatalogProductPrevie
   };
 }
 
-// ----------------------------------------------------------------------------
+// ============================================================================
+// SPECIFICATIONS
+// ============================================================================
+
+function mapProductSpecifications(raw: unknown): CatalogProductSpecification[] {
+  if (!Array.isArray(raw)) return [];
+
+  const result: CatalogProductSpecification[] = [];
+
+  for (const item of raw) {
+    if (!item || typeof item !== "object") continue;
+
+    const spec = item as {
+      id?: unknown;
+      label?: unknown;
+      value?: unknown;
+      href?: unknown;
+    };
+
+    const label = typeof spec.label === "string" ? spec.label.trim() : "";
+    const value = typeof spec.value === "string" ? spec.value.trim() : "";
+    const href = typeof spec.href === "string" ? spec.href.trim() : "";
+
+    if (!label || !value) continue;
+
+    result.push({
+      id: String(spec.id ?? `${label}-${value}`),
+      label,
+      value,
+      href: href || null,
+    });
+  }
+
+  return result;
+}
+
+// ============================================================================
 // mapProductDetail
-// Превращает Strapi товар в детальную модель для страницы товара.
-// ----------------------------------------------------------------------------
+// ============================================================================
+
 export function mapProductDetail(item: StrapiProductItem): CatalogProductDetail | null {
   const source = item.attributes;
 
-  // Для детальной страницы ожидаем, что данные лежат в attributes
   if (!source) return null;
 
   const name = source.name?.trim() ?? "";
   const moyskladId = source.moyskladId?.trim() ?? "";
   const slug = source.slug?.trim() ?? "";
 
-  // Если чего-то нет — страницу лучше считать "не найдено"
   if (!name || !moyskladId || !slug) return null;
 
-  // price: нормализуем (NaN/<=0 → 0)
   const rawPrice = source.price;
   const price = typeof rawPrice === "number" && Number.isFinite(rawPrice) && rawPrice > 0 ? rawPrice : 0;
 
-  // priceOld: допускаем 0 (это значит "нет старой цены")
   const rawPriceOld = source.priceOld;
   const priceOld = typeof rawPriceOld === "number" && Number.isFinite(rawPriceOld) && rawPriceOld > 0 ? rawPriceOld : 0;
 
-  // description: строка или null
   const description = typeof source.description === "string" ? source.description : null;
 
-  // image: используем ТУ ЖЕ логику, что и в preview (через pickFirstProductImage)
-  const firstImage = pickFirstProductImage(source.image ?? null);
+  const images: CatalogProductImage[] = [];
+  const rawImages = source.image;
 
-  const imagePath =
-    firstImage?.formats?.medium?.url ??
-    firstImage?.formats?.small?.url ??
-    firstImage?.formats?.thumbnail?.url ??
-    firstImage?.url ??
-    null;
+  // вариант 1 — массив файлов
+  if (Array.isArray(rawImages)) {
+    for (const file of rawImages) {
+      const imagePath = pickBestImagePath(file);
+      const imageUrl = imagePath ? getStrapiMediaUrl(imagePath) : null;
 
-  const imageUrl = imagePath ? getStrapiMediaUrl(imagePath) : null;
+      if (!imageUrl) continue;
+
+      images.push({
+        src: imageUrl,
+        alt: file?.alternativeText?.trim() || name,
+      });
+    }
+  }
+
+  // вариант 2 — стандартный Strapi
+  if (!Array.isArray(rawImages) && rawImages?.data) {
+    for (const item of rawImages.data) {
+      const file = item?.attributes ?? null;
+      const imagePath = pickBestImagePath(file);
+      const imageUrl = imagePath ? getStrapiMediaUrl(imagePath) : null;
+
+      if (!imageUrl) continue;
+
+      images.push({
+        src: imageUrl,
+        alt: file?.alternativeText?.trim() || name,
+      });
+    }
+  }
+
+  const specifications = mapProductSpecifications(source.specifications);
 
   return {
     id: String(item.id),
     moyskladId,
     slug,
-
     name,
     price,
     priceOld,
     description,
-
-    imageUrl,
+    images,
+    specifications,
   };
 }
 
 // ============================================================================
-// ВАРИАНТЫ (variants)
-// Пока делаем максимально простой маппинг:
-// - берём name/value как есть
-// - meta игнорируем
+// VARIANTS
 // ============================================================================
 
-// ----------------------------------------------------------------------------
-// mapVariantCharacteristics
-// Превращаем "сырой массив" characteristics в безопасный список { name, value }.
-// ----------------------------------------------------------------------------
 function mapVariantCharacteristics(raw: unknown): CatalogVariantCharacteristic[] {
   if (!Array.isArray(raw)) return [];
 
@@ -310,7 +318,6 @@ function mapVariantCharacteristics(raw: unknown): CatalogVariantCharacteristic[]
     const name = typeof obj.name === "string" ? obj.name.trim() : "";
     const value = typeof obj.value === "string" ? obj.value.trim() : "";
 
-    // Для UI нам важна пара name/value. Пустое — выкидываем.
     if (!name || !value) continue;
 
     result.push({ name, value });
@@ -319,12 +326,9 @@ function mapVariantCharacteristics(raw: unknown): CatalogVariantCharacteristic[]
   return result;
 }
 
-// ----------------------------------------------------------------------------
-// mapVariant
-// Один Strapi-variant → Domain-variant для UI.
-// ----------------------------------------------------------------------------
 export function mapVariant(item: StrapiVariantItem): CatalogVariant | null {
   const source = item.attributes;
+
   if (!source) return null;
 
   const name = typeof source.name === "string" ? source.name.trim() : "";
@@ -350,10 +354,6 @@ export function mapVariant(item: StrapiVariantItem): CatalogVariant | null {
   };
 }
 
-// ----------------------------------------------------------------------------
-// mapVariants
-// Маппим массив variants, отбрасываем мусорные/битые элементы.
-// ----------------------------------------------------------------------------
 export function mapVariants(items: StrapiVariantItem[] | undefined): CatalogVariant[] {
   if (!items || items.length === 0) return [];
 

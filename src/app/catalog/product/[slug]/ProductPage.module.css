@@ -1,3 +1,9 @@
+/* src/app/catalog/product/[slug]/ProductPage.module.css */
+
+/* ═══════════════════════════════════════════════════════════
+   СТРАНИЦА ТОВАРА
+   ═══════════════════════════════════════════════════════════ */
+
 .productPage {
   margin-bottom: 50px;
 }
@@ -8,51 +14,227 @@
   font-weight: 450;
 }
 
-.productMeta {
-  display: flex;
-  flex-direction: row;
-  gap: 20px;
-}
-
-.productSku {
-  font-size: var(--text-sm);
-  color: var(--color-gray);
-}
+/* ─── Основная сетка страницы ─────────────────────────────────
+   12 колонок:
+   [1..6]  — галерея
+   [7..9]  — информация / характеристики
+   [10..12] — сайдбар (цена, кнопки)
+   [1..-1] — описание (на всю ширину, следующая строка)
+──────────────────────────────────────────────────────────── */
 .productLayout {
   display: grid;
   grid-template-columns: repeat(12, 1fr);
   gap: 16px;
 }
 
-.productGallery {
-  grid-column: 1 / 7;
-  height: 500px;
-  border: 1px solid green;
-  position: relative;
-  overflow: hidden;
-  width: 100%;
+.productMeta {
+  grid-column: 1 / -1;
+  font-size: var(--text-sm);
+  color: var(--color-gray);
+  font-weight: 300;
 }
 
-.image {
-  object-fit: contain;
-  border-radius: 12px;
+/* ═══════════════════════════════════════════════════════════
+   ГАЛЕРЕЯ
+
+/* Внешний контейнер галереи — flex-row: миниатюры + большое фото */
+.productGallery {
+  grid-column: 1 / 7;
+  display: flex;
+  flex-direction: row;
+  gap: 12px;
+  height: 500px;
 }
+
+/* ─── Колонка миниатюр ──────────────────────────────────── */
+
+/* ul-список миниатюр: вертикальная колонка */
+.productGalleryThumbs {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  width: 70px;
+  flex-shrink: 0;
+
+  overflow-y: auto;
+  max-height: 100%;
+}
+
+.productGalleryThumbs::-webkit-scrollbar {
+  width: 4px;
+}
+.productGalleryThumbs::-webkit-scrollbar-track {
+  background-color: var(--color-light-soft);
+}
+
+.productGalleryThumbs::-webkit-scrollbar-thumb {
+  background-color: var(--color-light);
+  border-radius: 999px;
+}
+
+.productGalleryThumbs::-webkit-scrollbar-thumb:hover {
+  background-color: var(--color-gray);
+  cursor: pointer;
+}
+/* Один элемент миниатюры */
+.productGalleryThumbItem {
+  position: relative;
+  width: 60px;
+  height: 60px;
+  flex-shrink: 0;
+
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid var(--color-light);
+
+  cursor: pointer;
+}
+
+/* Картинка миниатюры */
+.productGalleryThumbImage {
+  object-fit: contain;
+}
+
+/* Кнопка-обёртка миниатюры — сброс стилей кнопки + позиционирование для Image fill */
+.productGalleryThumbButton {
+  all: unset;
+  position: relative;
+  display: block;
+  width: 100%;
+  height: 100%;
+
+  cursor: pointer;
+}
+
+/* Активный элемент — рамка на li, потому что overflow: hidden на нём же */
+.productGalleryThumbItem[data-active="true"] {
+  border: 1px solid var(--color-dark-blue);
+}
+
+/* ─── Большое фото ──────────────────────────────────────── */
+
+/* Контейнер главного фото — занимает всё оставшееся место */
+.productGalleryMain {
+  position: relative;
+
+  flex: 1;
+  height: 100%;
+
+  border-radius: 12px;
+  overflow: hidden;
+
+  background-color: var(--color-light-soft);
+}
+
+/* Картинка главного фото */
+.productGalleryMainImage {
+  object-fit: contain;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   ИНФОРМАЦИЯ О ТОВАРЕ (характеристики, варианты)
+   ═══════════════════════════════════════════════════════════ */
 
 .productInfo {
   grid-column: 7 / 10;
-  height: 100px;
   display: flex;
   flex-direction: column;
   gap: 20px;
-  /* background-color: antiquewhite; */
-  /* border: 1px solid blue; */
 }
+
+/* Заголовок блока (например, "О товаре", "Цвет") */
+.productInfoTitle {
+  display: block;
+  font-size: var(--text-base);
+  font-weight: 450;
+  margin-bottom: 10px;
+}
+
+/* Первая буква с заглавной (для характеристик из API, которые могут быть строчными) */
+.productInfoTitle::first-letter {
+  text-transform: uppercase;
+}
+
+/* ─── Варианты товара (цвет, объём и т.д.) ──────────────── */
+
+.productVariants {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Список значений одной характеристики (горизонтальный) */
+.productVariantValues {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: row;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+/* Одно значение характеристики (чип/бейдж) */
+.productVariantValue {
+  font-size: var(--text-sm);
+  padding: 5px 15px;
+  background-color: var(--color-light-soft);
+  border-radius: 12px;
+}
+
+/* ─── Таблица характеристик (артикул, тип, материал...) ─── */
+
+.specRow {
+  display: grid;
+  grid-template-columns: 130px auto;
+  gap: 16px;
+  align-items: center;
+
+  border-bottom: 1px solid var(--color-light);
+  padding: 10px 0;
+  height: 40px;
+}
+
+.specLeft {
+  display: flex;
+  align-items: end;
+  gap: 8px;
+}
+
+.specLabel {
+  font-size: 12px;
+  color: var(--color-gray);
+  font-weight: 300;
+  line-height: 1;
+}
+
+.specValue {
+  font-size: 12px;
+  color: var(--color-dark-blue);
+  text-wrap: nowrap;
+}
+
+.specLink {
+  transition: color var(--dur) var(--ease);
+}
+.specLink:hover {
+  color: var(--color-gray);
+}
+
+/* ═══════════════════════════════════════════════════════════
+   САЙДБАР: цена + кнопки покупки
+   ═══════════════════════════════════════════════════════════ */
 
 .productSidebar {
   grid-column: 10 / 13;
-  border: 1px solid gold;
 }
 
+/* Блок с ценой — sticky: остаётся видимым при скролле */
 .productPurchase {
   background-color: var(--color-white);
   padding: 24px;
@@ -67,25 +249,35 @@
   color: var(--color-gray);
   font-weight: 300;
 }
+
 .productPurchasePrice {
   font-size: var(--text-2xl);
   font-weight: 550;
   margin-bottom: 10px;
-
   width: fit-content;
 }
 
+/* ─── Контролы (количество + гравировка) ────────────────── */
+
+.productPurchaseControls {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* Строка с кнопками действий */
 .productActions {
   display: flex;
   flex-direction: row;
   gap: 8px;
 }
 
+/* ─── Кнопка "В корзину" ────────────────────────────────── */
+
 .addToCartButton {
   background-color: var(--color-dark-blue);
   color: var(--color-white);
   border-radius: 12px;
-  width: fit-content;
   border: none;
   font-size: var(--text-base);
   display: flex;
@@ -96,6 +288,7 @@
   gap: 16px;
   padding: 10px 30px;
   height: 46px;
+  cursor: pointer;
   transition: background-color var(--dur) var(--ease);
 }
 
@@ -103,14 +296,14 @@
   background-color: var(--color-dark-blue-hover);
 }
 
+/* ─── Кнопка "Быстрый заказ" ────────────────────────────── */
+
 .quickOrderButton {
   background-color: var(--color-light);
   color: var(--color-dark-blue);
   border-radius: 12px;
   width: 100%;
   font-size: var(--text-base);
-
-  margin-top: 10px;
   border: none;
   display: flex;
   flex-direction: row;
@@ -119,82 +312,204 @@
   gap: 16px;
   padding: 10px 30px;
   height: 46px;
+  cursor: pointer;
   transition: background-color var(--dur) var(--ease);
 }
 
 .quickOrderButton:hover {
   background-color: var(--color-light);
 }
+
+/* ─── Кнопка "Избранное" ────────────────────────────────── */
+
 .favoriteButton {
   width: 48px;
   background-color: var(--color-light);
   border-radius: 12px;
-
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-.favoriteIcon {
-  width: 40px;
-}
+/* ─── Блок доставки ─────────────────────────────────────── */
 
-.productInfoTitle {
-  display: block;
-  font-size: var(--text-base);
-  font-weight: 450;
+.deliveryTitle {
+  font-size: var(--text-lg);
+  font-weight: 500;
   margin-bottom: 10px;
+  margin-top: 20px;
 }
 
-.productInfoTitle::first-letter {
-  text-transform: uppercase;
-}
-
-.productVariantValues {
+.deliveryItem {
   display: flex;
   flex-direction: row;
+  align-items: center;
   gap: 8px;
-  flex-wrap: wrap;
 }
 
-.productVariantValue {
+.deliveryIcon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px;
+  border-radius: 12px;
+  background-color: var(--color-light);
+  width: 50px;
+  aspect-ratio: 1 / 1;
+  flex-shrink: 0;
+}
+
+.deliveryText {
   font-size: var(--text-sm);
-  padding: 5px 15px;
+  text-wrap: balance;
+}
+
+.deliveryHighlight {
+  font-weight: 700;
+}
+
+/* ═══════════════════════════════════════════════════════════
+   ОПИСАНИЕ ТОВАРА
+   Занимает всю ширину (grid-column: 1 / -1), вторая строка сетки
+   ═══════════════════════════════════════════════════════════ */
+
+.productDescription {
   background-color: var(--color-light-soft);
+  padding: 40px;
+  margin-top: 20px;
+
+  grid-column: 1 / -1;
+
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: 16px;
+
   border-radius: 12px;
 }
-.specRow {
+
+.productDescriptionTitle {
+  grid-column: 1 / 5;
+  font-size: var(--text-xl);
+  font-weight: 450;
+}
+
+.productDescriptionText {
+  grid-column: 5 / 13;
+  font-size: var(--text-base);
+}
+
+/* ═══════════════════════════════════════════════════════════
+   ПОХОЖИЕ ТОВАРЫ
+   ═══════════════════════════════════════════════════════════ */
+.related {
+  grid-column: 1 / -1;
+}
+
+.relatedTitle {
+  font-size: var(--text-xl);
+  font-weight: 450;
+  margin: 20px 0;
+
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.relatedList {
   display: grid;
-  grid-template-columns: 130px auto;
+  grid-template-columns: repeat(6, 1fr);
   gap: 16px;
 }
 
-.specLeft {
+.relatedItem {
+  border: 1px solid var(--color-light);
+  border-radius: 12px;
+  padding: 10px;
+  transition:
+    border var(--dur) var(--ease),
+    box-shadow var(--dur) var(--ease);
+}
+
+.relatedItem:hover {
+  border: 1px solid transparent;
+  box-shadow: 0 2px 8px #ededed;
+}
+
+.relatedImage {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1 / 1; /* квадрат */
+  border-radius: 12px;
+  overflow: hidden;
+  background-color: var(--color-light-soft);
+}
+
+/* Картинка главного фото */
+.relatedImageImg {
+  object-fit: contain;
+}
+
+.relatedCardTitle {
+  font-size: var(--text-sm);
+
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.relatedCardPrice {
+  margin: 10px 0 5px 0;
+  font-size: var(--text-lg);
+  font-weight: 500;
+}
+
+.relatedList {
   display: flex;
-  align-items: end;
-  gap: 8px;
+  gap: 16px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  padding-bottom: 12px; /* место для скроллбара */
+
+  /* скрываем скроллбар визуально */
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-light) transparent;
 }
 
-.specLabel {
-  font-size: 14px;
+.relatedItem {
+  /* фиксированная ширина карточки — примерно 6 в ряд */
+  flex: 0 0 calc((100% - 5 * 16px) / 6);
+  scroll-snap-align: start;
+
+  border: 1px solid var(--color-light);
+  border-radius: 12px;
+  padding: 10px;
+  transition:
+    border var(--dur) var(--ease),
+    box-shadow var(--dur) var(--ease);
+}
+
+.relatedItem {
+  flex: 0 0 calc((100% - 5 * 16px) / 6.3); /* 6.3 вместо 6 */
+}
+
+.relatedScrollIcon {
+  width: 24px;
+  height: auto;
   color: var(--color-gray);
-  font-weight: 300;
-  white-space: nowrap;
+  animation: nudge 2.5s ease-in-out infinite;
 }
 
-.specLine {
-  flex: 1;
-  border-bottom: 1px solid var(--color-gray-light);
-}
-
-.specValue {
-  font-size: 14px;
-  color: var(--color-dark-blue);
-  text-wrap: nowrap;
-}
-
-.productDescription {
-  grid-column: 1 / -1;
-  height: 100px;
-  background-color: aqua;
+@keyframes nudge {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+  50% {
+    transform: translateX(5px);
+  }
 }

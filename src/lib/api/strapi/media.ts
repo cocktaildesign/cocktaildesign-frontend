@@ -4,8 +4,12 @@
 // а нам нужен абсолютный URL.
 // ============================================================================
 
+// src/lib/api/strapi/media.ts
 import { getStrapiUrl } from "./client";
 
-export function getStrapiMediaUrl(path: string): string {
-  return `${getStrapiUrl()}${path}`;
+export function getStrapiMediaUrl(path: string | null | undefined): string | undefined {
+  if (!path) return undefined;
+
+  const base = getStrapiUrl().replace(/\/api\/?$/, "");
+  return `${base}${path}`;
 }

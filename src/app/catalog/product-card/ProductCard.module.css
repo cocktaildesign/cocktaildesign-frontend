@@ -50,65 +50,6 @@
   color: var(--color-dark-blue);
 }
 
-.quantityControl {
-  display: flex;
-  flex: 1;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-  gap: 0px;
-  border: 1px solid #ebeaea;
-  border-radius: 12px;
-  width: fit-content;
-  padding: 2px;
-}
-
-.quantityButton {
-  width: 24px;
-  height: 24px;
-
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  border: none;
-  background-color: transparent;
-  cursor: pointer;
-
-  font-size: 32px;
-  font-weight: 300;
-  color: var(--color-gray);
-  transition: color var(--dur) var(--ease);
-}
-
-.quantityButton:hover {
-  color: var(--color-dark-blue);
-}
-
-.quantityInput {
-  border: none;
-
-  /* flex: 1;
-  min-width: 40px; */
-
-  width: 30px;
-  background-color: transparent;
-  text-align: center;
-  font-weight: 450;
-  font-size: var(--text-base);
-  font-family: var(--font-sans);
-}
-
-.quantityInput::-webkit-outer-spin-button,
-.quantityInput::-webkit-inner-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
-}
-
-.quantityInput {
-  -moz-appearance: textfield;
-  appearance: textfield;
-}
-
 .productActions {
   display: flex;
   flex-direction: row;
@@ -205,10 +146,11 @@
   flex: 1;
   min-height: 0;
   flex-direction: column;
+  margin-bottom: 15px;
 }
 
 .purchaseSection {
-  border-top: 1px solid var(--color-light);
+  border-top: 1px solid var(--color-light-soft);
   margin-top: auto;
 }
 

@@ -291,13 +291,11 @@
 
   background-color: transparent;
   transition:
-    background-color var(--dur) var(--ease),
     border var(--dur) var(--ease),
     box-shadow var(--dur) var(--ease);
 }
 
 .randomProductItem:hover {
-  background-color: var(--color-light);
   border: 1px solid transparent;
   box-shadow: 0 2px 8px #ededed;
 }

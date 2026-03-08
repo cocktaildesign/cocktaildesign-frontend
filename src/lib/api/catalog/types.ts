@@ -14,7 +14,7 @@ export type StrapiMediaFormat = {
   url?: string; // "/uploads/medium_xxx.png"
 };
 
-// Медиа в Strapi(нам нужен только URL)
+// Медиа в Strapi (нам нужен только URL)
 export type StrapiMediaFile = {
   url?: string; // "/uploads/xxx.png"
   alternativeText?: string | null;
@@ -69,6 +69,13 @@ export type StrapiCategoryListResponse = {
 //    1.1) Strapi types — товары
 // ============================================================
 
+export type StrapiProductSpecification = {
+  id?: number;
+  label?: string | null;
+  value?: string | null;
+  href?: string | null;
+};
+
 export type StrapiProductAttributes = {
   name?: string;
   moyskladId?: string;
@@ -78,6 +85,8 @@ export type StrapiProductAttributes = {
   slug?: string | null;
   priceOld?: number | null;
   description?: string | null;
+
+  specifications?: StrapiProductSpecification[] | null;
 
   image?:
     | StrapiMediaFile[]
@@ -99,6 +108,7 @@ export type StrapiProductItem = {
   moyskladId?: string;
   price?: number | null;
   image?: StrapiProductAttributes["image"];
+  specifications?: StrapiProductSpecification[] | null;
 };
 
 // ============================================================
@@ -131,7 +141,7 @@ export type StrapiVariantItem = {
   attributes?: StrapiVariantAttributes;
 };
 
-//  ============================================================
+// ============================================================
 //    2) Domain types (то, что отдаём в UI)
 // ============================================================
 
@@ -147,7 +157,7 @@ export type CatalogCategoryPreview = {
   children?: CatalogCategoryPreview[];
 };
 
-//  ============================================================
+// ============================================================
 //    3) Domain types — товары (то, что отдаём в UI)
 // ============================================================
 
@@ -184,6 +194,18 @@ export type BreadcrumbCategory = {
   name: string;
 };
 
+export type CatalogProductImage = {
+  src: string;
+  alt: string;
+};
+
+export type CatalogProductSpecification = {
+  id: string;
+  label: string;
+  value: string;
+  href: string | null;
+};
+
 // Детальная модель товара для страницы товара.
 export type CatalogProductDetail = {
   id: string;
@@ -195,7 +217,8 @@ export type CatalogProductDetail = {
   priceOld: number;
   description: string | null;
 
-  imageUrl: string | null;
+  images: CatalogProductImage[];
+  specifications: CatalogProductSpecification[];
 };
 
 // Упрощённая характеристика (для UI): просто name/value как текст
@@ -220,6 +243,6 @@ export type CatalogVariant = {
 // GET /api/catalog/product?slug=ms-xxxxxxx
 export type StrapiCatalogProductBySlugResponse = {
   item: StrapiProductItem;
-  variants?: StrapiVariantItem[]; // <-- добавили (как в Postman)
+  variants?: StrapiVariantItem[];
   breadcrumbsCategories?: BreadcrumbCategory[];
 };

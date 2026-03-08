@@ -252,6 +252,10 @@ export async function getProductBySlugFromStrapi(slug: string): Promise<CatalogP
       slug: stableSlug,
     });
 
+    console.log("RAW PRODUCT RESPONSE:", response);
+    // Детальный лог item — смотрим есть ли attributes или плоская структура
+    console.log("RAW ITEM:", JSON.stringify(response.item, null, 2));
+
     // 3) Маппим Strapi → Domain
     const product = mapProductDetail(response.item);
     if (!product) return null;

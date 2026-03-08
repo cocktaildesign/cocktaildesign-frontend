@@ -8,12 +8,23 @@
   top: 0;
   z-index: 9000;
   width: 100%;
-  background: rgba(255, 255, 255, 0.92);
+  background: var(--color-white);
+  transition: border-bottom var(--dur) var(--ease);
+}
+
+/* Хедер после того как навбар ушёл с экрана */
+.headerScrolled {
+  position: sticky;
+  top: 0;
+  z-index: 9000;
+  width: 100%;
+  background: var(--color-white);
+  border-bottom: 1px solid var(--color-light);
 }
 
 /* ==========================================================================
    LINK BASE
-   Базовые стили для ссылок и интерактивных элементов хедера.
+   Базовые стили для ссылок топбара.
    ========================================================================== */
 .linkBase {
   font-size: var(--text-sm);
@@ -28,7 +39,7 @@
 
 /* ==========================================================================
    TOP BAR
-   Первая строка: “Написать нам”, соцсети, верхнее меню, контакты.
+   Первая строка: "Написать нам", соцсети, верхнее меню, контакты.
    ========================================================================== */
 .topBar {
   padding-top: 8px;
@@ -54,110 +65,6 @@
 }
 
 /* ==========================================================================
-   TOP NAV
-   Верхнее меню + dropdown.
-   ========================================================================== */
-.topBarNav {
-  min-width: 0;
-}
-
-.topNavList {
-  display: flex;
-  align-items: center;
-  gap: 24px;
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
-
-.topNavItem {
-  position: relative;
-}
-
-.topNavLink {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  white-space: nowrap;
-}
-
-.chevron {
-  font-size: 18px;
-  opacity: 0.7;
-}
-
-/* Dropdown контейнер */
-.dropdown {
-  position: absolute;
-  top: calc(100% + 8px);
-  left: 0;
-  min-width: 200px;
-  background: #fff;
-  border-radius: var(--radius);
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.14);
-  padding: 8px;
-  z-index: 9011;
-
-  opacity: 0;
-  transform: translateY(-6px);
-  pointer-events: none;
-  transition:
-    opacity 140ms ease,
-    transform 140ms ease;
-}
-
-.topNavItem:hover .dropdown,
-.topNavItem:focus-within .dropdown {
-  opacity: 1;
-  transform: translateY(0);
-  pointer-events: auto;
-}
-
-/* Hover-буфер между триггером и dropdown */
-.topNavItem::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  top: 100%;
-  width: 100%;
-  height: 15px;
-}
-
-.dropdownList {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
-
-.dropdownLink {
-  display: flex;
-  align-items: center;
-  height: 38px;
-  padding: 0 10px;
-  border-radius: var(--radius);
-  text-decoration: none;
-  font-size: var(--text-sm);
-  transition: background-color var(--dur) var(--ease);
-}
-
-.dropdownLink:hover {
-  background: var(--color-light);
-}
-
-.dropdownLink:focus-visible {
-  outline: 1px solid var(--color-dark-blue-soft);
-  outline-offset: -1px;
-}
-
-.dropdownTrigger {
-  background: none;
-  border: none;
-  padding: 0;
-  cursor: pointer;
-  font-size: 14px;
-}
-
-/* ==========================================================================
    TOP BAR CONTACT
    Телефон и tooltip с графиком работы.
    ========================================================================== */
@@ -176,7 +83,10 @@
   font-size: var(--text-sm);
 }
 
-/* Tooltip контейнер */
+/* ==========================================================================
+   INFO TOOLTIP
+   Иконка с часами работы и email.
+   ========================================================================== */
 .infoTooltip {
   position: relative;
   display: flex;
@@ -187,6 +97,16 @@
   width: 11px;
   color: var(--color-gray);
   cursor: pointer;
+}
+
+/* Hover-буфер для tooltip */
+.infoTooltip::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 100%;
+  width: 100%;
+  height: 8px;
 }
 
 /* Tooltip dropdown */
@@ -215,16 +135,6 @@
   pointer-events: auto;
 }
 
-/* Hover-буфер для tooltip */
-.infoTooltip::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  top: 100%;
-  width: 100%;
-  height: 8px;
-}
-
 .infoDropdownContent {
   display: flex;
   flex-direction: column;
@@ -251,165 +161,4 @@
 
 .infoDropdownEmail {
   font-size: 12px;
-}
-
-/* ==========================================================================
-   MAIN BAR
-   Вторая строка: логотип, каталог, поиск, избранное, корзина.
-   ========================================================================== */
-.mainBar {
-  display: flex;
-  align-items: flex-start;
-  gap: 24px;
-  width: 100%;
-  padding: 10px 0;
-}
-
-.mainBarLeft {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.logo {
-  display: inline-flex;
-  align-items: center;
-  flex: 0 0 auto;
-}
-
-.mainBarCenter {
-  display: flex;
-  gap: 8px;
-  flex: 1 1 auto;
-  min-width: 0;
-}
-
-.rightMainBar {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  flex: 0 0 auto;
-  position: relative;
-  top: 4px;
-}
-
-/* Action links: избранное / корзина */
-.actionLink {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  text-decoration: none;
-  color: var(--color-black);
-  font-weight: 450;
-  transition: color var(--dur) var(--ease);
-}
-
-.actionLink:hover {
-  color: var(--color-gray);
-}
-
-.iconWrapper {
-  position: relative;
-  display: inline-flex;
-}
-
-.actionIcon {
-  color: var(--color-black);
-  fill: transparent;
-}
-
-.badge {
-  position: absolute;
-  top: -6px;
-  right: -10px;
-
-  min-width: 18px;
-  height: 18px;
-  padding: 0 5px;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  font-size: 11px;
-  font-weight: 600;
-
-  color: #fff;
-  background: #e53935;
-  border-radius: 999px;
-
-  pointer-events: none;
-}
-
-.actionText {
-  font-size: var(--text-sm);
-  color: currentColor;
-}
-
-/* ==========================================================================
-   NAV BAR
-   Третья строка: категории + кнопка “Акции”.
-   ========================================================================== */
-.navBar {
-  display: flex;
-  align-items: center;
-  gap: 24px;
-  width: 100%;
-  flex-wrap: nowrap;
-  white-space: nowrap;
-  padding-bottom: 15px;
-}
-
-.categoryList {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  list-style: none;
-  flex: 1 1 auto;
-  white-space: nowrap;
-  margin: 0;
-  padding: 0;
-  scrollbar-width: none;
-}
-
-.categoryList::-webkit-scrollbar {
-  display: none;
-}
-
-.categoryItem {
-  flex: 0 0 auto;
-}
-
-.categoryLink {
-  display: inline-flex;
-  align-items: center;
-  text-decoration: none;
-  font-size: var(--text-sm);
-  font-weight: 450;
-}
-
-/* Кнопка “Акции” */
-.sale {
-  flex: 0 0 auto;
-  display: flex;
-  align-items: center;
-  font-weight: 650;
-  text-decoration: none;
-  color: var(--color-light-soft);
-  background-color: var(--color-dark-blue);
-  border-radius: var(--radius);
-  padding: 8px 18px;
-  font-size: var(--text-xs);
-  cursor: pointer;
-  transition: background-color var(--dur) var(--ease);
-}
-
-.sale:hover {
-  background-color: var(--color-dark-blue-hover);
-}
-
-.sale:focus-visible {
-  outline: 2px solid var(--color-accent-strong);
-  outline-offset: 2px;
 }

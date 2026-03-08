@@ -1,0 +1,56 @@
+/* src/components/ui/quantity/QuantityControl.module.css */
+
+.quantityControl {
+  display: flex;
+  flex: 1;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 0px;
+  border: 1px solid #ebeaea;
+  border-radius: 12px;
+  width: fit-content;
+  padding: 2px;
+}
+
+.quantityButton {
+  width: 24px;
+  height: 24px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+
+  font-size: 32px;
+  font-weight: 300;
+  color: var(--color-gray);
+  transition: color var(--dur) var(--ease);
+}
+
+.quantityButton:hover {
+  color: var(--color-dark-blue);
+}
+
+.quantityInput {
+  border: none;
+  width: 30px;
+  background-color: transparent;
+  text-align: center;
+  font-weight: 450;
+  font-size: var(--text-base);
+  font-family: var(--font-sans);
+}
+
+.quantityInput::-webkit-outer-spin-button,
+.quantityInput::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.quantityInput {
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
