@@ -122,6 +122,10 @@
   text-overflow: ellipsis;
 }
 
+.previewLink {
+  height: 100%;
+}
+
 .addToCartButton {
   background-color: var(--color-dark-blue);
   color: var(--color-white);
@@ -152,10 +156,38 @@
 .purchaseSection {
   border-top: 1px solid var(--color-light-soft);
   margin-top: auto;
+  cursor: auto;
 }
 
 .favoriteButtonOverlay {
   position: absolute;
   top: 15px;
   right: 15px;
+}
+
+/* Строка когда гравировки нет: количество + корзина рядом */
+.actionsRow {
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+/* Кнопка корзины растягивается на всё оставшееся место */
+.addToCartButtonFull {
+  background-color: var(--color-dark-blue);
+  color: var(--color-white);
+  border: none;
+  flex: 1; /* занимает всё свободное место в строке */
+  border-radius: 12px;
+  height: 46px;
+  font-weight: 400;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color var(--dur) var(--ease);
+}
+
+.addToCartButtonFull:hover {
+  background-color: var(--color-dark-blue-hover);
 }

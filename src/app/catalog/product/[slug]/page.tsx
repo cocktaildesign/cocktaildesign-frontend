@@ -12,6 +12,7 @@ import PageLayout from "@/components/layout/PageLayout";
 import { getProductBySlugFromStrapi } from "@/lib/api/catalog";
 import ProductPurchaseControls from "./ProductPurchaseControls";
 import MouseScrollIcon from "@/components/icons/product-page/MouseScrollIcon";
+import ArrowBackIcon from "@/components/icons/ArrowBackIcon";
 
 import styles from "./ProductPage.module.css";
 
@@ -213,8 +214,14 @@ export default async function ProductPage({ params }: PageProps) {
 
             {/* Характеристики товара */}
             <div>
-              <h2 className={styles.productInfoTitle}>О товаре</h2>
+              <div className={styles.productAboutHeader}>
+                <h2 className={styles.productInfoTitle}>О товаре</h2>
 
+                <a href="#product-description" className={styles.productAboutButton}>
+                  <span className={styles.productAboutButtonText}>Перейти к описанию</span>
+                  <ArrowBackIcon className={styles.productAboutButtonIcon} />
+                </a>
+              </div>
               {specifications.map((spec) => (
                 <div key={spec.id} className={styles.specRow}>
                   <div className={styles.specLeft}>
@@ -241,20 +248,19 @@ export default async function ProductPage({ params }: PageProps) {
             <div className={styles.productPurchase}>
               <span className={styles.productPurchasePriceTitle}>Ваша цена: </span>
               <p className={styles.productPurchasePrice}>{product.price} ₽</p>
-
               {/*
                 ProductPurchaseControls — Client Component.
                 Всё интерактивное (счётчик, гравировка, корзина) живёт там.
                 Сюда передаём только id, чтобы знать какой товар добавлять.
               */}
-              <ProductPurchaseControls productId={product.id} />
+              <ProductPurchaseControls productId={product.id} engravingEnabled={product.engravingEnabled} />{" "}
             </div>
           </div>
           {/* ── /САЙДБАР ──────────────────────────────────────────────────── */}
 
           {/* ── ОПИСАНИЕ ТОВАРА (на всю ширину, внизу) ──────────────────── */}
           {product.description?.trim() ? (
-            <div className={styles.productDescription}>
+            <div id="product-description" className={styles.productDescription}>
               <h2 className={styles.productDescriptionTitle}>Описание</h2>
               <div className={styles.productDescriptionText}>{product.description}</div>
             </div>

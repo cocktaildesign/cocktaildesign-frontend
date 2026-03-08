@@ -65,20 +65,27 @@ export default function ProductCard({ product }: ProductCardProps) {
           Некликабельная зона действий: количество / гравировка / в корзину
           ==================================================================== */}
       <div className={styles.purchaseSection}>
-        <div className={styles.productActions}>
-          <QuantityControl value={quantity} onChange={setQuantity} />
+        {product.engravingEnabled ? (
+          // Гравировка есть — два ряда: [кол-во + гравировка] и [корзина]
+          <>
+            <div className={styles.productActions}>
+              <QuantityControl value={quantity} onChange={setQuantity} />
+              <EngravingToggle checked={engravingEnabled} onChange={(checked) => setEngravingEnabled(checked)} />
+            </div>
 
-          <EngravingToggle
-            checked={engravingEnabled}
-            onChange={(nextChecked) => {
-              setEngravingEnabled(nextChecked);
-            }}
-          />
-        </div>
-
-        <button type="button" className={styles.addToCartButton}>
-          В корзину
-        </button>
+            <button type="button" className={styles.addToCartButton}>
+              В корзину
+            </button>
+          </>
+        ) : (
+          // Гравировки нет — один ряд: [кол-во + корзина]
+          <div className={styles.actionsRow}>
+            <button type="button" className={styles.addToCartButtonFull}>
+              В корзину
+            </button>	
+            <QuantityControl value={quantity} onChange={setQuantity} />
+          </div>
+        )}
       </div>
     </article>
   );

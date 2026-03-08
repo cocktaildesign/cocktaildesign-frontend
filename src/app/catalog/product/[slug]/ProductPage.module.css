@@ -39,11 +39,11 @@
 
 /* Внешний контейнер галереи — flex-row: миниатюры + большое фото */
 .productGallery {
-  grid-column: 1 / 7;
+  grid-column: 1 / 6;
   display: flex;
   flex-direction: row;
   gap: 12px;
-  height: 500px;
+  aspect-ratio: 1 / 1;
 }
 
 /* ─── Колонка миниатюр ──────────────────────────────────── */
@@ -124,7 +124,7 @@
 
   flex: 1;
   height: 100%;
-
+  aspect-ratio: 1 / 1;
   border-radius: 12px;
   overflow: hidden;
 
@@ -141,10 +141,17 @@
    ═══════════════════════════════════════════════════════════ */
 
 .productInfo {
-  grid-column: 7 / 10;
+  grid-column: 6 / 10;
   display: flex;
   flex-direction: column;
   gap: 20px;
+}
+
+.productAboutHeader {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
 }
 
 /* Заголовок блока (например, "О товаре", "Цвет") */
@@ -158,6 +165,29 @@
 /* Первая буква с заглавной (для характеристик из API, которые могут быть строчными) */
 .productInfoTitle::first-letter {
   text-transform: uppercase;
+}
+
+.productAboutButton {
+  font-size: 12px;
+  border: none;
+  background-color: var(--color-light-soft);
+  border-radius: 6px;
+  padding: 5px 10px;
+  display: flex;
+  flex-direction: row;
+  gap: 6px;
+  align-items: center;
+  transition: background-color var(--dur) var(--ease);
+}
+
+.productAboutButton:hover {
+  background-color: var(--color-gray-light);
+}
+
+.productAboutButtonIcon {
+  transform: rotate(180deg);
+  width: 10px;
+  height: 10px;
 }
 
 /* ─── Варианты товара (цвет, объём и т.д.) ──────────────── */
@@ -191,7 +221,7 @@
 
 .specRow {
   display: grid;
-  grid-template-columns: 130px auto;
+  grid-template-columns: 200px auto;
   gap: 16px;
   align-items: center;
 
@@ -221,11 +251,30 @@
 
 .specLink {
   transition: color var(--dur) var(--ease);
+
+  width: 100%;
+  display: block;
+  position: relative;
 }
 .specLink:hover {
   color: var(--color-gray);
 }
+.specLink::after {
+  content: "→";
+  /* color: var(--color-dark-blue); */
+  color: var(--color-dark-blue-hover);
+  height: 100%;
+  aspect-ratio: 1 / 1;
+  position: absolute;
+  right: 0;
+  top: 0;
+  opacity: 0;
+  transition: opacity var(--dur) var(--ease);
+}
 
+.specLink:hover::after {
+  opacity: 1;
+}
 /* ═══════════════════════════════════════════════════════════
    САЙДБАР: цена + кнопки покупки
    ═══════════════════════════════════════════════════════════ */
@@ -385,6 +434,10 @@
   gap: 16px;
 
   border-radius: 12px;
+}
+
+.productDescription {
+  scroll-margin-top: 120px;
 }
 
 .productDescriptionTitle {

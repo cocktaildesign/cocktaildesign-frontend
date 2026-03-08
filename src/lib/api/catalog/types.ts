@@ -85,9 +85,9 @@ export type StrapiProductAttributes = {
   slug?: string | null;
   priceOld?: number | null;
   description?: string | null;
-
+  engravingEnabled?: boolean | null;
   specifications?: StrapiProductSpecification[] | null;
-
+  code?: string | null;
   image?:
     | StrapiMediaFile[]
     | {
@@ -109,6 +109,7 @@ export type StrapiProductItem = {
   price?: number | null;
   image?: StrapiProductAttributes["image"];
   specifications?: StrapiProductSpecification[] | null;
+  engravingEnabled?: boolean | null;
 };
 
 // ============================================================
@@ -170,6 +171,8 @@ export type CatalogProductPreview = {
   name: string; // заголовок карточки
   price: number; // цена
   imageUrl: string | null; // картинка карточки
+  images: string[];
+  engravingEnabled: boolean;
 };
 
 // Ответ API для infinite scroll.
@@ -219,6 +222,8 @@ export type CatalogProductDetail = {
 
   images: CatalogProductImage[];
   specifications: CatalogProductSpecification[];
+  engravingEnabled: boolean;
+  code: string | null;
 };
 
 // Упрощённая характеристика (для UI): просто name/value как текст

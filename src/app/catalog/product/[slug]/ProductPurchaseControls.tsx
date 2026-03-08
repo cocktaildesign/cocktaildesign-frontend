@@ -13,20 +13,21 @@ import styles from "./ProductPage.module.css";
 
 type ProductPurchaseControlsProps = {
   productId: string;
+  engravingEnabled: boolean;
 };
 
-export default function ProductPurchaseControls({ productId }: ProductPurchaseControlsProps) {
+export default function ProductPurchaseControls({ productId, engravingEnabled }: ProductPurchaseControlsProps) {
   // На странице товара состояние всегда начинается с дефолтов:
   // - quantity = 1
   // - engraving = false
   const [quantity, setQuantity] = useState<number>(1);
-  const [engravingEnabled, setEngravingEnabled] = useState<boolean>(false);
+  const [engravingChecked, setEngravingChecked] = useState<boolean>(false);
 
   function handleAddToCart() {
     console.log("addToCart", {
       productId,
       quantity,
-      engravingEnabled,
+      engravingChecked, // было engravingEnabled
     });
   }
 
@@ -35,7 +36,7 @@ export default function ProductPurchaseControls({ productId }: ProductPurchaseCo
       <div className={styles.productInfoConfigurator}>
         <div className={styles.productActions}>
           <QuantityControl value={quantity} onChange={setQuantity} />
-          <EngravingToggle checked={engravingEnabled} onChange={setEngravingEnabled} />
+          {engravingEnabled ? <EngravingToggle checked={engravingChecked} onChange={setEngravingChecked} /> : null}{" "}
         </div>
       </div>
 

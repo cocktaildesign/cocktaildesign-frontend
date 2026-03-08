@@ -181,6 +181,25 @@ export function mapProductPreview(item: StrapiProductItem): CatalogProductPrevie
   const imagePath = pickBestImagePath(firstImage);
   const imageUrl = imagePath ? (getStrapiMediaUrl(imagePath) ?? null) : null;
 
+  // Берём до 4 картинок для hover scrub
+  // Используем medium если есть, иначе оригинал
+  const images: string[] = [];
+
+  if (Array.isArray(source.image)) {
+    // берём максимум 4 фото
+    const sliced = source.image.slice(0, 4);
+
+    for (const file of sliced) {
+      const path = pickBestImagePath(file);
+      const url = path ? (getStrapiMediaUrl(path) ?? null) : null;
+
+      // добавляем только валидные URL
+      if (url) images.push(url);
+    }
+  }
+
+  // Гравировка — если поле не задано в Strapi, считаем false
+  const engravingEnabled = source.engravingEnabled === true;
   const slug = makeProductSlug(moyskladId, name);
 
   return {
@@ -190,6 +209,8 @@ export function mapProductPreview(item: StrapiProductItem): CatalogProductPrevie
     name,
     price,
     imageUrl,
+    images,
+    engravingEnabled,
   };
 }
 
@@ -254,6 +275,9 @@ export function mapProductDetail(item: StrapiProductItem): CatalogProductDetail 
 
   const images: CatalogProductImage[] = [];
   const rawImages = source.image;
+  const rawCode = source.code;
+  const code = typeof rawCode === "string" && rawCode.trim() ? rawCode.trim() : null;
+  const engravingEnabled = source.engravingEnabled === true;
 
   // вариант 1 — массив файлов
   if (Array.isArray(rawImages)) {
@@ -298,6 +322,8 @@ export function mapProductDetail(item: StrapiProductItem): CatalogProductDetail 
     description,
     images,
     specifications,
+    engravingEnabled,
+    code,
   };
 }
 
