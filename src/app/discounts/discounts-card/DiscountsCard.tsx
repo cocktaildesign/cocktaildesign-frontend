@@ -26,14 +26,14 @@ export default function DiscountCard({ discount }: DiscountsCardProps) {
           <Image
             className={styles.cardImage}
             src={discount.image}
-            alt="" // оставляем пустым, так как описание уже в aria-label кнопки
+            alt="" 
             width={400}
             height={190}
           />
           <h2 className={styles.cardTitle}>{discount.title}</h2>
         </button>
       </article>
-      <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} title={discount.title}>
+      <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} title={discount.title} size="large">
         <DiscountModal title={discount.title} blocks={discount.blocks} />
       </Modal>
     </>

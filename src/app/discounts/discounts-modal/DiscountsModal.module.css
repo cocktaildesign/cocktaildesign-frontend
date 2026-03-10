@@ -1,3 +1,48 @@
+/* DiscountsModal.module.css */
+
+/* ===== ГОРИЗОНТАЛЬНАЯ РАСКЛАДКА ===== */
+.layout {
+  display: flex;
+  flex-direction: row;
+  gap: 32px;
+  align-items: flex-start; /* картинка и текст выравниваются по верху */
+}
+
+/* Левая колонка — картинка */
+.imageSide {
+  /* Фиксированная ширина, не сжимается */
+  flex: 0 0 300px;
+}
+
+.sideImage {
+  width: 100%;
+  height: auto;
+  border-radius: 12px;
+  display: block; /* убирает лишний отступ снизу у img */
+}
+
+/* Правая колонка — весь текст */
+.contentSide {
+  flex: 1; /* занимает оставшееся место */
+  min-width: 0; /* важно: без этого flex-дети могут вылезать за границы */
+}
+
+/* ===== АДАПТИВ ===== */
+/* Когда добавишь медиазапросы для планшета/мобилки — раскомментируй: */
+/*
+@media (max-width: 768px) {
+  .layout {
+    flex-direction: column;
+  }
+
+  .imageSide {
+    flex: none;
+    width: 100%;
+  }
+}
+*/
+
+/* ===== ТИПОГРАФИКА ===== */
 .title {
   font-family: var(--font-display);
   font-weight: 500;
@@ -7,16 +52,10 @@
 
 .heading2 {
   font-weight: 550;
-  font-size: var(--text-lg);
-  margin-bottom: 10px;
-  text-wrap: balance;
-  margin-top: 10px;
-}
-
-.heading2 {
-  font-weight: 550;
   font-size: var(--text-xl);
   margin-bottom: 10px;
+  margin-top: 10px;
+  text-wrap: balance;
 }
 
 .heading3 {
@@ -37,6 +76,7 @@
   border-radius: 12px;
 }
 
+/* Картинка внутри contentSide (если попадёт туда — для акций без первого image-блока) */
 .figure {
   margin: 0;
   margin-bottom: 20px;

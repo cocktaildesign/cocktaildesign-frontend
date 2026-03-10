@@ -1,9 +1,15 @@
+/* Hero container */
+
 .hero {
   position: relative;
   width: 100%;
 }
 
-/* позиция карточки */
+/* =========================
+   POSITION
+========================= */
+
+/* позиционирование карточки поверх баннера */
 .weeklyProduct {
   position: absolute;
   bottom: 20px;
@@ -11,7 +17,11 @@
   z-index: 2;
 }
 
-/* карточка */
+/* =========================
+   CARD
+========================= */
+
+/* основной контейнер карточки */
 .weeklyProductCard {
   width: 400px;
 
@@ -21,8 +31,14 @@
   background: hsla(0, 0%, 100%, 0.25);
   backdrop-filter: blur(3rem);
   border: 1px solid var(--color-gray-light);
+
+  /* ссылка выглядит как обычный блок */
+  display: block;
+  color: inherit;
+  text-decoration: none;
 }
 
+/* hover эффект карточки */
 .weeklyProductCard:hover {
   background-color: var(--color-light-soft);
 }
@@ -36,7 +52,9 @@
   justify-content: space-between;
   align-items: center;
   gap: 12px;
+
   padding-bottom: 10px;
+
   border-bottom: 1px solid var(--color-gray-light);
 }
 
@@ -47,6 +65,7 @@
   min-width: 0;
 }
 
+/* заголовок */
 .weeklyProductTitle {
   color: var(--color-dark-blue);
   font-size: 18px;
@@ -54,6 +73,7 @@
   white-space: nowrap;
 }
 
+/* бренд */
 .weeklyProductBrand {
   color: var(--color-bg);
   font-size: 12px;
@@ -63,6 +83,7 @@
   white-space: nowrap;
 }
 
+/* бейдж скидки */
 .weeklyProductDiscount {
   color: var(--color-bg);
   font-size: 16px;
@@ -89,19 +110,24 @@
   gap: 12px;
 }
 
+/* основной layout карточки */
 .weeklyProductMain {
   display: flex;
+  justify-content: space-between;
   flex-direction: row;
   gap: 16px;
   align-items: stretch;
 }
 
+/* описание товара */
 .weeklyProductDescription {
   font-size: 14px;
   color: var(--color-dark-blue);
 }
 
-/* цены */
+/* =========================
+   PRICE
+========================= */
 
 .weeklyProductPriceBlock {
   display: flex;

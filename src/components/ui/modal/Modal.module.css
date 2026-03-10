@@ -80,3 +80,7 @@
 .content {
   animation: modalContentIn 220ms ease;
 }
+
+.contentLarge {
+  width: min(1024px, 100%);
+}

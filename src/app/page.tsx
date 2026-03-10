@@ -3,6 +3,7 @@
 import type { Metadata } from "next";
 import HeroSection from "@/sections/home/hero-section/HeroSection";
 import { pageMetadata } from "@/lib/seo/metadata";
+import { getWeeklyProductBlock } from "@/lib/api/catalog";
 
 export const metadata: Metadata = pageMetadata({
   title: "Магазин барного инвентаря в СПб - CocktailDesign",
@@ -11,6 +12,9 @@ export const metadata: Metadata = pageMetadata({
   canonical: "/",
 });
 
-export default function HomePage() {
-  return <HeroSection />;
+export default async function HomePage() {
+  // Загружаем товар недели из Strapi
+  const weeklyProduct = await getWeeklyProductBlock();
+
+  return <HeroSection weeklyProduct={weeklyProduct} />;
 }

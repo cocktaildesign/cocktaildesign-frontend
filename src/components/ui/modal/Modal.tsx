@@ -12,10 +12,11 @@ type ModalProps = {
   onClose: () => void;
   children: ReactNode;
   title?: string;
+  size?: "large";
 };
 
 export function Modal(props: ModalProps) {
-  const { isOpen, onClose, children, title } = props;
+  const { isOpen, onClose, children, title, size } = props;
   const contentRef = useRef(null);
 
   useEffect(() => {
@@ -50,7 +51,13 @@ export function Modal(props: ModalProps) {
       onMouseDown={(event) => {
         if (event.target === event.currentTarget) onClose();
       }}>
-      <div className={styles.content} ref={contentRef} tabIndex={-1} role="dialog" aria-modal="true" aria-label={title}>
+      <div
+        className={`${styles.content} ${size === "large" ? styles.contentLarge : ""}`}
+        ref={contentRef}
+        tabIndex={-1}
+        role="dialog"
+        aria-modal="true"
+        aria-label={title}>
         <button type="button" className={styles.closeButton} onClick={onClose} aria-label="Закрыть модальное окно">
           ×
         </button>

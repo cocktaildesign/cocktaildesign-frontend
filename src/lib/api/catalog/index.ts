@@ -1,3 +1,5 @@
+// src/lib/api/catalog/index.ts
+
 export {
   // Категории
   getTopCategoriesFromStrapi,
@@ -9,4 +11,7 @@ export {
 
   // Товар (детальная страница)
   getProductBySlugFromStrapi,
+
+  // Главная — товар недели
+  getWeeklyProductBlock,
 } from "./queries";

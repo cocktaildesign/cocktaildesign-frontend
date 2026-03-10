@@ -15,9 +15,11 @@ import type {
   StrapiCatalogProductBySlugResponse,
   StrapiCategoryListResponse,
   StrapiProductItem,
+  StrapiWeeklyProductBlockResponse,
+  WeeklyProductBlock,
 } from "./types";
 
-import { mapCategoryPreview, mapProductDetail, mapProductPreview, mapVariants } from "./mappers";
+import { mapCategoryPreview, mapProductDetail, mapProductPreview, mapVariants, mapWeeklyProductBlock } from "./mappers";
 
 // ============================================================================
 // КАТЕГОРИИ
@@ -330,4 +332,37 @@ export async function getProductsByIdsFromStrapi(productIds: string[]): Promise<
     offset: 0,
     hasMore: false,
   };
+}
+
+// ============================================================================
+// ТОВАР НЕДЕЛИ (главная страница)
+// ============================================================================
+
+// ----------------------------------------------------------------------------
+// Получить блок "Товар недели" для главной страницы.
+// ----------------------------------------------------------------------------
+export async function getWeeklyProductBlock(): Promise<WeeklyProductBlock | null> {
+  const params: Record<string, string> = {
+    "populate[product][populate]": "image",
+  };
+
+  try {
+    const response: StrapiWeeklyProductBlockResponse = await fetchStrapi("/api/weekly-product-block", params);
+
+    return mapWeeklyProductBlock(response);
+  } catch (e) {
+    const message = e instanceof Error ? e.message : "";
+
+    // Если блок ещё не создан / не опубликован / недоступен — просто не показываем его
+    if (
+      message.includes(" 404 ") ||
+      message.includes("Not Found") ||
+      message.includes(" 403 ") ||
+      message.includes("Forbidden")
+    ) {
+      return null;
+    }
+
+    throw e;
+  }
 }
