@@ -1,0 +1,160 @@
+/* ================================================================
+   КАРТОЧКА ТОВАРА
+   Структура: card > previewLink > thumb + productBody > purchaseSection
+   ================================================================ */
+
+/* Внешняя обёртка карточки */
+.card {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  border-radius: 12px;
+  padding: 16px;
+  overflow: hidden;
+  cursor: pointer;
+  transition:
+    border var(--dur) var(--ease),
+    box-shadow var(--dur) var(--ease);
+}
+
+.card:hover {
+  border: 1px solid transparent;
+  box-shadow: 0 2px 8px #ededed;
+}
+
+/* ================================================================
+   КЛИКАБЕЛЬНАЯ ССЫЛКА (вся верхняя часть карточки)
+   ================================================================ */
+
+.previewLink {
+  height: 100%;
+}
+
+/* ================================================================
+   КАРТИНКА (thumb)
+   ================================================================ */
+
+/* Контейнер картинки — квадрат, position relative для Image fill */
+.thumb {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+}
+
+/* Сама картинка */
+.image {
+  object-fit: cover;
+  border-radius: 12px;
+}
+
+/* Кнопка избранного — абсолютно поверх картинки */
+.favoriteButtonOverlay {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+}
+
+/* ── Точки hover scrub ──────────────────────────────────── */
+
+/* Контейнер точек — по центру внизу картинки */
+.dots {
+  position: absolute;
+  bottom: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 6px;
+  z-index: 2;
+}
+
+/* Обычная точка */
+.dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: var(--color-gray-light);
+  transition: background-color var(--dur) var(--ease);
+}
+
+/* Активная точка — соответствует текущей картинке */
+.dotActive {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: var(--color-dark-blue);
+}
+
+/* ================================================================
+   ТЕЛО КАРТОЧКИ: цена + название
+   ================================================================ */
+
+.productBody {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  flex: 1;
+  min-height: 0;
+}
+
+.priceBlock {
+  padding-top: 10px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+}
+
+.price {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 600;
+}
+
+.productName {
+  padding-top: 10px;
+}
+
+.title {
+  font-size: var(--text-sm);
+  font-weight: 450;
+  color: var(--color-gray);
+
+  display: -webkit-box;
+  -webkit-line-clamp: 2; /* максимум 2 строки */
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+
+  overflow: hidden;
+}
+
+.title:hover {
+  color: var(--color-dark-blue);
+}
+
+.discountBadge {
+  position: absolute;
+  bottom: 100%;
+  left: 0px;
+  z-index: 2;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 32px;
+  padding: 0 10px;
+  border-radius: 12px;
+  background: rgb(60, 170, 60);
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1;
+}
+
+.priceOld {
+  margin: 0;
+  color: var(--color-gray-light);
+  text-decoration: line-through;
+}

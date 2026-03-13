@@ -40,7 +40,7 @@ export default function CatalogMenu({ categories }: CatalogMenuProps) {
   }
 
   return (
-    <div className={styles.catalogMenu} onFocus={openMenu} onBlur={handleBlur}>
+    <div className={styles.catalogMenu} onMouseLeave={closeMenu} onFocus={openMenu} onBlur={handleBlur}>
       <button
         type="button"
         className={styles.buttonCta}
@@ -52,7 +52,7 @@ export default function CatalogMenu({ categories }: CatalogMenuProps) {
       </button>
 
       {isOpen && (
-        <div id={menuId} className={styles.panel} onMouseLeave={closeMenu}>
+        <div id={menuId} className={styles.panel}>
           <div className={styles.columns}>
             {/* ЛЕВАЯ КОЛОНКА */}
             <ul className={styles.topList}>

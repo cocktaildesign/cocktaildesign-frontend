@@ -121,14 +121,13 @@ export type StrapiProductItem = {
 
 // ============================================================
 //    1.2) Strapi types — варианты (variants)
-//    meta НЕ типизируем (не усложняем) — оставляем unknown
 // ============================================================
 
 export type StrapiVariantCharacteristic = {
   id?: string;
   meta?: unknown;
-  name?: string; // например: "цвет"
-  value?: string; // например: "желтый"
+  name?: string;
+  value?: string;
 };
 
 export type StrapiVariantAttributes = {
@@ -139,9 +138,6 @@ export type StrapiVariantAttributes = {
   priceOld?: number | null;
 
   characteristics?: StrapiVariantCharacteristic[] | null;
-
-  // (позже) можно добавить image, если решишь хранить фото у варианта
-  // image?: ...
 };
 
 export type StrapiVariantItem = {
@@ -150,10 +146,60 @@ export type StrapiVariantItem = {
 };
 
 // ============================================================
+//    1.3) Strapi types — подборки товаров (catalog-collections)
+// ============================================================
+
+export type StrapiCollectionSelectionMode = "manual" | "category" | "discount";
+
+export type StrapiCatalogCollectionSourceCategory = {
+  id: number;
+  documentId?: string;
+  name?: string | null;
+  slug?: string | null;
+  productsCount?: number | null;
+};
+
+export type StrapiCatalogCollectionItem = {
+  id: number;
+  documentId?: string;
+
+  title?: string | null;
+  slug?: string | null;
+  description?: string | null;
+  sortOrder?: number | null;
+
+  selectionMode?: StrapiCollectionSelectionMode | string | null;
+  sourceCategory?: StrapiCatalogCollectionSourceCategory | null;
+
+  products?: StrapiProductItem[] | null;
+};
+
+export type StrapiCatalogCollectionsResponse = {
+  data: StrapiCatalogCollectionItem[];
+};
+
+// ============================================================
+//    1.4) Strapi types — состав комплекта (bundle items)
+//    Приходит из корня ответа /api/catalog/product, не из attributes
+// ============================================================
+
+// Один компонент комплекта — как приходит из Strapi
+export type StrapiBundleItem = {
+  id: number;
+  quantity?: number | null;
+  componentProduct?: {
+    id: number;
+    name?: string | null;
+    slug?: string | null;
+    price?: number | null;
+    imageUrl?: string | null;
+  } | null;
+};
+
+// ============================================================
 //    2) Domain types (то, что отдаём в UI)
 // ============================================================
 
-// CatalogCategoryPreview — это то, что получит UI (/catalog).
 export type CatalogCategoryPreview = {
   id: string;
   name: string;
@@ -169,20 +215,19 @@ export type CatalogCategoryPreview = {
 //    3) Domain types — товары (то, что отдаём в UI)
 // ============================================================
 
-// CatalogProductPreview — минимальная модель товара для списка/грида.
 export type CatalogProductPreview = {
-  id: string; // Strapi id
-  moyskladId: string; // внешний стабильный id
-  slug: string; // URL
+  id: string;
+  moyskladId: string;
+  slug: string;
 
-  name: string; // заголовок карточки
-  price: number; // цена
-  imageUrl: string | null; // картинка карточки
+  name: string;
+  price: number;
+  priceOld: number;
+  imageUrl: string | null;
   images: string[];
   engravingEnabled: boolean;
 };
 
-// Ответ API для infinite scroll.
 export type CatalogProductsResponse = {
   items: CatalogProductPreview[];
 
@@ -194,10 +239,23 @@ export type CatalogProductsResponse = {
 };
 
 // ============================================================
+//    3.1) Domain types — подборки товаров для главной
+// ============================================================
+
+export type CatalogCollection = {
+  id: string;
+  title: string;
+  slug: string;
+  description: string | null;
+  sortOrder: number;
+  viewAllHref: string | null;
+  products: CatalogProductPreview[];
+};
+
+// ============================================================
 //    4) Товар: детальная страница (/catalog/product/[slug])
 // ============================================================
 
-// Категория для хлебных крошек (приходит из backend как breadcrumbsCategories)
 export type BreadcrumbCategory = {
   id: string;
   slug: string;
@@ -216,7 +274,22 @@ export type CatalogProductSpecification = {
   href: string | null;
 };
 
-// Детальная модель товара для страницы товара.
+// Один товар внутри комплекта (domain тип для UI)
+export type CatalogBundleComponentProduct = {
+  id: string;
+  name: string;
+  slug: string;
+  price: number;
+  imageUrl: string | null;
+};
+
+// Один элемент состава комплекта (domain тип для UI)
+export type CatalogBundleItem = {
+  id: string;
+  quantity: number;
+  componentProduct: CatalogBundleComponentProduct | null;
+};
+
 export type CatalogProductDetail = {
   id: string;
   moyskladId: string;
@@ -231,17 +304,18 @@ export type CatalogProductDetail = {
   specifications: CatalogProductSpecification[];
   engravingEnabled: boolean;
   code: string | null;
+
+  // Состав комплекта — пустой массив для обычных товаров
+  bundleItems: CatalogBundleItem[];
 };
 
-// Упрощённая характеристика (для UI): просто name/value как текст
 export type CatalogVariantCharacteristic = {
   name: string;
   value: string;
 };
 
-// Вариант для UI (детальная страница)
 export type CatalogVariant = {
-  id: string; // Strapi id варианта
+  id: string;
   moyskladId: string;
 
   name: string;
@@ -251,20 +325,18 @@ export type CatalogVariant = {
   characteristics: CatalogVariantCharacteristic[];
 };
 
-// Сырой ответ backend:
-// GET /api/catalog/product?slug=ms-xxxxxxx
 export type StrapiCatalogProductBySlugResponse = {
   item: StrapiProductItem;
   variants?: StrapiVariantItem[];
   breadcrumbsCategories?: BreadcrumbCategory[];
+  // Состав комплекта — приходит из корня ответа (не из item.attributes)
+  bundleItems?: StrapiBundleItem[];
 };
 
 // ============================================================
-//    5) Товар недели (главная страница)
+//    5) Товар недели
 // ============================================================
 
-// Сырой ответ Strapi:
-// GET /api/weekly-product-block?populate[product][populate]=image
 export type StrapiWeeklyProductBlockResponse = {
   data: {
     id: number;
@@ -273,7 +345,6 @@ export type StrapiWeeklyProductBlockResponse = {
   } | null;
 };
 
-// Domain-модель для UI главной страницы
 export type WeeklyProductBlock = {
   isEnabled: boolean;
 

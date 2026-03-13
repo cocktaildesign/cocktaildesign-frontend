@@ -8,6 +8,11 @@ export {
 
   // Товары (категория + все потомки, пагинация)
   getProductsByCategorySlugFromStrapi,
+  getDiscountedProductsFromStrapi,
+  getProductsByIdsFromStrapi,
+
+  // Главная — подборки товаров
+  getCatalogCollectionsWithProductsFromStrapi,
 
   // Товар (детальная страница)
   getProductBySlugFromStrapi,

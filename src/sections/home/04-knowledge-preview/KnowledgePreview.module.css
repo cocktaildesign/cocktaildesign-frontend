@@ -1,0 +1,31 @@
+/* src/sections/home/knowledge-preview/KnowledgePreview.module.css */
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+}
+
+.title {
+  font-size: 32px;
+  font-weight: 500;
+  margin: 0;
+}
+
+.viewAll {
+  font-size: 14px;
+  color: var(--color-dark-blue);
+  text-decoration: none;
+}
+
+.viewAll:hover {
+  text-decoration: underline;
+}
+
+/* 4 колонки — под десктоп */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+}

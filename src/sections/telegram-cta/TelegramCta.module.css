@@ -1,6 +1,6 @@
 .banner {
   /* border: 1px solid var(--color-gray-light); */
-  padding: 50px 150px;
+  padding: 50px 215px;
   border-radius: var(--radius);
   display: flex;
   flex-direction: row;
@@ -65,7 +65,7 @@
 .qrFrame {
   position: absolute;
   bottom: 0;
-  right: 150px;
+  right: 200px;
   width: 320px;
   height: 320px;
 }

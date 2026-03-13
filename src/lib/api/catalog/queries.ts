@@ -9,40 +9,42 @@ import { fetchStrapi } from "@/lib/api/strapi/client";
 import type {
   BreadcrumbCategory,
   CatalogCategoryPreview,
+  CatalogCollection,
   CatalogProductDetail,
   CatalogProductsResponse,
   CatalogVariant,
+  StrapiCatalogCollectionsResponse,
   StrapiCatalogProductBySlugResponse,
   StrapiCategoryListResponse,
+  StrapiCollectionSelectionMode,
   StrapiProductItem,
   StrapiWeeklyProductBlockResponse,
   WeeklyProductBlock,
 } from "./types";
 
-import { mapCategoryPreview, mapProductDetail, mapProductPreview, mapVariants, mapWeeklyProductBlock } from "./mappers";
+import {
+  mapBundleItems,
+  mapCatalogCollectionBase,
+  mapCategoryPreview,
+  mapProductDetail,
+  mapProductPreview,
+  mapVariants,
+  mapWeeklyProductBlock,
+} from "./mappers";
 
 // ============================================================================
 // КАТЕГОРИИ
 // ============================================================================
 
-// "Верхний уровень витрины" = дети категории с id=14.
 const CATALOG_ROOT_PARENT_ID = 14;
 
-// Профиль параметров для /catalog (список верхнего уровня).
 const TOP_CATEGORIES_PARAMS: Record<string, string> = {
   sort: "name:asc",
-
-  // Важно: медиа не возвращается автоматически, нужно populate.
   "populate[image]": "true",
   "populate[children][sort]": "name:asc",
-
-  // Фильтр: только верхний уровень
   "filters[parent][id][$eq]": String(CATALOG_ROOT_PARENT_ID),
 };
 
-// ----------------------------------------------------------------------------
-// Получить категории верхнего уровня для страницы /catalog.
-// ----------------------------------------------------------------------------
 export async function getTopCategoriesFromStrapi(): Promise<CatalogCategoryPreview[]> {
   const response: StrapiCategoryListResponse = await fetchStrapi("/api/moysklad-categories", TOP_CATEGORIES_PARAMS);
 
@@ -59,9 +61,6 @@ export async function getTopCategoriesFromStrapi(): Promise<CatalogCategoryPrevi
   return result;
 }
 
-// ----------------------------------------------------------------------------
-// Получить одну категорию по slug (для страницы /catalog/[slug]).
-// ----------------------------------------------------------------------------
 export async function getCategoryBySlugFromStrapi(slug: string): Promise<CatalogCategoryPreview | null> {
   const safeSlug = slug.trim();
   if (!safeSlug) return null;
@@ -92,10 +91,6 @@ type FlatCategory = {
   parentId: string | null;
 };
 
-// ----------------------------------------------------------------------------
-// normalizeCount
-// Приводим счётчик к безопасному числу для UI.
-// ----------------------------------------------------------------------------
 function normalizeCount(value: unknown): number {
   if (typeof value !== "number") return 0;
   if (!Number.isFinite(value)) return 0;
@@ -104,14 +99,9 @@ function normalizeCount(value: unknown): number {
   return value;
 }
 
-// ----------------------------------------------------------------------------
-// buildCatalogTree
-// Собираем дерево любой глубины из плоского списка.
-// ----------------------------------------------------------------------------
 function buildCatalogTree(flat: FlatCategory[]): CatalogCategoryPreview[] {
   const byId = new Map<string, CatalogCategoryPreview>();
 
-  // 1) создаём узлы
   for (const item of flat) {
     if (!item.id || !item.slug || !item.name) continue;
 
@@ -125,7 +115,6 @@ function buildCatalogTree(flat: FlatCategory[]): CatalogCategoryPreview[] {
     });
   }
 
-  // 2) связываем parent → children
   const roots: CatalogCategoryPreview[] = [];
 
   for (const item of flat) {
@@ -148,7 +137,6 @@ function buildCatalogTree(flat: FlatCategory[]): CatalogCategoryPreview[] {
     parent.children.push(node);
   }
 
-  // 3) скрываем технический root
   if (roots.length === 1) {
     return roots[0].children ?? [];
   }
@@ -156,9 +144,6 @@ function buildCatalogTree(flat: FlatCategory[]): CatalogCategoryPreview[] {
   return roots;
 }
 
-// ----------------------------------------------------------------------------
-// Публичная функция получения дерева категорий.
-// ----------------------------------------------------------------------------
 export async function getCatalogTreeFromStrapi(): Promise<CatalogCategoryPreview[]> {
   const flat: FlatCategory[] = await fetchStrapi("/api/catalog/categories-flat");
 
@@ -175,7 +160,11 @@ type GetProductsParams = {
   offset: number;
 };
 
-// Ответ backend (сырой)
+type GetDiscountedProductsParams = {
+  limit: number;
+  offset: number;
+};
+
 type StrapiCatalogProductsResponse = {
   items: StrapiProductItem[];
   total: number;
@@ -184,10 +173,6 @@ type StrapiCatalogProductsResponse = {
   hasMore: boolean;
 };
 
-// ----------------------------------------------------------------------------
-// Получить товары категории (с pagination).
-// Backend должен включать товары всех потомков категории.
-// ----------------------------------------------------------------------------
 export async function getProductsByCategorySlugFromStrapi(params: GetProductsParams): Promise<CatalogProductsResponse> {
   const safeSlug = params.categorySlug.trim();
 
@@ -201,9 +186,7 @@ export async function getProductsByCategorySlugFromStrapi(params: GetProductsPar
     };
   }
 
-  // защита limit
   const limit = Number.isFinite(params.limit) && params.limit > 0 ? Math.min(params.limit, 100) : 50;
-
   const offset = Number.isFinite(params.offset) && params.offset >= 0 ? params.offset : 0;
 
   const query: Record<string, string> = {
@@ -214,7 +197,30 @@ export async function getProductsByCategorySlugFromStrapi(params: GetProductsPar
 
   const response: StrapiCatalogProductsResponse = await fetchStrapi("/api/catalog/products", query);
 
-  // маппинг Strapi → Domain
+  const items = response.items.map(mapProductPreview).filter((item): item is NonNullable<typeof item> => item !== null);
+
+  return {
+    items,
+    total: response.total,
+    limit: response.limit,
+    offset: response.offset,
+    hasMore: response.hasMore,
+  };
+}
+
+export async function getDiscountedProductsFromStrapi(
+  params: GetDiscountedProductsParams,
+): Promise<CatalogProductsResponse> {
+  const limit = Number.isFinite(params.limit) && params.limit > 0 ? Math.min(params.limit, 100) : 50;
+  const offset = Number.isFinite(params.offset) && params.offset >= 0 ? params.offset : 0;
+
+  const query: Record<string, string> = {
+    limit: String(limit),
+    offset: String(offset),
+  };
+
+  const response: StrapiCatalogProductsResponse = await fetchStrapi("/api/catalog/products-discounted", query);
+
   const items = response.items.map(mapProductPreview).filter((item): item is NonNullable<typeof item> => item !== null);
 
   return {
@@ -227,6 +233,118 @@ export async function getProductsByCategorySlugFromStrapi(params: GetProductsPar
 }
 
 // ============================================================================
+// ПОДБОРКИ ТОВАРОВ ДЛЯ ГЛАВНОЙ (catalog-collections)
+// ============================================================================
+
+function normalizeSelectionMode(value: unknown): StrapiCollectionSelectionMode {
+  if (value === "category") return "category";
+  if (value === "discount") return "discount";
+  return "manual";
+}
+
+function buildCollectionViewAllHref(params: {
+  selectionMode: StrapiCollectionSelectionMode;
+  collectionSlug: string;
+  sourceCategorySlug: string | null;
+}): string | null {
+  if (params.selectionMode === "category" && params.sourceCategorySlug) {
+    return `/catalog/${params.sourceCategorySlug}`;
+  }
+
+  if (params.selectionMode === "discount") {
+    return "/discounts-product";
+  }
+
+  if (params.collectionSlug) {
+    return `/collections/${params.collectionSlug}`;
+  }
+
+  return null;
+}
+
+export async function getCatalogCollectionsWithProductsFromStrapi(): Promise<CatalogCollection[]> {
+  const params: Record<string, string> = {
+    sort: "sortOrder:asc",
+    "populate[products][populate]": "image",
+    "populate[sourceCategory]": "true",
+  };
+
+  try {
+    const response: StrapiCatalogCollectionsResponse = await fetchStrapi("/api/catalog-collections", params);
+
+    const result: CatalogCollection[] = [];
+    const rawCollections = response.data ?? [];
+
+    for (const item of rawCollections) {
+      const base = mapCatalogCollectionBase(item);
+      if (!base) continue;
+
+      const selectionMode = normalizeSelectionMode(item.selectionMode);
+      const sourceCategorySlug = item.sourceCategory?.slug?.trim() ?? null;
+      const products: CatalogCollection["products"] = [];
+
+      if (selectionMode === "manual") {
+        const rawProducts = Array.isArray(item.products) ? item.products : [];
+
+        for (const product of rawProducts) {
+          const mapped = mapProductPreview(product);
+
+          if (mapped) {
+            products.push(mapped);
+          }
+        }
+      }
+
+      if (selectionMode === "category") {
+        if (sourceCategorySlug) {
+          const categoryProductsResponse = await getProductsByCategorySlugFromStrapi({
+            categorySlug: sourceCategorySlug,
+            limit: 100,
+            offset: 0,
+          });
+
+          products.push(...categoryProductsResponse.items);
+        }
+      }
+
+      if (selectionMode === "discount") {
+        const discountedProductsResponse = await getDiscountedProductsFromStrapi({
+          limit: 100,
+          offset: 0,
+        });
+
+        products.push(...discountedProductsResponse.items);
+      }
+
+      result.push({
+        ...base,
+        viewAllHref: buildCollectionViewAllHref({
+          selectionMode,
+          collectionSlug: base.slug,
+          sourceCategorySlug,
+        }),
+        products,
+      });
+    }
+
+    return result;
+  } catch (e) {
+    const message = e instanceof Error ? e.message : "";
+
+    if (
+      message.includes(" 404 ") ||
+      message.includes("Not Found") ||
+      message.includes(" 403 ") ||
+      message.includes("Forbidden")
+    ) {
+      return [];
+    }
+
+    throw e;
+  }
+}
+
+// ============================================================================
 // ТОВАР (детальная страница /catalog/product/[slug])
 // ============================================================================
 
@@ -236,33 +354,22 @@ export type CatalogProductPageData = {
   breadcrumbsCategories: BreadcrumbCategory[];
 };
 
-// ----------------------------------------------------------------------------
-// Товар по slug (детальная страница)
-// ----------------------------------------------------------------------------
 export async function getProductBySlugFromStrapi(slug: string): Promise<CatalogProductPageData | null> {
   const rawSlug = slug.trim();
   if (!rawSlug) return null;
 
-  // 1) Нормализуем slug:
-  //    принимаем "ms-xxxxxxxx-любая-строка" и режем до "ms-xxxxxxxx"
-  //    чтобы совпасть с тем, что хранится в Strapi.
   const stableSlug = rawSlug.startsWith("ms-") ? rawSlug.slice(0, 11) : rawSlug;
 
   try {
-    // 2) Запрашиваем backend по стабильному slug
     const response: StrapiCatalogProductBySlugResponse = await fetchStrapi("/api/catalog/product", {
       slug: stableSlug,
     });
 
-    console.log("RAW PRODUCT RESPONSE:", response);
-    // Детальный лог item — смотрим есть ли attributes или плоская структура
-    console.log("RAW ITEM:", JSON.stringify(response.item, null, 2));
-
-    // 3) Маппим Strapi → Domain
-    const product = mapProductDetail(response.item);
+    // Передаём bundleItems из корня ответа вторым аргументом.
+    // Для обычных товаров response.bundleItems будет [] → bundleItems в product тоже [].
+    const product = mapProductDetail(response.item, response.bundleItems);
     if (!product) return null;
 
-    // 4) variants: маппим в безопасный Domain-формат
     const variants = mapVariants(response.variants);
 
     return {
@@ -271,11 +378,9 @@ export async function getProductBySlugFromStrapi(slug: string): Promise<CatalogP
       breadcrumbsCategories: response.breadcrumbsCategories ?? [],
     };
   } catch (e) {
-    // 404 = не найдено → вернём null, страница покажет notFound()
     const message = e instanceof Error ? e.message : "";
     if (message.includes(" 404 ") || message.includes("Not Found")) return null;
 
-    // Любая другая ошибка — это реально проблема
     throw e;
   }
 }
@@ -286,41 +391,28 @@ export async function getProductBySlugFromStrapi(slug: string): Promise<CatalogP
 
 type StrapiCatalogProductsByIdsResponse = {
   items: StrapiProductItem[];
-  // total/limit/offset/hasMore могут отсутствовать — это нормально для этого endpoint
   total?: number;
 };
 
-// ----------------------------------------------------------------------------
-// Получить список товаров по массиву Strapi id.
-// GET /api/catalog/products-by-ids?ids=867,866,848
-//
-// Возвращаем в формате CatalogProductsResponse, чтобы UI мог переиспользовать
-// уже существующий подход (items/total/...)
-// ----------------------------------------------------------------------------
 export async function getProductsByIdsFromStrapi(productIds: string[]): Promise<CatalogProductsResponse> {
-  // 1) Если ids пустой — сразу пустой результат (без запроса)
   if (productIds.length === 0) {
     return { items: [], total: 0, limit: 0, offset: 0, hasMore: false };
   }
 
-  // 2) Нормализуем ids: trim + удаляем пустые
   const normalizedIds = productIds.map((id) => id.trim()).filter(Boolean);
 
   if (normalizedIds.length === 0) {
     return { items: [], total: 0, limit: 0, offset: 0, hasMore: false };
   }
 
-  // 3) Query-параметр "ids" = "867,866"
   const idsParam = normalizedIds.join(",");
 
   const query: Record<string, string> = {
     ids: idsParam,
   };
 
-  // 4) Запрос
   const response: StrapiCatalogProductsByIdsResponse = await fetchStrapi("/api/catalog/products-by-ids", query);
 
-  // 5) Маппинг Strapi → Domain (как в остальных запросах)
   const items = (response.items ?? [])
     .map(mapProductPreview)
     .filter((item): item is NonNullable<typeof item> => item !== null);
@@ -335,12 +427,9 @@ export async function getProductsByIdsFromStrapi(productIds: string[]): Promise<
 }
 
 // ============================================================================
-// ТОВАР НЕДЕЛИ (главная страница)
+// ТОВАР НЕДЕЛИ
 // ============================================================================
 
-// ----------------------------------------------------------------------------
-// Получить блок "Товар недели" для главной страницы.
-// ----------------------------------------------------------------------------
 export async function getWeeklyProductBlock(): Promise<WeeklyProductBlock | null> {
   const params: Record<string, string> = {
     "populate[product][populate]": "image",
@@ -353,7 +442,6 @@ export async function getWeeklyProductBlock(): Promise<WeeklyProductBlock | null
   } catch (e) {
     const message = e instanceof Error ? e.message : "";
 
-    // Если блок ещё не создан / не опубликован / недоступен — просто не показываем его
     if (
       message.includes(" 404 ") ||
       message.includes("Not Found") ||

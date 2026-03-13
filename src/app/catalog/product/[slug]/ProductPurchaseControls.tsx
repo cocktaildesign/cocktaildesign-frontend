@@ -14,29 +14,66 @@ import styles from "./ProductPage.module.css";
 type ProductPurchaseControlsProps = {
   productId: string;
   engravingEnabled: boolean;
+  price: number;
+  priceOld: number;
 };
 
-export default function ProductPurchaseControls({ productId, engravingEnabled }: ProductPurchaseControlsProps) {
-  // На странице товара состояние всегда начинается с дефолтов:
-  // - quantity = 1
-  // - engraving = false
+function formatPrice(price: number): string {
+  return new Intl.NumberFormat("ru-RU").format(price);
+}
+
+function getSavingsAmount(price: number, priceOld: number): number | null {
+  if (price <= 0) return null;
+  if (priceOld <= price) return null;
+
+  const savings = priceOld - price;
+
+  if (!Number.isFinite(savings) || savings <= 0) return null;
+
+  return savings;
+}
+
+export default function ProductPurchaseControls({
+  productId,
+  engravingEnabled,
+  price,
+  priceOld,
+}: ProductPurchaseControlsProps) {
   const [quantity, setQuantity] = useState<number>(1);
   const [engravingChecked, setEngravingChecked] = useState<boolean>(false);
+
+  const hasDiscount = priceOld > price;
+  const savingsAmount = getSavingsAmount(price, priceOld);
 
   function handleAddToCart() {
     console.log("addToCart", {
       productId,
       quantity,
-      engravingChecked, // было engravingEnabled
+      engravingChecked,
     });
   }
 
   return (
     <div className={styles.productPurchaseControls}>
+      <div className={styles.productPurchasePriceBlock}>
+        {hasDiscount && (
+          <div className={styles.productPurchasePriceTopRow}>
+            <span className={styles.productPurchasePriceOld}>{formatPrice(priceOld)} ₽</span>
+
+            {savingsAmount !== null && (
+              <span className={styles.productPurchaseBenefitBadge}>Выгода {formatPrice(savingsAmount)} ₽</span>
+            )}
+          </div>
+        )}
+
+        <div className={styles.productPurchasePrice}>{formatPrice(price)} ₽</div>
+      </div>
+
       <div className={styles.productInfoConfigurator}>
         <div className={styles.productActions}>
           <QuantityControl value={quantity} onChange={setQuantity} />
-          {engravingEnabled ? <EngravingToggle checked={engravingChecked} onChange={setEngravingChecked} /> : null}{" "}
+
+          {engravingEnabled ? <EngravingToggle checked={engravingChecked} onChange={setEngravingChecked} /> : null}
         </div>
       </div>
 

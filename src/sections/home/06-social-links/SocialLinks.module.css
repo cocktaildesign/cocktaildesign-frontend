@@ -1,0 +1,45 @@
+.section {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+
+}
+
+.card {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 20px 24px;
+  border-radius: var(--radius);
+  background: var(--color-light-soft);
+}
+
+.name {
+  font-size: 16px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.description {
+  flex: 1; /* растягивается, толкает кнопку вправо */
+  font-size: 14px;
+  color: var(--color-dark-blue);
+}
+
+.button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  border-radius: 20px;
+  background: #0077ff;
+  color: #fff;
+  font-size: 14px;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: opacity 200ms ease;
+}
+
+.button:hover {
+  opacity: 0.85;
+}

@@ -1,0 +1,52 @@
+/* src/sections/home/about-company/AboutCompany.module.css */
+
+.section {
+  border: 1px solid var(--color-light-soft);
+  border-radius: var(--radius);
+
+  margin: 60px 0;
+}
+
+.intro {
+  margin-bottom: 40px;
+}
+
+.title {
+  font-size: 20px;
+  font-weight: 700;
+  margin: 0 0 16px 0;
+}
+
+.description {
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--color-dark-blue);
+  max-width: 600px;
+  margin: 0;
+}
+
+/* 3 колонки как в рефе */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 32px 24px;
+}
+
+.point {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.pointTitle {
+  font-size: 14px;
+  font-weight: 700;
+  margin: 0;
+}
+
+.pointDescription {
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--color-dark-blue);
+  margin: 0;
+}

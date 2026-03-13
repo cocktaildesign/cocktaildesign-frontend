@@ -10,13 +10,17 @@
 
 import { getStrapiMediaUrl } from "@/lib/api/strapi/media";
 import type {
+  CatalogBundleItem,
   CatalogCategoryPreview,
+  CatalogCollection,
   CatalogProductDetail,
   CatalogProductImage,
   CatalogProductPreview,
   CatalogProductSpecification,
   CatalogVariant,
   CatalogVariantCharacteristic,
+  StrapiBundleItem,
+  StrapiCatalogCollectionItem,
   StrapiCategoryItem,
   StrapiMediaFile,
   StrapiProductItem,
@@ -185,6 +189,10 @@ export function mapProductPreview(item: StrapiProductItem): CatalogProductPrevie
   const rawPrice = source.price;
   const price = typeof rawPrice === "number" && Number.isFinite(rawPrice) && rawPrice > 0 ? rawPrice : 0;
 
+  const rawPriceOld = source.priceOld;
+  const priceOld =
+    typeof rawPriceOld === "number" && Number.isFinite(rawPriceOld) && rawPriceOld > 0 ? rawPriceOld : price;
+
   const firstImage = Array.isArray(source.image) ? source.image[0] : (source.image?.data?.[0]?.attributes ?? null);
 
   const imagePath = pickBestImagePath(firstImage);
@@ -212,9 +220,38 @@ export function mapProductPreview(item: StrapiProductItem): CatalogProductPrevie
     slug,
     name,
     price,
+    priceOld,
     imageUrl,
     images,
     engravingEnabled,
+  };
+}
+
+// ============================================================================
+// mapCatalogCollectionBase
+// ============================================================================
+
+export function mapCatalogCollectionBase(
+  item: StrapiCatalogCollectionItem,
+): Omit<CatalogCollection, "products" | "viewAllHref"> | null {
+  const rawTitle = item.title;
+  const rawSlug = item.slug;
+  const rawDescription = item.description;
+  const rawSortOrder = item.sortOrder;
+
+  const title = typeof rawTitle === "string" ? rawTitle.trim() : "";
+  const slug = typeof rawSlug === "string" ? rawSlug.trim() : "";
+  const description = typeof rawDescription === "string" && rawDescription.trim() ? rawDescription.trim() : null;
+  const sortOrder = typeof rawSortOrder === "number" && Number.isFinite(rawSortOrder) ? rawSortOrder : 0;
+
+  if (!title || !slug) return null;
+
+  return {
+    id: String(item.id),
+    title,
+    slug,
+    description,
+    sortOrder,
   };
 }
 
@@ -255,10 +292,50 @@ function mapProductSpecifications(raw: unknown): CatalogProductSpecification[] {
 }
 
 // ============================================================================
-// mapProductDetail
+// BUNDLE ITEMS
+// Маппим состав комплекта из сырых данных Strapi в domain-тип для UI.
+// bundleItems приходят из КОРНЯ ответа /api/catalog/product,
+// а не из item.attributes — поэтому передаём их отдельным аргументом.
 // ============================================================================
 
-export function mapProductDetail(item: StrapiProductItem): CatalogProductDetail | null {
+export function mapBundleItems(raw: StrapiBundleItem[] | undefined): CatalogBundleItem[] {
+  // Если нет данных — возвращаем пустой массив (это обычный товар, не bundle)
+  if (!raw || raw.length === 0) return [];
+
+  const result: CatalogBundleItem[] = [];
+
+  for (const item of raw) {
+    const cp = item.componentProduct ?? null;
+
+    result.push({
+      id: String(item.id),
+      // quantity — сколько единиц этого товара в комплекте, по умолчанию 1
+      quantity: typeof item.quantity === "number" && item.quantity > 0 ? item.quantity : 1,
+      componentProduct: cp
+        ? {
+            id: String(cp.id),
+            name: cp.name ?? "",
+            slug: cp.slug ?? "",
+            price: typeof cp.price === "number" && cp.price > 0 ? cp.price : 0,
+            imageUrl: cp.imageUrl ?? null,
+          }
+        : null,
+    });
+  }
+
+  return result;
+}
+
+// ============================================================================
+// mapProductDetail
+// Принимает второй аргумент rawBundleItems — состав комплекта из корня ответа.
+// Для обычных товаров rawBundleItems не передаётся → bundleItems будет [].
+// ============================================================================
+
+export function mapProductDetail(
+  item: StrapiProductItem,
+  rawBundleItems?: StrapiBundleItem[],
+): CatalogProductDetail | null {
   const source = item.attributes;
 
   if (!source) return null;
@@ -314,6 +391,9 @@ export function mapProductDetail(item: StrapiProductItem): CatalogProductDetail 
 
   const specifications = mapProductSpecifications(source.specifications);
 
+  // Маппим состав комплекта (для обычного товара будет пустой массив)
+  const bundleItems = mapBundleItems(rawBundleItems);
+
   return {
     id: String(item.id),
     moyskladId,
@@ -326,6 +406,7 @@ export function mapProductDetail(item: StrapiProductItem): CatalogProductDetail 
     specifications,
     engravingEnabled,
     code,
+    bundleItems,
   };
 }
 

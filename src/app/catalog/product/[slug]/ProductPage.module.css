@@ -261,7 +261,6 @@
 }
 .specLink::after {
   content: "→";
-  /* color: var(--color-dark-blue); */
   color: var(--color-dark-blue-hover);
   height: 100%;
   aspect-ratio: 1 / 1;
@@ -299,10 +298,46 @@
   font-weight: 300;
 }
 
+/* Блок с ценами */
+.productPurchasePriceBlock {
+  margin-bottom: 10px;
+}
+
+/* Верхняя строка: старая цена + выгода */
+.productPurchasePriceTopRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 8px;
+}
+
+/* Старая цена */
+.productPurchasePriceOld {
+  font-size: var(--text-lg);
+  color: var(--color-gray);
+  text-decoration: line-through;
+  font-weight: 400;
+}
+
+/* Бейдж выгоды */
+.productPurchaseBenefitBadge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 36px;
+  padding: 0 14px;
+  border-radius: 12px;
+  background: rgb(60, 170, 60);
+  color: var(--color-white);
+  font-size: var(--text-base);
+  font-weight: 600;
+  line-height: 1;
+}
+
 .productPurchasePrice {
   font-size: var(--text-2xl);
   font-weight: 550;
-  margin-bottom: 10px;
   width: fit-content;
 }
 
@@ -476,30 +511,10 @@
   gap: 12px;
 }
 
-.relatedList {
-  display: grid;
-  grid-template-columns: repeat(6, 1fr);
-  gap: 16px;
-}
-
-.relatedItem {
-  border: 1px solid var(--color-light);
-  border-radius: 12px;
-  padding: 10px;
-  transition:
-    border var(--dur) var(--ease),
-    box-shadow var(--dur) var(--ease);
-}
-
-.relatedItem:hover {
-  border: 1px solid transparent;
-  box-shadow: 0 2px 8px #ededed;
-}
-
 .relatedImage {
   position: relative;
   width: 100%;
-  aspect-ratio: 1 / 1; /* квадрат */
+  aspect-ratio: 1 / 1;
   border-radius: 12px;
   overflow: hidden;
   background-color: var(--color-light-soft);
@@ -529,48 +544,8 @@
   font-weight: 500;
 }
 
-.relatedList {
-  display: flex;
-  gap: 16px;
-  overflow-x: auto;
-  scroll-snap-type: x mandatory;
-  padding-bottom: 12px; /* место для скроллбара */
-
-  /* скрываем скроллбар визуально */
-  scrollbar-width: thin;
-  scrollbar-color: var(--color-light) transparent;
-}
-
-.relatedItem {
-  /* фиксированная ширина карточки — примерно 6 в ряд */
-  flex: 0 0 calc((100% - 5 * 16px) / 6);
+.relatedSlide {
+  flex: 0 0 calc((100% - 16px * 5) / 6);
   scroll-snap-align: start;
-
-  border: 1px solid var(--color-light);
-  border-radius: 12px;
-  padding: 10px;
-  transition:
-    border var(--dur) var(--ease),
-    box-shadow var(--dur) var(--ease);
-}
-
-.relatedItem {
-  flex: 0 0 calc((100% - 5 * 16px) / 6.3); /* 6.3 вместо 6 */
-}
-
-.relatedScrollIcon {
-  width: 24px;
-  height: auto;
-  color: var(--color-gray);
-  animation: nudge 2.5s ease-in-out infinite;
-}
-
-@keyframes nudge {
-  0%,
-  100% {
-    transform: translateX(0);
-  }
-  50% {
-    transform: translateX(5px);
-  }
+  align-self: stretch;
 }

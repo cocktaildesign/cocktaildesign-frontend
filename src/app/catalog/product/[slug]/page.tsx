@@ -3,6 +3,7 @@
 // Server Component — данные грузятся на сервере, клиенту уходит готовый HTML.
 // Интерактивные части (кнопки, количество, избранное) вынесены в ProductPurchaseControls.
 
+import ProductsSlider from "@/components/ui/products-slider/ProductsSlider";
 import { notFound } from "next/navigation";
 import { getStrapiMediaUrl } from "@/lib/api/strapi/media";
 import Link from "next/link";
@@ -11,7 +12,8 @@ import ProductGallery from "./ProductGallery";
 import PageLayout from "@/components/layout/PageLayout";
 import { getProductBySlugFromStrapi } from "@/lib/api/catalog";
 import ProductPurchaseControls from "./ProductPurchaseControls";
-import MouseScrollIcon from "@/components/icons/product-page/MouseScrollIcon";
+import BundleItems from "./bundle/BundleItems";
+
 import ArrowBackIcon from "@/components/icons/ArrowBackIcon";
 import CopyButton from "@/components/ui/copy-button/CopyButton";
 
@@ -38,18 +40,18 @@ type ProductImageFormats = {
 
 // Один объект изображения товара
 type ProductImage = {
-  url: string; // оригинальное изображение
-  alternativeText?: string | null; // alt текст из Strapi
-  formats?: ProductImageFormats; // набор ресайзов
+  url: string;
+  alternativeText?: string | null;
+  formats?: ProductImageFormats;
 };
 
 // Атрибуты товара из API
 type RelatedProductAttributes = {
-  name: string | null; // название товара
-  slug: string | null; // slug для страницы товара
-  price: number | null; // текущая цена
-  priceOld: number | null; // старая цена
-  image: ProductImage[] | null; // массив изображений или null
+  name: string | null;
+  slug: string | null;
+  price: number | null;
+  priceOld: number | null;
+  image: ProductImage[] | null;
 };
 
 // Один товар из ответа API
@@ -60,11 +62,11 @@ type RelatedProduct = {
 
 // Полный ответ endpoint `/api/catalog/products`
 type RelatedProductsResponse = {
-  items: RelatedProduct[]; // список товаров
-  total: number; // всего товаров в категории
-  limit: number; // limit запроса
-  offset: number; // offset запроса
-  hasMore: boolean; // есть ли ещё товары
+  items: RelatedProduct[];
+  total: number;
+  limit: number;
+  offset: number;
+  hasMore: boolean;
 };
 
 // Запрос для получения блока похожие товары
@@ -96,27 +98,15 @@ async function getRelatedProducts(params: {
 export default async function ProductPage({ params }: PageProps) {
   const { slug } = await params;
 
-  // Загружаем данные товара с бэкенда
   const data = await getProductBySlugFromStrapi(slug);
-
-  // Если товар не найден — показываем стандартную 404-страницу Next.js
   if (!data) notFound();
 
   const { product, breadcrumbsCategories } = data;
 
-  // variants может отсутствовать, если товар без вариантов — используем пустой массив
   const variants = data.variants ?? [];
-
-  // images может отсутствовать (товар без фото) — используем пустой массив
   const images = product.images ?? [];
-
-  // specifications может отсутствовать — используем пустой массив
-
   const specifications = product.specifications ?? [];
 
-  // ─── Характеристики вариантов ─────────────────────────────────────────────
-  // Собираем уникальные значения по каждой характеристике:
-  // { "цвет": ["чёрный", "золото"], "объём": ["30/60"] }
   const characteristicsByName: Record<string, string[]> = {};
 
   for (const variant of variants) {
@@ -126,27 +116,20 @@ export default async function ProductPage({ params }: PageProps) {
       const name = ch.name.trim();
       const value = ch.value.trim();
 
-      // Пропускаем пустые значения
       if (!name || !value) continue;
 
-      // Создаём массив для новой характеристики
       if (!characteristicsByName[name]) {
         characteristicsByName[name] = [];
       }
 
-      // Добавляем только уникальные значения
       if (!characteristicsByName[name].includes(value)) {
         characteristicsByName[name].push(value);
       }
     }
   }
 
-  // Object.entries превращает объект в массив пар [ключ, значения]
-  // для удобного рендера через .map()
   const characteristicEntries = Object.entries(characteristicsByName);
 
-  // ─── Хлебные крошки ───────────────────────────────────────────────────────
-  // Формат: Главная / Каталог / [категории из бэкенда] / Название товара
   const breadcrumbsItems = [
     { href: "/", label: "Главная" },
     { href: "/catalog", label: "Каталог" },
@@ -157,32 +140,26 @@ export default async function ProductPage({ params }: PageProps) {
     { href: `/catalog/product/${product.slug}`, label: product.name },
   ];
 
-  // берём "верхнюю" категорию товара
   const relatedCategorySlug = breadcrumbsCategories[0]?.slug ?? "";
 
-  // запрашиваем товары
   const relatedResponse = await getRelatedProducts({
     categorySlug: relatedCategorySlug,
     limit: 1000,
     offset: 0,
   });
 
-  // убираем текущий товар
   const relatedItems = (relatedResponse?.items ?? []).filter((item) => {
     const itemSlug = item.attributes.slug ?? "";
     return itemSlug && itemSlug !== product.slug;
   });
-  console.log("GALLERY IMAGES", images);
 
   return (
     <PageLayout breadcrumbsItems={breadcrumbsItems}>
       <section className={styles.productPage}>
-        {/* Заголовок товара */}
         <header className={styles.productPageHeader}>
           <h1 className={styles.productPageTitle}>{product.name}</h1>
         </header>
 
-        {/* Основная сетка: галерея | характеристики | сайдбар с ценой */}
         <div className={styles.productLayout}>
           <div className={styles.productMeta}>
             <div className={styles.productMetaSku}>
@@ -192,12 +169,10 @@ export default async function ProductPage({ params }: PageProps) {
               <CopyButton value={product.code ?? ""} label="Артикул" />
             </div>
           </div>
-          {/* ── /ГАЛЕРЕЯ ──────────────────────────────────────────────────── */}
+
           <ProductGallery images={images} />
 
-          {/* ── ИНФОРМАЦИЯ О ТОВАРЕ ─────────────────────────────────────── */}
           <div className={styles.productInfo}>
-            {/* Варианты (цвет, объём и т.д.) — показываем только если они есть */}
             {variants.length > 0 && characteristicEntries.length > 0 ? (
               <div className={styles.productVariants}>
                 {characteristicEntries.map(([name, values]) => (
@@ -216,7 +191,6 @@ export default async function ProductPage({ params }: PageProps) {
               </div>
             ) : null}
 
-            {/* Характеристики товара */}
             <div>
               <div className={styles.productAboutHeader}>
                 <h2 className={styles.productInfoTitle}>О товаре</h2>
@@ -226,6 +200,7 @@ export default async function ProductPage({ params }: PageProps) {
                   <ArrowBackIcon className={styles.productAboutButtonIcon} />
                 </a>
               </div>
+
               {specifications.map((spec) => (
                 <div key={spec.id} className={styles.specRow}>
                   <div className={styles.specLeft}>
@@ -245,39 +220,31 @@ export default async function ProductPage({ params }: PageProps) {
               ))}
             </div>
           </div>
-          {/* ── /ИНФОРМАЦИЯ ───────────────────────────────────────────────── */}
 
-          {/* ── САЙДБАР: цена и кнопки покупки ─────────────────────────── */}
           <div className={styles.productSidebar}>
             <div className={styles.productPurchase}>
-              <span className={styles.productPurchasePriceTitle}>Ваша цена: </span>
-              <p className={styles.productPurchasePrice}>{product.price} ₽</p>
-              {/*
-                ProductPurchaseControls — Client Component.
-                Всё интерактивное (счётчик, гравировка, корзина) живёт там.
-                Сюда передаём только id, чтобы знать какой товар добавлять.
-              */}
-              <ProductPurchaseControls productId={product.id} engravingEnabled={product.engravingEnabled} />
+              <ProductPurchaseControls
+                productId={product.id}
+                engravingEnabled={product.engravingEnabled}
+                price={product.price}
+                priceOld={product.priceOld}
+              />
             </div>
           </div>
-          {/* ── /САЙДБАР ──────────────────────────────────────────────────── */}
 
-          {/* ── ОПИСАНИЕ ТОВАРА (на всю ширину, внизу) ──────────────────── */}
+          {product.bundleItems.length > 0 && <BundleItems items={product.bundleItems} bundlePrice={product.price} />}
+
           {product.description?.trim() ? (
             <div id="product-description" className={styles.productDescription}>
               <h2 className={styles.productDescriptionTitle}>Описание</h2>
               <div className={styles.productDescriptionText}>{product.description}</div>
             </div>
           ) : null}
-          {/* ── /ОПИСАНИЕ ─────────────────────────────────────────────────── */}
 
-          {/* ── ПОХОЖИЕ ТОВАРЫ  ──────────────────── */}
           <section className={styles.related} aria-label="Похожие товары">
-            <h2 className={styles.relatedTitle}>
-              Аналогичные товары
-              <MouseScrollIcon className={styles.relatedScrollIcon} />
-            </h2>
-            <ul className={styles.relatedList}>
+            <h2 className={styles.relatedTitle}>Аналогичные товары</h2>
+
+            <ProductsSlider>
               {relatedItems.map((item) => {
                 const itemSlug = item.attributes.slug ?? "";
                 const itemName = item.attributes.name ?? "Товар";
@@ -287,7 +254,7 @@ export default async function ProductPage({ params }: PageProps) {
                 const itemImg = getStrapiMediaUrl(rawImg) ?? PLACEHOLDER_IMG;
 
                 return (
-                  <li key={item.id} className={styles.relatedItem}>
+                  <div key={item.id} className={styles.relatedSlide}>
                     <Link href={`/catalog/product/${itemSlug}`} className={styles.relatedCard}>
                       <div className={styles.relatedImage}>
                         <Image src={itemImg} fill alt={itemName} className={styles.relatedImageImg} />
@@ -295,12 +262,11 @@ export default async function ProductPage({ params }: PageProps) {
                       <div className={styles.relatedCardPrice}>{itemPrice} ₽</div>
                       <div className={styles.relatedCardTitle}>{itemName}</div>
                     </Link>
-                  </li>
+                  </div>
                 );
               })}
-            </ul>
+            </ProductsSlider>
           </section>
-          {/* ── ПОХОЖИЕ ТОВАРЫ ─────────────────────────────────────────────────── */}
         </div>
       </section>
     </PageLayout>

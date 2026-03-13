@@ -98,7 +98,7 @@ export default function Footer() {
         <Container>
           <div className={styles.footerGrid}>
             <div className={styles.footerColumn}>
-              <Logo color="#fff" />
+              <Logo className={styles.logo} />
               <a
                 className={styles.footerRating}
                 href="https://reviews.yandex.ru/shop/cocktaildesign.ru?utm_source=ya_bro&scroll_to=reviews"

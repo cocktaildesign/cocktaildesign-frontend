@@ -2,23 +2,26 @@ import Link from "next/link";
 
 type LogoProps = {
   href?: string;
-  className?: string;
+  linkClassName?: string; // стили для тега <a> (отступы, display и т.д.)
+  className?: string; // размер и цвет SVG
   "aria-label"?: string;
   color?: string;
 };
 
 export default function Logo({
   href = "/",
+  linkClassName,
   className,
   "aria-label": ariaLabel = "CocktailDesign — на главную",
   color = "currentColor",
 }: LogoProps) {
   return (
-    <Link href={href} aria-label={ariaLabel} className={className}>
+    <Link href={href} aria-label={ariaLabel} className={linkClassName}>
       <svg
+        viewBox="0 0 120 42"
         width="120"
         height="42"
-        viewBox="0 0 120 42"
+        className={className}
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
         role="img"
@@ -38,7 +41,7 @@ export default function Logo({
           strokeWidth="2.551"
         />
 
-        {/* Углы (corners) - все с одинаковым паттерном */}
+        {/* Углы (corners) */}
         <g fill="currentColor">
           {/* Top-right corner */}
           <path d="M32.461 12.294C33.1373 12.2939 33.786 12.5624 34.2643 13.0405C34.7426 13.5187 35.0114 14.1672 35.0115 14.8435C35.0116 15.5198 34.7431 16.1685 34.265 16.6468C33.7869 17.1251 33.1383 17.3939 32.462 17.394V14.845H29.911C29.911 14.1687 30.1797 13.5201 30.6579 13.0419C31.1361 12.5637 31.7847 12.295 32.461 12.295V12.294Z" />

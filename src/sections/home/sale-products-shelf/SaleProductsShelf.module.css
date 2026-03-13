@@ -1,0 +1,51 @@
+/* src/sections/home/sale-products-shelf/SaleProductsShelf.module.css */
+
+.section {
+  width: 100%;
+  background-color: var(--color-light-soft);
+  padding: 50px 26px;
+  border-radius: 12px;
+  border: 1px solid var(--color-light);
+  margin-top: 70px;
+}
+
+.shelf {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.title {
+  font-size: var(--text-2xl);
+  font-weight: 450;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 20px;
+}
+
+.viewAll {
+  font-size: 14px;
+  text-decoration: none;
+  color: var(--text-secondary);
+  transition: opacity 0.2s ease;
+}
+
+.viewAll:hover {
+  opacity: 0.7;
+}
+
+.slide {
+  flex: 0 0 calc((100% - 16px * 4) / 5);
+  scroll-snap-align: start;
+  align-self: stretch;
+}

@@ -33,8 +33,8 @@ export default function NavBar() {
             ))}
           </ul>
 
-          <Link className={styles.sale} href="/promotions">
-            % Акции
+          <Link className={styles.sale} href="/discounts-product">
+            % Товары со скидкой
           </Link>
         </div>
       </Container>

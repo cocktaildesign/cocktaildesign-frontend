@@ -1,4 +1,4 @@
-//frontend/src/app/knowledge/articles/[slug]/page.tsx
+// frontend/src/app/knowledge/articles/[slug]/page.tsx
 import { notFound } from "next/navigation";
 import Image from "next/image";
 
@@ -13,7 +13,7 @@ import { getKnowledgeArticleBySlugFromStrapi } from "@/lib/api/knowledge";
 import styles from "./ArticlePage.module.css";
 
 type Params = {
-  slug: string; // slug из сегмента /knowledge/articles/[slug]
+  slug: string;
 };
 
 type PageProps = {
@@ -84,13 +84,15 @@ export default async function KnowledgeArticlePage({ params }: PageProps) {
         </header>
 
         <div className={styles.detailBody}>
-          {item.blocks.map((block) => {
+          {item.blocks.map((block, index) => {
+            const blockKey = `${block.type}-${block.id}-${index}`;
+
             switch (block.type) {
               case "heading": {
                 const Tag = block.level === 2 ? "h2" : "h3";
 
                 return (
-                  <Tag key={block.id} className={styles[`heading${block.level}`]}>
+                  <Tag key={blockKey} className={styles[`heading${block.level}`]}>
                     {block.content}
                   </Tag>
                 );
@@ -98,7 +100,7 @@ export default async function KnowledgeArticlePage({ params }: PageProps) {
 
               case "text": {
                 return (
-                  <p key={block.id} className={styles.paragraph}>
+                  <p key={blockKey} className={styles.paragraph}>
                     {block.content}
                   </p>
                 );
@@ -108,9 +110,9 @@ export default async function KnowledgeArticlePage({ params }: PageProps) {
                 const ListTag = block.ordered ? "ol" : "ul";
 
                 return (
-                  <ListTag key={block.id} className={styles.list}>
-                    {block.items.map((itemText) => (
-                      <li key={`${block.id}-${itemText}`} className={styles.listItem}>
+                  <ListTag key={blockKey} className={styles.list}>
+                    {block.items.map((itemText, itemIndex) => (
+                      <li key={`${blockKey}-${itemIndex}`} className={styles.listItem}>
                         {itemText}
                       </li>
                     ))}
@@ -120,7 +122,7 @@ export default async function KnowledgeArticlePage({ params }: PageProps) {
 
               case "image": {
                 return (
-                  <figure key={block.id} className={styles.figure}>
+                  <figure key={blockKey} className={styles.figure}>
                     <Image src={block.src} alt={block.alt ?? ""} width={870} height={490} className={styles.image} />
                     {block.caption ? <figcaption className={styles.caption}>{block.caption}</figcaption> : null}
                   </figure>
@@ -129,12 +131,11 @@ export default async function KnowledgeArticlePage({ params }: PageProps) {
 
               case "link": {
                 return (
-                  <div key={block.id} className={styles.linkBlock}>
+                  <div key={blockKey} className={styles.linkBlock}>
                     <a className={styles.link} href={block.url} target="_blank" rel="noopener noreferrer">
                       {block.title}
                     </a>
 
-                    {/* Описание (необязательно) */}
                     {block.description ? <p className={styles.linkDescription}>{block.description}</p> : null}
                   </div>
                 );

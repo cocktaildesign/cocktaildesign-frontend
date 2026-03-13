@@ -16,6 +16,21 @@ type ProductCardProps = {
   product: CatalogProductPreview;
 };
 
+function formatPrice(price: number): string {
+  return new Intl.NumberFormat("ru-RU").format(price);
+}
+
+function getDiscountPercent(price: number, priceOld: number): number | null {
+  if (price <= 0) return null;
+  if (priceOld <= price) return null;
+
+  const percent = Math.round(((priceOld - price) / priceOld) * 100);
+
+  if (!Number.isFinite(percent) || percent <= 0) return null;
+
+  return percent;
+}
+
 export default function ProductCard({ product }: ProductCardProps) {
   // Количество товара — локальный стейт, пока не подключена корзина
   const [quantity, setQuantity] = useState<number>(1);
@@ -33,6 +48,12 @@ export default function ProductCard({ product }: ProductCardProps) {
   // Берём активную картинку из массива.
   // Если массив пустой — фолбэк на imageUrl, потом на плейсхолдер
   const imageSrc = product.images[activeImageIndex] ?? product.imageUrl ?? "/images/catalog/product-placeholder.webp";
+
+  // Есть ли скидка у товара
+  const hasDiscount = product.priceOld > product.price;
+
+  // Процент скидки для бейджа
+  const discountPercent = getDiscountPercent(product.price, product.priceOld);
 
   // Вызывается при движении мыши над картинкой.
   // Делим ширину картинки на зоны по количеству фото —
@@ -77,6 +98,9 @@ export default function ProductCard({ product }: ProductCardProps) {
             sizes="(max-width: 768px) 50vw, 25vw"
           />
 
+          {/* Бейдж скидки */}
+          {discountPercent !== null && <span className={styles.discountBadge}>-{discountPercent}%</span>}
+
           {/* Кнопка избранного поверх картинки */}
           <FavoriteButton productId={product.id} className={styles.favoriteButtonOverlay} />
 
@@ -93,7 +117,9 @@ export default function ProductCard({ product }: ProductCardProps) {
         {/* Цена и название */}
         <div className={styles.productBody}>
           <div className={styles.priceBlock}>
-            <p className={styles.price}>{product.price} ₽</p>
+            <p className={styles.price}>{formatPrice(product.price)} ₽</p>
+
+            {hasDiscount && <p className={styles.priceOld}>{formatPrice(product.priceOld)} ₽</p>}
           </div>
 
           <div className={styles.productName}>
@@ -107,7 +133,6 @@ export default function ProductCard({ product }: ProductCardProps) {
           ================================================================ */}
       <div className={styles.purchaseSection}>
         {product.engravingEnabled ? (
-          // Гравировка есть — два ряда: [кол-во + гравировка] потом [корзина]
           <>
             <div className={styles.productActions}>
               <QuantityControl value={quantity} onChange={setQuantity} />
@@ -119,7 +144,6 @@ export default function ProductCard({ product }: ProductCardProps) {
             </button>
           </>
         ) : (
-          // Гравировки нет — один ряд: [кол-во + корзина]
           <div className={styles.actionsRow}>
             <QuantityControl value={quantity} onChange={setQuantity} />
 

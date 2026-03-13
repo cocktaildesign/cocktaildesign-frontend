@@ -1,0 +1,18 @@
+.section {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  padding: 60px 0;
+}
+
+.banner {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  border-radius: var(--radius);
+  overflow: hidden;
+  background: var(--color-light-soft);
+}
+
+.image {
+  object-fit: cover;
+}
