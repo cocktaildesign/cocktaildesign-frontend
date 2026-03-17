@@ -228,6 +228,9 @@ export default async function ProductPage({ params }: PageProps) {
                 engravingEnabled={product.engravingEnabled}
                 price={product.price}
                 priceOld={product.priceOld}
+                name={product.name}
+                slug={product.slug}
+                imageUrl={product.images?.[0]?.src ?? null}
               />
             </div>
           </div>

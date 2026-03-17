@@ -40,14 +40,19 @@ export default function HeaderClient({ categories }: HeaderClientProps) {
             <div className={styles.topBarLeftSocial}>
               <a
                 className="icon"
-                href="https://t.me/yourbot"
+                href="https://t.me/Cocktail_Design_official"
                 aria-label="Telegram"
                 rel="noopener noreferrer"
                 target="_blank">
                 <TelegramIcon />
               </a>
 
-              <a className="icon" href="https://max.ru/xxx" aria-label="MAX" rel="noopener noreferrer" target="_blank">
+              <a
+                className="icon"
+                href="https://max.ru/join/QQKS8__nbdrJTvRVrRSCdMBqinbSTzi34ReNX1TJw80"
+                aria-label="MAX"
+                rel="noopener noreferrer"
+                target="_blank">
                 <MaxBrandIcon />
               </a>
             </div>

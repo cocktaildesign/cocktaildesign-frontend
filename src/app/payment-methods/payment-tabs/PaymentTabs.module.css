@@ -21,14 +21,19 @@
   background-color: var(--color-white);
   text-align: start;
   border: 1px solid transparent;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
 }
+
 .active {
   border: 1px solid var(--color-gray);
   box-shadow: none;
+  cursor: default;
 }
 
-.active .icon {
-  color: #000;
+.tabButton:not(.active):hover {
+  border: 1px solid #8d8d8d;
 }
 
 .tabText {
@@ -36,16 +41,35 @@
   flex-direction: column;
   gap: 4px;
 }
+
 .tabTitle {
   font-family: var(--font-display);
   font-size: var(--text-base);
-  color: var(--color-dark-blue);
   font-weight: 550;
+  color: var(--color-gray-light);
+  transition: color 0.2s ease;
 }
 
 .tabSubtitle {
   font-size: var(--text-xs);
-  color: var(--color-gray);
+  color: var(--color-gray-light);
+  transition: color 0.2s ease;
+}
+
+.icon {
+  transition: color 0.2s ease;
+}
+
+.tabButton:not(.active):hover .icon,
+.tabButton:not(.active):hover .tabTitle,
+.tabButton:not(.active):hover .tabSubtitle {
+  color: #8d8d8d;
+}
+
+.active .icon,
+.active .tabTitle,
+.active .tabSubtitle {
+  color: var(--color-dark-blue);
 }
 
 .paymentList {

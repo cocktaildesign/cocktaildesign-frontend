@@ -2,12 +2,14 @@
 "use client";
 
 import { useState } from "react";
-
+import Link from "next/link";
 import QuantityControl from "@/components/ui/quantity/QuantityControl";
 import EngravingToggle from "@/components/ui/engraving/EngravingToggle";
 import CartIcon from "@/components/icons/CartIcon";
 import FavoriteButton from "@/components/ui/favorites/FavoriteButton";
 import DeliveryIcon from "@/components/icons/product-page/DeliveryIcon";
+import { useCartStore } from "@/lib/cart/cartStore";
+import type { CartItem } from "@/lib/cart/cartStore";
 
 import styles from "./ProductPage.module.css";
 
@@ -16,6 +18,9 @@ type ProductPurchaseControlsProps = {
   engravingEnabled: boolean;
   price: number;
   priceOld: number;
+  name: string;
+  slug: string;
+  imageUrl: string | null;
 };
 
 function formatPrice(price: number): string {
@@ -38,23 +43,48 @@ export default function ProductPurchaseControls({
   engravingEnabled,
   price,
   priceOld,
+  name,
+  slug,
+  imageUrl,
 }: ProductPurchaseControlsProps) {
   const [quantity, setQuantity] = useState<number>(1);
   const [engravingChecked, setEngravingChecked] = useState<boolean>(false);
 
+  // Берём товар из store если он уже в корзине
+  const cartItem = useCartStore((s) => s.items.find((i) => i.id === productId));
+
+  // Есть ли товар в корзине
+  const isInCart = Boolean(cartItem);
+
+  // Если товар в корзине — берём значения из store, иначе локальный стейт
+  const displayQuantity = cartItem?.quantity ?? quantity;
+  const displayEngraving = cartItem?.engraving ?? engravingChecked;
+
   const hasDiscount = priceOld > price;
   const savingsAmount = getSavingsAmount(price, priceOld);
 
+  // Берём actions из store
+  const addItem = useCartStore((s) => s.addItem);
+  const removeItem = useCartStore((s) => s.removeItem);
+
   function handleAddToCart() {
-    console.log("addToCart", {
-      productId,
-      quantity,
-      engravingChecked,
-    });
+    const item: CartItem = {
+      id: productId,
+      name: name,
+      price: price,
+      imageUrl: imageUrl,
+      priceOld: priceOld,
+      slug: slug,
+      quantity: quantity,
+      engraving: engravingChecked,
+    };
+
+    addItem(item);
   }
 
   return (
     <div className={styles.productPurchaseControls}>
+      {/* Цена */}
       <div className={styles.productPurchasePriceBlock}>
         {hasDiscount && (
           <div className={styles.productPurchasePriceTopRow}>
@@ -69,29 +99,73 @@ export default function ProductPurchaseControls({
         <div className={styles.productPurchasePrice}>{formatPrice(price)} ₽</div>
       </div>
 
+      {/* Количество и гравировка */}
       <div className={styles.productInfoConfigurator}>
         <div className={styles.productActions}>
-          <QuantityControl value={quantity} onChange={setQuantity} />
+          {/* Количество из store если в корзине, иначе локальный стейт */}
+          <QuantityControl
+            min={0}
+            value={displayQuantity}
+            onChange={(next) => {
+              if (next < 1) {
+                removeItem(productId);
+                setQuantity(1);
+                return;
+              }
+              if (isInCart) {
+                useCartStore.getState().updateQuantity(productId, next);
+              } else {
+                setQuantity(next);
+              }
+            }}
+          />
 
-          {engravingEnabled ? <EngravingToggle checked={engravingChecked} onChange={setEngravingChecked} /> : null}
+          {/* Гравировка из store если в корзине, иначе локальный стейт */}
+          {engravingEnabled ? (
+            <EngravingToggle
+              checked={displayEngraving}
+              onChange={(checked) => {
+                if (isInCart) {
+                  const updatedItems = useCartStore.getState().items.map((i) => {
+                    if (i.id !== productId) return i;
+                    return { ...i, engraving: checked };
+                  });
+                  useCartStore.setState({ items: updatedItems });
+                } else {
+                  setEngravingChecked(checked);
+                }
+              }}
+            />
+          ) : null}
         </div>
       </div>
 
+      {/* Кнопка корзины + избранное */}
       <div className={styles.productActions}>
-        <button type="button" className={styles.addToCartButton} onClick={handleAddToCart}>
-          <CartIcon />
-          <span>В корзину</span>
-        </button>
+        {/* Если в корзине — ссылка на корзину, иначе — кнопка добавления */}
+        {isInCart ? (
+          <Link href="/cart" className={styles.goToCartButton}>
+            <CartIcon />
+            <span>В корзине</span>
+          </Link>
+        ) : (
+          <button type="button" className={styles.addToCartButton} onClick={handleAddToCart}>
+            <CartIcon />
+            <span>В корзину</span>
+          </button>
+        )}
 
         <div className={styles.favoriteButton}>
           <FavoriteButton productId={productId} />
         </div>
       </div>
 
+      {/* Быстрый заказ */}
       <button type="button" className={styles.quickOrderButton}>
         <span>Быстрый заказ</span>
       </button>
 
+      {/* Доставка */}
       <div className={styles.deliveryBlock}>
         <h3 className={styles.deliveryTitle}>Доставка</h3>
 

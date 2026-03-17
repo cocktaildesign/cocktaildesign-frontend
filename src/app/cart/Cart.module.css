@@ -1,0 +1,4 @@
+.CartPage {
+  min-height: 75vh;
+  background-color: var(--color-light-soft);
+}

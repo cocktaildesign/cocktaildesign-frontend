@@ -1,0 +1,116 @@
+.item {
+  display: grid;
+  grid-template-columns: 20px 150px 1fr 200px auto;
+  align-items: center;
+  gap: 16px;
+  padding: 24px 0;
+  border-bottom: 1px solid #eee;
+  min-height: 180px;
+}
+
+.itemChekbox {
+  appearance: none;
+  -webkit-appearance: none;
+
+  width: 20px;
+  height: 20px;
+  border: 1px solid var(--color-dark-blue);
+  border-radius: 4px;
+  flex-shrink: 0;
+  cursor: pointer;
+  transition:
+    background-color 0.15s,
+    border-color 0.15s;
+}
+
+.itemChekbox:checked {
+  background-color: var(--color-dark-blue);
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 16 16' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M3 8L6.5 11.5L13 5' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 70%;
+}
+.image {
+  width: 150px;
+  height: 100%;
+  min-height: 150px;
+  position: relative;
+}
+
+.info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.name {
+  font-weight: 450;
+  text-decoration: none;
+  color: #656565;
+  font-size: var(--text-base);
+}
+
+.name:hover {
+  color: var(--color-dark-blue);
+}
+.blockPrice {
+  display: flex;
+  flex-direction: row;
+  gap: 15px;
+  align-items: center;
+}
+
+.price {
+  font-size: 22px;
+  color: var(--color-dark-blue);
+  font-weight: 550;
+}
+
+.priceOld {
+  font-size: 18px;
+  color: #aaa;
+  text-decoration: line-through;
+}
+
+.quantity {
+  display: flex;
+  align-items: center;
+}
+
+.remove {
+  background: none;
+  border: none;
+  color: #888;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.remove:hover {
+  color: #000;
+}
+
+.itemControls {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  height: 100%;
+}
+
+.itemActions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 4px;
+}
+
+.quantitySmall {
+  height: 40px;
+  min-width: 120px;
+  background-color: var(--color-light-soft);
+}
+
+.engravingNote {
+  font-size: var(--text-xs);
+  color: var(--color-gray);
+  margin: 4px 0 0;
+}

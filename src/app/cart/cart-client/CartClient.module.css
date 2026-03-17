@@ -1,0 +1,186 @@
+.emptyCart {
+  background-color: var(--color-white);
+  padding: 26px;
+  border-radius: 12px;
+  width: 70%;
+}
+
+.emptyTitle {
+  font-size: var(--text-xl);
+  font-weight: 550;
+}
+
+.emptyText {
+  padding-top: 15px;
+  font-size: 16px;
+  text-wrap: balance;
+}
+
+.emptyActions {
+  margin-top: 15px;
+  display: flex;
+  flex-direction: row;
+  gap: 15px;
+}
+
+.primaryButton {
+  display: block;
+  background-color: var(--color-dark-blue);
+  color: var(--color-white);
+  width: fit-content;
+  padding: 10px 20px;
+
+  border-radius: 12px;
+  font-family: var(--font-display);
+  font-size: 16px;
+  transition: background-color var(--dur) var(--ease);
+}
+
+.primaryButton:hover {
+  background-color: var(--color-dark-blue-hover);
+}
+
+.secondaryButton {
+  display: block;
+  border: 1px solid var(--color-dark-blue);
+  color: var(--color-dark-blue);
+  width: fit-content;
+  padding: 10px 20px;
+
+  border-radius: 12px;
+  font-family: var(--font-display);
+  font-size: 16px;
+  transition: opacity var(--dur) var(--ease);
+}
+
+.secondaryButton:hover {
+  opacity: 0.5;
+}
+
+.selectAllLabel {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+}
+
+.cartTitleRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+}
+
+.cartActionButton {
+  padding: 8px 16px;
+  font-weight: 400;
+  color: var(--color-gray);
+  border: 1px solid transparent;
+  background: none;
+  cursor: pointer;
+  font-size: var(--text-sm);
+  display: flex;
+  flex-direction: row;
+  gap: 4px;
+  align-items: center;
+  transition: color var(--dur) var(--ease);
+}
+
+.cartIcon {
+  transition: color var(--dur) var(--ease);
+}
+
+.cartActionButton:hover {
+  color: var(--color-dark-blue);
+}
+
+.cartActionButton:hover .cartIcon {
+  color: var(--color-dark-blue);
+}
+
+.cartActions {
+  display: flex;
+  gap: 8px;
+}
+
+.cartHeader {
+  display: flex;
+  flex-direction: row;
+  height: 60px;
+  width: 100%;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--color-light);
+}
+.buttonDeleteAll {
+  height: fit-content;
+  padding: 10px 0px;
+  border-radius: 12px;
+  border: 1px solid transparent;
+  background-color: transparent;
+  color: var(--color-dark-blue);
+  font-size: 14px;
+  font-family: var(--font-display);
+}
+.cart {
+  border-radius: 12px;
+
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  gap: 24px;
+  align-items: start;
+}
+
+.itemChekbox {
+  width: 20px;
+  height: 20px;
+  border-radius: 6px;
+}
+
+.cartTitle {
+  margin: 0 0 24px;
+  font-size: var(--text-2xl);
+  font-weight: 450;
+}
+
+.cartItems {
+  background-color: var(--color-white);
+  border-radius: 12px;
+  padding: 26px;
+}
+
+/* Скрываем стандартный чекбокс */
+.itemCheckbox {
+  appearance: none;
+  -webkit-appearance: none;
+
+  /* Размер и форма */
+  width: 20px;
+  height: 20px;
+  border: 1px solid var(--color-dark-blue);
+  border-radius: 4px;
+
+  flex-shrink: 0;
+
+  cursor: pointer;
+
+  /* Плавная смена цвета */
+  transition:
+    background-color 0.15s,
+    border-color 0.15s;
+}
+
+/* Когда выбран — меняем фон и границу */
+.itemCheckbox:checked {
+  background-color: var(--color-dark-blue); /* жёлтый как на скриншоте */
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 16 16' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M3 8L6.5 11.5L13 5' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 70%;
+}
+
+/* При печати скрываем основной UI корзины */
+@media print {
+  .cart {
+    display: none;
+  }
+}

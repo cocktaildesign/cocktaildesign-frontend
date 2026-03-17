@@ -381,6 +381,25 @@
   background-color: var(--color-dark-blue-hover);
 }
 
+.goToCartButton {
+  background-color: transparent;
+  color: var(--color-dark-blue);
+  font: 500px;
+  border-radius: 12px;
+  border: 2px solid var(--color-dark-blue);
+  font-size: var(--text-base);
+  display: flex;
+  flex: 1;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  padding: 10px 30px;
+  height: 46px;
+  cursor: pointer;
+  transition: background-color var(--dur) var(--ease);
+}
+
 /* ─── Кнопка "Быстрый заказ" ────────────────────────────── */
 
 .quickOrderButton {

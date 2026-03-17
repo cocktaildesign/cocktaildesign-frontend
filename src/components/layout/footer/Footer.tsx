@@ -13,10 +13,7 @@ import YandexIcon from "@/components/icons/YandexIcon";
 import TelegramIcon from "@/components/icons/social-network/TelegramIcon";
 import TelegramIconFon from "@/components/icons/social-network/TelegramIconFon";
 import VKIcon from "@/components/icons/social-network/VKIcon";
-import InstagramIcon from "@/components/icons/social-network/InstagramIcon";
 import MaxIcon from "@/components/icons/social-network/MaxIcon";
-import PinterestIcon from "@/components/icons/social-network/PinterestIcon";
-import ThreadsIcon from "@/components/icons/social-network/ThreadsIcon";
 import YouTubeIcon from "@/components/icons/social-network/YouTubeIcon";
 
 type FooterLink = {
@@ -49,7 +46,10 @@ export const footerCompanyLinks: FooterLink[] = [
   { label: "Каталог", href: "/catalog" },
 ];
 
-export const footerPromosLinks: FooterLink[] = [{ label: "Наши акции", href: "/promos" }];
+export const footerPromosLinks: FooterLink[] = [
+  { label: "Система скидок", href: "/discounts" },
+  { label: "Товары со скидкой", href: "/discounts-product" },
+];
 
 export const footerSupportLinks: FooterLink[] = [
   { label: "Обратная связь", href: "/support/feedback" },
@@ -57,8 +57,8 @@ export const footerSupportLinks: FooterLink[] = [
 ];
 
 export const footerDeliveryPaymentLinks: FooterLink[] = [
-  { label: "Способы оплаты", href: "/payment" },
-  { label: "Способы доставки", href: "/delivery" },
+  { label: "Способы оплаты", href: "/payment-methods" },
+  { label: "Способы доставки", href: "/shipping" },
 ];
 
 export const footerLegalLinks: FooterLink[] = [{ label: "Правовая информация", href: "/legal" }];
@@ -81,12 +81,9 @@ type FooterSocialLink = {
 
 export const footerSocialLinks: FooterSocialLink[] = [
   { label: "Telegram", href: "https://t.me/Cocktail_Design_official", icon: <TelegramIcon /> },
-  { label: "VK", href: "https://vk.com/", icon: <VKIcon /> },
-  { label: "Instagram", href: "https://www.instagram.com/", icon: <InstagramIcon /> },
-  { label: "MAX", href: "https://max.ru/", icon: <MaxIcon /> },
-  { label: "Pinterest", href: "https://www.pinterest.com/", icon: <PinterestIcon /> },
-  { label: "Threads", href: "https://www.threads.net/", icon: <ThreadsIcon /> },
-  { label: "YouTube", href: "https://www.youtube.com/", icon: <YouTubeIcon /> },
+  { label: "VK", href: "https://vk.ru/cocktail_design", icon: <VKIcon /> },
+  { label: "MAX", href: "https://max.ru/join/QQKS8__nbdrJTvRVrRSCdMBqinbSTzi34ReNX1TJw80", icon: <MaxIcon /> },
+  { label: "YouTube", href: "https://youtube.com/@cocktaildesign-d7n?si=xtR34NMhHFghKq02", icon: <YouTubeIcon /> },
 ];
 
 export default function Footer() {
@@ -98,7 +95,7 @@ export default function Footer() {
         <Container>
           <div className={styles.footerGrid}>
             <div className={styles.footerColumn}>
-              <Logo className={styles.logo} />
+              <Logo color="white" className={styles.logo} />
               <a
                 className={styles.footerRating}
                 href="https://reviews.yandex.ru/shop/cocktaildesign.ru?utm_source=ya_bro&scroll_to=reviews"

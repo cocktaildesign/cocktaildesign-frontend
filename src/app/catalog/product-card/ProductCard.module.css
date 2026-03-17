@@ -3,7 +3,6 @@
    Структура: card > previewLink > thumb + productBody > purchaseSection
    ================================================================ */
 
-/* Внешняя обёртка карточки */
 .card {
   display: flex;
   flex-direction: column;
@@ -24,7 +23,7 @@
 }
 
 /* ================================================================
-   КЛИКАБЕЛЬНАЯ ССЫЛКА (вся верхняя часть карточки)
+   КЛИКАБЕЛЬНАЯ ССЫЛКА
    ================================================================ */
 
 .previewLink {
@@ -32,10 +31,9 @@
 }
 
 /* ================================================================
-   КАРТИНКА (thumb)
+   КАРТИНКА
    ================================================================ */
 
-/* Контейнер картинки — квадрат, position relative для Image fill */
 .thumb {
   position: relative;
   overflow: hidden;
@@ -43,13 +41,11 @@
   aspect-ratio: 1 / 1;
 }
 
-/* Сама картинка */
 .image {
   object-fit: cover;
   border-radius: 12px;
 }
 
-/* Бейдж скидки */
 .discountBadge {
   position: absolute;
   left: 0px;
@@ -68,16 +64,13 @@
   line-height: 1;
 }
 
-/* Кнопка избранного — абсолютно поверх картинки */
 .favoriteButtonOverlay {
   position: absolute;
   top: 15px;
   right: 15px;
 }
 
-/* ── Точки hover scrub ──────────────────────────────────── */
-
-/* Контейнер точек — по центру внизу картинки */
+/* Точки hover scrub */
 .dots {
   position: absolute;
   bottom: 8px;
@@ -88,7 +81,6 @@
   z-index: 2;
 }
 
-/* Обычная точка */
 .dot {
   width: 6px;
   height: 6px;
@@ -97,7 +89,6 @@
   transition: background-color var(--dur) var(--ease);
 }
 
-/* Активная точка — соответствует текущей картинке */
 .dotActive {
   width: 6px;
   height: 6px;
@@ -155,60 +146,40 @@
 }
 
 /* ================================================================
-   ЗОНА ПОКУПКИ: количество / гравировка / корзина
+   ЗОНА ПОКУПКИ
    ================================================================ */
 
-/* Разделитель между карточкой и зоной покупки */
 .purchaseSection {
   border-top: 1px solid var(--color-light-soft);
   margin-top: auto;
   cursor: auto;
-}
-
-/* Строка с количеством и гравировкой (когда гравировка есть) */
-.productActions {
   display: flex;
-  flex-direction: row;
-  align-items: stretch;
-  gap: 8px;
-  margin-top: 10px;
+  flex-direction: column;
+  gap: 10px;
+  padding-top: 10px;
 }
 
-/* Кнопка корзины (когда гравировка есть — отдельная строка) */
-.addToCartButton {
-  background-color: var(--color-dark-blue);
-  color: var(--color-white);
-  border: none;
-  width: fit-content;
-  padding: 10px 20px;
-  border-radius: 12px;
-  margin-top: 10px;
-  height: 46px;
-  font-weight: 400;
-  font-size: 16px;
-  cursor: pointer;
-  transition: background-color var(--dur) var(--ease);
+/* Строка с гравировкой */
+.engravingRow {
+  display: flex;
+  align-items: center;
 }
 
-.addToCartButton:hover {
-  background-color: var(--color-dark-blue-hover);
-}
-
-/* Строка когда гравировки нет: количество + корзина рядом */
+/* Строка после добавления: количество + стрелка */
 .actionsRow {
   display: flex;
   flex-direction: row;
   align-items: stretch;
   gap: 8px;
-  margin-top: 10px;
 }
 
-/* Кнопка корзины растягивается на всё свободное место в строке */
+/* Кнопка В корзину — на всю ширину */
 .addToCartButtonFull {
+  display: block;
   background-color: var(--color-dark-blue);
   color: var(--color-white);
   border: none;
-  flex: 1;
+  width: 100%;
   border-radius: 12px;
   height: 46px;
   font-weight: 400;
@@ -218,5 +189,23 @@
 }
 
 .addToCartButtonFull:hover {
+  background-color: var(--color-dark-blue-hover);
+}
+
+/* Кнопка стрелки после добавления */
+.arrowButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--color-dark-blue);
+  color: var(--color-white);
+  border-radius: 12px;
+  height: 46px;
+  width: 46px;
+  flex-shrink: 0;
+  transition: background-color var(--dur) var(--ease);
+}
+
+.arrowButton:hover {
   background-color: var(--color-dark-blue-hover);
 }

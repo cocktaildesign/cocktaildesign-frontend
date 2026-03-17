@@ -5,6 +5,8 @@ import Link from "next/link";
 import styles from "./MainBar.module.css";
 
 import { useFavoritesStore } from "@/lib/favorites/favoritesStore";
+import { useCartStore } from "@/lib/cart/cartStore";
+
 import Logo from "@/components/ui/logo/Logo";
 import CatalogMenu from "@/components/layout/header/catalog-menu/CatalogMenu";
 import SearchBar from "@/components/layout/header/search-bar/SearchBar";
@@ -24,6 +26,12 @@ export default function MainBar({ categories }: MainBarProps) {
   const hasHydrated = useFavoritesStore((s) => s.hasHydrated);
   const favoritesCount = useFavoritesStore((s) => Object.keys(s.ids).length);
   const badgeCount = hasHydrated ? favoritesCount : 0;
+
+  // Считаем общее количество товаров в корзине
+  const cartItems = useCartStore((s) => s.items);
+  // До загрузки localStorage показываем 0
+  const cartHasHydrated = useCartStore((s) => s.hasHydrated);
+  const cartCount = cartHasHydrated ? cartItems.reduce((total, item) => total + item.quantity, 0) : 0;
 
   return (
     <div className={styles.mainBar}>
@@ -49,7 +57,11 @@ export default function MainBar({ categories }: MainBarProps) {
         </Link>
 
         <Link href="/cart" className={styles.actionLink}>
-          <CartIcon className={styles.actionIcon} />
+          <div className={styles.iconWrapper}>
+            <CartIcon className={styles.actionIcon} />
+            {/* Показываем бейдж только если есть товары */}
+            {cartCount > 0 && <span className={styles.badge}>{cartCount}</span>}
+          </div>
           <span className={styles.actionText}>Корзина</span>
         </Link>
       </div>

@@ -7,9 +7,10 @@ type QuantityControlProps = {
   value: number;
   onChange: (nextValue: number) => void;
   min?: number;
+  className?: string; // добавляем
 };
 
-export default function QuantityControl({ value, onChange, min = 1 }: QuantityControlProps) {
+export default function QuantityControl({ value, onChange, min = 1, className }: QuantityControlProps) {
   function increment() {
     onChange(value + 1);
   }
@@ -20,7 +21,7 @@ export default function QuantityControl({ value, onChange, min = 1 }: QuantityCo
   }
 
   return (
-    <div className={styles.quantityControl}>
+    <div className={`${styles.quantityControl} ${className ?? ""}`}>
       <button type="button" className={styles.quantityButton} aria-label="Уменьшить количество" onClick={decrement}>
         -
       </button>
