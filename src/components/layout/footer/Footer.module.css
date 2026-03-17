@@ -11,11 +11,6 @@
   width: 100%;
 }
 
-.logo {
-  color: var(--color-light-soft);
-  width: 180px;
-}
-
 .feedbackBarIcon {
   color: var(--color-accent-contrast);
   transition: color 160ms ease;

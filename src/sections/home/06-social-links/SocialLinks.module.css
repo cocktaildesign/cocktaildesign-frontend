@@ -2,7 +2,6 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 16px;
-
 }
 
 .card {
@@ -26,13 +25,13 @@
   color: var(--color-dark-blue);
 }
 
-.button {
+.buttonVk {
   display: flex;
   align-items: center;
   gap: 8px;
   padding: 10px 20px;
   border-radius: 8px;
-  background: #0077ff;
+  background: #066de3;
   color: #fff;
   font-size: 14px;
   text-decoration: none;
@@ -40,6 +39,23 @@
   transition: opacity 200ms ease;
 }
 
-.button:hover {
+.buttonVk:hover {
+  opacity: 0.85;
+}
+
+.buttonTg {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  border-radius: 8px;
+  background: #2c9fd7;
+  color: #fff;
+  font-size: 14px;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: opacity 200ms ease;
+}
+.buttonTg:hover {
   opacity: 0.85;
 }

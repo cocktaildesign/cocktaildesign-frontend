@@ -8,13 +8,12 @@ import PageLayout from "@/components/layout/PageLayout";
 export default function SocialLinks() {
   return (
     <PageLayout>
-      {" "}
       <section className={styles.section}>
         {/* ВКонтакте */}
         <div className={styles.card}>
           <span className={styles.name}>ВКонтакте</span>
           <span className={styles.description}>Подписывайтесь и следите за новостями!</span>
-          <a href="https://vk.ru/cocktail_design" target="_blank" rel="noopener noreferrer" className={styles.button}>
+          <a href="https://vk.ru/cocktail_design" target="_blank" rel="noopener noreferrer" className={styles.buttonVk}>
             <VKIcon width={16} height={16} />
             Подписаться
           </a>
@@ -28,7 +27,7 @@ export default function SocialLinks() {
             href="https://t.me/Cocktail_Design_official"
             target="_blank"
             rel="noopener noreferrer"
-            className={styles.button}>
+            className={styles.buttonTg}>
             <TelegramIcon width={16} height={16} />
             Подписаться
           </a>

@@ -15,29 +15,12 @@ import TelegramIconFon from "@/components/icons/social-network/TelegramIconFon";
 import VKIcon from "@/components/icons/social-network/VKIcon";
 import MaxIcon from "@/components/icons/social-network/MaxIcon";
 import YouTubeIcon from "@/components/icons/social-network/YouTubeIcon";
+import { getNavigation } from "@/lib/api/navigation";
 
 type FooterLink = {
   label: string;
   href: string;
 };
-
-export const footerCategories: FooterLink[] = [
-  { label: "Шейкеры", href: "/c/shakers" },
-  { label: "Джиггеры", href: "/c/jiggers" },
-  { label: "Барные ложки", href: "/c/bar-spoons" },
-  { label: "Стрейнеры", href: "/c/strainers" },
-  { label: "Мадлеры", href: "/c/muddlers" },
-  { label: "Ситечки и фильтры", href: "/c/filters" },
-  { label: "Мерные стаканы", href: "/c/measuring-cups" },
-  { label: "Диспенсеры и дозаторы", href: "/c/dispensers" },
-  { label: "Гейзеры", href: "/c/pourers" },
-  { label: "Щипцы и пинцеты", href: "/c/tongs" },
-  { label: "Открывалки и штопоры", href: "/c/openers" },
-  { label: "Инвентарь для льда", href: "/c/ice-tools" },
-  { label: "Бокалы и стаканы", href: "/c/glassware" },
-  { label: "Сиропы и топпинги", href: "/c/syrups" },
-  { label: "Барные наборы", href: "/c/bar-sets" },
-];
 
 export const footerCompanyLinks: FooterLink[] = [
   { label: "О нас", href: "/about" },
@@ -86,7 +69,9 @@ export const footerSocialLinks: FooterSocialLink[] = [
   { label: "YouTube", href: "https://youtube.com/@cocktaildesign-d7n?si=xtR34NMhHFghKq02", icon: <YouTubeIcon /> },
 ];
 
-export default function Footer() {
+export default async function Footer() {
+  const navigation = await getNavigation();
+
   return (
     <footer className={styles.footer}>
       <FooterFeedback />
@@ -151,11 +136,12 @@ export default function Footer() {
                 </div>
               </div>
             </div>
+
             <div className={styles.footerColumn}>
               <nav className={styles.footerNav} aria-label="Категории">
                 <h3 className={styles.footerTitle}>Категории</h3>
                 <ul className={styles.footerList}>
-                  {footerCategories.map((category) => (
+                  {navigation.footer.map((category) => (
                     <li key={category.href} className={styles.footerItem}>
                       <Link href={category.href} className={styles.footerLink}>
                         {category.label}
@@ -165,6 +151,7 @@ export default function Footer() {
                 </ul>
               </nav>
             </div>
+
             <div className={styles.footerColumn}>
               <nav className={styles.footerNav} aria-label="Компания">
                 <h3 className={styles.footerTitle}>Компания</h3>
@@ -178,6 +165,7 @@ export default function Footer() {
                   ))}
                 </ul>
               </nav>
+
               <nav className={styles.footerNav} aria-label="Акции">
                 <h3 className={styles.footerTitle}>Акции</h3>
                 <ul className={styles.footerList}>
@@ -191,6 +179,7 @@ export default function Footer() {
                 </ul>
               </nav>
             </div>
+
             <div className={styles.footerColumn}>
               <nav className={styles.footerNav} aria-label="Сервис и поддержка">
                 <h3 className={styles.footerTitle}>Сервис и поддержка</h3>
@@ -204,6 +193,7 @@ export default function Footer() {
                   ))}
                 </ul>
               </nav>
+
               <nav className={styles.footerNav} aria-label="Получение и оплата">
                 <h3 className={styles.footerTitle}>Получение и оплата</h3>
                 <ul className={styles.footerList}>
@@ -216,6 +206,7 @@ export default function Footer() {
                   ))}
                 </ul>
               </nav>
+
               <nav className={styles.footerNav} aria-label="Документы">
                 <h3 className={styles.footerTitle}>Документы</h3>
                 <ul className={styles.footerList}>
@@ -228,6 +219,7 @@ export default function Footer() {
                   ))}
                 </ul>
               </nav>
+
               <nav className={styles.footerNav} aria-label="Наше производство">
                 <h3 className={styles.footerTitle}>Наше производство</h3>
                 <ul className={styles.footerList}>
@@ -241,6 +233,7 @@ export default function Footer() {
                 </ul>
               </nav>
             </div>
+
             <div className={styles.footerColumn}>
               <nav className={styles.footerNav} aria-label="Знания">
                 <h3 className={styles.footerTitle}>Знания</h3>
@@ -255,6 +248,7 @@ export default function Footer() {
                 </ul>
               </nav>
             </div>
+
             <div className={styles.footerColumnSocial}>
               <nav className={styles.footerNav} aria-label="Наши соцсети">
                 <h3 className={styles.footerTitle}>Наши соцсети</h3>
@@ -273,11 +267,13 @@ export default function Footer() {
                   ))}
                 </ul>
               </nav>
+
               <aside className={styles.tgCard} aria-label="Подписка на Telegram-канал">
                 <div className={styles.tgHeader}>
                   <h3 className={styles.tgHeaderTitle}>Telegram</h3>
                   <p className={styles.tgHeaderSubTitle}>Подписывайтесь и будте в курсе последних событий</p>
                 </div>
+
                 <div className={styles.tgQr} aria-hidden="true">
                   <Image
                     src="/images/qr/tgQr.png"
@@ -323,14 +319,10 @@ export default function Footer() {
                 </Link>
                 .
               </p>
-              <p className={styles.footerBottomText}>
-                * Instagram — продукт компании Meta Platforms Inc., деятельность которой признана экстремистской и
-                запрещена на территории РФ.
-              </p>
             </div>
 
             <div className={styles.footerBottomRight}>
-              <a className={styles.footerDev} href="" target="_blank" rel="noopener noreferrer">
+              <a className={styles.footerDev} href="https://t.me/mazalovalex" target="_blank" rel="noopener noreferrer">
                 Разработка сайта <span className={styles.footerDevName}>MazalovAlex</span>
               </a>
               <p className={styles.footerCopyright}>
