@@ -38,6 +38,7 @@ export default async function PopularCategories() {
                 <div className={styles.imageWrapper}>
                   <Image
                     src={category.imageSrc || "/placeholder-image.jpg"}
+                    sizes="(max-width: 768px) 100vw, 33vw"
                     fill
                     alt={category.name ? `Категория: ${category.name}` : "Категория"}
                     className={styles.image}

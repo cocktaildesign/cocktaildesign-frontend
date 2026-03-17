@@ -62,6 +62,7 @@ export default async function CatalogPage() {
                   <Image
                     src={category.imageSrc || "/placeholder-image.jpg"}
                     fill
+                    sizes="(max-width: 768px) 100vw, 33vw"
                     alt={category.name ? `Категория: ${category.name}` : "Категория"}
                     className={styles.image}
                   />

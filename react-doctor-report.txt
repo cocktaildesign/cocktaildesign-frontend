@@ -1,0 +1,106 @@
+react-doctor v0.0.30
+
+✔ Select projects to scan › frontend
+Scanning /Users/mazalov/Desktop/проекты/cocktaildesign/frontend...
+
+
+  ⚠ next/image with fill but no sizes — the browser downloads the largest image. Add a sizes attribute for responsive behavior (9)
+    Add sizes for responsive behavior: `sizes="(max-width: 768px) 100vw, 50vw"` matching your layout breakpoints
+    src/app/catalog/page.tsx: 62
+    src/sections/home/03-advantages/Advantages.tsx: 48
+    src/app/catalog/product/[slug]/page.tsx: 263
+    src/app/knowledge/knowledge-content/knowledge-card/KnowledgeCard.tsx: 55
+    src/sections/home/05-banners/Banners.tsx: 14, 19
+    src/app/cart/cart-item/CartItem.tsx: 49
+    src/app/about/page.tsx: 194
+    src/sections/home/02-popular-categories/PopularCategories.tsx: 39
+
+  ⚠ Page without metadata or generateMetadata export — hurts SEO
+    Add `export const metadata = { title: '...', description: '...' }` or `export async function generateMetadata()`
+    src/app/catalog/product/[slug]/page.tsx: 6
+
+  ⚠ Array index "index" used as key — causes bugs when list is reordered or filtered (5)
+    Use a stable unique identifier: `key={item.id}` or `key={item.slug}` — index keys break on reorder/filter
+    src/sections/home/product-card/HomeProductCard.tsx: 74
+    src/app/discounts/discounts-modal/DiscountsModal.tsx: 56, 64
+    src/app/catalog/product-card/ProductCard.tsx: 136
+    src/app/knowledge/materials/[slug]/page.tsx: 113
+
+  ⚠ useSearchParams() requires a <Suspense> boundary — without one, the entire page bails out to client-side rendering
+    Wrap the component using useSearchParams: `<Suspense fallback={<Skeleton />}><SearchComponent /></Suspense>`
+    src/app/knowledge/knowledge-filters/KnowledgeFilters.tsx: 41
+
+  ⚠ "scroll" listener without { passive: true } — blocks scrolling performance
+    Add `{ passive: true }` as the third argument: `addEventListener('scroll', handler, { passive: true })`
+    src/components/layout/header/HeaderClient.tsx: 28
+
+  ⚠ Component "SearchBar" has 7 useState calls — consider useReducer for related state (2)
+    Group related state: `const [state, dispatch] = useReducer(reducer, { field1, field2, ... })`
+    src/components/layout/header/search-bar/SearchBar.tsx: 145
+    src/app/checkout/CheckoutClient.tsx: 17
+
+  ⚠ Component "SearchBar" is 381 lines — consider breaking it into smaller focused components (4)
+    Extract logical sections into focused components: `<UserHeader />`, `<UserActions />`, etc.
+    src/components/layout/header/search-bar/SearchBar.tsx: 145
+    src/app/legal/terms/page.tsx: 13
+    src/app/legal/privacy-policy/page.tsx: 13
+    src/app/legal/offer/page.tsx: 13
+
+  ⚠ 8 setState calls in a single useEffect — consider using useReducer or deriving state (2)
+    Combine into useReducer: `const [state, dispatch] = useReducer(reducer, initialState)`
+    src/components/layout/header/search-bar/SearchBar.tsx: 198
+    src/app/favorites/FavoritesClient.tsx: 28
+
+  ⚠ Use next/link instead of <a> for internal links — enables client-side navigation and prefetching
+    `import Link from 'next/link'` — enables client-side navigation, prefetching, and preserves scroll position
+    src/components/ui/feedback-form/FeedbackForm.tsx: 71
+
+  ⚠ Static HTML elements with event handlers require a role. (3)
+    Add a role attribute to this element, or use a semantic HTML element instead.
+    src/components/ui/modal/Modal.tsx: 49
+    src/components/layout/header/catalog-menu/CatalogMenu.tsx: 95
+    src/components/ui/side-modal/SideModal.tsx: 48
+
+  ⚠ Enforce a clickable non-interactive element has at least one keyboard event listener.
+    Visible, non-interactive elements with click handlers must have one of `keyup`, `keydown`, or `keypress` listener.
+    src/components/layout/header/catalog-menu/CatalogMenu.tsx: 95
+
+  ⚠ Unused file (6)
+    This file is not imported by any other file in the project.
+    src/components/icons/knowlodgePage/ClockIcon.tsx
+    src/components/icons/product-page/MouseScrollIcon.tsx
+    src/components/icons/social-network/InstagramIcon.tsx
+    src/components/icons/social-network/PinterestIcon.tsx
+    src/components/icons/social-network/ThreadsIcon.tsx
+    src/sections/home/04-knowledge-preview/knowledge-preview-card/KnowledgePreviewCard.tsx
+
+  ⚠ Unused export: footerCompanyLinks (12)
+    src/components/layout/footer/Footer.tsx
+    src/lib/api/catalog/index.ts
+    src/lib/api/catalog/mappers.ts
+    src/lib/api/strapi/index.ts
+
+  ⚠ Unused type: CatalogProductPageData (8)
+    src/lib/api/catalog/queries.ts
+    src/lib/api/catalog/types.ts
+    src/app/knowledge/types.ts
+    src/lib/api/knowledge/types.ts
+
+  ┌────────────────────────────────────────────────────┐
+  │ ┌─────┐                                            │
+  │ │ ◠ ◠ │                                            │
+  │ │  ▽  │                                            │
+  │ └─────┘                                            │
+  │ React Doctor (www.react.doctor)                    │
+  │                                                    │
+  │ 90 / 100  Great                                    │
+  │                                                    │
+  │ █████████████████████████████████████████████░░░░░ │
+  │                                                    │
+  │ ⚠ 56 warnings  across 38/154 files  in 454ms       │
+  └────────────────────────────────────────────────────┘
+
+  Full diagnostics written to /var/folders/z1/21s0sq4n3j5c74yy6qjf6sf40000gn/T/react-doctor-469365c1-8c12-49c5-b265-053c841a38df
+
+  Share your results: https://www.react.doctor/share?p=frontend&s=90&w=56&f=38
+

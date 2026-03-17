@@ -50,6 +50,7 @@ export default function CartItem({ item }: CartItemProps) {
           src={item.imageUrl ?? "/images/catalog/product-placeholder.webp"}
           alt={item.name}
           fill
+          sizes="80px"
           style={{ objectFit: "contain" }}
         />
       </div>

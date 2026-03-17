@@ -2,6 +2,7 @@
 import { notFound } from "next/navigation";
 import Image from "next/image";
 
+
 import { pageMetadata } from "@/lib/seo/metadata";
 import { formatRelativeFromIsoDate } from "@/lib/date/relativeDate";
 

@@ -49,10 +49,34 @@ export const rootMetadata: Metadata = {
   },
 };
 
-export function pageMetadata(input: { title: string; description?: string; canonical: string }): Metadata {
+export function pageMetadata(input: {
+  title: string;
+  description?: string;
+  canonical: string;
+  image?: string;
+}): Metadata {
+  const description = input.description ?? SITE_DESCRIPTION;
+
   return {
     title: input.title,
-    description: input.description ?? SITE_DESCRIPTION,
+    description,
     alternates: { canonical: input.canonical },
+
+    openGraph: {
+      type: "website",
+      locale: "ru_RU",
+      siteName: SITE_NAME,
+      url: input.canonical,
+      title: input.title,
+      description,
+      images: input.image ? [{ url: input.image, alt: input.title }] : undefined,
+    },
+
+    twitter: {
+      card: "summary_large_image",
+      title: input.title,
+      description,
+      images: input.image ? [input.image] : undefined,
+    },
   };
 }

@@ -11,12 +11,24 @@ export default function Banners() {
       <section className={styles.section}>
         {/* Баннер 1 */}
         <div className={styles.banner}>
-          <Image src="/images/catalog/product-placeholder.webp" alt="Баннер 1" fill className={styles.image} />
+          <Image
+            src="/images/catalog/product-placeholder.webp"
+            alt="Баннер 1"
+            fill
+            sizes="100vw"
+            className={styles.image}
+          />
         </div>
 
         {/* Баннер 2 */}
         <div className={styles.banner}>
-          <Image src="/images/catalog/product-placeholder.webp" alt="Баннер 2" fill className={styles.image} />
+          <Image
+            src="/images/catalog/product-placeholder.webp"
+            alt="Баннер 2"
+            fill
+            sizes="100vw"
+            className={styles.image}
+          />
         </div>
       </section>
     </PageLayout>

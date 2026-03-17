@@ -45,7 +45,12 @@ export default async function Advantages() {
           <div className={`${styles.card} ${styles.cardWide}`}>
             <h3 className={styles.cardHeading}>Для юридических лиц</h3>
             <div className={styles.cardImageWrap}>
-              <Image src="/images/page/Advantages/bg_srrein.webp" alt="Для юридических лиц" fill />
+              <Image
+                src="/images/page/Advantages/bg_srrein.webp"
+                alt="Для юридических лиц"
+                fill
+                sizes="(max-width: 768px) 100vw, 50vw"
+              />
             </div>
             <div className={styles.cardFeatures}>
               <p className={styles.cardTitle}>Возврат НДС</p>
