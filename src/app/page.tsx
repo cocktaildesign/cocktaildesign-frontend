@@ -24,13 +24,6 @@ export const metadata: Metadata = pageMetadata({
 
 export default async function HomePage() {
   const collections = await getCatalogCollectionsWithProductsFromStrapi();
-  console.log(
-    collections.map((item) => ({
-      slug: item.slug,
-      count: item.products.length,
-    })),
-  );
-
   const weeklyProduct = await getWeeklyProductBlock();
 
   return (
