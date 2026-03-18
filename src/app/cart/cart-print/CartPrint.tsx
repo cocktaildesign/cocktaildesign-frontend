@@ -1,9 +1,9 @@
-// src/app/cart/CartPrint.tsx
-// Этот компонент виден ТОЛЬКО при печати (display: none в обычном режиме)
+// src/app/cart/cart-print/CartPrint.tsx
+// Компонент виден ТОЛЬКО при печати (в обычном режиме display: none)
 
-import styles from "./CartPrint.module.css";
 import type { CartItem } from "@/lib/cart/cartStore";
-import Logo from "@//components/ui/logo/Logo";
+import Logo from "@/components/ui/logo/Logo";
+import styles from "./CartPrint.module.css";
 
 type CartPrintProps = {
   items: CartItem[];
@@ -11,6 +11,7 @@ type CartPrintProps = {
   totalQuantity: number;
 };
 
+// 1200 -> "1 200"
 function formatPrice(price: number): string {
   return new Intl.NumberFormat("ru-RU").format(price);
 }
@@ -46,8 +47,7 @@ export default function CartPrint({ items, totalPrice, totalQuantity }: CartPrin
             <tr key={item.id}>
               <td>
                 {item.name}
-                {/* Пометка о гравировке */}
-                {item.engraving && <span className={styles.engraving}>+ Гравировка</span>}
+                {item.engraving && <span className={styles.engraving}> + Гравировка</span>}
               </td>
               <td>{formatPrice(item.price)} ₽</td>
               <td>{item.quantity}</td>
@@ -71,7 +71,7 @@ export default function CartPrint({ items, totalPrice, totalQuantity }: CartPrin
       <div className={styles.footer}>
         <p>
           Цены действительны на момент печати. Актуальные цены и сроки акций всегда можно узнать на нашем сайте или по
-          телефону
+          телефону.
         </p>
       </div>
     </div>

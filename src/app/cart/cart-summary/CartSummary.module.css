@@ -1,43 +1,39 @@
-/* Обёртка всей правой колонки */
-.summary {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  background-color: var(--color-white);
-  border-radius: 12px;
-  padding: 16px;
-}
-
 /* Кнопка оформления заказа */
 .checkoutButton {
   display: block;
-  text-align: center;
-  text-decoration: none;
   width: 100%;
   padding: 16px;
-  background-color: var(--color-dark-blue);
-  color: var(--color-white);
+  margin-bottom: 10px;
   border: none;
   border-radius: 12px;
+  background-color: var(--color-dark-blue);
+  color: var(--color-white);
   font-size: var(--text-base);
   font-weight: 450;
+  text-align: center;
   cursor: pointer;
   transition: opacity 0.15s;
-  margin-bottom: 10px;
 }
 
 .checkoutButton:hover {
   opacity: 0.9;
 }
 
-/* Блок промокода */
+/* Обёртка правой колонки */
+.summary {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 16px;
+  border-radius: 12px;
+  background-color: var(--color-white);
+}
+
+/* Промокод */
 .promoBlock {
   display: flex;
   flex-direction: column;
   gap: 8px;
-}
-.promoInput::placeholder {
-  color: var(--color-gray-light);
 }
 
 .promoInput {
@@ -46,9 +42,13 @@
   border: 1px solid var(--color-dark-blue);
   border-radius: 8px;
   font-size: var(--text-base);
+  color: #000;
   outline: none;
   transition: border-color 0.15s;
-  color: #000;
+}
+
+.promoInput::placeholder {
+  color: var(--color-gray-light);
 }
 
 .promoInput:focus {
@@ -71,6 +71,18 @@
   background-color: var(--color-dark-blue-hover);
 }
 
+.promoError {
+  font-size: 12px;
+  color: #e53e3e;
+  margin: 4px 0 0;
+}
+
+.promoSuccess {
+  font-size: 12px;
+  color: #2a9d4e;
+  margin: 4px 0 0;
+}
+
 /* Строки с суммами */
 .totals {
   display: flex;
@@ -86,12 +98,16 @@
   font-size: var(--text-base);
 }
 
-/* "при оформлении" — серый текст */
+.savings {
+  color: #2a9d4e;
+  font-weight: 500;
+}
+
 .deliveryNote {
   color: var(--color-text-secondary);
 }
 
-/* Итоговая строка */
+/* Итоговая сумма */
 .totalFinal {
   display: flex;
   justify-content: space-between;
@@ -106,22 +122,4 @@
 .totalFinalPrice {
   font-size: 28px;
   font-weight: 600;
-}
-
-/* Выгода — зелёный цвет */
-.savings {
-  color: #2a9d4e;
-  font-weight: 500;
-}
-
-.promoError {
-  font-size: 12px;
-  color: #e53e3e;
-  margin: 4px 0 0;
-}
-
-.promoSuccess {
-  font-size: 12px;
-  color: #2a9d4e;
-  margin: 4px 0 0;
 }

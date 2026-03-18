@@ -19,4 +19,8 @@ export {
 
   // Главная — товар недели
   getWeeklyProductBlock,
+
+  // Коллекции — страница /catalog/collection/[slug]
+  getCollectionProductsFromStrapi,
+  getCollectionCategoriesTreeFromStrapi,
 } from "./queries";

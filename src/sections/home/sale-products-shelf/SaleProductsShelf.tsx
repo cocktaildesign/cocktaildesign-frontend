@@ -30,7 +30,7 @@ export default function SaleProductsShelf({ collections, collectionSlug = "sale"
             <h2 className={styles.title}>Скидки в Cocktail Design</h2>
 
             {collection.viewAllHref && (
-              <Link href="/discounts-product" className={styles.viewAll}>
+              <Link href="/catalog/collection/sale" className={styles.viewAll}>
                 Смотреть всё →
               </Link>
             )}

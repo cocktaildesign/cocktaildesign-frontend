@@ -16,7 +16,8 @@ import { getProductBySlugFromStrapi } from "@/lib/api/catalog";
 import ProductPurchaseControls from "./ProductPurchaseControls";
 import BundleItems from "./bundle/BundleItems";
 
-import ArrowBackIcon from "@/components/icons/ArrowBackIcon";
+import ScrollToDescriptionButton from "./ScrollToDescriptionButton";
+
 import CopyButton from "@/components/ui/copy-button/CopyButton";
 
 import styles from "./ProductPage.module.css";
@@ -260,11 +261,7 @@ export default async function ProductPage({ params }: PageProps) {
             <div>
               <div className={styles.productAboutHeader}>
                 <h2 className={styles.productInfoTitle}>О товаре</h2>
-
-                <a href="#product-description" className={styles.productAboutButton}>
-                  <span className={styles.productAboutButtonText}>Перейти к описанию</span>
-                  <ArrowBackIcon className={styles.productAboutButtonIcon} />
-                </a>
+                <ScrollToDescriptionButton />
               </div>
 
               {specifications.map((spec) => (

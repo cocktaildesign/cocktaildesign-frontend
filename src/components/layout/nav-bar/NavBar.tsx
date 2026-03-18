@@ -25,7 +25,7 @@ export default async function NavBar() {
             ))}
           </ul>
 
-          <Link className={styles.sale} href="/discounts-product">
+          <Link className={styles.sale} href="/catalog/collection/sale">
             % Товары со скидкой
           </Link>
         </div>

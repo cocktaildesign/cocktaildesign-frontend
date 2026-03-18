@@ -241,22 +241,14 @@ function normalizeSelectionMode(value: unknown): StrapiCollectionSelectionMode {
   if (value === "discount") return "discount";
   return "manual";
 }
-
 function buildCollectionViewAllHref(params: {
   selectionMode: StrapiCollectionSelectionMode;
   collectionSlug: string;
   sourceCategorySlug: string | null;
 }): string | null {
-  if (params.selectionMode === "category" && params.sourceCategorySlug) {
-    return `/catalog/${params.sourceCategorySlug}`;
-  }
-
-  if (params.selectionMode === "discount") {
-    return "/discounts-product";
-  }
-
+  // Все подборки ведут на универсальную страницу /catalog/collection/:slug
   if (params.collectionSlug) {
-    return `/collections/${params.collectionSlug}`;
+    return `/catalog/collection/${params.collectionSlug}`;
   }
 
   return null;
@@ -451,6 +443,95 @@ export async function getWeeklyProductBlock(): Promise<WeeklyProductBlock | null
       return null;
     }
 
+    throw e;
+  }
+}
+
+// ============================================================================
+// КОЛЛЕКЦИИ — страница /catalog/collection/[slug]
+// ============================================================================
+
+// Тип мета-данных коллекции (заголовок, описание)
+export type CollectionMeta = {
+  id: string;
+  title: string;
+  slug: string;
+  description: string | null;
+};
+
+// Тип ответа от /api/catalog/collection/:slug/products
+type StrapiCollectionProductsResponse = {
+  collection: CollectionMeta;
+  items: StrapiProductItem[];
+  total: number;
+  limit: number;
+  offset: number;
+  hasMore: boolean;
+};
+
+// Получить товары коллекции по slug с пагинацией
+export async function getCollectionProductsFromStrapi(params: {
+  slug: string;
+  limit: number;
+  offset: number;
+  categorySlug?: string; // ← новое: фильтр по категории внутри коллекции
+}): Promise<{ collection: CollectionMeta } & CatalogProductsResponse> {
+  const safeSlug = params.slug.trim();
+
+  if (!safeSlug) {
+    return {
+      collection: { id: "", title: "", slug: "", description: null },
+      items: [],
+      total: 0,
+      limit: params.limit,
+      offset: params.offset,
+      hasMore: false,
+    };
+  }
+
+  const limit = Number.isFinite(params.limit) && params.limit > 0 ? Math.min(params.limit, 100) : 50;
+  const offset = Number.isFinite(params.offset) && params.offset >= 0 ? params.offset : 0;
+
+  // Собираем query параметры — categorySlug добавляем только если передан
+  const query: Record<string, string> = {
+    limit: String(limit),
+    offset: String(offset),
+  };
+
+  if (params.categorySlug?.trim()) {
+    query.categorySlug = params.categorySlug.trim();
+  }
+
+  const response: StrapiCollectionProductsResponse = await fetchStrapi(
+    `/api/catalog/collection/${safeSlug}/products`,
+    query,
+  );
+
+  const items = response.items.map(mapProductPreview).filter((item): item is NonNullable<typeof item> => item !== null);
+
+  return {
+    collection: response.collection,
+    items,
+    total: response.total,
+    limit: response.limit,
+    offset: response.offset,
+    hasMore: response.hasMore,
+  };
+}
+
+// Получить дерево категорий из товаров коллекции
+// Формат совпадает с categories-flat → передаём в buildCatalogTree
+export async function getCollectionCategoriesTreeFromStrapi(slug: string): Promise<CatalogCategoryPreview[]> {
+  const safeSlug = slug.trim();
+  if (!safeSlug) return [];
+
+  try {
+    const flat: FlatCategory[] = await fetchStrapi(`/api/catalog/collection/${safeSlug}/categories-tree`);
+
+    return buildCatalogTree(flat);
+  } catch (e) {
+    const message = e instanceof Error ? e.message : "";
+    if (message.includes("404") || message.includes("Not Found")) return [];
     throw e;
   }
 }

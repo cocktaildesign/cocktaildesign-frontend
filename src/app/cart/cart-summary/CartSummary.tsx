@@ -2,117 +2,87 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { useCartStore } from "@/lib/cart/cartStore";
 import styles from "./CartSummary.module.css";
-import Link from "next/link";
 
-// Форматируем цену: 1200 -> "1 200"
+// 1200 -> "1 200"
 function formatPrice(price: number): string {
   return new Intl.NumberFormat("ru-RU").format(price);
 }
 
+// Склонение: 1 товар / 2 товара / 5 товаров
 function formatProductsCount(count: number): string {
   const lastTwo = count % 100;
   const last = count % 10;
 
-  // исключение для 11-14
-  if (lastTwo >= 11 && lastTwo <= 14) {
-    return `${count} товаров`;
-  }
-
-  // 1 товар
-  if (last === 1) {
-    return `${count} товар`;
-  }
-
-  // 2-4 товара
-  if (last >= 2 && last <= 4) {
-    return `${count} товара`;
-  }
-
+  if (lastTwo >= 11 && lastTwo <= 14) return `${count} товаров`;
+  if (last === 1) return `${count} товар`;
+  if (last >= 2 && last <= 4) return `${count} товара`;
   return `${count} товаров`;
 }
 
 export default function CartSummary() {
   const items = useCartStore((s) => s.items);
 
-  // Локальный стейт для поля промокода
-  const [promoCode, setPromoCode] = useState<string>("");
-
-  // Статус применения промокода
+  const [promoCode, setPromoCode] = useState("");
   const [promoStatus, setPromoStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
+  const [promoError, setPromoError] = useState("");
+  const [promoDiscount, setPromoDiscount] = useState(0);
 
-  // Сообщение об ошибке
-  const [promoError, setPromoError] = useState<string>("");
-
-  // Скидка от промокода в рублях
-  const [promoDiscount, setPromoDiscount] = useState<number>(0);
-
-  // Считаем общее количество штук
+  // Считаем итоги
   let totalQuantity = 0;
-  for (const item of items) {
-    totalQuantity = totalQuantity + item.quantity;
-  }
-
-  // Считаем итоговую сумму
   let totalPrice = 0;
-  for (const item of items) {
-    totalPrice = totalPrice + item.price * item.quantity;
-  }
-
-  // Считаем экономию — разница между старой и новой ценой
   let totalSavings = 0;
+
   for (const item of items) {
+    totalQuantity += item.quantity;
+    totalPrice += item.price * item.quantity;
     if (item.priceOld > item.price) {
-      totalSavings = totalSavings + (item.priceOld - item.price) * item.quantity;
+      totalSavings += (item.priceOld - item.price) * item.quantity;
     }
   }
 
-  // Итоговая сумма с учётом скидки промокода
+  // Итог с учётом промокода
   const finalPrice = totalPrice - promoDiscount;
 
-  // Отправляем промокод на сервер для проверки
+  // Сброс промокода при изменении поля
+  function handlePromoChange(e: React.ChangeEvent<HTMLInputElement>) {
+    setPromoCode(e.target.value);
+    setPromoStatus("idle");
+    setPromoDiscount(0);
+    setPromoError("");
+  }
+
+  // Отправка промокода на сервер
   async function handleApplyPromo() {
-    // Защита от пустого поля
     if (!promoCode.trim()) return;
 
-    // Показываем загрузку
     setPromoStatus("loading");
     setPromoError("");
 
     try {
-      // Отправляем запрос на наш API
       const response = await fetch("https://api.cocktaildesign.ru/api/promo-code/apply", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          code: promoCode.trim(),
-          totalPrice: totalPrice,
-        }),
+        body: JSON.stringify({ code: promoCode.trim(), totalPrice }),
       });
 
       const data = await response.json();
 
       if (data.ok) {
-        // Промокод применён — сохраняем скидку
         setPromoDiscount(data.discountAmount);
         setPromoStatus("success");
       } else {
-        // Сервер вернул ошибку — показываем сообщение
         setPromoStatus("error");
-
-        if (data.error === "not_found") {
-          setPromoError("Промокод не найден");
-        } else if (data.error === "not_active") {
-          setPromoError("Промокод неактивен");
-        } else if (data.error === "limit_reached") {
-          setPromoError("Промокод больше не действует");
-        } else {
-          setPromoError("Что-то пошло не так");
-        }
+        const errorMessages: Record<string, string> = {
+          not_found: "Промокод не найден",
+          not_active: "Промокод неактивен",
+          limit_reached: "Промокод больше не действует",
+        };
+        setPromoError(errorMessages[data.error] ?? "Что-то пошло не так");
       }
     } catch {
-      // Сеть упала или сервер недоступен
       setPromoStatus("error");
       setPromoError("Ошибка соединения");
     }
@@ -120,26 +90,23 @@ export default function CartSummary() {
 
   return (
     <section className={styles.summaryWrapper}>
+      {/* Кнопка оформления заказа */}
       <Link href="/checkout" className={styles.checkoutButton}>
         Оформить заказ
       </Link>
+
       <div className={styles.summary}>
-        {/* Промокод — кнопка появляется только когда есть текст */}
+        {/* Промокод */}
         <div className={styles.promoBlock}>
           <input
             type="text"
             className={styles.promoInput}
             placeholder="Промокод"
             value={promoCode}
-            // Сбрасываем скидку если пользователь изменил код
-            onChange={(e) => {
-              setPromoCode(e.target.value);
-              setPromoStatus("idle");
-              setPromoDiscount(0);
-              setPromoError("");
-            }}
+            onChange={handlePromoChange}
           />
-          {/* Показываем кнопку только если пользователь что-то ввёл */}
+
+          {/* Кнопка появляется только когда что-то введено и промокод ещё не применён */}
           {promoCode.length > 0 && promoStatus !== "success" && (
             <button
               type="button"
@@ -150,22 +117,17 @@ export default function CartSummary() {
             </button>
           )}
 
-          {/* Сообщение об ошибке */}
           {promoStatus === "error" && <p className={styles.promoError}>{promoError}</p>}
-
-          {/* Успешное применение */}
           {promoStatus === "success" && <p className={styles.promoSuccess}>Промокод применён!</p>}
         </div>
 
         {/* Строки итога */}
         <div className={styles.totals}>
-          {/* Количество товаров и сумма */}
           <div className={styles.totalRow}>
             <span>{formatProductsCount(totalQuantity)}</span>
             <span>{formatPrice(totalPrice)} ₽</span>
           </div>
 
-          {/* Экономия от скидок на товары */}
           {totalSavings > 0 && (
             <div className={styles.totalRow}>
               <span>Ваша выгода</span>
@@ -173,7 +135,6 @@ export default function CartSummary() {
             </div>
           )}
 
-          {/* Скидка от промокода */}
           {promoDiscount > 0 && (
             <div className={styles.totalRow}>
               <span>Промокод</span>
@@ -181,14 +142,13 @@ export default function CartSummary() {
             </div>
           )}
 
-          {/* Доставка — считается менеджером */}
           <div className={styles.totalRow}>
             <span>Доставка</span>
             <span className={styles.deliveryNote}>при оформлении</span>
           </div>
         </div>
 
-        {/* Итоговая сумма с учётом промокода */}
+        {/* Итоговая сумма */}
         <div className={styles.totalFinal}>
           <span className={styles.totalFinalLabel}>Итого</span>
           <span className={styles.totalFinalPrice}>{formatPrice(finalPrice)} ₽</span>

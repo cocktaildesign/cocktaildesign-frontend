@@ -1,30 +1,40 @@
 // src/app/catalog/product-grid/ProductGrid.tsx
-// Server Component — данные грузятся на сервере, клиент получает готовый HTML.
 
 import styles from "./ProductGrid.module.css";
 import ProductCard from "../product-card/ProductCard";
-import { getProductsByCategorySlugFromStrapi } from "@/lib/api/catalog";
+import { getProductsByCategorySlugFromStrapi, getCollectionProductsFromStrapi } from "@/lib/api/catalog";
+import type { CatalogProductPreview } from "@/lib/api/catalog/types";
 
 type ProductGridProps = {
-  categorySlug: string;
+  categorySlug?: string;
+  collectionSlug?: string;
+  filterCategorySlug?: string; // фильтр по категории внутри коллекции
 };
 
 const PAGE_SIZE = 50;
 
-// async — потому что мы делаем await внутри
-// В App Router Server Components могут быть async — это нормально
-export default async function ProductGrid({ categorySlug }: ProductGridProps) {
-  // Грузим товары прямо здесь — на сервере, до отдачи HTML клиенту
-  // Никакого useEffect, никакого "Загрузка..."
-  const res = await getProductsByCategorySlugFromStrapi({
-    categorySlug,
-    limit: PAGE_SIZE,
-    offset: 0,
-  });
+export default async function ProductGrid({ categorySlug, collectionSlug, filterCategorySlug }: ProductGridProps) {
+  let products: CatalogProductPreview[] = [];
 
-  const products = res.items;
+  if (collectionSlug) {
+    // Грузим товары коллекции — с опциональным фильтром по категории
+    const res = await getCollectionProductsFromStrapi({
+      slug: collectionSlug,
+      limit: PAGE_SIZE,
+      offset: 0,
+      categorySlug: filterCategorySlug,
+    });
+    products = res.items;
+  } else if (categorySlug) {
+    // Грузим товары категории — старая логика
+    const res = await getProductsByCategorySlugFromStrapi({
+      categorySlug,
+      limit: PAGE_SIZE,
+      offset: 0,
+    });
+    products = res.items;
+  }
 
-  // Пустая категория
   if (products.length === 0) {
     return <p className={styles.state}>В этой категории пока нет товаров.</p>;
   }

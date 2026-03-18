@@ -3,13 +3,14 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import styles from "./Checkout.module.css";
+import { useCartStore } from "@/lib/cart/cartStore";
 import PersonIcon from "@/components/icons/payment-tabs/PersonIcon";
 import OrganizationIcon from "@/components/icons/payment-tabs/OrganizationIcon";
-import { useCartStore } from "@/lib/cart/cartStore";
+import styles from "./Checkout.module.css";
 
 type BuyerType = "individual" | "legal";
 
+// 1200 -> "1 200"
 function formatPrice(price: number): string {
   return new Intl.NumberFormat("ru-RU").format(price);
 }
@@ -18,22 +19,28 @@ export default function CheckoutClient() {
   const items = useCartStore((s) => s.items);
 
   const [buyerType, setBuyerType] = useState<BuyerType>("legal");
-  const [phone, setPhone] = useState<string>("");
-  const [telegram, setTelegram] = useState<string>("");
-  const [address, setAddress] = useState<string>("");
-  const [comment, setComment] = useState<string>("");
-  const [fullName, setFullName] = useState<string>("");
-  const [contactName, setContactName] = useState<string>("");
-  const [inn, setInn] = useState<string>("");
+  const [phone, setPhone] = useState("");
+  const [telegram, setTelegram] = useState("");
+  const [address, setAddress] = useState("");
+  const [comment, setComment] = useState("");
+  const [fullName, setFullName] = useState("");
+  const [contactName, setContactName] = useState("");
+  const [inn, setInn] = useState("");
   const [submitStatus, setSubmitStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
   const [errors, setErrors] = useState<Record<string, string>>({});
 
-  // Считаем итоговую сумму
+  // Итоговая сумма заказа
   let totalPrice = 0;
   for (const item of items) {
-    totalPrice = totalPrice + item.price * item.quantity;
+    totalPrice += item.price * item.quantity;
   }
 
+  // Сброс одной ошибки при вводе
+  function clearError(field: string) {
+    setErrors((prev) => ({ ...prev, [field]: "" }));
+  }
+
+  // Валидация перед отправкой
   function validate(): boolean {
     const newErrors: Record<string, string> = {};
 
@@ -43,12 +50,8 @@ export default function CheckoutClient() {
     if (buyerType === "individual" && !fullName.trim()) {
       newErrors.fullName = "Укажите имя и фамилию";
     }
-    if (!phone.trim()) {
-      newErrors.phone = "Укажите телефон";
-    }
-    if (!address.trim()) {
-      newErrors.address = "Укажите адрес доставки";
-    }
+    if (!phone.trim()) newErrors.phone = "Укажите телефон";
+    if (!address.trim()) newErrors.address = "Укажите адрес доставки";
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -62,16 +65,15 @@ export default function CheckoutClient() {
 
   return (
     <div className={styles.page}>
-      {/* Кнопка назад */}
+      {/* Назад в корзину */}
       <Link href="/cart" className={styles.backLink}>
         ← Вернуться в корзину
       </Link>
 
       <h1 className={styles.title}>Оформление заказа</h1>
 
-      {/* Двухколоночный layout */}
       <div className={styles.layout}>
-        {/* Левая колонка — выбор типа + товары */}
+        {/* Левая колонка — тип покупателя + список товаров */}
         <div className={styles.leftColumn}>
           {/* Карточки выбора типа покупателя */}
           <div className={styles.tabButtons}>
@@ -98,7 +100,7 @@ export default function CheckoutClient() {
             </button>
           </div>
 
-          {/* Товары из корзины */}
+          {/* Список товаров из корзины */}
           <div className={styles.orderSummary}>
             <h2 className={styles.orderSummaryTitle}>Ваш заказ</h2>
 
@@ -107,7 +109,6 @@ export default function CheckoutClient() {
                 <div key={item.id} className={styles.orderItem}>
                   <span className={styles.orderItemName}>
                     {item.name}
-                    {/* Пометка о гравировке под названием */}
                     {item.engraving && <span className={styles.orderItemEngraving}>Гравировка</span>}
                   </span>
                   <span className={styles.orderItemQty}>{item.quantity} шт.</span>
@@ -116,7 +117,6 @@ export default function CheckoutClient() {
               ))}
             </div>
 
-            {/* Итого */}
             <div className={styles.orderTotal}>
               <span className={styles.orderTotalLabel}>Итого</span>
               <span className={styles.orderTotalPrice}>{formatPrice(totalPrice)} ₽</span>
@@ -126,7 +126,6 @@ export default function CheckoutClient() {
 
         {/* Правая колонка — форма */}
         <div className={styles.form}>
-          {/* Двухколоночная сетка полей */}
           <div className={styles.formGrid}>
             {/* Контактное лицо — только для юрлица */}
             {buyerType === "legal" && (
@@ -142,7 +141,7 @@ export default function CheckoutClient() {
                   value={contactName}
                   onChange={(e) => {
                     setContactName(e.target.value);
-                    setErrors((prev) => ({ ...prev, contactName: "" }));
+                    clearError("contactName");
                   }}
                 />
                 {errors.contactName && <p className={styles.errorText}>{errors.contactName}</p>}
@@ -163,7 +162,7 @@ export default function CheckoutClient() {
                   value={fullName}
                   onChange={(e) => {
                     setFullName(e.target.value);
-                    setErrors((prev) => ({ ...prev, fullName: "" }));
+                    clearError("fullName");
                   }}
                 />
                 {errors.fullName && <p className={styles.errorText}>{errors.fullName}</p>}
@@ -183,7 +182,7 @@ export default function CheckoutClient() {
                 value={phone}
                 onChange={(e) => {
                   setPhone(e.target.value);
-                  setErrors((prev) => ({ ...prev, phone: "" }));
+                  clearError("phone");
                 }}
               />
               {errors.phone && <p className={styles.errorText}>{errors.phone}</p>}
@@ -234,7 +233,7 @@ export default function CheckoutClient() {
                 value={address}
                 onChange={(e) => {
                   setAddress(e.target.value);
-                  setErrors((prev) => ({ ...prev, address: "" }));
+                  clearError("address");
                 }}
               />
               {errors.address && <p className={styles.errorText}>{errors.address}</p>}
@@ -256,7 +255,7 @@ export default function CheckoutClient() {
             </div>
           </div>
 
-          {/* Кнопка */}
+          {/* Кнопка отправки */}
           <button
             type="button"
             className={styles.submitButton}

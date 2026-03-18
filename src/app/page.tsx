@@ -29,7 +29,7 @@ export default async function HomePage() {
   return (
     <>
       <HeroSection weeklyProduct={weeklyProduct} />
-      <CategoryProductShelves collections={collections} collectionSlug="strejnery" />
+      <CategoryProductShelves collections={collections} collectionSlug="novinki" />
       <PopularCategories />
       <Advantages />
       <Telegram />
