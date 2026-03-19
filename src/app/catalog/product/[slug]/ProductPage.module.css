@@ -482,6 +482,8 @@
   flex-direction: row;
   gap: 3px;
   align-items: center;
+font-size: var(--text-sm);
+color: var(--color-gray);
 }
 
 .productDescriptionTitle {

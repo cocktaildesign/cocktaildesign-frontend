@@ -176,7 +176,6 @@ export default function VariantSelector({ product, variants, specifications }: V
       {/* ── САЙДБАР ───────────────────────────────────────────────────── */}
       <div className={styles.productSidebar}>
         <div className={styles.productPurchase}>
-          tsx
           <ProductPurchaseControls
             key={activeVariant ? activeVariant.id : product.id}
             productId={activeVariant ? activeVariant.id : product.id}
