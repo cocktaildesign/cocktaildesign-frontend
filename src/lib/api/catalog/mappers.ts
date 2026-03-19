@@ -174,6 +174,44 @@ function pickBestImagePath(file: StrapiMediaFile | null): string | null {
   );
 }
 
+// Маппим массив медиа-файлов Strapi в массив CatalogProductImage.
+// Используется и для товаров, и для вариантов.
+function mapMediaArray(
+  raw: StrapiMediaFile[] | { data?: Array<{ id: number; attributes?: StrapiMediaFile }> } | null | undefined,
+  fallbackAlt: string,
+): CatalogProductImage[] {
+  const images: CatalogProductImage[] = [];
+
+  if (Array.isArray(raw)) {
+    for (const file of raw) {
+      const imagePath = pickBestImagePath(file);
+      const imageUrl = imagePath ? getStrapiMediaUrl(imagePath) : null;
+      if (!imageUrl) continue;
+      images.push({
+        src: imageUrl,
+        alt: file?.alternativeText?.trim() || fallbackAlt,
+      });
+    }
+    return images;
+  }
+
+  if (raw && !Array.isArray(raw) && raw.data) {
+    for (const item of raw.data) {
+      const file = item?.attributes ?? null;
+      const imagePath = pickBestImagePath(file);
+      const imageUrl = imagePath ? getStrapiMediaUrl(imagePath) : null;
+      if (!imageUrl) continue;
+      images.push({
+        src: imageUrl,
+        alt: file?.alternativeText?.trim() || fallbackAlt,
+      });
+    }
+    return images;
+  }
+
+  return images;
+}
+
 // ============================================================================
 // mapProductPreview
 // ============================================================================
@@ -293,13 +331,9 @@ function mapProductSpecifications(raw: unknown): CatalogProductSpecification[] {
 
 // ============================================================================
 // BUNDLE ITEMS
-// Маппим состав комплекта из сырых данных Strapi в domain-тип для UI.
-// bundleItems приходят из КОРНЯ ответа /api/catalog/product,
-// а не из item.attributes — поэтому передаём их отдельным аргументом.
 // ============================================================================
 
 export function mapBundleItems(raw: StrapiBundleItem[] | undefined): CatalogBundleItem[] {
-  // Если нет данных — возвращаем пустой массив (это обычный товар, не bundle)
   if (!raw || raw.length === 0) return [];
 
   const result: CatalogBundleItem[] = [];
@@ -309,7 +343,6 @@ export function mapBundleItems(raw: StrapiBundleItem[] | undefined): CatalogBund
 
     result.push({
       id: String(item.id),
-      // quantity — сколько единиц этого товара в комплекте, по умолчанию 1
       quantity: typeof item.quantity === "number" && item.quantity > 0 ? item.quantity : 1,
       componentProduct: cp
         ? {
@@ -328,8 +361,6 @@ export function mapBundleItems(raw: StrapiBundleItem[] | undefined): CatalogBund
 
 // ============================================================================
 // mapProductDetail
-// Принимает второй аргумент rawBundleItems — состав комплекта из корня ответа.
-// Для обычных товаров rawBundleItems не передаётся → bundleItems будет [].
 // ============================================================================
 
 export function mapProductDetail(
@@ -353,45 +384,12 @@ export function mapProductDetail(
   const priceOld = typeof rawPriceOld === "number" && Number.isFinite(rawPriceOld) && rawPriceOld > 0 ? rawPriceOld : 0;
 
   const description = typeof source.description === "string" ? source.description : null;
-
-  const images: CatalogProductImage[] = [];
-  const rawImages = source.image;
   const rawCode = source.code;
   const code = typeof rawCode === "string" && rawCode.trim() ? rawCode.trim() : null;
   const engravingEnabled = source.engravingEnabled === true;
 
-  if (Array.isArray(rawImages)) {
-    for (const file of rawImages) {
-      const imagePath = pickBestImagePath(file);
-      const imageUrl = imagePath ? getStrapiMediaUrl(imagePath) : null;
-
-      if (!imageUrl) continue;
-
-      images.push({
-        src: imageUrl,
-        alt: file?.alternativeText?.trim() || name,
-      });
-    }
-  }
-
-  if (!Array.isArray(rawImages) && rawImages?.data) {
-    for (const item of rawImages.data) {
-      const file = item?.attributes ?? null;
-      const imagePath = pickBestImagePath(file);
-      const imageUrl = imagePath ? getStrapiMediaUrl(imagePath) : null;
-
-      if (!imageUrl) continue;
-
-      images.push({
-        src: imageUrl,
-        alt: file?.alternativeText?.trim() || name,
-      });
-    }
-  }
-
+  const images = mapMediaArray(source.image, name);
   const specifications = mapProductSpecifications(source.specifications);
-
-  // Маппим состав комплекта (для обычного товара будет пустой массив)
   const bundleItems = mapBundleItems(rawBundleItems);
 
   return {
@@ -451,7 +449,13 @@ export function mapVariant(item: StrapiVariantItem): CatalogVariant | null {
   const rawPriceOld = source.priceOld;
   const priceOld = typeof rawPriceOld === "number" && Number.isFinite(rawPriceOld) && rawPriceOld > 0 ? rawPriceOld : 0;
 
+  const rawCode = source.code;
+  const code = typeof rawCode === "string" && rawCode.trim() ? rawCode.trim() : null;
+
   const characteristics = mapVariantCharacteristics(source.characteristics);
+
+  // Маппим фото варианта — используем тот же хелпер что и для товара
+  const images = mapMediaArray(source.image, name);
 
   return {
     id: String(item.id),
@@ -459,7 +463,9 @@ export function mapVariant(item: StrapiVariantItem): CatalogVariant | null {
     name,
     price,
     priceOld,
+    code,
     characteristics,
+    images,
   };
 }
 
@@ -515,43 +521,11 @@ export function mapWeeklyProductBlock(response: StrapiWeeklyProductBlockResponse
   const priceOld = typeof rawPriceOld === "number" && Number.isFinite(rawPriceOld) && rawPriceOld > 0 ? rawPriceOld : 0;
 
   const description = typeof source.description === "string" ? source.description : null;
-
   const rawCode = source.code;
   const code = typeof rawCode === "string" && rawCode.trim() ? rawCode.trim() : null;
-
   const engravingEnabled = source.engravingEnabled === true;
 
-  const images: CatalogProductImage[] = [];
-  const rawImages = source.image;
-
-  if (Array.isArray(rawImages)) {
-    for (const file of rawImages) {
-      const imagePath = pickBestImagePath(file);
-      const imageUrl = imagePath ? getStrapiMediaUrl(imagePath) : null;
-
-      if (!imageUrl) continue;
-
-      images.push({
-        src: imageUrl,
-        alt: file?.alternativeText?.trim() || name,
-      });
-    }
-  }
-
-  if (!Array.isArray(rawImages) && rawImages?.data) {
-    for (const item of rawImages.data) {
-      const file = item?.attributes ?? null;
-      const imagePath = pickBestImagePath(file);
-      const imageUrl = imagePath ? getStrapiMediaUrl(imagePath) : null;
-
-      if (!imageUrl) continue;
-
-      images.push({
-        src: imageUrl,
-        alt: file?.alternativeText?.trim() || name,
-      });
-    }
-  }
+  const images = mapMediaArray(source.image, name);
 
   return {
     isEnabled: data.isEnabled === true,

@@ -7,7 +7,6 @@ import styles from "./ProductPage.module.css";
 
 const PLACEHOLDER_IMG = "/images/catalog/product-placeholder.webp";
 
-// Тип одного фото
 type GalleryImage = {
   src: string;
   alt: string;
@@ -15,20 +14,13 @@ type GalleryImage = {
 
 type ProductGalleryProps = {
   images: GalleryImage[];
+  startIndex?: number;
 };
 
-export default function ProductGallery({ images }: ProductGalleryProps) {
-  const safeImages =
-    images.length > 0
-      ? images
-      : [
-          {
-            src: PLACEHOLDER_IMG,
-            alt: "Изображение товара отсутствует",
-          },
-        ];
+export default function ProductGallery({ images, startIndex = 0 }: ProductGalleryProps) {
+  const safeImages = images.length > 0 ? images : [{ src: PLACEHOLDER_IMG, alt: "Изображение товара отсутствует" }];
 
-  const [activeIndex, setActiveIndex] = useState(0);
+  const [activeIndex, setActiveIndex] = useState(startIndex);
 
   const activeImage = safeImages[activeIndex] ?? safeImages[0];
 

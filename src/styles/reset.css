@@ -15,7 +15,6 @@ body {
   background-color: var(--color-white);
   color: var(--color-text);
   margin: 0;
-  scroll-behavior: smooth;
 
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;

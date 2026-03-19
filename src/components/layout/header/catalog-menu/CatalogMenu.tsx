@@ -3,18 +3,19 @@ import CatalogIcon from "@/components/icons/CatalogIcon";
 import styles from "./CatalogMenu.module.css";
 import { useId, useState } from "react";
 import { useRouter } from "next/navigation";
-import type { CatalogCategoryPreview } from "@/lib/api/catalog/types";
+import type { CatalogCategoryPreview, CatalogCollection } from "@/lib/api/catalog/types";
 import Link from "next/link";
 
 type CatalogMenuProps = {
   categories: CatalogCategoryPreview[];
+  collections: CatalogCollection[]; // ← новое
 };
 
 function itemHasChildren(item: CatalogCategoryPreview) {
   return (item.children?.length ?? 0) > 0;
 }
 
-export default function CatalogMenu({ categories }: CatalogMenuProps) {
+export default function CatalogMenu({ categories, collections }: CatalogMenuProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [activeId, setActiveId] = useState(categories[0]?.id ?? "");
   const menuId = useId();
@@ -54,8 +55,9 @@ export default function CatalogMenu({ categories }: CatalogMenuProps) {
       {isOpen && (
         <div id={menuId} className={styles.panel}>
           <div className={styles.columns}>
-            {/* ЛЕВАЯ КОЛОНКА */}
+            {/* ЛЕВАЯ КОЛОНКА — категории + коллекции */}
             <ul className={styles.topList}>
+              {/* Категории МойСклад */}
               {categories.map((item) => {
                 const isActive = item.id === activeId;
                 return (
@@ -63,14 +65,8 @@ export default function CatalogMenu({ categories }: CatalogMenuProps) {
                     <Link
                       href={`/catalog/${item.slug}`}
                       className={styles.topItemButton}
-                      onMouseEnter={() => {
-                        // всегда обновляем activeId — даже если нет детей
-                        // тогда правая колонка корректно очищается
-                        setActiveId(item.id);
-                      }}
-                      onFocus={() => {
-                        setActiveId(item.id);
-                      }}
+                      onMouseEnter={() => setActiveId(item.id)}
+                      onFocus={() => setActiveId(item.id)}
                       aria-current={isActive ? "true" : undefined}
                       onClick={closeMenu}>
                       <span className={styles.topItemTitle}>{item.name}</span>
@@ -83,9 +79,25 @@ export default function CatalogMenu({ categories }: CatalogMenuProps) {
                   </li>
                 );
               })}
+
+              {/* Разделитель если есть коллекции */}
+              {collections.length > 0 && <li className={styles.divider} aria-hidden="true" />}
+
+              {/* Коллекции — просто ссылки без заголовка */}
+              {collections.map((collection) => (
+                <li key={collection.id} className={styles.topListItem}>
+                  <Link
+                    href={`/catalog/collection/${collection.slug}`}
+                    className={styles.topItemButton}
+                    onMouseEnter={() => setActiveId("")}
+                    onClick={closeMenu}>
+                    <span className={styles.topItemTitle}>{collection.title}</span>
+                  </Link>
+                </li>
+              ))}
             </ul>
 
-            {/* ПРАВАЯ ЗОНА — рендерится только если у активной категории есть дети */}
+            {/* ПРАВАЯ ЗОНА — подкатегории */}
             {level2Items.length > 0 ? (
               <div className={styles.subPanel}>
                 <div className={styles.subGrid}>

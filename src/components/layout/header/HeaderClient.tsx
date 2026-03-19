@@ -11,14 +11,14 @@ import InfoIcon from "@/components/icons/InfoIcon";
 import TelegramIcon from "@/components/icons/TelegramIcon";
 import MaxBrandIcon from "@/components/icons/MaxIcon";
 
-import type { CatalogCategoryPreview } from "@/lib/api/catalog/types";
+import type { CatalogCategoryPreview, CatalogCollection } from "@/lib/api/catalog/types";
 
 type HeaderClientProps = {
   categories: CatalogCategoryPreview[];
+  collections: CatalogCollection[]; // ← новое
 };
 
-export default function HeaderClient({ categories }: HeaderClientProps) {
-  // true — когда пользователь проскроллил ниже навбара
+export default function HeaderClient({ categories, collections }: HeaderClientProps) {
   const [isScrolled, setIsScrolled] = useState(false);
 
   useEffect(() => {
@@ -32,7 +32,6 @@ export default function HeaderClient({ categories }: HeaderClientProps) {
   return (
     <header className={isScrolled ? styles.headerScrolled : styles.header}>
       <Container>
-        {/* Верхняя строка */}
         <div className={styles.topBar}>
           <div className={styles.topBarLeft}>
             <span className={styles.topBarLeftText}>Написать нам</span>
@@ -58,7 +57,6 @@ export default function HeaderClient({ categories }: HeaderClientProps) {
             </div>
           </div>
 
-          {/* Верхнее меню — вынесено в отдельный компонент */}
           <TopNav />
 
           <address className={styles.topBarContact}>
@@ -92,8 +90,8 @@ export default function HeaderClient({ categories }: HeaderClientProps) {
           </address>
         </div>
 
-        {/* Средняя строка — вынесена в отдельный компонент */}
-        <MainBar categories={categories} />
+        {/* Передаём и categories и collections */}
+        <MainBar categories={categories} collections={collections} />
       </Container>
     </header>
   );

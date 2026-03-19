@@ -206,3 +206,9 @@
   background-color: var(--color-gray-light);
   color: var(--color-dark-blue);
 }
+
+.divider {
+  height: 1px;
+  background-color: var(--color-light);
+  margin: 8px 12px;
+}

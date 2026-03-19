@@ -136,8 +136,20 @@ export type StrapiVariantAttributes = {
 
   price?: number | null;
   priceOld?: number | null;
+  code?: string | null;
 
   characteristics?: StrapiVariantCharacteristic[] | null;
+
+  // Фото варианта — массив медиа (добавлено в схему)
+  image?:
+    | StrapiMediaFile[]
+    | {
+        data?: Array<{
+          id: number;
+          attributes?: StrapiMediaFile;
+        }>;
+      }
+    | null;
 };
 
 export type StrapiVariantItem = {
@@ -321,8 +333,12 @@ export type CatalogVariant = {
   name: string;
   price: number;
   priceOld: number;
+  code: string | null;
 
   characteristics: CatalogVariantCharacteristic[];
+
+  // Фото варианта — первое используется как главное при выборе варианта
+  images: CatalogProductImage[];
 };
 
 export type StrapiCatalogProductBySlugResponse = {

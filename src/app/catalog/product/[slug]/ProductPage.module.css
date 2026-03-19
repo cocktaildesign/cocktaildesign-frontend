@@ -14,13 +14,6 @@
   font-weight: 450;
 }
 
-/* ─── Основная сетка страницы ─────────────────────────────────
-   12 колонок:
-   [1..6]  — галерея
-   [7..9]  — информация / характеристики
-   [10..12] — сайдбар (цена, кнопки)
-   [1..-1] — описание (на всю ширину, следующая строка)
-──────────────────────────────────────────────────────────── */
 .productLayout {
   display: grid;
   grid-template-columns: repeat(12, 1fr);
@@ -36,8 +29,8 @@
 
 /* ═══════════════════════════════════════════════════════════
    ГАЛЕРЕЯ
+   ═══════════════════════════════════════════════════════════ */
 
-/* Внешний контейнер галереи — flex-row: миниатюры + большое фото */
 .productGallery {
   grid-column: 1 / 6;
   display: flex;
@@ -46,21 +39,15 @@
   aspect-ratio: 1 / 1;
 }
 
-/* ─── Колонка миниатюр ──────────────────────────────────── */
-
-/* ul-список миниатюр: вертикальная колонка */
 .productGalleryThumbs {
   list-style: none;
   margin: 0;
   padding: 0;
-
   display: flex;
   flex-direction: column;
   gap: 8px;
-
   width: 70px;
   flex-shrink: 0;
-
   overflow-y: auto;
   max-height: 100%;
 }
@@ -71,73 +58,59 @@
 .productGalleryThumbs::-webkit-scrollbar-track {
   background-color: var(--color-light-soft);
 }
-
 .productGalleryThumbs::-webkit-scrollbar-thumb {
   background-color: var(--color-light);
   border-radius: 999px;
 }
-
 .productGalleryThumbs::-webkit-scrollbar-thumb:hover {
   background-color: var(--color-gray);
   cursor: pointer;
 }
-/* Один элемент миниатюры */
+
 .productGalleryThumbItem {
   position: relative;
   width: 60px;
   height: 60px;
   flex-shrink: 0;
-
   border-radius: 8px;
   overflow: hidden;
   border: 1px solid var(--color-light);
-
   cursor: pointer;
 }
 
-/* Картинка миниатюры */
 .productGalleryThumbImage {
   object-fit: contain;
 }
 
-/* Кнопка-обёртка миниатюры — сброс стилей кнопки + позиционирование для Image fill */
 .productGalleryThumbButton {
   all: unset;
   position: relative;
   display: block;
   width: 100%;
   height: 100%;
-
   cursor: pointer;
 }
 
-/* Активный элемент — рамка на li, потому что overflow: hidden на нём же */
 .productGalleryThumbItem[data-active="true"] {
   border: 1px solid var(--color-dark-blue);
 }
 
-/* ─── Большое фото ──────────────────────────────────────── */
-
-/* Контейнер главного фото — занимает всё оставшееся место */
 .productGalleryMain {
   position: relative;
-
   flex: 1;
   height: 100%;
   aspect-ratio: 1 / 1;
   border-radius: 12px;
   overflow: hidden;
-
   background-color: var(--color-light-soft);
 }
 
-/* Картинка главного фото */
 .productGalleryMainImage {
   object-fit: contain;
 }
 
 /* ═══════════════════════════════════════════════════════════
-   ИНФОРМАЦИЯ О ТОВАРЕ (характеристики, варианты)
+   ИНФОРМАЦИЯ О ТОВАРЕ
    ═══════════════════════════════════════════════════════════ */
 
 .productInfo {
@@ -154,7 +127,6 @@
   align-items: center;
 }
 
-/* Заголовок блока (например, "О товаре", "Цвет") */
 .productInfoTitle {
   display: block;
   font-size: var(--text-base);
@@ -162,7 +134,6 @@
   margin-bottom: 10px;
 }
 
-/* Первая буква с заглавной (для характеристик из API, которые могут быть строчными) */
 .productInfoTitle::first-letter {
   text-transform: uppercase;
 }
@@ -190,7 +161,7 @@
   height: 10px;
 }
 
-/* ─── Варианты товара (цвет, объём и т.д.) ──────────────── */
+/* ─── Варианты товара ───────────────────────────────────── */
 
 .productVariants {
   display: flex;
@@ -198,7 +169,6 @@
   gap: 12px;
 }
 
-/* Список значений одной характеристики (горизонтальный) */
 .productVariantValues {
   list-style: none;
   margin: 0;
@@ -209,7 +179,7 @@
   flex-wrap: wrap;
 }
 
-/* Одно значение характеристики (чип/бейдж) */
+/* Статичный тег (не кликабельный) — оставляем для совместимости */
 .productVariantValue {
   font-size: var(--text-sm);
   padding: 5px 15px;
@@ -217,14 +187,50 @@
   border-radius: 12px;
 }
 
-/* ─── Таблица характеристик (артикул, тип, материал...) ─── */
+/* Кнопка-тег варианта (интерактивная) */
+.productVariantValueButton {
+  font-size: var(--text-sm);
+  padding: 5px 15px;
+  background-color: var(--color-light-soft);
+  border-radius: 12px;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition:
+    border-color var(--dur) var(--ease),
+    background-color var(--dur) var(--ease);
+  color: var(--color-dark-blue);
+}
+
+.productVariantValueButton:hover {
+  border-color: var(--color-dark-blue);
+}
+
+.productVariantValueButton[data-active="true"] {
+  border-color: var(--color-dark-blue);
+  background-color: var(--color-white);
+
+}
+
+/* ─── Артикул варианта ──────────────────────────────────── */
+
+.productVariantSku {
+  display: flex;
+  flex-direction: row;
+  gap: 3px;
+  align-items: center;
+  grid-column: 6 / 10;
+  font-size: var(--text-sm);
+  color: var(--color-gray);
+  font-weight: 300;
+}
+
+/* ─── Таблица характеристик ─────────────────────────────── */
 
 .specRow {
   display: grid;
   grid-template-columns: 200px auto;
   gap: 16px;
   align-items: center;
-
   border-bottom: 1px solid var(--color-light);
   padding: 10px 0;
   height: 40px;
@@ -251,7 +257,6 @@
 
 .specLink {
   transition: color var(--dur) var(--ease);
-
   width: 100%;
   display: block;
   position: relative;
@@ -270,19 +275,18 @@
   opacity: 0;
   transition: opacity var(--dur) var(--ease);
 }
-
 .specLink:hover::after {
   opacity: 1;
 }
+
 /* ═══════════════════════════════════════════════════════════
-   САЙДБАР: цена + кнопки покупки
+   САЙДБАР
    ═══════════════════════════════════════════════════════════ */
 
 .productSidebar {
   grid-column: 10 / 13;
 }
 
-/* Блок с ценой — sticky: остаётся видимым при скролле */
 .productPurchase {
   background-color: var(--color-white);
   padding: 24px;
@@ -298,12 +302,10 @@
   font-weight: 300;
 }
 
-/* Блок с ценами */
 .productPurchasePriceBlock {
   margin-bottom: 10px;
 }
 
-/* Верхняя строка: старая цена + выгода */
 .productPurchasePriceTopRow {
   display: flex;
   align-items: center;
@@ -312,7 +314,6 @@
   margin-bottom: 8px;
 }
 
-/* Старая цена */
 .productPurchasePriceOld {
   font-size: var(--text-lg);
   color: var(--color-gray);
@@ -320,7 +321,6 @@
   font-weight: 400;
 }
 
-/* Бейдж выгоды */
 .productPurchaseBenefitBadge {
   display: inline-flex;
   align-items: center;
@@ -341,23 +341,18 @@
   width: fit-content;
 }
 
-/* ─── Контролы (количество + гравировка) ────────────────── */
-
 .productPurchaseControls {
   display: flex;
   flex-direction: column;
   gap: 8px;
 }
 
-/* Строка с кнопками действий */
 .productActions {
   display: flex;
   flex-direction: row;
   gap: 8px;
   min-height: 44px;
 }
-
-/* ─── Кнопка "В корзину" ────────────────────────────────── */
 
 .addToCartButton {
   background-color: var(--color-dark-blue);
@@ -400,8 +395,6 @@
   transition: background-color var(--dur) var(--ease);
 }
 
-/* ─── Кнопка "Быстрый заказ" ────────────────────────────── */
-
 .quickOrderButton {
   background-color: var(--color-light);
   color: var(--color-dark-blue);
@@ -424,8 +417,6 @@
   background-color: var(--color-light);
 }
 
-/* ─── Кнопка "Избранное" ────────────────────────────────── */
-
 .favoriteButton {
   width: 48px;
   background-color: var(--color-light);
@@ -434,8 +425,6 @@
   align-items: center;
   justify-content: center;
 }
-
-/* ─── Блок доставки ─────────────────────────────────────── */
 
 .deliveryTitle {
   font-size: var(--text-lg);
@@ -474,21 +463,18 @@
 
 /* ═══════════════════════════════════════════════════════════
    ОПИСАНИЕ ТОВАРА
-   Занимает всю ширину (grid-column: 1 / -1), вторая строка сетки
    ═══════════════════════════════════════════════════════════ */
 
 .productDescription {
   background-color: var(--color-light-soft);
   padding: 40px;
   margin-top: 20px;
-
   grid-column: 1 / -1;
-
   display: grid;
   grid-template-columns: repeat(12, 1fr);
   gap: 16px;
-
   border-radius: 12px;
+  scroll-margin-top: 120px;
 }
 
 .productMetaSku {
@@ -496,10 +482,6 @@
   flex-direction: row;
   gap: 3px;
   align-items: center;
-}
-
-.productDescription {
-  scroll-margin-top: 120px;
 }
 
 .productDescriptionTitle {
@@ -516,6 +498,7 @@
 /* ═══════════════════════════════════════════════════════════
    ПОХОЖИЕ ТОВАРЫ
    ═══════════════════════════════════════════════════════════ */
+
 .related {
   grid-column: 1 / -1;
 }
@@ -524,7 +507,6 @@
   font-size: var(--text-xl);
   font-weight: 450;
   margin: 20px 0;
-
   display: flex;
   align-items: center;
   gap: 12px;
@@ -539,20 +521,16 @@
   background-color: var(--color-light-soft);
 }
 
-/* Картинка главного фото */
 .relatedImageImg {
   object-fit: contain;
 }
 
 .relatedCardTitle {
   font-size: var(--text-sm);
-
   display: -webkit-box;
   -webkit-box-orient: vertical;
-
   -webkit-line-clamp: 2;
   line-clamp: 2;
-
   overflow: hidden;
   text-overflow: ellipsis;
 }
