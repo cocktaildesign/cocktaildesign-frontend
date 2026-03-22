@@ -6,7 +6,7 @@ import CartPrint from "../cart-print/CartPrint";
 import CartItem from "../cart-item/CartItem";
 import CartSummary from "../cart-summary/CartSummary";
 import PrinterIcon from "@/components/icons/cart/PrinterIcon";
-import ExcelIcon from "@/components/icons/cart/ExcelIcon";
+import DownloadIcon from "@/components/icons/cart/DownloadIcon";
 import { useCartStore } from "@/lib/cart/cartStore";
 import { exportCartToXlsx } from "@/lib/cart/exportToXlsx";
 import styles from "./CartClient.module.css";
@@ -70,7 +70,7 @@ export default function CartClient() {
             <h1 className={styles.cartTitle}>Корзина</h1>
             <div className={styles.cartActions}>
               <button type="button" className={styles.cartActionButton} onClick={() => exportCartToXlsx(items)}>
-                <ExcelIcon className={styles.cartIcon} color="#A1A1A1" width="20" height="20" />
+                <DownloadIcon className={styles.cartIcon} color="#A1A1A1" width="15" height="15" />
                 <span>Скачать</span>
               </button>
               <button

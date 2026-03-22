@@ -46,8 +46,12 @@ export default function CartPrint({ items, totalPrice, totalQuantity }: CartPrin
           {items.map((item) => (
             <tr key={item.id}>
               <td>
-                {item.name}
-                {item.engraving && <span className={styles.engraving}> + Гравировка</span>}
+                <div className={styles.name}>
+                  {item.name}
+                  {item.engraving && <span className={styles.engraving}> + Гравировка</span>}
+                </div>
+
+                {item.code && <div className={styles.code}>Артикул: {item.code}</div>}
               </td>
               <td>{formatPrice(item.price)} ₽</td>
               <td>{item.quantity}</td>

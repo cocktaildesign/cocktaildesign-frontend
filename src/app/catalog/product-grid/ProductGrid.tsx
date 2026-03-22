@@ -24,6 +24,7 @@ export default async function ProductGrid({ categorySlug, collectionSlug, filter
       offset: 0,
       categorySlug: filterCategorySlug,
     });
+
     products = res.items;
   } else if (categorySlug) {
     // Грузим товары категории — старая логика
@@ -32,6 +33,7 @@ export default async function ProductGrid({ categorySlug, collectionSlug, filter
       limit: PAGE_SIZE,
       offset: 0,
     });
+
     products = res.items;
   }
 

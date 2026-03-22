@@ -185,6 +185,7 @@ export default function VariantSelector({ product, variants, specifications }: V
             name={activeVariant ? activeVariant.name : product.name}
             slug={product.slug}
             imageUrl={activeImages[0]?.src ?? null}
+            code={activeCode}
           />
         </div>
       </div>

@@ -1,4 +1,3 @@
-// src/app/api/cart-export/route.ts
 import ExcelJS from "exceljs";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -10,6 +9,7 @@ type CartItemData = {
   slug: string;
   quantity: number;
   engraving: boolean;
+  code: string | null;
 };
 
 const DARK_BLUE = "1A2C5B";
@@ -29,12 +29,13 @@ export async function POST(request: NextRequest) {
 
   // Ширина колонок
   ws.columns = [
-    { key: "A", width: 56 },
-    { key: "B", width: 33 },
-    { key: "C", width: 15 },
-    { key: "D", width: 23 },
-    { key: "E", width: 5 },
+    { key: "A", width: 56 }, // Наименование
+    { key: "B", width: 22 }, // Артикул
+    { key: "C", width: 33 }, // Цена
+    { key: "D", width: 15 }, // Кол-во
+    { key: "E", width: 23 }, // Стоимость
     { key: "F", width: 5 },
+    { key: "G", width: 5 },
   ];
 
   // ============================================================
@@ -65,14 +66,22 @@ export async function POST(request: NextRequest) {
     right: { style: "thin", color: { argb: "FFDDDDDD" } },
   };
 
-  // Объединяем C1:F1 для примечания
-  ws.mergeCells("C1:F1");
   const cellC1 = ws.getCell("C1");
-  cellC1.value =
-    "Цены действительны на момент выгрузки.\nАктуальные цены и сроки акций всегда можно узнать на нашем сайте или по телефону.";
-  cellC1.font = { italic: true, size: 11, color: { argb: "FF555555" }, name: "Calibri" };
-  cellC1.alignment = { horizontal: "center", vertical: "middle", wrapText: true };
   cellC1.border = {
+    top: { style: "thin", color: { argb: "FF" + DARK_BLUE } },
+    bottom: { style: "thin", color: { argb: "FF" + DARK_BLUE } },
+    left: { style: "thin", color: { argb: "FFDDDDDD" } },
+    right: { style: "thin", color: { argb: "FFDDDDDD" } },
+  };
+
+  // Объединяем D1:G1 для примечания
+  ws.mergeCells("D1:G1");
+  const cellD1 = ws.getCell("D1");
+  cellD1.value =
+    "Цены действительны на момент выгрузки.\nАктуальные цены и сроки акций всегда можно узнать на нашем сайте или по телефону.";
+  cellD1.font = { italic: true, size: 11, color: { argb: "FF555555" }, name: "Calibri" };
+  cellD1.alignment = { horizontal: "center", vertical: "middle", wrapText: true };
+  cellD1.border = {
     top: { style: "thin", color: { argb: "FF" + DARK_BLUE } },
     bottom: { style: "thin", color: { argb: "FF" + DARK_BLUE } },
     left: { style: "thin", color: { argb: "FFDDDDDD" } },
@@ -130,8 +139,8 @@ export async function POST(request: NextRequest) {
   // ============================================================
   ws.getRow(6).height = 36;
 
-  const headers = ["Наименование товара", "Цена за 1 шт., руб.", "Кол-во, шт.", "Стоимость, руб."];
-  const headerCols = ["A", "B", "C", "D"];
+  const headers = ["Наименование товара", "Артикул", "Цена за 1 шт., руб.", "Кол-во, шт.", "Стоимость, руб."];
+  const headerCols = ["A", "B", "C", "D", "E"];
 
   for (let i = 0; i < headers.length; i++) {
     const cell = ws.getCell(`${headerCols[i]}6`);
@@ -170,8 +179,20 @@ export async function POST(request: NextRequest) {
       right: { style: "thin", color: { argb: "FFDDDDDD" } },
     };
 
+    // Артикул
+    const cellCode = ws.getCell(`B${rowNum}`);
+    cellCode.value = item.code ?? "—";
+    cellCode.font = { size: 13, name: "Calibri" };
+    cellCode.alignment = { horizontal: "center", vertical: "middle", wrapText: true };
+    cellCode.border = {
+      top: { style: "thin", color: { argb: "FFDDDDDD" } },
+      bottom: { style: "thin", color: { argb: "FFDDDDDD" } },
+      left: { style: "thin", color: { argb: "FFDDDDDD" } },
+      right: { style: "thin", color: { argb: "FFDDDDDD" } },
+    };
+
     // Цена
-    const cellPrice = ws.getCell(`B${rowNum}`);
+    const cellPrice = ws.getCell(`C${rowNum}`);
     cellPrice.value = item.price;
     cellPrice.font = { size: 14, name: "Calibri" };
     cellPrice.alignment = { horizontal: "right", vertical: "middle" };
@@ -183,7 +204,7 @@ export async function POST(request: NextRequest) {
     };
 
     // Количество
-    const cellQty = ws.getCell(`C${rowNum}`);
+    const cellQty = ws.getCell(`D${rowNum}`);
     cellQty.value = item.quantity;
     cellQty.font = { size: 14, name: "Calibri" };
     cellQty.alignment = { horizontal: "center", vertical: "middle" };
@@ -195,7 +216,7 @@ export async function POST(request: NextRequest) {
     };
 
     // Стоимость
-    const cellTotal = ws.getCell(`D${rowNum}`);
+    const cellTotal = ws.getCell(`E${rowNum}`);
     cellTotal.value = item.price * item.quantity;
     cellTotal.font = { size: 14, name: "Calibri" };
     cellTotal.alignment = { horizontal: "right", vertical: "middle" };
@@ -247,7 +268,16 @@ export async function POST(request: NextRequest) {
     right: { style: "thin", color: { argb: "FFDDDDDD" } },
   };
 
-  const cellTotalQty = ws.getCell(`C${totalRowNum}`);
+  const cellTotalC = ws.getCell(`C${totalRowNum}`);
+  cellTotalC.fill = { type: "pattern", pattern: "solid", fgColor: { argb: "FF" + LIGHT_GRAY } };
+  cellTotalC.border = {
+    top: { style: "medium", color: { argb: "FF" + DARK_BLUE } },
+    bottom: { style: "medium", color: { argb: "FF" + DARK_BLUE } },
+    left: { style: "thin", color: { argb: "FFDDDDDD" } },
+    right: { style: "thin", color: { argb: "FFDDDDDD" } },
+  };
+
+  const cellTotalQty = ws.getCell(`D${totalRowNum}`);
   cellTotalQty.value = totalQuantity;
   cellTotalQty.font = { bold: true, size: 15, name: "Calibri" };
   cellTotalQty.fill = { type: "pattern", pattern: "solid", fgColor: { argb: "FF" + LIGHT_GRAY } };
@@ -259,7 +289,7 @@ export async function POST(request: NextRequest) {
     right: { style: "thin", color: { argb: "FFDDDDDD" } },
   };
 
-  const cellTotalPrice = ws.getCell(`D${totalRowNum}`);
+  const cellTotalPrice = ws.getCell(`E${totalRowNum}`);
   cellTotalPrice.value = totalPrice;
   cellTotalPrice.font = { bold: true, size: 15, name: "Calibri" };
   cellTotalPrice.fill = { type: "pattern", pattern: "solid", fgColor: { argb: "FF" + LIGHT_GRAY } };

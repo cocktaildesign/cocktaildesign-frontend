@@ -56,6 +56,7 @@ export default function CartItem({ item }: CartItemProps) {
         <Link href={`/catalog/product/${item.slug}`} className={styles.name}>
           {item.name}
         </Link>
+        <span className={styles.sku}>Артикул: {item.code}</span>
         {item.engraving && <p className={styles.engravingNote}>Вы выбрали гравировку</p>}
       </div>
 

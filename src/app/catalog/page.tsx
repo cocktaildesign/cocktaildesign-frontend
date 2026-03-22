@@ -60,7 +60,7 @@ export default async function CatalogPage() {
                 {/* Контейнер изображения */}
                 <div className={styles.imageWrapper}>
                   <Image
-                    src={category.imageSrc || "/placeholder-image.jpg"}
+                    src={category.imageSrc || "/images/catalog/product-placeholder.webp"}
                     fill
                     sizes="(max-width: 768px) 100vw, 33vw"
                     alt={category.name ? `Категория: ${category.name}` : "Категория"}

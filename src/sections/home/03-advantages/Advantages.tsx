@@ -1,85 +1,92 @@
 import styles from "./Advantages.module.css";
 import PageLayout from "@/components/layout/PageLayout";
-import Logo from "@/components/ui/logo/Logo";
 import Link from "next/link";
-import Image from "next/image";
-import GuaranteeIcon from "@/components/icons/home-page/GuaranteeIcon";
-import TheWorlds50BestLogo from "@/components/icons/home-page/TheWorlds50BestLogo";
-import BarProofLogo from "@/components/icons/home-page/BarProofLogo";
 
 export default async function Advantages() {
   return (
     <PageLayout>
-      <section className={styles.advantages}>
-        <h2 className={styles.title}>Профессиональный барный инвентарь</h2>
+      <section className={styles.advantages} aria-labelledby="advantages-title">
+        <h2 id="advantages-title" className={styles.title}>
+          Профессиональный барный инвентарь
+        </h2>
 
         <div className={styles.grid}>
-          <div className={`${styles.card} ${styles.cardTall}`}>
-            <Logo className={styles.logoSmall} />
-            <p className={styles.cardDescription}>Магазин барного инвентаря</p>
+          {/* Левый высокий акцентный блок */}
+          <article className={`${styles.card} ${styles.cardTall} ${styles.saleCard}`}>
+            <div className={styles.cardSaleBadge}>
+              <span>Для новых клиентов</span>
+            </div>
 
-            <div className={styles.cardSale}>
-              <div className={styles.cardSaleBadge}>
-                <span>Для новых клиентов</span>
-              </div>
+            <div className={styles.saleContent}>
+              <p className={styles.cardSalePercent}>-20%</p>
+              <p className={styles.cardSaleDescription}>Подарок на выбор</p>
+              <p className={styles.cardSaleDescriptionText}>К первому заказу</p>
+            </div>
 
-              <div className={styles.cardSaleContent}>
-                <p className={styles.cardSalePercent}>-20%</p>
-                <p className={styles.cardSaleDescription}>Подарок на выбор</p>
-              </div>
-
-              <Link href="/catalog" className={styles.cardSaleButton}>
+            <div className={styles.saleFooter}>
+              <Link href="/catalog" className={styles.cardSaleLink}>
                 Перейти в каталог
               </Link>
             </div>
-          </div>
+          </article>
 
-          <div className={styles.card}>
-            <div className={styles.cardMeta}>
-              <GuaranteeIcon className={styles.cardIcon} />
-              <p className={styles.cardSubtitle}>Распространяется только на продукцию Cocktail Design</p>
+          {/* Верхняя центральная */}
+          <article className={styles.card}>
+            <div className={styles.cardContent}>
+              <h3 className={styles.cardHeading}>Пожизненная гарантия</h3>
+              <p className={styles.cardText}>Мы предоставляем пожизненную гарантию на наш барный инвентарь.</p>
             </div>
-            <p className={styles.cardTitle}>Пожизненная гарантия на нашу продукцию</p>
-          </div>
+          </article>
 
-          <div className={`${styles.card} ${styles.cardWide}`}>
-            <h3 className={styles.cardHeading}>Для юридических лиц</h3>
-            <div className={styles.cardImageWrap}>
-              <Image
-                src="/images/page/Advantages/bg_srrein.webp"
-                alt="Для юридических лиц"
-                fill
-                sizes="(max-width: 768px) 100vw, 50vw"
-              />
+          {/* Верхняя правая */}
+          <article className={styles.card}>
+            <div className={styles.cardContent}>
+              <h3 className={styles.cardHeading}>Для юридических лиц</h3>
+              <p className={styles.cardText}>Возврат НДС, оптовые скидки и постоплата для компаний.</p>
             </div>
-            <div className={styles.cardFeatures}>
-              <p className={styles.cardTitle}>Возврат НДС</p>
-              <p className={styles.cardTitle}>Оптовые скидки</p>
+          </article>
+
+          {/* Широкая центральная */}
+          <article className={`${styles.card} ${styles.cardWide}`}>
+            <div className={styles.cardContent}>
+              <div className={styles.wideHeader}>
+                <h3 className={styles.cardHeading}>Используется лучшими барами</h3>
+              </div>
+
+              <p className={styles.cardText}>
+                Наш инвентарь использует множество ведущих баров из списка The World&apos;s 50 Best Bars. Лучший продукт
+                России 2017 и 2019 по версии Barproof.
+              </p>
             </div>
-          </div>
+          </article>
 
-          <div className={`${styles.card} ${styles.cardColor}`}>
-            <TheWorlds50BestLogo className={styles.theWorlds50BestLogo} />
-            <p className={styles.cardTitle}>Наш инвентарь используют бары из списка The World&apos;s 50 Best Bars</p>
-          </div>
+          {/* Нижний ряд */}
+          <article className={styles.card}>
+            <div className={styles.cardContent}>
+              <h3 className={styles.cardHeading}>10 лет опыта</h3>
+              <p className={styles.cardText}>Опыт работы с барным инвентарем и оборудованием более 10 лет.</p>
+            </div>
+          </article>
 
-          <div className={`${styles.card} ${styles.cardColor}`}>
-            <BarProofLogo className={styles.barProofLogo} />
-            <p className={styles.cardTitle}>Лучший продукт России 2017 и 2019 по версии Barproof</p>
-          </div>
+          <article className={styles.card}>
+            <div className={styles.cardContent}>
+              <div className={styles.smallCardHeader}>
+                <h3 className={styles.cardHeadingSmall}>Гибкая система скидок</h3>
+              </div>
 
-          <div className={styles.card}>
-            <span className={styles.cardAccent}>10</span>
-            <p className={styles.cardTitle}>Лет опыта в барном инвентаре и оборудовании</p>
-          </div>
+              <p className={styles.cardText}>Индивидуальные скидки и предложения для наших клиентов.</p>
+            </div>
+          </article>
 
-          <div className={styles.bottomCard}>Поставим товар под заказ</div>
+          <article className={styles.card}>
+            <div className={styles.cardContent}>
+              <div className={styles.smallCardHeader}>
+                <h3 className={styles.cardHeadingSmall}>Быстрая доставка</h3>
+              </div>
 
-          <div className={styles.bottomCard}>Гибкая система скидок</div>
-
-          <div className={styles.bottomCard}>Разработка и брендинг</div>
-
-          <div className={styles.bottomCard}>Быстрая доставка</div>
+              <p className={styles.cardText}>Оперативно доставляем заказы по всей России и СНГ.</p>
+            </div>
+          </article>
         </div>
       </section>
     </PageLayout>

@@ -1,9 +1,52 @@
-/* src/app/catalog/collection/[slug]/CollectionPage.module.css */
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.header {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
 
 .headerTitle {
-  margin: 0 0 24px;
+  margin: 0;
   font-size: var(--text-2xl);
   font-weight: 450;
+}
+
+/* Мини-плашка с контекстом коллекции */
+.collectionNotice {
+  max-width: 100%;
+  padding: 14px 18px;
+  border-radius: 16px;
+  background-color: #f5f7fa;
+}
+
+.collectionNoticeText {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  font-size: var(--text-base);
+  line-height: 1.5;
+  color: rgba(28, 34, 48, 0.84);
+}
+
+.collectionNoticeDivider {
+  color: rgba(28, 34, 48, 0.28);
+}
+
+.collectionNoticeLink {
+  color: var(--color-dark-blue);
+  text-decoration: none;
+  transition: opacity 0.2s ease;
+}
+
+.collectionNoticeLink:hover {
+  opacity: 0.75;
 }
 
 .layout {
@@ -18,4 +61,38 @@
 
 .content {
   grid-column: 4 / 13;
+}
+
+@media (max-width: 1200px) {
+  .layout {
+    grid-template-columns: 1fr;
+  }
+
+  .sidebar {
+    grid-column: auto;
+  }
+
+  .content {
+    grid-column: auto;
+  }
+}
+
+@media (max-width: 767px) {
+  .page {
+    gap: 20px;
+  }
+
+  .header {
+    gap: 14px;
+  }
+
+  .collectionNotice {
+    padding: 12px 14px;
+    border-radius: 14px;
+  }
+
+  .collectionNoticeText {
+    font-size: var(--text-sm);
+    gap: 6px;
+  }
 }

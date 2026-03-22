@@ -141,11 +141,6 @@ export default function CartSummary() {
               <span className={styles.savings}>−{formatPrice(promoDiscount)} ₽</span>
             </div>
           )}
-
-          <div className={styles.totalRow}>
-            <span>Доставка</span>
-            <span className={styles.deliveryNote}>при оформлении</span>
-          </div>
         </div>
 
         {/* Итоговая сумма */}

@@ -28,6 +28,10 @@
     font-weight: 700;
   }
 
+	.code{
+		color: var(--color-gray);
+	}
+
   .contacts {
     font-size: 20px;
     text-align: right;

@@ -1,209 +1,365 @@
+.advantages {
+  margin: 60px 0;
+}
+
 .title {
   margin: 0 0 24px;
   font-size: var(--text-2xl);
   font-weight: 450;
+  color: var(--color-dark-blue);
 }
+
+/* -------------------------------------------------------------------------- */
+/* GRID */
+/* -------------------------------------------------------------------------- */
 
 .grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-areas:
+    "sale warranty business"
+    "sale wide wide"
+    "experience discounts delivery";
   gap: 16px;
+  align-items: stretch;
 }
 
+/* -------------------------------------------------------------------------- */
+/* BASE CARD */
+/* -------------------------------------------------------------------------- */
+
 .card {
-  min-height: 160px;
+  min-width: 0;
+
   padding: 24px;
-  border-radius: 12px;
-  background: var(--color-dark-blue-soft);
-  background: #2d333d;
-  color: #fff;
+  border: 1px solid #e3e6eb;
+  border-radius: 24px;
+  background-color: #ffffff;
+  color: var(--color-dark-blue);
 
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    border-color 0.2s ease;
 }
 
+.cardContent {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.cardHeading {
+  margin: 0;
+  font-size: 20px;
+  line-height: 1.12;
+  font-weight: 450;
+  letter-spacing: -0.02em;
+  color: var(--color-dark-blue);
+  text-wrap: balance;
+}
+
+.cardHeadingSmall {
+  margin: 0;
+  font-size: 22px;
+  line-height: 1.2;
+  font-weight: 450;
+  letter-spacing: -0.01em;
+  color: var(--color-dark-blue);
+  text-wrap: balance;
+}
+
+.cardText {
+  margin: 0;
+  font-size: 16px;
+  line-height: 1.4;
+  font-weight: 350;
+  color: rgba(28, 34, 48, 0.78);
+  text-wrap: balance;
+}
+
+/* -------------------------------------------------------------------------- */
+/* GRID AREAS */
+/* -------------------------------------------------------------------------- */
+
 .cardTall {
-  grid-row: span 2;
-  min-height: 366px;
+  grid-area: sale;
 }
 
 .cardWide {
-  grid-column: span 2;
-  position: relative;
+  grid-area: wide;
 }
 
-.bottomCard {
-  min-height: 92px;
-  padding: 20px;
-  border-radius: 12px;
-  background: var(--color-light);
-  color: var(--color-dark-blue);
+.grid > .card:nth-child(2) {
+  grid-area: warranty;
+}
+
+.grid > .card:nth-child(3) {
+  grid-area: business;
+}
+
+.grid > .card:nth-child(5) {
+  grid-area: experience;
+}
+
+.grid > .card:nth-child(6) {
+  grid-area: discounts;
+}
+
+.grid > .card:nth-child(7) {
+  grid-area: delivery;
+}
+
+/* -------------------------------------------------------------------------- */
+/* SALE CARD */
+/* -------------------------------------------------------------------------- */
+
+.saleCard {
+  padding: 24px 28px 24px;
+  justify-content: space-between;
   display: flex;
   align-items: center;
-  justify-content: center;
-  text-align: center;
 }
 
-.logoSmall {
-  width: 220px;
-  height: auto;
-}
-
-.cardDescription {
-  margin-top: 15px;
-  font-size: var(--text-base);
-}
-
-.cardSale {
-  margin-top: 30px;
-  position: relative;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 16px;
-
-  padding: 32px 24px;
-
-  background-color: var(--color-light-soft);
-  border-radius: 12px;
-}
-
-/* ───── Диагональный бейдж ───── */
 .cardSaleBadge {
-  position: absolute;
-  top: 18px;
-  left: -66px;
-
-  width: 280px;
-  padding: 8px 0;
-
-  background: linear-gradient(90.97deg, #1c2230 25.43%, #405672 66.72%);
-  transform: rotate(-25deg);
-
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  justify-content: center;
+
+  min-height: 32px;
+  padding: 0 16px;
+  border-radius: 6px;
+  background-color: var(--color-light);
 }
 
 .cardSaleBadge span {
-  font-size: 13px;
-  font-weight: 450;
-  color: #ffffff;
+  font-size: 14px;
+  line-height: 1;
+  font-weight: 400;
+  color: rgba(28, 34, 48, 0.72);
   white-space: nowrap;
 }
 
-/* ───── Контент ───── */
-.cardSaleContent {
+.saleContent {
   display: flex;
-  flex-direction: column;
   align-items: center;
-  gap: 8px;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 12px;
 }
 
 .cardSalePercent {
-  margin-top: 40px;
+  margin: 0;
   font-size: 92px;
-  font-weight: 400;
-  line-height: 1;
+  line-height: 0.9;
+  font-weight: 350;
+  letter-spacing: -0.06em;
   color: var(--color-dark-blue);
-  line-height: 1;
 }
 
 .cardSaleDescription {
-  margin-top: 10px;
+  margin: 0;
   font-size: 20px;
+  line-height: 1.15;
   font-weight: 400;
   color: var(--color-dark-blue);
 }
 
-/* ───── Кнопка ───── */
-.cardSaleButton {
+.cardSaleDescriptionText {
+  font-size: 14px;
+  color: var(--color-gray);
+}
+
+.saleFooter {
+  margin-top: 24px;
+  padding-top: 18px;
+  border-top: 1px solid #e7ebf0;
+}
+
+.cardSaleLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: rgba(28, 34, 48, 0.72);
+  font-size: 18px;
+  line-height: 1.2;
+  font-weight: 400;
+  text-decoration: none;
+  transition:
+    color 0.2s ease,
+    gap 0.2s ease;
+}
+
+.cardSaleLink:hover {
+  color: var(--color-dark-blue);
+  gap: 12px;
+}
+
+.cardSaleArrow {
+  line-height: 1;
+}
+
+/* -------------------------------------------------------------------------- */
+/* WIDE CARD */
+/* -------------------------------------------------------------------------- */
+
+.wideHeader {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.wideIcon {
+  flex-shrink: 0;
+  width: 30px;
+  height: 30px;
+
   display: inline-flex;
   align-items: center;
   justify-content: center;
 
-  padding: 14px 32px;
-  border-radius: 12px;
-
-  background-color: var(--color-dark-blue);
-  color: #ffffff;
-
-  font-size: 15px;
-  font-weight: 500;
-  text-decoration: none;
-  white-space: nowrap;
-
-  transition: opacity 0.2s ease;
-}
-
-.cardSaleButton:hover {
-  opacity: 0.85;
-}
-
-.cardMeta {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-}
-
-.cardIcon {
-  width: 70px;
-  height: auto;
-}
-
-.cardSubtitle {
-  font-size: 10px;
-  width: 120px;
-}
-
-.cardTitle {
-  font-size: var(--text-sm);
-  text-wrap: balance;
-  font-weight: 350;
-}
-
-.theWorlds50BestLogo {
-  width: 70px;
-  height: auto;
-}
-
-.cardAccent {
-  font-size: 100px;
+  font-size: 24px;
   line-height: 1;
-	font-weight: 300;
+  color: #27456f;
 }
 
-.cardHeading {
-  font-size: var(--text-xl);
-  font-weight: 450;
-}
+/* -------------------------------------------------------------------------- */
+/* SMALL HEADER WITH ICON */
+/* -------------------------------------------------------------------------- */
 
-.cardImageWrap {
-  position: absolute;
-  bottom: 0;
-  right: 0;
-  width: 217px;
-  height: 217px;
-}
-
-.cardFeatures {
+.smallCardHeader {
   display: flex;
-  flex-direction: column;
-  gap: 6px;
-  margin-top: auto;
+  align-items: center;
+  gap: 14px;
 }
 
-.cardFeatureItem {
-  font-size: 15px;
-  font-weight: 500;
+.smallIcon {
+  flex-shrink: 0;
+  width: 28px;
+  height: 28px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 24px;
+  line-height: 1;
+  color: #27456f;
 }
 
-.bottomCard {
-  font-size: var(--text-base);
+/* -------------------------------------------------------------------------- */
+/* TABLET */
+/* -------------------------------------------------------------------------- */
+
+@media (max-width: 1200px) {
+  .grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-areas:
+      "sale sale"
+      "warranty business"
+      "wide wide"
+      "experience discounts"
+      "delivery delivery";
+  }
+
+  .saleCard {
+    min-height: 360px;
+  }
+
+  .card {
+    min-height: 210px;
+    padding: 28px;
+  }
+
+  .cardWide {
+    min-height: 220px;
+  }
+
+  .cardSalePercent {
+    font-size: 84px;
+  }
 }
-.cardColor {
-  background-color: #3d424f;
+
+/* -------------------------------------------------------------------------- */
+/* MOBILE */
+/* -------------------------------------------------------------------------- */
+
+@media (max-width: 767px) {
+  .advantages {
+    margin: 40px 0;
+  }
+
+  .title {
+    margin-bottom: 20px;
+  }
+
+  .grid {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "sale"
+      "warranty"
+      "business"
+      "wide"
+      "experience"
+      "discounts"
+      "delivery";
+    gap: 16px;
+  }
+
+  .card {
+    min-height: auto;
+    padding: 24px;
+    border-radius: 20px;
+  }
+
+  .saleCard {
+    min-height: 320px;
+    padding: 24px;
+  }
+
+  .cardSaleBadge {
+    min-height: 30px;
+    padding: 0 14px;
+  }
+
+  .cardSaleBadge span {
+    font-size: 13px;
+  }
+
+  .saleContent {
+    gap: 12px;
+    margin-top: 10px;
+  }
+
+  .cardSalePercent {
+    font-size: 72px;
+  }
+
+  .cardSaleDescription {
+    font-size: 20px;
+  }
+
+  .saleFooter {
+    margin-top: 20px;
+    padding-top: 16px;
+  }
+
+  .cardSaleLink {
+    font-size: 16px;
+  }
+
+  .cardHeading {
+    font-size: 24px;
+  }
+
+  .cardHeadingSmall {
+    font-size: 22px;
+  }
+
+  .cardText {
+    font-size: 15px;
+  }
 }

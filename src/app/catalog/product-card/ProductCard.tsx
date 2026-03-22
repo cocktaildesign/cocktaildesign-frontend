@@ -102,6 +102,7 @@ export default function ProductCard({ product }: ProductCardProps) {
       slug: product.slug,
       quantity: quantity,
       engraving: engravingChecked,
+      code: product.code ?? "",
     };
 
     addItem(cartItem);

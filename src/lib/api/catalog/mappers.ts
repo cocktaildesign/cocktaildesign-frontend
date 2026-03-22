@@ -187,11 +187,13 @@ function mapMediaArray(
       const imagePath = pickBestImagePath(file);
       const imageUrl = imagePath ? getStrapiMediaUrl(imagePath) : null;
       if (!imageUrl) continue;
+
       images.push({
         src: imageUrl,
         alt: file?.alternativeText?.trim() || fallbackAlt,
       });
     }
+
     return images;
   }
 
@@ -201,11 +203,13 @@ function mapMediaArray(
       const imagePath = pickBestImagePath(file);
       const imageUrl = imagePath ? getStrapiMediaUrl(imagePath) : null;
       if (!imageUrl) continue;
+
       images.push({
         src: imageUrl,
         alt: file?.alternativeText?.trim() || fallbackAlt,
       });
     }
+
     return images;
   }
 
@@ -221,6 +225,9 @@ export function mapProductPreview(item: StrapiProductItem): CatalogProductPrevie
 
   const name = source.name?.trim() ?? "";
   const moyskladId = source.moyskladId?.trim() ?? "";
+
+  const rawCode = source.code;
+  const code = typeof rawCode === "string" && rawCode.trim() ? rawCode.trim() : null;
 
   if (!name || !moyskladId) return null;
 
@@ -245,7 +252,9 @@ export function mapProductPreview(item: StrapiProductItem): CatalogProductPrevie
       const path = pickBestImagePath(file);
       const url = path ? (getStrapiMediaUrl(path) ?? null) : null;
 
-      if (url) images.push(url);
+      if (url) {
+        images.push(url);
+      }
     }
   }
 
@@ -262,6 +271,7 @@ export function mapProductPreview(item: StrapiProductItem): CatalogProductPrevie
     imageUrl,
     images,
     engravingEnabled,
+    code,
   };
 }
 
@@ -476,7 +486,10 @@ export function mapVariants(items: StrapiVariantItem[] | undefined): CatalogVari
 
   for (const v of items) {
     const mapped = mapVariant(v);
-    if (mapped) result.push(mapped);
+
+    if (mapped) {
+      result.push(mapped);
+    }
   }
 
   return result;

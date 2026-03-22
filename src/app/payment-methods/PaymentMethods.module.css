@@ -8,3 +8,8 @@
   font-weight: 450;
 }
 
+.paymentMethodsPageDescription {
+  margin-top: 15px;
+  font-size: var(--text-base);
+	color: var(--color-gray);
+}

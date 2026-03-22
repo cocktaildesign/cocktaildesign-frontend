@@ -1,13 +1,17 @@
+// frontend/src/components/ui/slider/Slider.tsx
+
 "use client";
 
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import styles from "./Slider.module.css";
 
 type SlideImage = {
   id: number;
   url: string;
   alt: string;
+  href?: string;
 };
 
 type SliderProps = {
@@ -15,13 +19,13 @@ type SliderProps = {
   autoPlayInterval?: number;
 };
 
-// Возвращает индекс следующего слайда с зацикливанием.
+// Следующий индекс (с зацикливанием)
 function getNextSlideIndex(current: number, total: number) {
   const next = current + 1;
   return next >= total ? 0 : next;
 }
 
-// Возвращает индекс предыдущего слайда с зацикливанием.
+// Предыдущий индекс (с зацикливанием)
 function getPrevSlideIndex(current: number, total: number) {
   const prev = current - 1;
   return prev < 0 ? total - 1 : prev;
@@ -31,14 +35,10 @@ export default function Slider({ images, autoPlayInterval = 7000 }: SliderProps)
   const totalSlides = images.length;
   const hasControls = totalSlides > 1;
 
-  // Единственное UI-состояние: какой слайд сейчас показан.
   const [currentIndex, setCurrentIndex] = useState(0);
-
-  // Таймер не должен вызывать ререндеры, поэтому id интервала храним в ref.
   const timerIdRef = useRef<number | null>(null);
 
-  // Перезапускаем автоплей после ручной навигации,
-  // чтобы избежать "внезапного" перелистывания сразу после клика.
+  // Перезапуск автоплея
   function restartAutoplay() {
     if (!hasControls) return;
 
@@ -51,7 +51,6 @@ export default function Slider({ images, autoPlayInterval = 7000 }: SliderProps)
     }, autoPlayInterval);
   }
 
-  // Показать следующий слайд.
   function showNextSlide() {
     if (!hasControls) return;
 
@@ -59,7 +58,6 @@ export default function Slider({ images, autoPlayInterval = 7000 }: SliderProps)
     restartAutoplay();
   }
 
-  // Показать предыдущий слайд.
   function showPrevSlide() {
     if (!hasControls) return;
 
@@ -67,7 +65,7 @@ export default function Slider({ images, autoPlayInterval = 7000 }: SliderProps)
     restartAutoplay();
   }
 
-  // Автоплей — внешняя система (interval), поэтому управление жизненным циклом в useEffect.
+  // Автоплей
   useEffect(() => {
     if (!hasControls) return;
 
@@ -90,9 +88,28 @@ export default function Slider({ images, autoPlayInterval = 7000 }: SliderProps)
       <div className={styles.slides} aria-live="polite">
         {images.map((image, index) => {
           const isActive = index === currentIndex;
+          const slideClassName = isActive ? styles.slideActive : styles.slide;
 
+          // 👉 Если есть ссылка — делаем слайд ссылкой
+          if (image.href) {
+            return (
+              <Link key={image.id} href={image.href} aria-label={image.alt} className={slideClassName}>
+                <Image
+                  src={image.url}
+                  alt={image.alt}
+                  className={styles.image}
+                  width={1200}
+                  height={500}
+                  sizes="100vw"
+                  priority={isActive}
+                />
+              </Link>
+            );
+          }
+
+          // 👉 Если ссылки нет — обычный div
           return (
-            <div key={image.id} className={isActive ? styles.slideActive : styles.slide} aria-hidden={!isActive}>
+            <div key={image.id} className={slideClassName} aria-hidden={!isActive}>
               <Image
                 src={image.url}
                 alt={image.alt}
@@ -100,7 +117,6 @@ export default function Slider({ images, autoPlayInterval = 7000 }: SliderProps)
                 width={1200}
                 height={500}
                 sizes="100vw"
-                // Приоритет загрузки только активному слайду, чтобы не прелоадить всё сразу.
                 priority={isActive}
               />
             </div>
@@ -122,7 +138,6 @@ export default function Slider({ images, autoPlayInterval = 7000 }: SliderProps)
             </span>
           </button>
 
-          {/* Декоративный индикатор. Скринридеру он не нужен. */}
           <div className={styles.progressBar} aria-hidden="true">
             {Array.from({ length: totalSlides }).map((_, index) => (
               <div key={index} className={index === currentIndex ? styles.progressItemActive : styles.progressItem} />

@@ -18,19 +18,23 @@ export default function Branding() {
         <div className={styles.brandingContainer}>
           <div className={styles.brandingContainerTextContent}>
             <h1 className={styles.brandingContainerTitle}>Брендинг барного инвентаря и аксессуаров</h1>
+
             <p className={styles.brandingContainerDescription}>
               Мы создаём кастомизированный барный инвентарь и аксессуары, которые подчёркивают характер бренда и
               помогают заведениям выделяться среди конкурентов.
             </p>
           </div>
+
           <Logo className={styles.logo} />
         </div>
+
         <div className={styles.servicesIntro}>
           <p className={styles.servicesIntroText}>
             Мы предлагаем два формата брендинга барного инвентаря, которые позволяют адаптировать изделия под стиль
             вашего бренда и уровень кастомизации.
           </p>
         </div>
+
         <ServiceCards />
       </section>
     </PageLayout>

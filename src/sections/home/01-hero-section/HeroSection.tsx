@@ -18,12 +18,13 @@ type HeroSectionProps = {
 
 // Баннеры для слайдера (пока статические)
 const BANNER_IMAGES = [
-  { id: 1, url: "/banner1.jpg", alt: "Баннер 1" },
-  { id: 2, url: "/banner2.jpg", alt: "Баннер 2" },
-  { id: 3, url: "/banner3.jpg", alt: "Баннер 3" },
-  { id: 4, url: "/banner4.jpg", alt: "Баннер 4" },
+  {
+    id: 1,
+    url: "/banner3.webp",
+    alt: "Наборы для бара",
+    href: "/catalog",
+  },
 ];
-
 // Форматирование цены для UI
 // 1950 -> "1 950 ₽"
 function formatPrice(value: number): string {
@@ -100,8 +101,6 @@ export default function HeroSection({ weeklyProduct }: HeroSectionProps) {
             <div className={styles.weeklyProductHeader}>
               <span className={styles.weeklyProductTitleGroup}>
                 <span className={styles.weeklyProductTitle}>Товар недели</span>
-
-                <span className={styles.weeklyProductBrand}>CocktailDesign</span>
               </span>
 
               {/* Скидка показывается только если она есть */}

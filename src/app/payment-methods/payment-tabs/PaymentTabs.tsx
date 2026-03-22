@@ -3,76 +3,138 @@
 import { useState } from "react";
 import Link from "next/link";
 import styles from "./PaymentTabs.module.css";
-import PersonIcon from "@/components/icons/payment-tabs/PersonIcon";
-import OrganizationIcon from "@/components/icons/payment-tabs/OrganizationIcon";
+
+type PaymentTab = "legal" | "physical";
 
 // Экспортируем компонент по умолчанию
 export default function PaymentTabs() {
-  // Состояние активной вкладки: "legal" = юридические лица, "physical" = физические лица
-  const [activeTab, setActiveTab] = useState<"physical" | "legal">("legal");
+  // Состояние активной вкладки:
+  // "legal" = юридические лица
+  // "physical" = физические лица
+  const [activeTab, setActiveTab] = useState<PaymentTab>("legal");
 
   return (
     <div className={styles.tabs}>
-      {/* Заготовка кнопок табов */}
-      <div className={styles.tabButtons}>
+      {/* Левая колонка: навигация */}
+      <div className={styles.tabButtons} role="tablist" aria-label="Разделы оплаты">
         <button
-          className={`${styles.tabButton} ${activeTab === "legal" ? styles.active : ""}`}
+          type="button"
+          role="tab"
+          aria-selected={activeTab === "legal"}
+          aria-controls="payment-panel-legal"
+          id="payment-tab-legal"
+          className={`${styles.tabButton} ${activeTab === "legal" ? styles.tabButtonActive : ""}`}
           onClick={() => setActiveTab("legal")}>
-          <OrganizationIcon className={styles.icon} width="38" height="34" />
-          <span className={styles.tabText}>
-            <span className={styles.tabTitle}>Юридические лица</span>
-            <span className={styles.tabSubtitle}>Надёжная оплата с индивидуальными условиями</span>
-          </span>
+          <span className={styles.tabButtonText}>Юридические лица</span>
         </button>
 
         <button
-          className={`${styles.tabButton} ${activeTab === "physical" ? styles.active : ""}`}
+          type="button"
+          role="tab"
+          aria-selected={activeTab === "physical"}
+          aria-controls="payment-panel-physical"
+          id="payment-tab-physical"
+          className={`${styles.tabButton} ${activeTab === "physical" ? styles.tabButtonActive : ""}`}
           onClick={() => setActiveTab("physical")}>
-          <PersonIcon className={styles.icon} width="38" height="34" />
-          <span className={styles.tabText}>
-            <span className={styles.tabTitle}>Физические лица</span>
-            <span className={styles.tabSubtitle}>Простые и безопасные платежи</span>
-          </span>
+          <span className={styles.tabButtonText}>Физические лица</span>
         </button>
       </div>
 
-      {/* Заготовка контента табов */}
-
+      {/* Правая колонка: контент */}
       <div className={styles.tabContent}>
         {activeTab === "legal" && (
-          <div className={styles.tabPane}>
-            <ul className={styles.paymentList}>
-              <li className={styles.paymentItem}>
-                <h3 className={styles.paymentTitle}>Оплата счета</h3>
-                <p className={styles.paymentDescription}>
-                  После выставления счета менеджером оплату необходимо произвести в течение 3 рабочих дней. Если
-                  требуется, срок можно продлить по договоренности с менеджером. Товар отправляется в течение суток
-                  после получения оплаты, за исключением заказных позиций.
-                </p>
-                <Link href="/legal/requisites" className={styles.paymentButton}>
-                  Смотреть реквизиты
-                </Link>
-              </li>
-            </ul>
-          </div>
+          <section
+            id="payment-panel-legal"
+            role="tabpanel"
+            aria-labelledby="payment-tab-legal"
+            className={styles.tabPane}>
+            <div className={styles.headerBlock}>
+              <div className={styles.headerText}>
+                <h2 className={styles.pageTitle}>Оплата по счёту</h2>
+                <p className={styles.pageSubtitle}>Выставим счёт. Оплата по реквизитам</p>
+              </div>
+            </div>
+
+            <div className={styles.innerCard}>
+              <h3 className={styles.sectionTitle}>Как происходит оплата</h3>
+
+              <ol className={styles.stepsList}>
+                <li className={styles.stepItem}>
+                  <span className={styles.stepNumber}>1</span>
+
+                  <div className={styles.stepContent}>
+                    <h4 className={styles.stepTitle}>Вы оставляете заявку</h4>
+                    <p className={styles.stepDescription}>Менеджер связывается с вами</p>
+                  </div>
+                </li>
+
+                <li className={styles.stepItem}>
+                  <span className={styles.stepNumber}>2</span>
+
+                  <div className={styles.stepContent}>
+                    <h4 className={styles.stepTitle}>Мы выставляем счёт</h4>
+                    <p className={styles.stepDescription}>Отправляем на email</p>
+                  </div>
+                </li>
+
+                <li className={styles.stepItem}>
+                  <span className={styles.stepNumber}>3</span>
+
+                  <div className={styles.stepContent}>
+                    <h4 className={styles.stepTitle}>Вы производите оплату</h4>
+                    <p className={styles.stepDescription}>Товар резервируется</p>
+                  </div>
+                </li>
+
+                <li className={styles.stepItem}>
+                  <span className={styles.stepNumber}>4</span>
+
+                  <div className={styles.stepContent}>
+                    <h4 className={styles.stepTitle}>Отгрузка товара</h4>
+                    <p className={styles.stepDescription}>После поступления средств</p>
+                  </div>
+                </li>
+              </ol>
+
+              <div className={styles.noteBox}>
+                <p className={styles.noteTitle}>Срок резерва товара — 14 рабочих дней</p>
+                <p className={styles.noteText}>Мы резервируем товар на 14 рабочих дней с момента выставления счёта.</p>
+              </div>
+
+              <Link href="/legal/requisites" className={styles.paymentLink}>
+                Смотреть реквизиты
+              </Link>
+            </div>
+          </section>
         )}
 
         {activeTab === "physical" && (
-          <div className={styles.tabPane}>
-            <ul className={styles.paymentList}>
-              <li className={styles.paymentItem}>
-                <h3 className={styles.paymentTitle}>Оплата наличными</h3>
-                <p className={styles.paymentDescription}>
-                  Возможна оплата наличными при самовывозе в Санкт-Петербурге.
-                </p>
-              </li>
+          <section
+            id="payment-panel-physical"
+            role="tabpanel"
+            aria-labelledby="payment-tab-physical"
+            className={styles.tabPane}>
+            <div className={styles.headerBlock}>
+              <div className={styles.headerText}>
+                <h2 className={styles.pageTitle}>Способы оплаты для физических лиц</h2>
+                <p className={styles.pageSubtitle}>Простые и безопасные платежи</p>
+              </div>
+            </div>
 
-              <li className={styles.paymentItem}>
-                <h3 className={styles.paymentTitle}>Оплата картой</h3>
-                <p className={styles.paymentDescription}>Картами Visa, MasterCard, Мир. Без комиссии</p>
-              </li>
-            </ul>
-          </div>
+            <div className={styles.innerCard}>
+              <div className={styles.physicalCards}>
+                <article className={styles.physicalCard}>
+                  <h3 className={styles.cardTitle}>Оплата наличными</h3>
+                  <p className={styles.cardText}>Возможна оплата наличными при самовывозе в Санкт-Петербурге.</p>
+                </article>
+
+                <article className={styles.physicalCard}>
+                  <h3 className={styles.cardTitle}>Оплата картой</h3>
+                  <p className={styles.cardText}>Картами Visa, MasterCard, Мир. Без комиссии.</p>
+                </article>
+              </div>
+            </div>
+          </section>
         )}
       </div>
     </div>

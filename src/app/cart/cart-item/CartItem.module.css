@@ -119,3 +119,9 @@
   min-width: 120px;
   background-color: var(--color-light-soft);
 }
+
+.sku {
+  font-size: var(--text-sm);
+  margin-top: 5px;
+  color: #888;
+}

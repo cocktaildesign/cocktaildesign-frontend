@@ -1,4 +1,3 @@
-// src/lib/api/catalog/queries.ts
 // ============================================================================
 // Запросы к Strapi для каталога.
 // Здесь нет JSX и UI — только загрузка данных и подготовка Domain-формата.
@@ -241,6 +240,7 @@ function normalizeSelectionMode(value: unknown): StrapiCollectionSelectionMode {
   if (value === "discount") return "discount";
   return "manual";
 }
+
 function buildCollectionViewAllHref(params: {
   selectionMode: StrapiCollectionSelectionMode;
   collectionSlug: string;

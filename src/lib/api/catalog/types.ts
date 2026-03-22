@@ -1,4 +1,3 @@
-// src/lib/api/catalog/types.ts
 // ============================================================================
 // Типы для каталога категорий.
 // Два слоя:
@@ -238,6 +237,7 @@ export type CatalogProductPreview = {
   imageUrl: string | null;
   images: string[];
   engravingEnabled: boolean;
+  code: string | null;
 };
 
 export type CatalogProductsResponse = {

@@ -14,6 +14,7 @@ export type CartItem = {
   slug: string;
   quantity: number;
   engraving: boolean; // ← новое поле
+  code: string;
 };
 
 // CartState — всё состояние корзины + все actions (действия).

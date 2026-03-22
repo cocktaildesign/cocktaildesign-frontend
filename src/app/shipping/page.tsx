@@ -14,6 +14,10 @@ export default function Shipping() {
     <PageLayout>
       <section className={styles.shippingPage}>
         <h1 className={styles.shippingPageTitle}>Доставка</h1>
+        <p className={styles.shippingPageDescription}>
+          Узнайте условия и сроки доставки — по России, миру и для самовывоза.
+        </p>
+
         <DeliveryTabs />
       </section>
     </PageLayout>

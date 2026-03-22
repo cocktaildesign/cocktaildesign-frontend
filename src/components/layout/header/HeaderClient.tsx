@@ -65,7 +65,7 @@ export default function HeaderClient({ categories, collections }: HeaderClientPr
 
               <div className={styles.infoDropdown}>
                 <div className={styles.infoDropdownContent}>
-                  <p className={styles.infoDropdownText}>Звонок бесплатный</p>
+                  <p className={styles.infoDropdownText}>Часы работы:</p>
 
                   <ul className={styles.infoDropdownSchedule}>
                     <li>

@@ -1,4 +1,3 @@
-// src/app/checkout/CheckoutClient.tsx
 "use client";
 
 import { useState } from "react";
@@ -18,7 +17,10 @@ function formatPrice(price: number): string {
 export default function CheckoutClient() {
   const items = useCartStore((s) => s.items);
 
+  // По умолчанию лучше ставить "Физическое лицо" —
+  // обычно это самый частый сценарий в e-commerce.
   const [buyerType, setBuyerType] = useState<BuyerType>("legal");
+
   const [phone, setPhone] = useState("");
   const [telegram, setTelegram] = useState("");
   const [address, setAddress] = useState("");
@@ -40,6 +42,20 @@ export default function CheckoutClient() {
     setErrors((prev) => ({ ...prev, [field]: "" }));
   }
 
+  // При переключении типа покупателя убираем ошибки полей,
+  // которые больше не актуальны для текущей формы.
+  function handleBuyerTypeChange(type: BuyerType) {
+    setBuyerType(type);
+
+    setErrors((prev) => {
+      const nextErrors = { ...prev };
+      delete nextErrors.fullName;
+      delete nextErrors.contactName;
+      delete nextErrors.inn;
+      return nextErrors;
+    });
+  }
+
   // Валидация перед отправкой
   function validate(): boolean {
     const newErrors: Record<string, string> = {};
@@ -47,11 +63,18 @@ export default function CheckoutClient() {
     if (buyerType === "legal" && !contactName.trim()) {
       newErrors.contactName = "Укажите контактное лицо";
     }
+
     if (buyerType === "individual" && !fullName.trim()) {
       newErrors.fullName = "Укажите имя и фамилию";
     }
-    if (!phone.trim()) newErrors.phone = "Укажите телефон";
-    if (!address.trim()) newErrors.address = "Укажите адрес доставки";
+
+    if (!phone.trim()) {
+      newErrors.phone = "Укажите телефон";
+    }
+
+    if (!address.trim()) {
+      newErrors.address = "Укажите адрес доставки";
+    }
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -59,7 +82,10 @@ export default function CheckoutClient() {
 
   function handleSubmit() {
     if (!validate()) return;
+
     setSubmitStatus("loading");
+
+    // Здесь позже будет реальная отправка формы
     console.log("Отправляем заказ...");
   }
 
@@ -75,33 +101,48 @@ export default function CheckoutClient() {
       <div className={styles.layout}>
         {/* Левая колонка — тип покупателя + список товаров */}
         <div className={styles.leftColumn}>
-          {/* Карточки выбора типа покупателя */}
-          <div className={styles.tabButtons}>
-            <button
-              type="button"
-              className={`${styles.tabButton} ${buyerType === "legal" ? styles.active : ""}`}
-              onClick={() => setBuyerType("legal")}>
-              <OrganizationIcon className={styles.icon} width="38" height="34" />
-              <span className={styles.tabText}>
-                <span className={styles.tabTitle}>Юридическое лицо</span>
-                <span className={styles.tabSubtitle}>Для компаний и ресторанов</span>
-              </span>
-            </button>
+          {/* Переключатель типа покупателя */}
+          <section className={styles.buyerTypeSection} aria-labelledby="buyer-type-title">
+            <div className={styles.buyerTypeHeader}>
+              <h2 id="buyer-type-title" className={styles.buyerTypeTitle}>
+                Кто оформляет заказ
+              </h2>
+              <p className={styles.buyerTypeDescription}>
+                Выберите подходящий вариант, чтобы показать нужные поля формы.
+              </p>
+            </div>
 
-            <button
-              type="button"
-              className={`${styles.tabButton} ${buyerType === "individual" ? styles.active : ""}`}
-              onClick={() => setBuyerType("individual")}>
-              <PersonIcon className={styles.icon} width="38" height="34" />
-              <span className={styles.tabText}>
-                <span className={styles.tabTitle}>Физическое лицо</span>
-                <span className={styles.tabSubtitle}>Для частных покупателей</span>
-              </span>
-            </button>
-          </div>
+            <div className={styles.segmentedControl} role="tablist" aria-label="Тип покупателя">
+              <button
+                type="button"
+                role="tab"
+                aria-selected={buyerType === "legal"}
+                className={`${styles.segmentButton} ${buyerType === "legal" ? styles.segmentButtonActive : ""}`}
+                onClick={() => handleBuyerTypeChange("legal")}>
+                <OrganizationIcon className={styles.segmentIcon} width="24" height="24" />
+                <span className={styles.segmentText}>
+                  <span className={styles.segmentTitle}>Юридическое лицо</span>
+                  <span className={styles.segmentSubtitle}>Для бизнеса</span>
+                </span>
+              </button>
+
+              <button
+                type="button"
+                role="tab"
+                aria-selected={buyerType === "individual"}
+                className={`${styles.segmentButton} ${buyerType === "individual" ? styles.segmentButtonActive : ""}`}
+                onClick={() => handleBuyerTypeChange("individual")}>
+                <PersonIcon className={styles.segmentIcon} width="24" height="24" />
+                <span className={styles.segmentText}>
+                  <span className={styles.segmentTitle}>Физическое лицо</span>
+                  <span className={styles.segmentSubtitle}>Для себя</span>
+                </span>
+              </button>
+            </div>
+          </section>
 
           {/* Список товаров из корзины */}
-          <div className={styles.orderSummary}>
+          <section className={styles.orderSummary}>
             <h2 className={styles.orderSummaryTitle}>Ваш заказ</h2>
 
             <div className={styles.orderItems}>
@@ -111,7 +152,9 @@ export default function CheckoutClient() {
                     {item.name}
                     {item.engraving && <span className={styles.orderItemEngraving}>Гравировка</span>}
                   </span>
+
                   <span className={styles.orderItemQty}>{item.quantity} шт.</span>
+
                   <span className={styles.orderItemPrice}>{formatPrice(item.price * item.quantity)} ₽</span>
                 </div>
               ))}
@@ -121,39 +164,30 @@ export default function CheckoutClient() {
               <span className={styles.orderTotalLabel}>Итого</span>
               <span className={styles.orderTotalPrice}>{formatPrice(totalPrice)} ₽</span>
             </div>
-          </div>
+          </section>
         </div>
 
         {/* Правая колонка — форма */}
-        <div className={styles.form}>
-          <div className={styles.formGrid}>
-            {/* Контактное лицо — только для юрлица */}
-            {buyerType === "legal" && (
-              <div className={styles.field}>
-                <label className={styles.label} htmlFor="contactName">
-                  Контактное лицо <span className={styles.required}>*</span>
-                </label>
-                <input
-                  id="contactName"
-                  type="text"
-                  className={`${styles.input} ${errors.contactName ? styles.inputError : ""}`}
-                  placeholder="Имя Фамилия"
-                  value={contactName}
-                  onChange={(e) => {
-                    setContactName(e.target.value);
-                    clearError("contactName");
-                  }}
-                />
-                {errors.contactName && <p className={styles.errorText}>{errors.contactName}</p>}
-              </div>
-            )}
+        <section className={styles.form}>
+          <div className={styles.formHeader}>
+            <h2 className={styles.formTitle}>
+              {buyerType === "individual" ? "Контактные данные" : "Данные для оформления"}
+            </h2>
+            <p className={styles.formDescription}>
+              {buyerType === "individual"
+                ? "Укажите данные получателя заказа."
+                : "Укажите контакт и реквизиты компании."}
+            </p>
+          </div>
 
+          <div className={styles.formGrid}>
             {/* Имя Фамилия — только для физлица */}
             {buyerType === "individual" && (
               <div className={styles.field}>
                 <label className={styles.label} htmlFor="fullName">
                   Имя Фамилия <span className={styles.required}>*</span>
                 </label>
+
                 <input
                   id="fullName"
                   type="text"
@@ -165,7 +199,31 @@ export default function CheckoutClient() {
                     clearError("fullName");
                   }}
                 />
+
                 {errors.fullName && <p className={styles.errorText}>{errors.fullName}</p>}
+              </div>
+            )}
+
+            {/* Контактное лицо — только для юрлица */}
+            {buyerType === "legal" && (
+              <div className={styles.field}>
+                <label className={styles.label} htmlFor="contactName">
+                  Контактное лицо <span className={styles.required}>*</span>
+                </label>
+
+                <input
+                  id="contactName"
+                  type="text"
+                  className={`${styles.input} ${errors.contactName ? styles.inputError : ""}`}
+                  placeholder="Имя Фамилия"
+                  value={contactName}
+                  onChange={(e) => {
+                    setContactName(e.target.value);
+                    clearError("contactName");
+                  }}
+                />
+
+                {errors.contactName && <p className={styles.errorText}>{errors.contactName}</p>}
               </div>
             )}
 
@@ -174,6 +232,7 @@ export default function CheckoutClient() {
               <label className={styles.label} htmlFor="phone">
                 Телефон <span className={styles.required}>*</span>
               </label>
+
               <input
                 id="phone"
                 type="tel"
@@ -185,6 +244,7 @@ export default function CheckoutClient() {
                   clearError("phone");
                 }}
               />
+
               {errors.phone && <p className={styles.errorText}>{errors.phone}</p>}
             </div>
 
@@ -193,6 +253,7 @@ export default function CheckoutClient() {
               <label className={styles.label} htmlFor="telegram">
                 Telegram
               </label>
+
               <input
                 id="telegram"
                 type="text"
@@ -209,13 +270,17 @@ export default function CheckoutClient() {
                 <label className={styles.label} htmlFor="inn">
                   ИНН компании
                 </label>
+
                 <input
                   id="inn"
                   type="text"
                   className={styles.input}
                   placeholder="7736570901"
                   value={inn}
-                  onChange={(e) => setInn(e.target.value)}
+                  onChange={(e) => {
+                    setInn(e.target.value);
+                    clearError("inn");
+                  }}
                 />
               </div>
             )}
@@ -225,6 +290,7 @@ export default function CheckoutClient() {
               <label className={styles.label} htmlFor="address">
                 Адрес доставки <span className={styles.required}>*</span>
               </label>
+
               <input
                 id="address"
                 type="text"
@@ -236,6 +302,7 @@ export default function CheckoutClient() {
                   clearError("address");
                 }}
               />
+
               {errors.address && <p className={styles.errorText}>{errors.address}</p>}
             </div>
 
@@ -244,6 +311,7 @@ export default function CheckoutClient() {
               <label className={styles.label} htmlFor="comment">
                 Комментарий к заказу
               </label>
+
               <textarea
                 id="comment"
                 className={styles.textarea}
@@ -265,7 +333,7 @@ export default function CheckoutClient() {
           </button>
 
           {submitStatus === "error" && <p className={styles.errorText}>Что-то пошло не так. Попробуйте ещё раз.</p>}
-        </div>
+        </section>
       </div>
     </div>
   );

@@ -21,6 +21,7 @@ type ProductPurchaseControlsProps = {
   name: string;
   slug: string;
   imageUrl: string | null;
+  code?: string | null;
 };
 
 function formatPrice(price: number): string {
@@ -46,6 +47,7 @@ export default function ProductPurchaseControls({
   name,
   slug,
   imageUrl,
+  code,
 }: ProductPurchaseControlsProps) {
   const [quantity, setQuantity] = useState<number>(1);
   const [engravingChecked, setEngravingChecked] = useState<boolean>(false);
@@ -77,6 +79,7 @@ export default function ProductPurchaseControls({
       slug: slug,
       quantity: quantity,
       engraving: engravingChecked,
+      code: code ?? "",
     };
 
     addItem(item);

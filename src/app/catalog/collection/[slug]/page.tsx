@@ -1,10 +1,9 @@
-// src/app/catalog/collection/[slug]/page.tsx
-
 import PageLayout from "@/components/layout/PageLayout";
 import styles from "./CollectionPage.module.css";
 import { pageMetadata } from "@/lib/seo/metadata";
 import { notFound } from "next/navigation";
-import { Metadata } from "next";
+import type { Metadata } from "next";
+import Link from "next/link";
 import CatalogSidebar from "@/app/catalog/[slug]/catalog-sidebar/CatalogSidebar";
 import ProductGrid from "@/app/catalog/product-grid/ProductGrid";
 import { getCollectionProductsFromStrapi, getCollectionCategoriesTreeFromStrapi } from "@/lib/api/catalog";
@@ -77,6 +76,16 @@ export default async function CollectionPage({ params, searchParams }: PageProps
         {/* Заголовок */}
         <header className={styles.header}>
           <h1 className={styles.headerTitle}>{collectionTitle}</h1>
+
+          <div className={styles.collectionNotice} aria-label="Информация о подборке">
+            <p className={styles.collectionNoticeText}>
+              Вы просматриваете подборку товаров — {collectionTitle}
+              <span className={styles.collectionNoticeDivider}>·</span>
+              <Link href="/catalog" className={styles.collectionNoticeLink}>
+                Перейти в основной каталог
+              </Link>
+            </p>
+          </div>
         </header>
 
         {/* Сетка: сайдбар + товары */}
