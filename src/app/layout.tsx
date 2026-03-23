@@ -6,7 +6,7 @@ import ScrollToTopInstant from "@/components/layout/ScrollToTopInstant";
 import NavBar from "@/components/layout/nav-bar/NavBar";
 import ScrollToTopButton from "@/components/ui/scroll-to-top-button/ScrollToTopButton";
 
-export { rootMetadata as metadata } from "@/lib/seo/metadata";
+export { rootMetadata as metadata, viewport } from "@/lib/seo/metadata";
 import { hikasamiSans, montserrat } from "@/lib/fonts";
 
 import "./globals.css";

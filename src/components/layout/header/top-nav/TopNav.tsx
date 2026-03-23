@@ -1,14 +1,14 @@
-// src/components/layout/header/top-nav/TopNav.tsx
 "use client";
 
 import Link from "next/link";
+import { useState } from "react";
 import styles from "./TopNav.module.css";
 
-// Типы — живут здесь, рядом с компонентом который их использует
+// Типы для ссылок
 type NavLink = { label: string; href: string };
 type TopNavItem = NavLink & { children?: NavLink[] };
 
-// Статические ссылки верхнего меню
+// Ссылки верхнего меню
 const TOP_NAV_ITEMS: TopNavItem[] = [
   { label: "Знания", href: "/knowledge" },
   {
@@ -23,7 +23,7 @@ const TOP_NAV_ITEMS: TopNavItem[] = [
   { label: "Система скидок", href: "/discounts" },
   {
     label: "О нас",
-    href: "",
+    href: "#",
     children: [
       { label: "О компании", href: "/about" },
       { label: "Реквизиты", href: "/legal/requisites" },
@@ -33,37 +33,66 @@ const TOP_NAV_ITEMS: TopNavItem[] = [
 ];
 
 export default function TopNav() {
+  // Какой dropdown сейчас открыт на мобильных
+  const [openItemLabel, setOpenItemLabel] = useState<string | null>(null);
+
+  // Открытие и закрытие dropdown по клику
+  function handleToggle(label: string) {
+    setOpenItemLabel((currentLabel) => {
+      if (currentLabel === label) {
+        return null;
+      }
+
+      return label;
+    });
+  }
+
+  // Закрываем dropdown после перехода по ссылке
+  function handleCloseDropdown() {
+    setOpenItemLabel(null);
+  }
+
   return (
     <nav className={styles.topBarNav} aria-label="Верхнее меню">
+      {/* Список пунктов меню */}
       <ul className={styles.topNavList}>
         {TOP_NAV_ITEMS.map((item) => {
-          const children = item.children ?? [];
-          const hasChildren = children.length > 0;
+          const hasChildren = !!item.children?.length;
+          const isOpen = openItemLabel === item.label;
 
           return (
-            <li key={item.href} className={styles.topNavItem}>
+            <li key={item.label} className={`${styles.topNavItem} ${isOpen ? styles.topNavItemOpen : ""}`}>
+              {/* Кнопка если есть dropdown */}
               {hasChildren ? (
                 <button
                   type="button"
-                  className={`${styles.linkBase} ${styles.topNavLink} ${styles.dropdownTrigger}`}
-                  aria-haspopup="true">
-                  {item.label}
+                  className={`${styles.linkBase} ${styles.topNavLink}`}
+                  aria-haspopup="true"
+                  aria-expanded={isOpen}
+                  onClick={() => handleToggle(item.label)}>
+                  <span>{item.label}</span>
+
                   <span className={styles.chevron} aria-hidden="true">
                     ▾
                   </span>
                 </button>
               ) : (
-                <Link href={item.href} className={`${styles.linkBase} ${styles.topNavLink}`}>
+                /* Обычная ссылка */
+                <Link
+                  href={item.href}
+                  className={`${styles.linkBase} ${styles.topNavLink}`}
+                  onClick={handleCloseDropdown}>
                   {item.label}
                 </Link>
               )}
 
+              {/* Dropdown */}
               {hasChildren && (
                 <div className={styles.dropdown}>
                   <ul className={styles.dropdownList}>
-                    {children.map((child) => (
+                    {item.children!.map((child) => (
                       <li key={child.href}>
-                        <Link className={styles.dropdownLink} href={child.href}>
+                        <Link className={styles.dropdownLink} href={child.href} onClick={handleCloseDropdown}>
                           {child.label}
                         </Link>
                       </li>

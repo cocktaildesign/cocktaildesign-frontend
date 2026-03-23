@@ -1,5 +1,6 @@
 /* ==========================================================================
-   Catalog menu (wrapper + hover "bridge")
+   CATALOG MENU
+   Обертка каталога и мостик до панели
    ========================================================================== */
 
 .catalogMenu {
@@ -17,21 +18,25 @@
 }
 
 /* ==========================================================================
-   Button
+   BUTTON
+   Кнопка каталога
    ========================================================================== */
 
 .buttonCta {
-  background-color: var(--color-dark-blue);
-  color: #fff;
-  border: none;
-  border-radius: var(--radius);
-  width: 135px;
-  height: 46px;
-  font-family: var(--font-display);
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 5px;
+
+  width: clamp(110px, 8vw, 135px);
+  height: 46px;
+  border: none;
+  border-radius: var(--radius);
+
+  background-color: var(--color-dark-blue);
+  color: var(--color-white);
+
+  font-family: var(--font-display);
   font-size: var(--text-sm);
   font-weight: 500;
   cursor: pointer;
@@ -56,7 +61,8 @@
 }
 
 /* ==========================================================================
-   Dropdown panel (card)
+   PANEL
+   Выпадающая панель
    ========================================================================== */
 
 .panel {
@@ -65,32 +71,38 @@
   left: 0;
   z-index: var(--z-search-panel);
 
+  width: 1040px;
+  max-width: min(100vw - 32px, 1040px);
+  padding: 14px;
   background: var(--color-white);
   border-radius: 16px;
   box-shadow: 0 18px 40px rgba(0, 0, 0, 0.16);
-  padding: 14px;
-  max-height: max-content;
 }
 
 .columns {
   display: flex;
+  align-items: flex-start;
   gap: 16px;
+  width: 100%;
 }
 
 /* ==========================================================================
-   Left column
+   LEFT COLUMN
+   Категории и коллекции
    ========================================================================== */
 
 .topList {
   list-style: none;
   margin: 0;
+  padding: 0 8px 0 0;
+
+  flex: 0 0 300px;
+  width: 300px;
+  min-width: 300px;
   max-width: 300px;
 
   max-height: 70vh;
   overflow-y: auto;
-
-  /* отступ справа чтобы скроллбар не перекрывал текст */
-  padding-right: 8px;
 
   scrollbar-width: thin;
   scrollbar-color: var(--color-light) transparent;
@@ -101,36 +113,34 @@
 }
 
 .topItemButton {
-  width: 100%;
-  height: 50px;
-
   display: flex;
   align-items: center;
   justify-content: space-between;
 
+  width: 100%;
+  height: 50px;
+  padding: 0 12px;
   border: 0;
-  background: transparent;
   border-radius: 6px;
 
-  padding: 0 12px;
+  background: transparent;
   cursor: pointer;
   text-align: left;
+  text-decoration: none;
+
   color: var(--color-black);
   font-size: 14px;
   font-weight: 500;
   font-family: var(--font-display);
 
-  transition: background-color 160ms ease;
+  transition: background-color var(--dur) var(--ease);
 }
 
 .topItemButton:hover,
-.topItemButton:focus-visible {
+.topItemButton:focus-visible,
+.topItemButtonActive {
   background: var(--color-light);
   outline: none;
-}
-
-.topItemButton[aria-current="true"] {
-  background: var(--color-light);
 }
 
 .topItemTitle {
@@ -140,15 +150,25 @@
 }
 
 .chevron {
+  flex: 0 0 auto;
   opacity: 0.55;
 }
 
+/* Разделитель между категориями и коллекциями */
+.divider {
+  height: 1px;
+  margin: 8px 12px;
+  background-color: var(--color-light);
+}
+
 /* ==========================================================================
-   Right zone (mega menu)
+   RIGHT ZONE
+   Подкатегории
    ========================================================================== */
 
 .subPanel {
-  min-width: 700px;
+  flex: 1 1 0;
+  min-width: 0;
 }
 
 .subGrid {
@@ -158,12 +178,12 @@
 }
 
 .subSection {
-  background-color: var(--color-light-soft);
-  border-radius: 6px;
-  padding: 20px;
-  transition: background-color var(--dur) var(--ease);
-  cursor: pointer;
   min-height: 55px;
+  padding: 20px;
+  border-radius: 6px;
+  background-color: var(--color-light-soft);
+  cursor: pointer;
+  transition: background-color var(--dur) var(--ease);
 }
 
 .subSection:hover {
@@ -172,15 +192,16 @@
 
 .subSectionTitle {
   display: block;
+  margin-bottom: 5px;
+  color: var(--color-dark-blue);
   font-family: var(--font-display);
   font-size: 16px;
   font-weight: 550;
-  color: var(--color-dark-blue);
-  margin-bottom: 5px;
 }
 
 /* ==========================================================================
-   Third level list
+   THIRD LEVEL
+   Список третьего уровня
    ========================================================================== */
 
 .thirdList {
@@ -196,9 +217,10 @@
 
 .thirdListLink {
   display: block;
-  color: var(--color-gray);
   padding: 3px 10px;
   border-radius: 6px;
+
+  color: var(--color-gray);
   text-decoration: none;
 }
 
@@ -207,8 +229,31 @@
   color: var(--color-dark-blue);
 }
 
-.divider {
-  height: 1px;
-  background-color: var(--color-light);
-  margin: 8px 12px;
+/* ==========================================================================
+   TABLET
+   Планшетная версия
+   ========================================================================== */
+
+@media (max-width: 1024px) {
+}
+
+@media (max-width: 768px) {
+  .buttonCtaText {
+    display: none;
+  }
+
+  .buttonCta {
+    width: 50px;
+  }
+}
+
+/* ==========================================================================
+   MOBILE
+   Мобильная версия
+   ========================================================================== */
+
+@media (max-width: 600px) {
+  .buttonCta {
+    display: none;
+  }
 }

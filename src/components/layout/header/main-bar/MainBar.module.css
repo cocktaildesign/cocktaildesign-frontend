@@ -1,53 +1,58 @@
 /* ==========================================================================
    MAIN BAR
-   Вторая строка: логотип, каталог, поиск, избранное, корзина.
+   Основная строка хедера
    ========================================================================== */
+
 .mainBar {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   gap: 24px;
   width: 100%;
   padding: 10px 0;
 }
 
+/* Левый блок с логотипом */
 .mainBarLeft {
   display: flex;
   align-items: center;
   gap: 10px;
+  flex: 0 0 auto;
 }
 
 .logo {
   display: inline-flex;
   align-items: center;
-
-  flex: 0 0 auto;
+  flex: 0 0 120px;
   width: 120px;
+  min-width: 120px;
 }
 
+/* Центральный блок с каталогом и поиском */
 .mainBarCenter {
   display: flex;
-  gap: 8px;
   flex: 1 1 auto;
   min-width: 0;
+  gap: 8px;
 }
 
-/* ==========================================================================
-   RIGHT — избранное и корзина
-   ========================================================================== */
+/* Правый блок с действиями */
 .mainBarRight {
   display: flex;
   align-items: center;
   gap: 16px;
   flex: 0 0 auto;
-  position: relative;
-  top: 4px;
 }
+
+/* ==========================================================================
+   ACTION LINK
+   Ссылки избранного и корзины
+   ========================================================================== */
 
 .actionLink {
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
+  justify-content: center;
   text-decoration: none;
   color: var(--color-black);
   font-weight: 450;
@@ -68,30 +73,70 @@
   fill: transparent;
 }
 
+.actionText {
+  font-size: var(--text-sm);
+  color: currentColor;
+}
+
+/* Счетчик товаров */
 .badge {
   position: absolute;
   top: -6px;
   right: -10px;
 
-  min-width: 18px;
-  height: 18px;
-  padding: 0 5px;
-
   display: flex;
   align-items: center;
   justify-content: center;
 
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+  border-radius: 999px;
+
   font-size: 11px;
   font-weight: 600;
+  line-height: 1;
 
   color: #fff;
   background: #e53935;
-  border-radius: 999px;
 
   pointer-events: none;
 }
 
-.actionText {
-  font-size: var(--text-sm);
-  color: currentColor;
+/* ==========================================================================
+   TABLET
+   Планшетная версия
+   ========================================================================== */
+
+@media (max-width: 1024px) {
+  .mainBar {
+    gap: 16px;
+  }
+}
+
+@media (max-width: 768px) {
+}
+
+/* ==========================================================================
+   MOBILE
+   Мобильная версия
+   ========================================================================== */
+
+@media (max-width: 600px) {
+  .mainBar {
+    background-color: var(--color-white);
+    border-radius: 0px 0px 12px 12px;
+  }
+  .mainBarRight {
+    display: none;
+  }
+
+  .mainBarLeft {
+    display: none;
+  }
+
+  .mainBarCenter {
+    gap: 0px;
+    padding: 0px 10px;
+  }
 }

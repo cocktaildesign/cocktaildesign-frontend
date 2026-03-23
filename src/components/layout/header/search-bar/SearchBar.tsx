@@ -1,22 +1,21 @@
-// frontend/src/components/layout/header/SearchBar.tsx
 "use client";
 
 import Link from "next/link";
 import Image from "next/image";
-import { useEffect, useId, useRef, useState } from "react";
+import { useEffect, useId, useRef, useState, type ChangeEvent, type FormEvent, type KeyboardEvent } from "react";
 import { useRouter } from "next/navigation";
+
 import { getStrapiMediaUrl } from "@/lib/api/strapi/media";
-import styles from "./SearchBar.module.css";
 import ResetIcon from "@/components/icons/ResetIcon";
+import SearchIcon from "@/components/icons/header/SearchIcon";
 
 import type { CatalogCategoryPreview } from "@/lib/api/catalog/types";
 
+import styles from "./SearchBar.module.css";
+
 const PLACEHOLDER_IMG = "/images/catalog/product-placeholder.webp";
 
-// ============================================================================
-// Types
-// ============================================================================
-
+// Типы
 type Props = {
   placeholder?: string;
   categories: CatalogCategoryPreview[];
@@ -42,10 +41,7 @@ type ApiProductItem = {
   };
 };
 
-// ============================================================================
-// Constants
-// ============================================================================
-
+// Константы
 const API_BASE = process.env.NEXT_PUBLIC_API_URL ?? "https://api.cocktaildesign.ru/api";
 const POPULAR_QUERIES = ["Шейкер", "Джиггер", "Барная ложка", "Стрейнер", "Сироп"];
 
@@ -55,10 +51,7 @@ const RANDOM_PRODUCTS_COUNT = 2;
 const SEARCH_MIN_LENGTH = 2;
 const SEARCH_DEBOUNCE_MS = 250;
 
-// ============================================================================
-// API mappers
-// ============================================================================
-
+// Преобразуем ответ API в формат компонента
 function mapApiProductToProduct(item: ApiProductItem): Product {
   const raw = item.attributes.image?.[0]?.url ?? undefined;
 
@@ -72,36 +65,37 @@ function mapApiProductToProduct(item: ApiProductItem): Product {
   };
 }
 
-// ============================================================================
-// API calls
-// ============================================================================
-
-// Запрос случайных товаров для состояния "idle"
+// Запрос случайных товаров для пустого состояния
 async function fetchRandomProducts(count: number): Promise<Product[]> {
   const res = await fetch(`${API_BASE}/catalog/random-products?count=${count}`);
-  if (!res.ok) return [];
+
+  if (!res.ok) {
+    return [];
+  }
 
   const data = (await res.json()) as { items?: ApiProductItem[] };
   return (data.items ?? []).map(mapApiProductToProduct);
 }
 
-// Поиск товаров по query
+// Поиск товаров по запросу
 async function searchProducts(query: string): Promise<Product[]> {
   const res = await fetch(`${API_BASE}/catalog/search?q=${encodeURIComponent(query)}`);
-  if (!res.ok) return [];
+
+  if (!res.ok) {
+    return [];
+  }
 
   const data = (await res.json()) as { items?: ApiProductItem[] };
   return (data.items ?? []).map(mapApiProductToProduct);
 }
 
-// ============================================================================
-// Chips builder
-// ============================================================================
-
-// Строим подсказки (чипы) для автодополнения следующего слова
+// Строим чипы для продолжения поисковой фразы
 function buildChips(query: string, products: Product[]): string[] {
   const trimmed = query.trim();
-  if (trimmed.length === 0 || products.length === 0) return [];
+
+  if (trimmed.length === 0 || products.length === 0) {
+    return [];
+  }
 
   const queryTokens = trimmed.toLowerCase().split(/\s+/).filter(Boolean);
 
@@ -114,20 +108,26 @@ function buildChips(query: string, products: Product[]): string[] {
   for (const product of products) {
     const titleTokens = product.title.toLowerCase().split(/\s+/).filter(Boolean);
 
-    // Совпадение базовых токенов строго по позициям (начало названия)
-    const baseMatches = baseTokens.length <= titleTokens.length && baseTokens.every((t, i) => titleTokens[i] === t);
+    const baseMatches =
+      baseTokens.length <= titleTokens.length && baseTokens.every((token, index) => titleTokens[index] === token);
 
-    if (!baseMatches) continue;
+    if (!baseMatches) {
+      continue;
+    }
 
-    // Следующее слово после базовых токенов
     const candidate = titleTokens[baseTokens.length];
-    if (!candidate) continue;
 
-    // Если есть prefix — фильтруем по началу слова
-    if (prefix.length > 0 && !candidate.startsWith(prefix)) continue;
+    if (!candidate) {
+      continue;
+    }
 
-    // Не показываем чип, который равен текущему префиксу
-    if (prefix.length > 0 && candidate === prefix) continue;
+    if (prefix.length > 0 && !candidate.startsWith(prefix)) {
+      continue;
+    }
+
+    if (prefix.length > 0 && candidate === prefix) {
+      continue;
+    }
 
     counts.set(candidate, (counts.get(candidate) ?? 0) + 1);
   }
@@ -138,94 +138,118 @@ function buildChips(query: string, products: Product[]): string[] {
     .map(([token]) => token);
 }
 
-// ============================================================================
-// Component
-// ============================================================================
-
 export default function SearchBar({ placeholder = "Поиск в CocktailDesign", categories }: Props) {
   const router = useRouter();
-
-  // id для aria-controls панели
   const panelId = useId();
-
-  // ref для управления фокусом
   const inputRef = useRef<HTMLInputElement>(null);
+  const latestQueryRef = useRef("");
 
-  // --------------------------------------------------------------------------
-  // State
-  // --------------------------------------------------------------------------
-
+  // Состояние панели и строки поиска
   const [isOpen, setIsOpen] = useState(false);
   const [query, setQuery] = useState("");
+  const [debouncedQuery, setDebouncedQuery] = useState("");
 
+  // Данные поиска
   const [products, setProducts] = useState<Product[]>([]);
   const [randomProducts, setRandomProducts] = useState<Product[]>([]);
 
+  // Служебное состояние интерфейса
   const [activeIndex, setActiveIndex] = useState(-1);
-  const [isLoading, setIsLoading] = useState(false);
-
+  const [isFetching, setIsFetching] = useState(false);
   const [showAllCategories, setShowAllCategories] = useState(false);
 
-  // --------------------------------------------------------------------------
-  // Derived values
-  // --------------------------------------------------------------------------
-
+  // Производные значения
   const trimmed = query.trim();
+  const trimmedDebounced = debouncedQuery.trim();
+
   const visibleCategories = showAllCategories ? categories : categories.slice(0, CATEGORIES_LIMIT);
 
-  const viewStatus =
-    !isOpen || trimmed.length === 0 ? "idle" : isLoading ? "loading" : products.length > 0 ? "success" : "empty";
+  const canUseResults = isOpen && trimmedDebounced.length >= SEARCH_MIN_LENGTH && trimmed === trimmedDebounced;
+  const visibleProducts = canUseResults ? products : [];
 
-  const chips = viewStatus === "success" ? buildChips(query, products) : [];
+  let viewStatus: "idle" | "loading" | "success" | "empty" = "idle";
 
-  // --------------------------------------------------------------------------
-  // Effects
-  // --------------------------------------------------------------------------
+  if (isOpen && trimmed.length > 0) {
+    if (trimmed.length < SEARCH_MIN_LENGTH) {
+      viewStatus = "empty";
+    } else if (isFetching || trimmed !== trimmedDebounced) {
+      viewStatus = "loading";
+    } else if (visibleProducts.length > 0) {
+      viewStatus = "success";
+    } else {
+      viewStatus = "empty";
+    }
+  }
 
-  // Загружаем случайные товары, когда панель открыта и запрос пустой
+  const chips = viewStatus === "success" ? buildChips(query, visibleProducts) : [];
+
+  // Загружаем случайные товары, когда панель открыта и строка поиска пустая
   useEffect(() => {
-    if (!isOpen || trimmed.length > 0) return;
+    if (!isOpen || trimmed.length > 0) {
+      return;
+    }
 
-    async function loadRandom() {
+    let isCancelled = false;
+
+    async function loadRandomProducts() {
       const result = await fetchRandomProducts(RANDOM_PRODUCTS_COUNT);
-      setRandomProducts(result);
+
+      if (!isCancelled) {
+        setRandomProducts(result);
+      }
     }
 
-    loadRandom();
-  }, [isOpen, trimmed.length]);
+    loadRandomProducts();
 
-  // Поиск товаров с debounce, когда есть минимум 2 символа
+    return () => {
+      isCancelled = true;
+    };
+  }, [isOpen, trimmed]);
+
+  // Debounce только для поискового запроса
   useEffect(() => {
-    if (!isOpen || trimmed.length < SEARCH_MIN_LENGTH) {
-      // Сбрасываем результаты, когда панель закрыта или запрос слишком короткий
-      const resetTimer = setTimeout(() => {
-        setProducts([]);
-        setIsLoading(false);
-      }, 0);
-
-      return () => clearTimeout(resetTimer);
+    if (!isOpen) {
+      return;
     }
 
-    // Показываем loading асинхронно, чтобы не дёргать лишние перерисовки
-    const loadingTimer = setTimeout(() => setIsLoading(true), 0);
-
-    // Debounce для запроса
-    const searchTimer = setTimeout(() => {
-      searchProducts(trimmed).then((result) => {
-        setProducts(result);
-        setIsLoading(false);
-      });
+    const timer = setTimeout(() => {
+      setDebouncedQuery(query);
     }, SEARCH_DEBOUNCE_MS);
 
     return () => {
-      clearTimeout(loadingTimer);
-      clearTimeout(searchTimer);
+      clearTimeout(timer);
     };
-  }, [query, isOpen, trimmed]);
+  }, [query, isOpen]);
 
-  // --------------------------------------------------------------------------
-  // Helpers (open / close / navigation)
-  // --------------------------------------------------------------------------
+  // Поиск товаров по debounce-запросу
+  useEffect(() => {
+    if (!isOpen || trimmedDebounced.length < SEARCH_MIN_LENGTH) {
+      return;
+    }
+
+    let isCancelled = false;
+    const requestedQuery = trimmedDebounced;
+
+    searchProducts(requestedQuery)
+      .then((result) => {
+        const currentQuery = latestQueryRef.current.trim();
+
+        if (!isCancelled && currentQuery === requestedQuery) {
+          setProducts(result);
+        }
+      })
+      .finally(() => {
+        const currentQuery = latestQueryRef.current.trim();
+
+        if (!isCancelled && currentQuery === requestedQuery) {
+          setIsFetching(false);
+        }
+      });
+
+    return () => {
+      isCancelled = true;
+    };
+  }, [isOpen, trimmedDebounced]);
 
   function openPanel() {
     setIsOpen(true);
@@ -236,33 +260,41 @@ export default function SearchBar({ placeholder = "Поиск в CocktailDesign"
     setActiveIndex(-1);
     setRandomProducts([]);
     setShowAllCategories(false);
+    setIsFetching(false);
+    setDebouncedQuery("");
   }
 
   function focusInput() {
-    queueMicrotask(() => inputRef.current?.focus());
+    queueMicrotask(() => {
+      inputRef.current?.focus();
+    });
   }
 
   function clearQuery() {
+    latestQueryRef.current = "";
     setQuery("");
+    setDebouncedQuery("");
     setProducts([]);
     setActiveIndex(-1);
+    setIsFetching(false);
     focusInput();
   }
 
   function goToProduct(product: Product) {
     closePanel();
 
-    if (!product.slug) return;
+    if (!product.slug) {
+      return;
+    }
+
     router.push(`/catalog/product/${product.slug}`);
   }
 
-  // --------------------------------------------------------------------------
-  // Handlers (popular queries / chips)
-  // --------------------------------------------------------------------------
-
   function applyPopularQuery(popularQuery: string) {
+    latestQueryRef.current = popularQuery;
     setQuery(popularQuery);
     setActiveIndex(-1);
+    setIsFetching(popularQuery.trim().length >= SEARCH_MIN_LENGTH);
     openPanel();
     focusInput();
   }
@@ -270,7 +302,7 @@ export default function SearchBar({ placeholder = "Поиск в CocktailDesign"
   function applyChip(token: string) {
     const endsWithSpace = /\s$/.test(query);
 
-    let nextQuery: string;
+    let nextQuery = "";
 
     if (endsWithSpace) {
       nextQuery = `${query}${token} `;
@@ -280,70 +312,76 @@ export default function SearchBar({ placeholder = "Поиск в CocktailDesign"
       nextQuery = `${parts.join(" ")} `;
     }
 
+    latestQueryRef.current = nextQuery;
     setQuery(nextQuery);
     setActiveIndex(-1);
+    setIsFetching(nextQuery.trim().length >= SEARCH_MIN_LENGTH);
     focusInput();
   }
 
-  // --------------------------------------------------------------------------
-  // Form handlers
-  // --------------------------------------------------------------------------
+  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
 
-  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-
-    // Если выбран элемент списка — переходим в него
-    if (activeIndex >= 0 && products[activeIndex]) {
-      goToProduct(products[activeIndex]);
+    if (activeIndex >= 0 && visibleProducts[activeIndex]) {
+      goToProduct(visibleProducts[activeIndex]);
     }
   }
 
-  function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
-    setQuery(e.target.value);
-    setActiveIndex(-1);
+  function handleChange(event: ChangeEvent<HTMLInputElement>) {
+    const nextQuery = event.target.value;
 
-    if (!isOpen) openPanel();
+    latestQueryRef.current = nextQuery;
+    setQuery(nextQuery);
+    setActiveIndex(-1);
+    setIsFetching(nextQuery.trim().length >= SEARCH_MIN_LENGTH);
+
+    if (!isOpen) {
+      openPanel();
+    }
   }
 
-  function handleKeyDown(e: React.KeyboardEvent<HTMLInputElement>) {
-    // Закрываем панель по Escape
-    if (e.key === "Escape") {
+  function handleKeyDown(event: KeyboardEvent<HTMLInputElement>) {
+    if (event.key === "Escape") {
       closePanel();
       return;
     }
 
-    // Навигация стрелками только когда есть результаты
-    if (viewStatus !== "success" || products.length === 0) return;
-
-    if (e.key === "ArrowDown") {
-      e.preventDefault();
-      setActiveIndex((i) => Math.min(i < 0 ? 0 : i + 1, products.length - 1));
+    if (viewStatus !== "success" || visibleProducts.length === 0) {
+      return;
     }
 
-    if (e.key === "ArrowUp") {
-      e.preventDefault();
-      setActiveIndex((i) => Math.max(i - 1, 0));
+    if (event.key === "ArrowDown") {
+      event.preventDefault();
+      setActiveIndex((currentIndex) => Math.min(currentIndex < 0 ? 0 : currentIndex + 1, visibleProducts.length - 1));
     }
 
-    if (e.key === "Enter" && activeIndex >= 0) {
-      e.preventDefault();
-      const product = products[activeIndex];
-      if (product) goToProduct(product);
+    if (event.key === "ArrowUp") {
+      event.preventDefault();
+      setActiveIndex((currentIndex) => Math.max(currentIndex - 1, 0));
+    }
+
+    if (event.key === "Enter" && activeIndex >= 0) {
+      event.preventDefault();
+
+      const product = visibleProducts[activeIndex];
+
+      if (product) {
+        goToProduct(product);
+      }
     }
   }
 
-  // --------------------------------------------------------------------------
-  // Render
-  // --------------------------------------------------------------------------
-
   return (
     <div className={styles.searchContainer}>
-      {/* Overlay для закрытия панели по клику вне */}
+      {/* Затемнение страницы при открытой панели */}
       <div className={isOpen ? styles.overlayOpen : styles.overlay} aria-hidden="true" onClick={closePanel} />
 
-      {/* Форма поиска (фиксированная высота: input + кнопки) */}
+      {/* Форма поиска */}
       <form className={styles.search} role="search" onSubmit={handleSubmit}>
         <div className={styles.inputRow}>
+          <span className={styles.searchIconBox} aria-hidden="true">
+            <SearchIcon className={styles.searchIcon} />
+          </span>
           <input
             ref={inputRef}
             role="combobox"
@@ -359,9 +397,9 @@ export default function SearchBar({ placeholder = "Поиск в CocktailDesign"
             aria-expanded={isOpen}
             aria-controls={panelId}
             aria-haspopup="listbox"
+            enterKeyHint="search"
           />
 
-          {/* Кнопка очистки показывается только при непустом запросе */}
           {trimmed.length > 0 && (
             <button type="button" className={styles.resetButton} aria-label="Очистить поиск" onClick={clearQuery}>
               <ResetIcon className={styles.resetIcon} />
@@ -374,14 +412,14 @@ export default function SearchBar({ placeholder = "Поиск в CocktailDesign"
         </div>
       </form>
 
-      {/* Выпадающая панель с контентом */}
+      {/* Выпадающая панель */}
       <div
         id={panelId}
         role="region"
         aria-label="Панель поиска"
         className={isOpen ? styles.searchPanelOpen : styles.searchPanel}>
         <div className={styles.searchPanelContent}>
-          {/* Чипы подсказок (только когда есть результаты поиска) */}
+          {/* Быстрые подсказки */}
           {chips.length > 0 && (
             <div className={styles.chipsRow} aria-label="Быстрые подсказки">
               {chips.map((chip) => (
@@ -392,7 +430,7 @@ export default function SearchBar({ placeholder = "Поиск в CocktailDesign"
             </div>
           )}
 
-          {/* IDLE: популярные запросы + случайные товары + категории */}
+          {/* Пустое состояние */}
           {viewStatus === "idle" && (
             <div className={styles.idleSection}>
               <div className={styles.sectionTitle}>Популярные запросы</div>
@@ -474,21 +512,20 @@ export default function SearchBar({ placeholder = "Поиск в CocktailDesign"
             </div>
           )}
 
-          {/* LOADING */}
+          {/* Загрузка */}
           {viewStatus === "loading" && <div className={styles.empty}>Ищем…</div>}
 
-          {/* SUCCESS: список товаров */}
+          {/* Результаты поиска */}
           {viewStatus === "success" && (
             <div>
               <div className={styles.sectionTitle}>Товары</div>
 
               <ul className={styles.productsList}>
-                {products.map((product, index) => (
+                {visibleProducts.map((product, index) => (
                   <li key={product.id}>
                     <button
                       type="button"
                       className={`${styles.productButton} ${index === activeIndex ? styles.productButtonActive : ""}`}
-                      aria-current={index === activeIndex ? "true" : undefined}
                       onMouseEnter={() => setActiveIndex(index)}
                       onClick={() => goToProduct(product)}>
                       <Image
@@ -516,7 +553,7 @@ export default function SearchBar({ placeholder = "Поиск в CocktailDesign"
             </div>
           )}
 
-          {/* EMPTY */}
+          {/* Ничего не найдено */}
           {viewStatus === "empty" && <div className={styles.empty}>Ничего не найдено</div>}
         </div>
       </div>

@@ -1,16 +1,18 @@
 /* ==========================================================================
    SEARCH CONTAINER
-   Корневой контейнер поиска (панель позиционируется относительно него).
+   Корневой контейнер поиска
    ========================================================================== */
+
 .searchContainer {
-  flex: 1;
   position: relative;
+  flex: 1;
 }
 
 /* ==========================================================================
    OVERLAY
-   Затемнение экрана при открытой панели.
+   Затемнение страницы при открытой панели
    ========================================================================== */
+
 .overlay,
 .overlayOpen {
   position: fixed;
@@ -33,23 +35,30 @@
 
 /* ==========================================================================
    SEARCH FORM
-   Форма поиска: input + reset + submit.
+   Поле ввода и кнопки
    ========================================================================== */
+
 .search {
+  position: relative;
+  z-index: var(--z-search-panel);
+  padding: 0px 10px;
+
   display: grid;
   gap: 8px;
 
   width: 100%;
-  background-color: var(--color-white);
-  border-radius: var(--radius);
-  position: relative;
-  z-index: var(--z-search-panel);
   border: 1px solid var(--color-gray);
+  border-radius: var(--radius);
+  background-color: var(--color-white);
+}
+
+.searchIcon {
+  color: var(--color-gray-light);
 }
 
 .inputRow {
   display: flex;
-  align-items: stretch;
+  align-items: center;
   width: 100%;
   height: 44px;
   gap: 8px;
@@ -57,19 +66,20 @@
 
 /* ==========================================================================
    INPUT
-   Поле ввода.
+   Поле поиска
    ========================================================================== */
+
 .input {
   display: block;
+  box-sizing: border-box;
   flex: 1;
   min-width: 0;
   width: 100%;
-  box-sizing: border-box;
-
-  padding: 0 16px;
   height: 100%;
+  padding: 0 16px;
+  border: 0;
   border-radius: var(--radius);
-  border: 0 solid transparent;
+  background-color: var(--color-white);
 }
 
 .input:focus {
@@ -84,7 +94,6 @@
   color: var(--color-gray-light);
 }
 
-/* Убираем стандартный “крестик очистки” у input type="search" */
 .input::-webkit-search-cancel-button {
   -webkit-appearance: none;
   appearance: none;
@@ -92,11 +101,12 @@
 
 /* ==========================================================================
    RESET BUTTON
-   Кнопка очистки рядом с input.
+   Кнопка очистки
    ========================================================================== */
+
 .resetButton {
+  border: 0;
   background-color: transparent;
-  border: 0 solid transparent;
 }
 
 .resetIcon {
@@ -110,23 +120,30 @@
 
 /* ==========================================================================
    SUBMIT BUTTON
-   Кнопка “Найти”.
+   Кнопка поиска
    ========================================================================== */
+
 .button {
   margin: 2px;
-  border-radius: 9px;
-  border: 0 solid transparent;
   padding: 0 16px;
+  border: 0;
+  border-radius: 9px;
+
+  background: var(--color-dark-blue);
+  color: var(--color-white);
 
   font-size: var(--text-sm);
   font-weight: 500;
-  color: #fff;
-  background: var(--color-dark-blue);
   cursor: pointer;
 
   transition:
     background-color var(--dur) var(--ease),
     color var(--dur) var(--ease);
+}
+
+.button:hover {
+  background-color: var(--color-dark-blue-hover);
+  color: var(--color-light-soft);
 }
 
 .button:focus {
@@ -137,26 +154,22 @@
   border: 2px solid var(--color-accent-strong);
 }
 
-.button:hover {
-  background-color: var(--color-dark-blue-hover);
-  color: var(--color-light-soft);
-}
-
 /* ==========================================================================
    SEARCH PANEL
-   Выпадающая панель результатов.
+   Выпадающая панель
    ========================================================================== */
+
 .searchPanel,
 .searchPanelOpen {
   position: absolute;
   top: calc(100% + 10px);
   left: 0;
-  width: 100%;
   z-index: var(--z-search-panel);
+  width: 100%;
 
+  border: 1px solid var(--color-gray);
   border-radius: 12px;
   background: var(--color-white);
-  border: 1px solid var(--color-gray);
   box-shadow: 0 12px 36px rgba(0, 0, 0, 0.18);
 
   transition:
@@ -166,26 +179,28 @@
 
 .searchPanel {
   opacity: 0;
-  transform: translateY(-6px);
   pointer-events: none;
+  transform: translateY(-6px);
 }
 
 .searchPanelOpen {
   opacity: 1;
-  transform: translateY(0);
   pointer-events: auto;
+  transform: translateY(0);
 }
 
 .searchPanelContent {
-  padding: 12px;
   max-height: 80vh;
-  overflow: scroll;
+  padding: 12px;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
 /* ==========================================================================
    CHIPS
-   Быстрые подсказки (автодополнение токена).
+   Быстрые подсказки
    ========================================================================== */
+
 .chipsRow {
   display: flex;
   gap: 10px;
@@ -201,19 +216,18 @@
 .chip {
   flex: 0 0 auto;
   padding: 7px 10px;
-
-  border-radius: var(--radius-sm);
   border: 1px solid var(--color-light);
+  border-radius: var(--radius-sm);
   background-color: transparent;
 
   font-size: var(--text-sm);
   font-weight: 450;
-  cursor: pointer;
   white-space: nowrap;
+  cursor: pointer;
 }
 
 .chip:hover {
-  border: 1px solid transparent;
+  border-color: transparent;
   background-color: var(--color-gray-light);
 }
 
@@ -224,17 +238,14 @@
 
 /* ==========================================================================
    IDLE STATE
-   Популярные запросы + случайные товары + категории.
+   Популярные запросы, случайные товары и категории
    ========================================================================== */
-.idleSection {
-  /* контейнер секции в состоянии idle (без отдельной стилизации) */
-}
 
 .sectionTitle {
+  height: max-content;
+  margin-bottom: 8px;
   font-size: 12px;
   font-weight: 500;
-  margin-bottom: 8px;
-  height: max-content;
 }
 
 .populateLayout {
@@ -246,21 +257,21 @@
 
 /* Популярные запросы */
 .list {
+  display: grid;
+  gap: 6px;
   list-style: none;
   margin: 0;
   padding: 0;
-  display: grid;
-  gap: 6px;
 }
 
 .listButton {
   width: 100%;
-  text-align: left;
-  padding: 10px 10px;
-  border-radius: 10px;
-
-  background: transparent;
+  padding: 10px;
   border: 0;
+  border-radius: 10px;
+  background: transparent;
+
+  text-align: left;
   cursor: pointer;
   transition: background var(--dur) var(--ease);
 }
@@ -283,11 +294,11 @@
 }
 
 .randomProductItem {
+  min-width: 0;
+  padding: 10px;
   border: 1px solid var(--color-gray-light);
   border-radius: 12px;
-  padding: 10px;
   overflow: hidden;
-  min-width: 0;
 
   background-color: transparent;
   transition:
@@ -296,46 +307,46 @@
 }
 
 .randomProductItem:hover {
-  border: 1px solid transparent;
+  border-color: transparent;
   box-shadow: 0 2px 8px #ededed;
 }
 
 .randomProductButton {
   display: flex;
   flex-direction: column;
+  text-decoration: none;
 }
 
 .thumb {
   position: relative;
-  overflow: hidden;
   width: 100%;
   aspect-ratio: 1 / 1;
+  overflow: hidden;
 }
 
 .image {
-  object-fit: cover;
   border-radius: 12px;
+  object-fit: cover;
 }
 
 .randomProductPrice {
   margin-top: 10px;
-  font-size: var(--text-xl);
   color: var(--color-dark-blue);
+  font-size: var(--text-xl);
   font-weight: 550;
 }
 
 .randomProductTitle {
   margin-top: 5px;
-  font-size: 14px;
   color: var(--color-gray);
+  font-size: 14px;
 }
 
-/* Skeleton для случайных товаров */
+/* Скелетон карточки */
 .skeletonCard {
   width: 100%;
   height: 271px;
   border-radius: 12px;
-
   background: linear-gradient(90deg, var(--color-light-soft) 25%, var(--color-light) 50%, var(--color-light-soft) 75%);
   background-size: 200% 100%;
   animation: shimmer 3s infinite;
@@ -345,6 +356,7 @@
   0% {
     background-position: 200% 0;
   }
+
   100% {
     background-position: -200% 0;
   }
@@ -352,22 +364,21 @@
 
 /* Категории */
 .idleCategories {
-  border-top: 1px solid var(--color-light);
+  position: relative;
   margin-top: 20px;
   margin-bottom: 10px;
-  position: relative;
+  border-top: 1px solid var(--color-light);
 }
 
 .idleCategoriesTitle {
+  height: max-content;
   margin: 10px 0 8px;
   font-size: 12px;
   font-weight: 500;
-  height: max-content;
 }
 
 .idleCategoriesList {
   display: flex;
-  flex-direction: row;
   flex-wrap: nowrap;
   gap: 8px;
   overflow: hidden;
@@ -379,9 +390,9 @@
 }
 
 .idleCategoriesItem {
-  background-color: var(--color-light-soft);
   padding: 5px 15px;
   border-radius: 12px;
+  background-color: var(--color-light-soft);
   transition: background-color var(--dur) var(--ease);
   text-wrap: nowrap;
 }
@@ -391,31 +402,31 @@
 }
 
 .idleCategoriesLink {
-  /* ссылка категории в idle (если нужно — можно добавить hover/focus позже) */
+  text-decoration: none;
+  color: inherit;
 }
 
 .idleCategoryText {
   font-size: var(--text-sm);
   font-weight: 400;
-  flex-wrap: nowrap;
 }
 
 .categoriesMoreButton {
   position: absolute;
   top: 75%;
   right: 0;
+  z-index: 0;
   transform: translateY(-50%);
 
   padding: 8px 15px;
-  border-radius: 12px;
   border: none;
+  border-radius: 12px;
   box-shadow: -70px 20px 80px 50px var(--color-white);
 
+  background-color: var(--color-light-soft);
   font-size: 14px;
   font-weight: 500;
-  background-color: var(--color-light-soft);
   transition: background-color var(--dur) var(--ease);
-  z-index: 0;
 }
 
 .categoriesMoreButton:hover {
@@ -424,8 +435,9 @@
 
 /* ==========================================================================
    STATES
-   Пустые состояния / статусные сообщения.
+   Статусные сообщения
    ========================================================================== */
+
 .empty {
   padding: 12px;
   opacity: 0.6;
@@ -433,29 +445,30 @@
 
 /* ==========================================================================
    PRODUCTS LIST
-   Результаты поиска (товары).
+   Результаты поиска
    ========================================================================== */
+
 .productsList {
+  display: grid;
+  gap: 8px;
   list-style: none;
   margin: 8px 0 0;
   padding: 0;
-  display: grid;
-  gap: 8px;
 }
 
 .productButton {
-  width: 100%;
-  text-align: left;
-  padding: 10px 10px;
-  border-radius: 12px;
-
   display: grid;
   grid-template-columns: 48px 1fr;
-  gap: 12px;
   align-items: center;
+  gap: 12px;
 
-  background: transparent;
+  width: 100%;
+  padding: 10px;
   border: 0;
+  border-radius: 12px;
+  background: transparent;
+
+  text-align: left;
   cursor: pointer;
 }
 
@@ -481,11 +494,11 @@
 }
 
 .previewImageImg {
+  display: block;
   width: 48px;
   height: 48px;
   border-radius: 12px;
   object-fit: cover;
-  display: block;
 }
 
 .productInfo {
@@ -495,22 +508,51 @@
 }
 
 .productTitle {
-  font-size: 14px;
-  font-weight: 450;
-  color: var(--color-black);
-  overflow: hidden;
-  white-space: nowrap;
-}
-
-.productCategory {
-  font-size: 12px;
-  color: var(--color-gray);
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  color: var(--color-black);
+  font-size: 14px;
+  font-weight: 450;
+}
+
+.productCategory {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--color-gray);
+  font-size: 12px;
 }
 
 .productPrice {
   font-size: 14px;
   font-weight: 500;
+}
+
+/* ==========================================================================
+   TABLET
+   Планшетная версия
+   ========================================================================== */
+
+@media (max-width: 1024px) {
+  .button {
+    display: none;
+  }
+}
+
+@media (max-width: 768px) {
+}
+
+/* ==========================================================================
+   MOBILE
+   Мобильная версия
+   ========================================================================== */
+
+@media (max-width: 600px) {
+  .populateLayout {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 16px;
+    align-items: start;
+  }
 }

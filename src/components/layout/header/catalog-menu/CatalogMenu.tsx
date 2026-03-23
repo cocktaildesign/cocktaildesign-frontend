@@ -1,14 +1,18 @@
-// src/components/layout/header/catalog-menu/CatalogMenu.tsx
-import CatalogIcon from "@/components/icons/CatalogIcon";
-import styles from "./CatalogMenu.module.css";
-import { useId, useState } from "react";
-import { useRouter } from "next/navigation";
-import type { CatalogCategoryPreview, CatalogCollection } from "@/lib/api/catalog/types";
+"use client";
+
 import Link from "next/link";
+import { useId, useState, type FocusEvent } from "react";
+import { useRouter } from "next/navigation";
+
+import CatalogIcon from "@/components/icons/CatalogIcon";
+
+import type { CatalogCategoryPreview, CatalogCollection } from "@/lib/api/catalog/types";
+
+import styles from "./CatalogMenu.module.css";
 
 type CatalogMenuProps = {
   categories: CatalogCategoryPreview[];
-  collections: CatalogCollection[]; // ← новое
+  collections: CatalogCollection[];
 };
 
 function itemHasChildren(item: CatalogCategoryPreview) {
@@ -16,12 +20,20 @@ function itemHasChildren(item: CatalogCategoryPreview) {
 }
 
 export default function CatalogMenu({ categories, collections }: CatalogMenuProps) {
+  // Состояние открытия меню
   const [isOpen, setIsOpen] = useState(false);
+
+  // Активная категория в левой колонке
   const [activeId, setActiveId] = useState(categories[0]?.id ?? "");
+
   const menuId = useId();
   const router = useRouter();
 
-  const activeCategory = categories.find((item) => item.id === activeId);
+  // Если текущий activeId больше не существует,
+  // используем первую категорию как безопасный запасной вариант
+  const resolvedActiveId = categories.some((item) => item.id === activeId) ? activeId : (categories[0]?.id ?? "");
+
+  const activeCategory = categories.find((item) => item.id === resolvedActiveId);
   const level2Items = activeCategory?.children ?? [];
 
   function openMenu() {
@@ -32,16 +44,32 @@ export default function CatalogMenu({ categories, collections }: CatalogMenuProp
     setIsOpen(false);
   }
 
-  function handleBlur(e: React.FocusEvent<HTMLDivElement>) {
-    const nextFocused = e.relatedTarget;
-    if (nextFocused instanceof Node && e.currentTarget.contains(nextFocused)) {
+  function handleBlur(event: FocusEvent<HTMLDivElement>) {
+    const nextFocused = event.relatedTarget;
+
+    if (nextFocused instanceof Node && event.currentTarget.contains(nextFocused)) {
       return;
     }
+
+    closeMenu();
+  }
+
+  function handleCategoryEnter(categoryId: string) {
+    setActiveId(categoryId);
+  }
+
+  function handleCollectionEnter() {
+    setActiveId("");
+  }
+
+  function handleSectionClick(sectionSlug: string) {
+    router.push(`/catalog/${sectionSlug}`);
     closeMenu();
   }
 
   return (
     <div className={styles.catalogMenu} onMouseLeave={closeMenu} onFocus={openMenu} onBlur={handleBlur}>
+      {/* Кнопка открытия каталога */}
       <button
         type="button"
         className={styles.buttonCta}
@@ -49,27 +77,28 @@ export default function CatalogMenu({ categories, collections }: CatalogMenuProp
         aria-expanded={isOpen}
         aria-controls={menuId}>
         <CatalogIcon className={styles.catalogIcon} />
-        Каталог
+        <span className={styles.buttonCtaText}>Каталог</span>
       </button>
 
+      {/* Выпадающая панель */}
       {isOpen && (
         <div id={menuId} className={styles.panel}>
           <div className={styles.columns}>
-            {/* ЛЕВАЯ КОЛОНКА — категории + коллекции */}
+            {/* Левая колонка: категории и коллекции */}
             <ul className={styles.topList}>
-              {/* Категории МойСклад */}
               {categories.map((item) => {
-                const isActive = item.id === activeId;
+                const isActive = item.id === resolvedActiveId;
+
                 return (
                   <li key={item.id} className={styles.topListItem}>
                     <Link
                       href={`/catalog/${item.slug}`}
-                      className={styles.topItemButton}
-                      onMouseEnter={() => setActiveId(item.id)}
-                      onFocus={() => setActiveId(item.id)}
-                      aria-current={isActive ? "true" : undefined}
+                      className={`${styles.topItemButton} ${isActive ? styles.topItemButtonActive : ""}`}
+                      onMouseEnter={() => handleCategoryEnter(item.id)}
+                      onFocus={() => handleCategoryEnter(item.id)}
                       onClick={closeMenu}>
                       <span className={styles.topItemTitle}>{item.name}</span>
+
                       {itemHasChildren(item) ? (
                         <span className={styles.chevron} aria-hidden="true">
                           ›
@@ -80,16 +109,15 @@ export default function CatalogMenu({ categories, collections }: CatalogMenuProp
                 );
               })}
 
-              {/* Разделитель если есть коллекции */}
               {collections.length > 0 && <li className={styles.divider} aria-hidden="true" />}
 
-              {/* Коллекции — просто ссылки без заголовка */}
               {collections.map((collection) => (
                 <li key={collection.id} className={styles.topListItem}>
                   <Link
                     href={`/catalog/collection/${collection.slug}`}
                     className={styles.topItemButton}
-                    onMouseEnter={() => setActiveId("")}
+                    onMouseEnter={handleCollectionEnter}
+                    onFocus={handleCollectionEnter}
                     onClick={closeMenu}>
                     <span className={styles.topItemTitle}>{collection.title}</span>
                   </Link>
@@ -97,20 +125,18 @@ export default function CatalogMenu({ categories, collections }: CatalogMenuProp
               ))}
             </ul>
 
-            {/* ПРАВАЯ ЗОНА — подкатегории */}
-            {level2Items.length > 0 ? (
-              <div className={styles.subPanel}>
+            {/* Правая зона: подкатегории */}
+            <div className={styles.subPanel}>
+              {level2Items.length > 0 ? (
                 <div className={styles.subGrid}>
                   {level2Items.map((section) => {
                     const level3Items = section.children ?? [];
+
                     return (
                       <div
                         key={section.id}
                         className={styles.subSection}
-                        onClick={() => {
-                          router.push(`/catalog/${section.slug}`);
-                          closeMenu();
-                        }}>
+                        onClick={() => handleSectionClick(section.slug)}>
                         <span className={styles.subSectionTitle}>{section.name}</span>
 
                         {level3Items.length > 0 ? (
@@ -120,8 +146,8 @@ export default function CatalogMenu({ categories, collections }: CatalogMenuProp
                                 <Link
                                   href={`/catalog/${leaf.slug}`}
                                   className={styles.thirdListLink}
-                                  onClick={(e) => {
-                                    e.stopPropagation();
+                                  onClick={(event) => {
+                                    event.stopPropagation();
                                     closeMenu();
                                   }}>
                                   {leaf.name}
@@ -134,8 +160,8 @@ export default function CatalogMenu({ categories, collections }: CatalogMenuProp
                     );
                   })}
                 </div>
-              </div>
-            ) : null}
+              ) : null}
+            </div>
           </div>
         </div>
       )}

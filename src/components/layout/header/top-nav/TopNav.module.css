@@ -1,11 +1,13 @@
 /* ==========================================================================
    TOP NAV
-   Верхнее меню + dropdown.
+   Верхнее меню
    ========================================================================== */
+
 .topBarNav {
   min-width: 0;
 }
 
+/* Список пунктов меню */
 .topNavList {
   display: flex;
   align-items: center;
@@ -15,26 +17,30 @@
   padding: 0;
 }
 
+/* Один пункт меню */
 .topNavItem {
   position: relative;
 }
 
+/* Открытый пункт меню */
+.topNavItemOpen {
+  z-index: 2;
+}
+
+/* Ссылка / кнопка пункта */
 .topNavLink {
   display: flex;
   align-items: center;
   gap: 6px;
   white-space: nowrap;
+
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
 }
 
-.chevron {
-  font-size: 18px;
-  opacity: 0.7;
-}
-
-/* ==========================================================================
-   LINK BASE
-   Базовые стили ссылок топнава.
-   ========================================================================== */
+/* Базовый стиль текста */
 .linkBase {
   font-size: var(--text-sm);
   font-weight: 440;
@@ -46,12 +52,27 @@
   color: var(--color-gray);
 }
 
+.linkBase:focus-visible {
+  outline: none;
+}
+
+/* Иконка стрелки */
+.chevron {
+  font-size: 18px;
+  opacity: 0.7;
+  transition: transform var(--dur) var(--ease);
+}
+
+.topNavItemOpen .chevron {
+  transform: rotate(180deg);
+}
+
 /* ==========================================================================
    DROPDOWN
-   Выпадающее меню.
+   Выпадающее меню
    ========================================================================== */
 
-/* Hover-буфер между триггером и dropdown */
+/* Буфер между пунктом и dropdown */
 .topNavItem::after {
   content: "";
   position: absolute;
@@ -61,6 +82,7 @@
   height: 15px;
 }
 
+/* Контейнер dropdown */
 .dropdown {
   position: absolute;
   top: calc(100% + 8px);
@@ -80,6 +102,7 @@
     transform 140ms ease;
 }
 
+/* Открытие dropdown на desktop */
 .topNavItem:hover .dropdown,
 .topNavItem:focus-within .dropdown {
   opacity: 1;
@@ -87,12 +110,21 @@
   pointer-events: auto;
 }
 
+/* Открытие dropdown через состояние */
+.topNavItemOpen .dropdown {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+/* Список внутри dropdown */
 .dropdownList {
   list-style: none;
   margin: 0;
   padding: 0;
 }
 
+/* Ссылка внутри dropdown */
 .dropdownLink {
   display: flex;
   align-items: center;
@@ -101,7 +133,9 @@
   border-radius: var(--radius);
   text-decoration: none;
   font-size: var(--text-sm);
-  transition: background-color var(--dur) var(--ease);
+  transition:
+    background-color var(--dur) var(--ease),
+    color var(--dur) var(--ease);
 }
 
 .dropdownLink:hover {
@@ -113,10 +147,29 @@
   outline-offset: -1px;
 }
 
-.dropdownTrigger {
-  background: none;
-  border: none;
-  padding: 0;
-  cursor: pointer;
-  font-size: 14px;
+/* ==========================================================================
+   TABLET
+   Планшетная версия
+   ========================================================================== */
+
+@media (min-width: 1024px) {
+}
+
+@media (max-width: 768px) {
+  .topNavList {
+    gap: 12px;
+  }
+  .linkBase {
+    font-size: 13px;
+  }
+}
+/* ==========================================================================
+   MOBILE
+   Мобильная версия
+   ========================================================================== */
+
+@media (max-width: 600px) {
+  .topBarNav {
+    display: none;
+  }
 }

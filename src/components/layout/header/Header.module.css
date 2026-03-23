@@ -1,31 +1,28 @@
 /* ==========================================================================
    HEADER
-   Корневой контейнер хедера.
-   Sticky-позиционирование + фон.
+   Корневой контейнер хедера
    ========================================================================== */
+
 .header {
   position: sticky;
   top: 0;
   z-index: 9000;
   width: 100%;
   background: var(--color-white);
-  transition: border-bottom var(--dur) var(--ease);
+  transition:
+    border-bottom var(--dur) var(--ease),
+    background-color var(--dur) var(--ease);
 }
 
-/* Хедер после того как навбар ушёл с экрана */
 .headerScrolled {
-  position: sticky;
-  top: 0;
-  z-index: 9000;
-  width: 100%;
-  background: var(--color-white);
   border-bottom: 1px solid var(--color-light);
 }
 
 /* ==========================================================================
    LINK BASE
-   Базовые стили для ссылок топбара.
+   Базовые стили ссылок в верхней строке
    ========================================================================== */
+
 .linkBase {
   font-size: var(--text-sm);
   font-weight: 440;
@@ -39,15 +36,17 @@
 
 /* ==========================================================================
    TOP BAR
-   Первая строка: "Написать нам", соцсети, верхнее меню, контакты.
+   Верхняя строка хедера
    ========================================================================== */
+
 .topBar {
-  padding-top: 8px;
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  justify-content: space-between;
+  padding-top: 8px;
 }
 
+/* Левая часть верхней строки */
 .topBarLeft {
   display: flex;
   align-items: center;
@@ -55,6 +54,7 @@
 }
 
 .topBarLeftText {
+  display: block;
   font-size: var(--text-sm);
   font-weight: 450;
 }
@@ -64,10 +64,7 @@
   gap: 6px;
 }
 
-/* ==========================================================================
-   TOP BAR CONTACT
-   Телефон и tooltip с графиком работы.
-   ========================================================================== */
+/* Правая часть верхней строки */
 .topBarContact {
   display: flex;
   align-items: center;
@@ -77,16 +74,32 @@
 }
 
 .phoneLink {
+  font-size: var(--text-sm);
+  font-weight: 450;
   text-decoration: none;
   white-space: nowrap;
-  font-weight: 450;
-  font-size: var(--text-sm);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.phoneIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
+  width: 20px;
+  height: 20px;
+  display: none;
+  background-color: var(--color-light-soft);
+  border-radius: 3px;
 }
 
 /* ==========================================================================
    INFO TOOLTIP
-   Иконка с часами работы и email.
+   Иконка с графиком работы и email
    ========================================================================== */
+
 .infoTooltip {
   position: relative;
   display: flex;
@@ -99,42 +112,44 @@
   cursor: pointer;
 }
 
-/* Hover-буфер для tooltip */
+/* Буфер между иконкой и tooltip */
 .infoTooltip::after {
   content: "";
   position: absolute;
-  left: 0;
   top: 100%;
+  left: 0;
   width: 100%;
   height: 8px;
 }
 
-/* Tooltip dropdown */
+/* Выпадающий блок */
 .infoDropdown {
   position: absolute;
   top: calc(100% + 8px);
   left: 50%;
+  z-index: 9011;
   min-width: 240px;
+  padding: 12px;
   background: #fff;
   border-radius: var(--radius);
   box-shadow: 0 12px 30px rgba(0, 0, 0, 0.14);
-  padding: 12px;
-  z-index: 9011;
 
   opacity: 0;
-  transform: translateX(-50%) translateY(-6px);
   pointer-events: none;
+  transform: translateX(-50%) translateY(-6px);
   transition:
     opacity var(--dur) var(--ease),
     transform var(--dur) var(--ease);
 }
 
-.infoTooltip:hover .infoDropdown {
+.infoTooltip:hover .infoDropdown,
+.infoTooltip:focus-within .infoDropdown {
   opacity: 1;
-  transform: translateX(-50%) translateY(0);
   pointer-events: auto;
+  transform: translateX(-50%) translateY(0);
 }
 
+/* Контент внутри tooltip */
 .infoDropdownContent {
   display: flex;
   flex-direction: column;
@@ -161,4 +176,46 @@
 
 .infoDropdownEmail {
   font-size: 12px;
+}
+
+/* ==========================================================================
+   TABLET
+   Планшетная версия
+   ========================================================================== */
+
+@media (max-width: 1024px) {
+  .topBarLeftText {
+    display: none;
+  }
+}
+
+@media (max-width: 768px) {
+  .infoTooltip {
+    display: none;
+  }
+  .phoneIcon {
+    display: flex;
+  }
+
+  .phoneText {
+    display: none;
+  }
+}
+
+/* ==========================================================================
+   MOBILE
+   Мобильная версия
+   ========================================================================== */
+
+@media (max-width: 600px) {
+  .header {
+    background: transparent;
+  }
+  .headerScrolled {
+    border-bottom: 1px solid transparent;
+  }
+
+  .topBar {
+    display: none;
+  }
 }

@@ -1,4 +1,3 @@
-// src/components/layout/header/main-bar/MainBar.tsx
 "use client";
 
 import Link from "next/link";
@@ -17,37 +16,43 @@ import type { CatalogCategoryPreview, CatalogCollection } from "@/lib/api/catalo
 
 type MainBarProps = {
   categories: CatalogCategoryPreview[];
-  collections: CatalogCollection[]; // ← новое
-  onCloseCatalog?: () => void;
+  collections: CatalogCollection[];
 };
 
 export default function MainBar({ categories, collections }: MainBarProps) {
-  const hasHydrated = useFavoritesStore((s) => s.hasHydrated);
-  const favoritesCount = useFavoritesStore((s) => Object.keys(s.ids).length);
-  const badgeCount = hasHydrated ? favoritesCount : 0;
+  // Количество избранных товаров после гидрации стора
+  const favoritesHasHydrated = useFavoritesStore((state) => state.hasHydrated);
+  const favoritesIds = useFavoritesStore((state) => state.ids);
 
-  const cartItems = useCartStore((s) => s.items);
-  const cartHasHydrated = useCartStore((s) => s.hasHydrated);
+  const favoritesCount = favoritesHasHydrated ? Object.keys(favoritesIds).length : 0;
+
+  // Количество товаров в корзине после гидрации стора
+  const cartHasHydrated = useCartStore((state) => state.hasHydrated);
+  const cartItems = useCartStore((state) => state.items);
+
   const cartCount = cartHasHydrated ? cartItems.reduce((total, item) => total + item.quantity, 0) : 0;
 
   return (
     <div className={styles.mainBar}>
+      {/* Логотип */}
       <div className={styles.mainBarLeft}>
         <Logo className={styles.logo} />
       </div>
 
+      {/* Каталог и поиск */}
       <div className={styles.mainBarCenter}>
-        {/* Передаём коллекции в мегаменю */}
         <CatalogMenu categories={categories} collections={collections} />
         <SearchBar categories={categories} />
       </div>
 
+      {/* Избранное и корзина */}
       <div className={styles.mainBarRight}>
         <Link href="/favorites" className={styles.actionLink}>
           <div className={styles.iconWrapper}>
             <HeartIcon className={styles.actionIcon} />
-            {badgeCount > 0 && <span className={styles.badge}>{badgeCount}</span>}
+            {favoritesCount > 0 && <span className={styles.badge}>{favoritesCount}</span>}
           </div>
+
           <span className={styles.actionText}>Избранное</span>
         </Link>
 
@@ -56,6 +61,7 @@ export default function MainBar({ categories, collections }: MainBarProps) {
             <CartIcon className={styles.actionIcon} />
             {cartCount > 0 && <span className={styles.badge}>{cartCount}</span>}
           </div>
+
           <span className={styles.actionText}>Корзина</span>
         </Link>
       </div>

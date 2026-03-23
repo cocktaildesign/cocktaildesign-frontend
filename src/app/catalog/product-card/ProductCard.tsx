@@ -21,16 +21,7 @@ type ProductCardProps = {
 };
 
 const MAX_PREVIEW_IMAGES = 4;
-
-const COLOR_GROUP_NAMES = ["цвет", "выбор цвета", "color", "цвет корпуса", "цвет металла", "цвет покрытия"];
-
-const COLOR_ALIASES: Record<string, string> = {
-  чёрный: "черный",
-  серебряный: "серебро",
-  золотой: "золото",
-  медный: "медь",
-  стальной: "сталь",
-};
+const COLOR_GROUP_NAME = "Выбор цвета";
 
 function formatPrice(price: number): string {
   return new Intl.NumberFormat("ru-RU").format(price);
@@ -48,34 +39,12 @@ function getDiscountPercent(price: number, priceOld: number): number | null {
 }
 
 function normalizeColorKey(value: string): string {
-  return value.trim().toLowerCase().replace(/ё/g, "е");
+  return value.trim().toLowerCase();
 }
 
 function resolveColorHex(label: string, colorMap: Record<string, string>): string | null {
   const normalized = normalizeColorKey(label);
-
-  if (colorMap[normalized]) {
-    return colorMap[normalized];
-  }
-
-  const alias = COLOR_ALIASES[normalized];
-  if (alias && colorMap[alias]) {
-    return colorMap[alias];
-  }
-
-  for (const [key, hex] of Object.entries(colorMap)) {
-    const normalizedKey = normalizeColorKey(key);
-
-    if (normalizedKey === normalized) {
-      return hex;
-    }
-
-    if (normalizedKey.includes(normalized) || normalized.includes(normalizedKey)) {
-      return hex;
-    }
-  }
-
-  return null;
+  return colorMap[normalized] ?? null;
 }
 
 function getVariantLabel(variant: CatalogVariant): string {
@@ -97,10 +66,7 @@ function getVariantGroupTitle(variants: CatalogVariant[]): string | null {
 }
 
 function isColorGroup(groupTitle: string | null): boolean {
-  if (!groupTitle) return false;
-
-  const normalized = groupTitle.trim().toLowerCase();
-  return COLOR_GROUP_NAMES.includes(normalized);
+  return groupTitle === COLOR_GROUP_NAME;
 }
 
 function buildUniqueImages(product: CatalogProductPreview): string[] {

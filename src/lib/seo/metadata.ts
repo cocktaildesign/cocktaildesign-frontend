@@ -1,5 +1,9 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { SITE_DESCRIPTION, SITE_NAME, siteUrl } from "./site";
+
+export const viewport: Viewport = {
+  themeColor: "#ffffff",
+};
 
 export const rootMetadata: Metadata = {
   metadataBase: new URL(siteUrl),
@@ -34,14 +38,12 @@ export const rootMetadata: Metadata = {
     siteName: SITE_NAME,
     title: `${SITE_NAME} — барное оборудование`,
     description: SITE_DESCRIPTION,
-    // images: [{ url: "/og.jpg", width: 1200, height: 630, alt: SITE_NAME }],
   },
 
   twitter: {
     card: "summary_large_image",
     title: `${SITE_NAME} — барное оборудование`,
     description: SITE_DESCRIPTION,
-    // images: ["/og.jpg"],
   },
 
   icons: {
