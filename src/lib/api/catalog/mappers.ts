@@ -1,4 +1,3 @@
-// src/lib/api/catalog/mappers.ts
 // ============================================================================
 // Преобразование Strapi → Domain types для каталога.
 // Это ЕДИНСТВЕННОЕ место, где мы:
@@ -174,8 +173,6 @@ function pickBestImagePath(file: StrapiMediaFile | null): string | null {
   );
 }
 
-// Маппим массив медиа-файлов Strapi в массив CatalogProductImage.
-// Используется и для товаров, и для вариантов.
 function mapMediaArray(
   raw: StrapiMediaFile[] | { data?: Array<{ id: number; attributes?: StrapiMediaFile }> } | null | undefined,
   fallbackAlt: string,
@@ -216,6 +213,45 @@ function mapMediaArray(
   return images;
 }
 
+function mapPreviewImageUrls(
+  raw: StrapiMediaFile[] | { data?: Array<{ id: number; attributes?: StrapiMediaFile }> } | null | undefined,
+): string[] {
+  const images: string[] = [];
+
+  if (Array.isArray(raw)) {
+    const sliced = raw.slice(0, 4);
+
+    for (const file of sliced) {
+      const path = pickBestImagePath(file);
+      const url = path ? (getStrapiMediaUrl(path) ?? null) : null;
+
+      if (url) {
+        images.push(url);
+      }
+    }
+
+    return images;
+  }
+
+  if (raw && !Array.isArray(raw) && raw.data) {
+    const sliced = raw.data.slice(0, 4);
+
+    for (const item of sliced) {
+      const file = item?.attributes ?? null;
+      const path = pickBestImagePath(file);
+      const url = path ? (getStrapiMediaUrl(path) ?? null) : null;
+
+      if (url) {
+        images.push(url);
+      }
+    }
+
+    return images;
+  }
+
+  return images;
+}
+
 // ============================================================================
 // mapProductPreview
 // ============================================================================
@@ -243,23 +279,16 @@ export function mapProductPreview(item: StrapiProductItem): CatalogProductPrevie
   const imagePath = pickBestImagePath(firstImage);
   const imageUrl = imagePath ? (getStrapiMediaUrl(imagePath) ?? null) : null;
 
-  const images: string[] = [];
-
-  if (Array.isArray(source.image)) {
-    const sliced = source.image.slice(0, 4);
-
-    for (const file of sliced) {
-      const path = pickBestImagePath(file);
-      const url = path ? (getStrapiMediaUrl(path) ?? null) : null;
-
-      if (url) {
-        images.push(url);
-      }
-    }
-  }
+  const images = mapPreviewImageUrls(source.image);
 
   const engravingEnabled = source.engravingEnabled === true;
   const slug = makeProductSlug(moyskladId, name);
+
+  // Варианты могут прийти:
+  // 1) в корне объекта товара
+  // 2) внутри attributes
+  const rawVariants = item.variants ?? source.variants ?? [];
+  const variants = mapVariants(rawVariants);
 
   return {
     id: String(item.id),
@@ -272,6 +301,7 @@ export function mapProductPreview(item: StrapiProductItem): CatalogProductPrevie
     images,
     engravingEnabled,
     code,
+    variants,
   };
 }
 
@@ -444,9 +474,7 @@ function mapVariantCharacteristics(raw: unknown): CatalogVariantCharacteristic[]
 }
 
 export function mapVariant(item: StrapiVariantItem): CatalogVariant | null {
-  const source = item.attributes;
-
-  if (!source) return null;
+  const source = item.attributes ?? item;
 
   const name = typeof source.name === "string" ? source.name.trim() : "";
   const moyskladId = typeof source.moyskladId === "string" ? source.moyskladId.trim() : "";
@@ -463,8 +491,6 @@ export function mapVariant(item: StrapiVariantItem): CatalogVariant | null {
   const code = typeof rawCode === "string" && rawCode.trim() ? rawCode.trim() : null;
 
   const characteristics = mapVariantCharacteristics(source.characteristics);
-
-  // Маппим фото варианта — используем тот же хелпер что и для товара
   const images = mapMediaArray(source.image, name);
 
   return {
@@ -479,13 +505,13 @@ export function mapVariant(item: StrapiVariantItem): CatalogVariant | null {
   };
 }
 
-export function mapVariants(items: StrapiVariantItem[] | undefined): CatalogVariant[] {
+export function mapVariants(items: StrapiVariantItem[] | undefined | null): CatalogVariant[] {
   if (!items || items.length === 0) return [];
 
   const result: CatalogVariant[] = [];
 
-  for (const v of items) {
-    const mapped = mapVariant(v);
+  for (const item of items) {
+    const mapped = mapVariant(item);
 
     if (mapped) {
       result.push(mapped);

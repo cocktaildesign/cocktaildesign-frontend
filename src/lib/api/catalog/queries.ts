@@ -22,7 +22,6 @@ import type {
 } from "./types";
 
 import {
-  mapBundleItems,
   mapCatalogCollectionBase,
   mapCategoryPreview,
   mapProductDetail,
@@ -246,7 +245,6 @@ function buildCollectionViewAllHref(params: {
   collectionSlug: string;
   sourceCategorySlug: string | null;
 }): string | null {
-  // Все подборки ведут на универсальную страницу /catalog/collection/:slug
   if (params.collectionSlug) {
     return `/catalog/collection/${params.collectionSlug}`;
   }
@@ -287,16 +285,14 @@ export async function getCatalogCollectionsWithProductsFromStrapi(): Promise<Cat
         }
       }
 
-      if (selectionMode === "category") {
-        if (sourceCategorySlug) {
-          const categoryProductsResponse = await getProductsByCategorySlugFromStrapi({
-            categorySlug: sourceCategorySlug,
-            limit: 100,
-            offset: 0,
-          });
+      if (selectionMode === "category" && sourceCategorySlug) {
+        const categoryProductsResponse = await getProductsByCategorySlugFromStrapi({
+          categorySlug: sourceCategorySlug,
+          limit: 100,
+          offset: 0,
+        });
 
-          products.push(...categoryProductsResponse.items);
-        }
+        products.push(...categoryProductsResponse.items);
       }
 
       if (selectionMode === "discount") {
@@ -357,8 +353,6 @@ export async function getProductBySlugFromStrapi(slug: string): Promise<CatalogP
       slug: stableSlug,
     });
 
-    // Передаём bundleItems из корня ответа вторым аргументом.
-    // Для обычных товаров response.bundleItems будет [] → bundleItems в product тоже [].
     const product = mapProductDetail(response.item, response.bundleItems);
     if (!product) return null;
 
@@ -451,7 +445,6 @@ export async function getWeeklyProductBlock(): Promise<WeeklyProductBlock | null
 // КОЛЛЕКЦИИ — страница /catalog/collection/[slug]
 // ============================================================================
 
-// Тип мета-данных коллекции (заголовок, описание)
 export type CollectionMeta = {
   id: string;
   title: string;
@@ -459,7 +452,6 @@ export type CollectionMeta = {
   description: string | null;
 };
 
-// Тип ответа от /api/catalog/collection/:slug/products
 type StrapiCollectionProductsResponse = {
   collection: CollectionMeta;
   items: StrapiProductItem[];
@@ -469,12 +461,11 @@ type StrapiCollectionProductsResponse = {
   hasMore: boolean;
 };
 
-// Получить товары коллекции по slug с пагинацией
 export async function getCollectionProductsFromStrapi(params: {
   slug: string;
   limit: number;
   offset: number;
-  categorySlug?: string; // ← новое: фильтр по категории внутри коллекции
+  categorySlug?: string;
 }): Promise<{ collection: CollectionMeta } & CatalogProductsResponse> {
   const safeSlug = params.slug.trim();
 
@@ -492,7 +483,6 @@ export async function getCollectionProductsFromStrapi(params: {
   const limit = Number.isFinite(params.limit) && params.limit > 0 ? Math.min(params.limit, 100) : 50;
   const offset = Number.isFinite(params.offset) && params.offset >= 0 ? params.offset : 0;
 
-  // Собираем query параметры — categorySlug добавляем только если передан
   const query: Record<string, string> = {
     limit: String(limit),
     offset: String(offset),
@@ -519,8 +509,6 @@ export async function getCollectionProductsFromStrapi(params: {
   };
 }
 
-// Получить дерево категорий из товаров коллекции
-// Формат совпадает с categories-flat → передаём в buildCatalogTree
 export async function getCollectionCategoriesTreeFromStrapi(slug: string): Promise<CatalogCategoryPreview[]> {
   const safeSlug = slug.trim();
   if (!safeSlug) return [];
@@ -533,5 +521,29 @@ export async function getCollectionCategoriesTreeFromStrapi(slug: string): Promi
     const message = e instanceof Error ? e.message : "";
     if (message.includes("404") || message.includes("Not Found")) return [];
     throw e;
+  }
+}
+
+// ============================================================================
+// КОЛЛЕКЦИЯ ЦВЕТОВ
+// ============================================================================
+
+export async function getColorMap(): Promise<Record<string, string>> {
+  try {
+    const response = await fetchStrapi<{
+      data: Array<{ id: number; name: string; hex: string }>;
+    }>("/api/colors", { "pagination[pageSize]": "100" });
+
+    const result: Record<string, string> = {};
+
+    for (const item of response.data ?? []) {
+      if (item.name && item.hex) {
+        result[item.name.toLowerCase()] = item.hex.startsWith("#") ? item.hex : `#${item.hex}`;
+      }
+    }
+
+    return result;
+  } catch {
+    return {};
   }
 }

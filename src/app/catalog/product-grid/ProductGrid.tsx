@@ -4,6 +4,7 @@ import styles from "./ProductGrid.module.css";
 import ProductCard from "../product-card/ProductCard";
 import { getProductsByCategorySlugFromStrapi, getCollectionProductsFromStrapi } from "@/lib/api/catalog";
 import type { CatalogProductPreview } from "@/lib/api/catalog/types";
+import { getColorMap } from "@/lib/api/catalog/index";
 
 type ProductGridProps = {
   categorySlug?: string;
@@ -15,6 +16,8 @@ const PAGE_SIZE = 50;
 
 export default async function ProductGrid({ categorySlug, collectionSlug, filterCategorySlug }: ProductGridProps) {
   let products: CatalogProductPreview[] = [];
+
+  const colorMap = await getColorMap();
 
   if (collectionSlug) {
     // Грузим товары коллекции — с опциональным фильтром по категории
@@ -44,7 +47,7 @@ export default async function ProductGrid({ categorySlug, collectionSlug, filter
   return (
     <div className={styles.grid}>
       {products.map((product) => (
-        <ProductCard key={product.id} product={product} />
+        <ProductCard key={product.id} product={product} colorMap={colorMap} />
       ))}
     </div>
   );

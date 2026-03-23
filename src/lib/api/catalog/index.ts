@@ -23,4 +23,7 @@ export {
   // Коллекции — страница /catalog/collection/[slug]
   getCollectionProductsFromStrapi,
   getCollectionCategoriesTreeFromStrapi,
+
+  //каталог цветов
+  getColorMap,
 } from "./queries";

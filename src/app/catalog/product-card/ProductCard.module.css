@@ -1,126 +1,111 @@
-/* ================================================================
-   КАРТОЧКА ТОВАРА
-   Структура: card > previewLink > thumb + productBody > purchaseSection
-   ================================================================ */
-
 .card {
   display: flex;
   flex-direction: column;
+  height: 100%;
   position: relative;
   border: 1px solid rgba(0, 0, 0, 0.08);
-  border-radius: 12px;
-  padding: 12px;
+  border-radius: 18px;
+  padding: 16px;
   overflow: hidden;
-  cursor: pointer;
+  background: var(--color-white);
   transition:
-    border var(--dur) var(--ease),
+    border-color var(--dur) var(--ease),
     box-shadow var(--dur) var(--ease);
 }
 
 .card:hover {
-  border: 1px solid transparent;
-  box-shadow: 0 2px 8px #ededed;
+  border-color: rgba(0, 0, 0, 0.04);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
 }
-
-/* ================================================================
-   КЛИКАБЕЛЬНАЯ ССЫЛКА
-   ================================================================ */
 
 .previewLink {
-  height: 100%;
+  display: block;
+  text-decoration: none;
+  color: inherit;
 }
-
-/* ================================================================
-   КАРТИНКА
-   ================================================================ */
 
 .thumb {
   position: relative;
   overflow: hidden;
   width: 100%;
   aspect-ratio: 1 / 1;
+  border-radius: 14px;
 }
 
 .image {
-  object-fit: cover;
-  border-radius: 12px;
+  object-fit: contain;
+  border-radius: 14px;
 }
 
 .discountBadge {
   position: absolute;
-  left: 0px;
-  bottom: 0px;
+  left: 0;
+  bottom: 0;
   z-index: 2;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-height: 35px;
-  padding: 0 16px;
+  min-height: 34px;
+  padding: 0 14px;
   border-radius: 12px;
   background: rgb(60, 170, 60);
   color: #ffffff;
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 600;
   line-height: 1;
 }
 
 .favoriteButtonOverlay {
   position: absolute;
-  top: 15px;
-  right: 15px;
+  top: 12px;
+  right: 12px;
 }
 
-/* Точки hover scrub */
 .dots {
   position: absolute;
-  bottom: 8px;
+  bottom: 10px;
   left: 50%;
   transform: translateX(-50%);
   display: flex;
-  gap: 6px;
+  gap: 8px;
   z-index: 2;
 }
 
-.dot {
-  width: 6px;
-  height: 6px;
+.dot,
+.dotActive {
+  width: 9px;
+  height: 9px;
   border-radius: 50%;
-  background-color: var(--color-gray-light);
-  transition: background-color var(--dur) var(--ease);
+}
+
+.dot {
+  background-color: #c7ced9;
 }
 
 .dotActive {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
   background-color: var(--color-dark-blue);
 }
-
-/* ================================================================
-   ТЕЛО КАРТОЧКИ: цена + название
-   ================================================================ */
 
 .productBody {
   display: flex;
   flex-direction: column;
   gap: 0;
-  flex: 1;
-  min-height: 0;
-  margin-bottom: 15px;
 }
 
 .priceBlock {
-  padding-top: 10px;
   display: flex;
   align-items: center;
   gap: 10px;
   flex-wrap: wrap;
+  padding-top: 16px;
 }
 
 .price {
   margin: 0;
-  font-size: 22px;
+  font-size: 28px;
   font-weight: 600;
+  line-height: 1.1;
+  color: var(--color-black);
 }
 
 .priceOld {
@@ -132,11 +117,13 @@
 }
 
 .productName {
-  padding-top: 10px;
+  padding-top: 14px;
 }
 
 .title {
-  font-size: var(--text-base);
+  margin: 0;
+  font-size: 17px;
+  line-height: 1.35;
   font-weight: 400;
   color: var(--color-gray);
 }
@@ -146,26 +133,165 @@
 }
 
 /* ================================================================
-   ЗОНА ПОКУПКИ
+   ХАРАКТЕРИСТИКИ — ВСЕГДА СРАЗУ ПОСЛЕ НАЗВАНИЯ
+   ================================================================ */
+
+.variantSection {
+  padding-top: 18px;
+  min-height: 88px;
+}
+
+.variantGroup {
+  position: relative;
+}
+
+.variantGroupTitle {
+  display: block;
+  font-size: var(--text-sm);
+  color: var(--color-gray);
+}
+
+.variantGroupValues {
+  margin-top: 10px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  flex-wrap: nowrap;
+  overflow: hidden;
+  min-height: 34px;
+  align-items: flex-start;
+  align-content: flex-start;
+}
+
+.variantGroupEmpty {
+  min-height: 58px;
+}
+
+.variantMeasureRoot {
+  position: absolute;
+  left: 0;
+  top: 0;
+  visibility: hidden;
+  pointer-events: none;
+  white-space: nowrap;
+  display: flex;
+  gap: 5px;
+}
+
+.colorOption {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  background: transparent;
+  cursor: pointer;
+  transition:
+    border-color 0.2s ease,
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+  flex: 0 0 auto;
+}
+
+.colorOption:hover {
+  transform: translateY(-1px);
+}
+
+.colorOptionActive {
+  border-color: #2b3345;
+  box-shadow: 0 0 0 2px rgba(43, 51, 69, 0.1);
+}
+
+.colorCircle {
+  width: 26px;
+  height: 26px;
+  border-radius: 999px;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+}
+
+.colorCircleFallback {
+  background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
+}
+
+.textOption {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 5px 12px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 12px;
+  background: #ffffff;
+  color: var(--color-gray);
+  font-size: 14px;
+  line-height: 1;
+  cursor: pointer;
+  transition:
+    border-color 0.2s ease,
+    color 0.2s ease,
+    background-color 0.2s ease;
+  flex: 0 0 auto;
+  white-space: nowrap;
+}
+
+.textOption:hover {
+  border-color: rgba(0, 0, 0, 0.18);
+}
+
+.textOptionActive {
+  border-color: var(--color-dark-blue);
+  color: var(--color-dark-blue);
+  background: rgba(9, 24, 61, 0.03);
+}
+
+.moreOptionsButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 32px;
+  padding: 5px 12px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-radius: 12px;
+  background: #ffffff;
+  color: var(--color-gray);
+  font-size: 15px;
+  line-height: 1;
+  cursor: pointer;
+  flex: 0 0 auto;
+  white-space: nowrap;
+}
+
+.moreOptionsButton:hover {
+  border-color: rgba(0, 0, 0, 0.18);
+  color: var(--color-dark-blue);
+}
+
+/* ================================================================
+   ЗОНА ПОКУПКИ — ВСЕГДА НИЖЕ ХАРАКТЕРИСТИК
    ================================================================ */
 
 .purchaseSection {
-  border-top: 1px solid var(--color-light-soft);
   margin-top: auto;
-  cursor: auto;
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  padding-top: 10px;
+  gap: 18px;
+  padding-top: 6px;
 }
 
-/* Строка с гравировкой */
 .engravingRow {
   display: flex;
   align-items: center;
+  padding-top: 18px;
+  border-top: 1px solid var(--color-light-soft);
 }
 
-/* Строка после добавления: количество + стрелка */
+.engravingRowEmpty {
+
+  padding-top: 18px;
+}
+
 .actionsRow {
   display: flex;
   flex-direction: row;
@@ -173,17 +299,16 @@
   gap: 8px;
 }
 
-/* Кнопка В корзину — на всю ширину */
 .addToCartButtonFull {
   display: block;
+  width: 100%;
+  height: 56px;
+  border: none;
+  border-radius: 18px;
   background-color: var(--color-dark-blue);
   color: var(--color-white);
-  border: none;
-  width: 100%;
-  border-radius: 12px;
-  height: 46px;
   font-weight: 400;
-  font-size: 16px;
+  font-size: 18px;
   cursor: pointer;
   transition: background-color var(--dur) var(--ease);
 }
@@ -192,20 +317,57 @@
   background-color: var(--color-dark-blue-hover);
 }
 
-/* Кнопка стрелки после добавления */
 .arrowButton {
   display: flex;
   align-items: center;
   justify-content: center;
+  width: 56px;
+  height: 56px;
+  flex-shrink: 0;
+  border-radius: 18px;
   background-color: var(--color-dark-blue);
   color: var(--color-white);
-  border-radius: 12px;
-  height: 46px;
-  width: 46px;
-  flex-shrink: 0;
   transition: background-color var(--dur) var(--ease);
 }
 
 .arrowButton:hover {
   background-color: var(--color-dark-blue-hover);
+}
+
+.variantSelect {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid var(--color-light);
+  border-radius: 8px;
+  font-size: var(--text-sm);
+  color: var(--color-dark-blue);
+  background-color: var(--color-white);
+  cursor: pointer;
+  appearance: auto;
+}
+
+.variantSelect:focus {
+  outline: none;
+  border-color: var(--color-dark-blue);
+}
+
+.colorOption {
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border: none;
+  border-radius: 999px;
+  background: transparent;
+  flex: 0 0 auto;
+}
+
+.colorCircle {
+  width: 28px;
+  height: 28px;
+  border-radius: 999px;
+  border: 1px solid rgba(0, 0, 0, 0.12);
+}
+
+.colorOptionActive {
+  box-shadow: 0 0 0 2px rgba(43, 51, 69, 0.18);
 }

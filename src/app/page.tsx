@@ -39,7 +39,7 @@ export default async function HomePage() {
       <Banners />
       <CategoryProductShelves collections={collections} collectionSlug="novinki" />
       <SocialLinks />
-      <AboutCompany />
+      {/* <AboutCompany /> */}
     </>
   );
 }

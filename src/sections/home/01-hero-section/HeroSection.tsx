@@ -20,9 +20,15 @@ type HeroSectionProps = {
 const BANNER_IMAGES = [
   {
     id: 1,
-    url: "/banner3.webp",
-    alt: "Наборы для бара",
+    url: "/banner1.webp",
+    alt: "Картинка для перехода в каталог",
     href: "/catalog",
+  },
+  {
+    id: 2,
+    url: "/banner2.webp",
+    alt: "Товары со скидкой",
+    href: "/catalog/collection/sale",
   },
 ];
 // Форматирование цены для UI

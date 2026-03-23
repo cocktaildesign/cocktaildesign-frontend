@@ -1,16 +1,4 @@
 // src/app/catalog/product/[slug]/VariantSelector.tsx
-//
-// "use client" — управляет выбором варианта товара.
-//
-// Содержит внутри себя:
-// - ProductGallery (колонки 1-6)
-// - блок вариантов + "О товаре" + артикул (колонки 6-10)
-// - ProductPurchaseControls в сайдбаре (колонки 10-13)
-//
-// Все три блока рендерятся через Fragment (<>) прямо в Grid родителя.
-// CSS классы productGallery / productInfo / productSidebar
-// уже содержат нужные grid-column — сетка не ломается.
-
 "use client";
 
 import { useState } from "react";
@@ -22,26 +10,38 @@ import CopyButton from "@/components/ui/copy-button/CopyButton";
 import Link from "next/link";
 import styles from "./ProductPage.module.css";
 
+// Название характеристики цвета в МойСклад
+const COLOR_CHARACTERISTIC_NAME = "Выбор цвета";
+
+type CharacteristicOption = {
+  value: string;
+  variantIds: string[];
+};
+
 type VariantSelectorProps = {
   product: CatalogProductDetail;
   variants: CatalogVariant[];
   specifications: CatalogProductSpecification[];
+  colorMap: Record<string, string>;
 };
 
-export default function VariantSelector({ product, variants, specifications }: VariantSelectorProps) {
+export default function VariantSelector({ product, variants, specifications, colorMap }: VariantSelectorProps) {
   const [activeVariantId, setActiveVariantId] = useState<string | null>(null);
 
+  // Находим активный вариант по id
   const activeVariant = variants.find((v) => v.id === activeVariantId) ?? null;
 
-  // ─── Актуальные данные (вариант или товар) ─────────────────────────────
+  // Цена: берём от варианта если есть, иначе от товара
   const activePrice = activeVariant?.price && activeVariant.price > 0 ? activeVariant.price : product.price;
 
+  // Старая цена: берём от варианта если есть, иначе от товара
   const activePriceOld =
     activeVariant?.priceOld && activeVariant.priceOld > 0 ? activeVariant.priceOld : product.priceOld;
 
+  // Артикул: берём от варианта если есть, иначе от товара
   const activeCode = activeVariant?.code ?? product.code;
 
-  // ─── Общий массив фото: товар + все варианты ───────────────────────────
+  // Общий массив фото: сначала фото товара, потом фото всех вариантов
   const variantImages = variants.flatMap((v) => v.images);
   const allImages = [...product.images, ...variantImages];
   const activeImages = allImages.length > 0 ? allImages : product.images;
@@ -52,11 +52,7 @@ export default function VariantSelector({ product, variants, specifications }: V
     : 0;
 
   // ─── Группируем варианты по характеристикам ───────────────────────────
-  type CharacteristicOption = {
-    value: string;
-    variantIds: string[];
-  };
-
+  // Результат: Map { "Выбор цвета" → [{ value: "красный", variantIds: ["1"] }] }
   const characteristicMap = new Map<string, CharacteristicOption[]>();
 
   for (const variant of variants) {
@@ -85,11 +81,12 @@ export default function VariantSelector({ product, variants, specifications }: V
 
   const characteristicEntries = Array.from(characteristicMap.entries());
 
-  // ─── Обработчик клика на тег ──────────────────────────────────────────
+  // ─── Клик на тег или кружок ───────────────────────────────────────────
   function handleTagClick(variantIds: string[]) {
     const firstVariantId = variantIds[0];
     if (!firstVariantId) return;
 
+    // Повторный клик — снимаем выбор
     if (activeVariantId === firstVariantId) {
       setActiveVariantId(null);
       return;
@@ -98,6 +95,7 @@ export default function VariantSelector({ product, variants, specifications }: V
     setActiveVariantId(firstVariantId);
   }
 
+  // Проверяем активен ли тег
   function isTagActive(variantIds: string[]): boolean {
     if (!activeVariantId) return false;
     return variantIds.includes(activeVariantId);
@@ -105,12 +103,10 @@ export default function VariantSelector({ product, variants, specifications }: V
 
   return (
     <>
-      {/* ── ГАЛЕРЕЯ ───────────────────────────────────────────────────────
-          key меняется при смене варианта → компонент пересоздаётся →
-          startIndex применяется → галерея переключается на фото варианта */}
+      {/* Галерея — key пересоздаёт компонент при смене варианта */}
       <ProductGallery key={activeVariantId ?? "default"} images={activeImages} startIndex={activeImageIndex} />
 
-      {/* ── КОЛОНКА ИНФОРМАЦИИ ────────────────────────────────────────── */}
+      {/* Колонка информации */}
       <div className={styles.productInfo}>
         {/* Артикул */}
         <div className={styles.productMetaSku}>
@@ -123,26 +119,64 @@ export default function VariantSelector({ product, variants, specifications }: V
         {/* Варианты */}
         {variants.length > 0 && characteristicEntries.length > 0 && (
           <div className={styles.productVariants}>
-            {characteristicEntries.map(([name, options]) => (
-              <div key={name} className={styles.productVariant}>
-                <span className={styles.productInfoTitle}>{name}</span>
+            {characteristicEntries.map(([name, options]) => {
+              const isColor = name === COLOR_CHARACTERISTIC_NAME;
 
-                <ul className={styles.productVariantValues}>
-                  {options.map((option) => (
-                    <li key={option.value}>
-                      <button
-                        type="button"
-                        onClick={() => handleTagClick(option.variantIds)}
-                        data-active={isTagActive(option.variantIds) ? "true" : "false"}
-                        className={styles.productVariantValueButton}
-                        aria-pressed={isTagActive(option.variantIds)}>
-                        {option.value}
-                      </button>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            ))}
+              // Название выбранного цвета для отображения рядом с заголовком
+              const activeColorValue = activeVariant
+                ? (activeVariant.characteristics.find((ch) => ch.name === COLOR_CHARACTERISTIC_NAME)?.value ?? "")
+                : "";
+
+              return (
+                <div key={name} className={styles.productVariant}>
+                  <span className={styles.productInfoTitle}>
+                    {name}
+                    {isColor && activeColorValue ? `: ${activeColorValue}` : ""}
+                  </span>
+
+                  <ul className={styles.productVariantValues}>
+                    {options.map((option) => {
+                      const active = isTagActive(option.variantIds);
+
+                      // Для цвета — кружок
+                      if (isColor) {
+                        const hex = colorMap[option.value.toLowerCase()] ?? "#cccccc";
+
+                        return (
+                          <li key={option.value}>
+                            <button
+                              type="button"
+                              onClick={() => handleTagClick(option.variantIds)}
+                              data-active={active ? "true" : "false"}
+                              className={styles.productVariantColorButton}
+                              aria-pressed={active}
+                              aria-label={option.value}
+                              title={option.value}>
+                              <span className={styles.productVariantColorCircle} style={{ backgroundColor: hex }} />
+                            </button>
+                          </li>
+                        );
+                      }
+
+                      // Для остальных — текстовый тег
+                      return (
+                        <li key={option.value}>
+                          <button
+                            type="button"
+                            onClick={() => handleTagClick(option.variantIds)}
+                            data-active={active ? "true" : "false"}
+                            className={styles.productVariantValueButton}
+                            aria-pressed={active}
+                            title={option.value}>
+                            {option.value}
+                          </button>
+                        </li>
+                      );
+                    })}
+                  </ul>
+                </div>
+              );
+            })}
           </div>
         )}
 
@@ -173,7 +207,7 @@ export default function VariantSelector({ product, variants, specifications }: V
         </div>
       </div>
 
-      {/* ── САЙДБАР ───────────────────────────────────────────────────── */}
+      {/* Сайдбар с ценой и кнопками */}
       <div className={styles.productSidebar}>
         <div className={styles.productPurchase}>
           <ProductPurchaseControls
@@ -185,7 +219,6 @@ export default function VariantSelector({ product, variants, specifications }: V
             name={activeVariant ? activeVariant.name : product.name}
             slug={product.slug}
             imageUrl={activeImages[0]?.src ?? null}
-            code={activeCode}
           />
         </div>
       </div>

@@ -98,6 +98,9 @@ export type StrapiProductAttributes = {
         }>;
       }
     | null;
+
+  // Варианты могут прийти внутри attributes
+  variants?: StrapiVariantItem[] | null;
 };
 
 export type StrapiProductItem = {
@@ -116,6 +119,9 @@ export type StrapiProductItem = {
   code?: string | null;
   displayTitle?: string | null;
   image?: StrapiProductAttributes["image"];
+
+  // Варианты могут прийти и в корне объекта
+  variants?: StrapiVariantItem[] | null;
 };
 
 // ============================================================
@@ -139,7 +145,7 @@ export type StrapiVariantAttributes = {
 
   characteristics?: StrapiVariantCharacteristic[] | null;
 
-  // Фото варианта — массив медиа (добавлено в схему)
+  // Фото варианта — массив медиа
   image?:
     | StrapiMediaFile[]
     | {
@@ -154,6 +160,15 @@ export type StrapiVariantAttributes = {
 export type StrapiVariantItem = {
   id: number;
   attributes?: StrapiVariantAttributes;
+
+  // На случай плоского ответа варианта
+  name?: string | null;
+  moyskladId?: string | null;
+  price?: number | null;
+  priceOld?: number | null;
+  code?: string | null;
+  characteristics?: StrapiVariantCharacteristic[] | null;
+  image?: StrapiVariantAttributes["image"];
 };
 
 // ============================================================
@@ -238,6 +253,7 @@ export type CatalogProductPreview = {
   images: string[];
   engravingEnabled: boolean;
   code: string | null;
+  variants: CatalogVariant[];
 };
 
 export type CatalogProductsResponse = {

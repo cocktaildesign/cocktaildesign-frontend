@@ -79,12 +79,24 @@ export const useCartStore = create<CartState>()(
         // Если товар уже есть в корзине
         if (existingItem) {
           // Создаём новый массив — где у нужного товара увеличили quantity
+          // И одновременно обновили остальные актуальные данные товара
           const updatedItems = get().items.map((i) => {
             // Это не тот товар — возвращаем без изменений
             if (i.id !== item.id) return i;
 
             // Это тот товар — увеличиваем количество
-            return { ...i, quantity: i.quantity + item.quantity };
+            // и обновляем актуальные данные
+            return {
+              ...i,
+              name: item.name,
+              price: item.price,
+              priceOld: item.priceOld,
+              imageUrl: item.imageUrl,
+              slug: item.slug,
+              engraving: item.engraving,
+              code: item.code,
+              quantity: i.quantity + item.quantity,
+            };
           });
 
           set({ items: updatedItems });

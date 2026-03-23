@@ -11,7 +11,7 @@ import { getStrapiMediaUrl } from "@/lib/api/strapi/media";
 import Link from "next/link";
 import Image from "next/image";
 import PageLayout from "@/components/layout/PageLayout";
-import { getProductBySlugFromStrapi } from "@/lib/api/catalog";
+import { getProductBySlugFromStrapi, getColorMap } from "@/lib/api/catalog";
 import BundleItems from "./bundle/BundleItems";
 import VariantSelector from "./VariantSelector";
 
@@ -107,7 +107,8 @@ export async function generateMetadata({ params }: PageProps) {
 export default async function ProductPage({ params }: PageProps) {
   const { slug } = await params;
 
-  const data = await getProductBySlugFromStrapi(slug);
+  const [data, colorMap] = await Promise.all([getProductBySlugFromStrapi(slug), getColorMap()]);
+
   if (!data) notFound();
 
   const { product, breadcrumbsCategories } = data;
@@ -181,7 +182,7 @@ export default async function ProductPage({ params }: PageProps) {
 
         <div className={styles.productLayout}>
           {/* VariantSelector: галерея + варианты + О товаре + сайдбар */}
-          <VariantSelector product={product} variants={variants} specifications={specifications} />
+          <VariantSelector product={product} variants={variants} specifications={specifications} colorMap={colorMap} />
 
           {/* Состав комплекта — только для bundle товаров */}
           {product.bundleItems.length > 0 && <BundleItems items={product.bundleItems} bundlePrice={product.price} />}

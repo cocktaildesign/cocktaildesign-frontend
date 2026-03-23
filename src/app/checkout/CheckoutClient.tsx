@@ -148,10 +148,17 @@ export default function CheckoutClient() {
             <div className={styles.orderItems}>
               {items.map((item) => (
                 <div key={item.id} className={styles.orderItem}>
-                  <span className={styles.orderItemName}>
-                    {item.name}
+                  <div className={styles.orderItemMain}>
+                    <span className={styles.orderItemName}>{item.name}</span>
+
+                    {item.code && (
+                      <span className={styles.orderItemCode}>
+                        Артикул: <span className={styles.orderItemCodeValue}>{item.code}</span>
+                      </span>
+                    )}
+
                     {item.engraving && <span className={styles.orderItemEngraving}>Гравировка</span>}
-                  </span>
+                  </div>
 
                   <span className={styles.orderItemQty}>{item.quantity} шт.</span>
 
