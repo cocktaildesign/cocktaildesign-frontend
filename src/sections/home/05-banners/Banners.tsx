@@ -1,36 +1,25 @@
-// src/sections/home/banners/Banners.tsx
-// Два рекламных баннера на главной — пока с плейсхолдерами.
-
-import Image from "next/image";
+import Container from "@/components/layout/Container";
+import Slider from "@/components/ui/slider/Slider";
 import styles from "./Banners.module.css";
-import PageLayout from "@/components/layout/PageLayout";
+
+const BANNER_IMAGES = [
+  {
+    id: 1,
+    desktopUrl: "/images/Hero/baner-slider/1.webp",
+    mobileUrl: "/images/Hero/baner-slider/1.webp",
+    alt: "Картинка для перехода в категорияю все для бариста",
+    href: "/catalog/ms-c374b866",
+  },
+];
 
 export default function Banners() {
   return (
-    <PageLayout>
-      <section className={styles.section}>
-        {/* Баннер 1 */}
-        <div className={styles.banner}>
-          <Image
-            src="/images/catalog/product-placeholder.webp"
-            alt="Баннер 1"
-            fill
-            sizes="100vw"
-            className={styles.image}
-          />
+    <section className={styles.section}>
+      <Container>
+        <div className={styles.sliderWrapper}>
+          <Slider images={BANNER_IMAGES} autoPlayInterval={7000} />
         </div>
-
-        {/* Баннер 2 */}
-        <div className={styles.banner}>
-          <Image
-            src="/images/catalog/product-placeholder.webp"
-            alt="Баннер 2"
-            fill
-            sizes="100vw"
-            className={styles.image}
-          />
-        </div>
-      </section>
-    </PageLayout>
+      </Container>
+    </section>
   );
 }

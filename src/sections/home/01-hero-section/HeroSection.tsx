@@ -1,64 +1,70 @@
-// frontend/src/sections/home/hero-section/HeroSection.tsx
-
-"use client";
-
 import Image from "next/image";
 import Link from "next/link";
+
 import Container from "@/components/layout/Container";
 import Slider from "@/components/ui/slider/Slider";
-import styles from "./HeroSection.module.css";
+import MobileSlider from "@/components/ui/slider/mobile-slider/MobileSlider";
 
-// Тип блока "Товар недели", который мы получаем из API слоя
 import type { WeeklyProductBlock } from "@/lib/api/catalog/types";
 
-// Пропсы компонента: либо блок есть, либо null (если в Strapi выключили)
+import styles from "./HeroSection.module.css";
+
 type HeroSectionProps = {
   weeklyProduct: WeeklyProductBlock | null;
 };
 
-// Баннеры для слайдера (пока статические)
+// Баннеры для слайдера
 const BANNER_IMAGES = [
   {
     id: 1,
-    url: "/banner1.webp",
+    desktopUrl: "/images/hero-baner/banner1.webp",
+    mobileUrl: "/images/hero-baner/banner1-mobile.webp",
     alt: "Картинка для перехода в каталог",
     href: "/catalog",
   },
   {
     id: 2,
-    url: "/banner2.webp",
+    desktopUrl: "/images/hero-baner/banner2.webp",
+    mobileUrl: "/images/hero-baner/banner2-mobile.webp",
     alt: "Товары со скидкой",
     href: "/catalog/collection/sale",
   },
+  {
+    id: 3,
+    desktopUrl: "/images/hero-baner/banner3.webp",
+    mobileUrl: "/images/hero-baner/banner3-mobile.webp",
+    alt: "Новинки",
+    href: "/catalog/collection/novinki",
+  },
 ];
-// Форматирование цены для UI
-// 1950 -> "1 950 ₽"
+
+// Форматирование цены
 function formatPrice(value: number): string {
   const formatted = new Intl.NumberFormat("ru-RU").format(value);
   return `${formatted} ₽`;
 }
 
 // Расчёт процента скидки
-// price = 1950
-// priceOld = 2450
-// -> "-20%"
 function calculateDiscount(price: number, priceOld: number): string | null {
-  // если старой цены нет — скидки нет
-  if (!priceOld) return null;
+  if (!priceOld) {
+    return null;
+  }
 
-  // если старая цена меньше или равна новой — скидки нет
-  if (priceOld <= price) return null;
+  if (priceOld <= price) {
+    return null;
+  }
 
   const percent = Math.round(((priceOld - price) / priceOld) * 100);
 
-  // защита от некорректных значений
-  if (percent <= 0) return null;
+  if (percent <= 0) {
+    return null;
+  }
 
   return `-${percent}%`;
 }
 
 export default function HeroSection({ weeklyProduct }: HeroSectionProps) {
-  // Если блок выключен в Strapi — показываем только слайдер
+  // Если блок выключен — показываем только слайдер
   if (!weeklyProduct || !weeklyProduct.product) {
     return (
       <Container>
@@ -69,84 +75,61 @@ export default function HeroSection({ weeklyProduct }: HeroSectionProps) {
     );
   }
 
-  // Товар из блока
   const product = weeklyProduct.product;
-
-  // =========================
-  // Расчёт скидки
-  // =========================
-  let discount: string | null = null;
-
-  if (product.priceOld) {
-    discount = calculateDiscount(product.price, product.priceOld);
-  }
-
-  // =========================
-  // Получение первой картинки
-  // =========================
-  let image = null;
-
-  if (product.images && product.images.length > 0) {
-    image = product.images[0];
-  }
+  const image = product.images?.[0] ?? null;
+  const discount = product.priceOld ? calculateDiscount(product.price, product.priceOld) : null;
 
   return (
     <Container>
       <section className={styles.hero}>
         {/* Слайдер баннеров */}
-        <Slider images={BANNER_IMAGES} autoPlayInterval={7000} />
+        <div className={styles.desktopSlider}>
+          <Slider images={BANNER_IMAGES} autoPlayInterval={7000} />
+        </div>
 
-        {/* Карточка "Товар недели" */}
+        <div className={styles.mobileSlider}>
+          <MobileSlider images={BANNER_IMAGES} />
+        </div>
+
+        {/* Карточка товара недели */}
         <aside className={styles.weeklyProduct}>
-          {/* Весь блок кликабельный → переход на страницу товара */}
           <Link
             href={`/catalog/product/${product.slug}`}
             className={styles.weeklyProductCard}
             aria-label={`Перейти к товару ${product.name}`}>
-            {/* ================= HEADER ================= */}
+            {/* Верхняя часть карточки */}
             <div className={styles.weeklyProductHeader}>
-              <span className={styles.weeklyProductTitleGroup}>
-                <span className={styles.weeklyProductTitle}>Товар недели</span>
-              </span>
+              <span className={styles.weeklyProductTitle}>Товар недели</span>
 
-              {/* Скидка показывается только если она есть */}
               {discount && <span className={styles.weeklyProductDiscount}>{discount}</span>}
             </div>
 
-            {/* ================= CONTENT ================= */}
-            <div className={styles.weeklyProductContent}>
-              <div className={styles.weeklyProductBody}>
-                <div className={styles.weeklyProductMain}>
-                  {/* Текстовая часть */}
-                  <div>
-                    <p className={styles.weeklyProductDescription}>{product.name}</p>
+            {/* Основной контент карточки */}
+            <div className={styles.weeklyProductMain}>
+              <div className={styles.weeklyProductInfo}>
+                <p className={styles.weeklyProductDescription}>{product.name}</p>
 
-                    {/* Блок цен */}
-                    <div className={styles.weeklyProductPriceBlock}>
-                      <span className={styles.weeklyProductPrice}>{formatPrice(product.price)}</span>
+                <div className={styles.weeklyProductPriceBlock}>
+                  <span className={styles.weeklyProductPrice}>{formatPrice(product.price)}</span>
 
-                      {/* старая цена показывается только если она больше */}
-                      {product.priceOld > product.price && (
-                        <span className={styles.weeklyProductOldPrice}>{formatPrice(product.priceOld)}</span>
-                      )}
-                    </div>
-                  </div>
-
-                  {/* Картинка товара */}
-                  {image && (
-                    <div className={styles.weeklyProductImageWrapper}>
-                      <Image
-                        src={image.src}
-                        alt={image.alt}
-                        className={styles.weeklyProductImage}
-                        width={160}
-                        height={160}
-                        priority
-                      />
-                    </div>
+                  {product.priceOld > product.price && (
+                    <span className={styles.weeklyProductOldPrice}>{formatPrice(product.priceOld)}</span>
                   )}
                 </div>
               </div>
+
+              {image && (
+                <div className={styles.weeklyProductImageWrapper}>
+                  <Image
+                    src={image.src}
+                    alt={image.alt}
+                    className={styles.weeklyProductImage}
+                    width={160}
+                    height={160}
+                    priority
+                  />
+                </div>
+              )}
             </div>
           </Link>
         </aside>

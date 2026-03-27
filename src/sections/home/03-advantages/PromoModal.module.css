@@ -1,0 +1,217 @@
+/* ==========================================================================
+   INNER
+   Внутренний контейнер модалки
+   ========================================================================== */
+
+.inner {
+  display: flex;
+  flex-direction: column;
+}
+
+/* ==========================================================================
+   HEADER
+   Бейдж, заголовок и подзаголовок
+   ========================================================================== */
+
+.badge {
+  display: inline-flex;
+  width: fit-content;
+  margin-bottom: 12px;
+  padding: 4px 12px;
+  border-radius: 6px;
+
+  background: #f5f5f7;
+  color: rgba(28, 34, 48, 0.55);
+  font-size: 12px;
+  font-weight: 400;
+}
+
+.title {
+  margin: 0 0 6px;
+  color: var(--color-dark-blue);
+  font-size: 22px;
+  font-weight: 450;
+  letter-spacing: -0.02em;
+}
+
+.subtitle {
+  margin: 0 0 20px;
+  color: rgba(28, 34, 48, 0.55);
+  font-size: 14px;
+  font-weight: 350;
+}
+
+/* ==========================================================================
+   SECTION LABEL
+   Подписи разделов
+   ========================================================================== */
+
+.sectionLabel {
+  margin: 0 0 10px;
+  color: rgba(28, 34, 48, 0.45);
+  font-size: 11px;
+  font-weight: 450;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+}
+
+/* ==========================================================================
+   PERKS
+   Список преимуществ
+   ========================================================================== */
+
+.perks {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.perk {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+
+  color: var(--color-dark-blue);
+  font-size: 15px;
+  font-weight: 350;
+  line-height: 1.4;
+}
+
+.check {
+  flex-shrink: 0;
+  margin-top: 2px;
+  color: #3a7d56;
+  font-size: 14px;
+}
+
+/* ==========================================================================
+   GIFTS
+   Список подарков
+   ========================================================================== */
+
+.gifts {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin: 8px 0 0 28px;
+  padding: 0;
+  list-style: none;
+}
+
+.gift {
+  padding: 10px 14px;
+  border-radius: 10px;
+
+  background: #f5f5f7;
+  color: rgba(28, 34, 48, 0.65);
+  font-size: 14px;
+  font-weight: 350;
+  line-height: 1.4;
+}
+
+/* ==========================================================================
+   DIVIDER
+   Разделительная линия
+   ========================================================================== */
+
+.divider {
+  height: 1px;
+  margin: 20px 0;
+  background: #e3e6eb;
+}
+
+/* ==========================================================================
+   STEPS
+   Шаги получения акции
+   ========================================================================== */
+
+.steps {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.step {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.stepNum {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+
+  width: 22px;
+  height: 22px;
+  margin-top: 2px;
+  border-radius: 50%;
+  border: 1px solid #e3e6eb;
+
+  background: #f5f5f7;
+  color: rgba(28, 34, 48, 0.55);
+  font-size: 12px;
+  font-weight: 450;
+}
+
+.stepText {
+  color: var(--color-dark-blue);
+  font-size: 14px;
+  font-weight: 350;
+  line-height: 1.5;
+}
+
+/* ==========================================================================
+   PROMO
+   Блок промокода
+   ========================================================================== */
+
+.promoRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 4px;
+  padding: 14px 16px;
+  border-radius: 12px;
+
+  background: #f5f5f7;
+}
+
+.promoLabel {
+  flex: 1;
+  color: rgba(28, 34, 48, 0.55);
+  font-size: 13px;
+  font-weight: 350;
+}
+
+.promoCode {
+  padding: 5px 12px;
+  border: 1px solid #e3e6eb;
+  border-radius: 8px;
+
+  background: #ffffff;
+  color: var(--color-dark-blue);
+  font-family: var(--font-mono, monospace);
+  font-size: 15px;
+  font-weight: 450;
+  letter-spacing: 0.04em;
+}
+
+/* ==========================================================================
+   NOTE
+   Нижнее примечание
+   ========================================================================== */
+
+.note {
+  color: rgba(28, 34, 48, 0.45);
+  font-size: 13px;
+  font-weight: 350;
+  line-height: 1.55;
+}

@@ -1,18 +1,47 @@
 .section {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 16px;
-  padding: 60px 0;
+  padding: 24px 0;
 }
 
-.banner {
-  position: relative;
-  aspect-ratio: 16 / 9;
-  border-radius: var(--radius);
+.sliderWrapper {
+  max-height: 208px;
   overflow: hidden;
-  background: var(--color-light-soft);
+  border-radius: var(--radius);
 }
 
-.image {
+.sliderWrapper img {
   object-fit: cover;
+  height: 208px;
+}
+
+/* ==========================================================================
+   TABLET
+   Планшетная версия
+   ========================================================================== */
+
+@media (max-width: 1024px) {
+}
+
+@media (max-width: 768px) {
+}
+
+/* ==========================================================================
+   MOBILE
+   Мобильная версия
+   ========================================================================== */
+
+@media (max-width: 600px) {
+  .section {
+    padding: 24px 15px;
+  }
+
+  .sliderWrapper {
+    max-height: 158px;
+    overflow: hidden;
+    border-radius: var(--radius);
+  }
+
+  .sliderWrapper img {
+    object-fit: cover;
+    height: 158px;
+  }
 }

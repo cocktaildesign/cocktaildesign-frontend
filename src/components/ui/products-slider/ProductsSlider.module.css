@@ -1,28 +1,35 @@
-/* wrapper — relative, чтобы absolute-кнопки позиционировались внутри */
+/* ==========================================================================
+   WRAPPER
+   Обертка слайдера и кнопок
+   ========================================================================== */
+
 .wrapper {
   position: relative;
 }
 
-/* Базовые стили кнопки — круг с тенью */
+/* ==========================================================================
+   BUTTONS
+   Кнопки навигации
+   ========================================================================== */
+
 .button {
   position: absolute;
   top: 50%;
-  /* Сдвигаем на половину высоты вверх — получаем вертикальный центр */
-  transform: translateY(-50%);
+  z-index: 2;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
   width: 48px;
   height: 48px;
   border: none;
   border-radius: 50%;
+
   background-color: #ffffff;
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.12);
   cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  /* Кнопки поверх слайдера */
-  z-index: 2;
+  transform: translateY(-50%);
 
   transition: box-shadow 0.2s ease;
 }
@@ -31,30 +38,58 @@
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.18);
 }
 
-/* Левая кнопка — выезжает за левый край на половину своей ширины */
 .buttonPrev {
   left: -24px;
 }
 
-/* Правая кнопка — выезжает за правый край */
 .buttonNext {
   right: -24px;
 }
+
+/* ==========================================================================
+   SLIDER
+   Горизонтальный контейнер карточек
+   ========================================================================== */
 
 .slider {
   display: flex;
   gap: 16px;
   overflow-x: auto;
-  scrollbar-width: none;
   scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+  padding: 10px 0;
 }
 
 .slider::-webkit-scrollbar {
   display: none;
 }
+/* ==========================================================================
+   TABLET
+   Планшетная версия
+   ========================================================================== */
 
-.slide {
-  flex: 0 0 calc((100% - 16px * 4) / 5);
-  scroll-snap-align: start;
-  align-self: stretch;
+@media (max-width: 1024px) {
+}
+
+@media (max-width: 768px) {
+}
+
+/* ==========================================================================
+   MOBILE
+   Мобильная версия
+   ========================================================================== */
+
+@media (max-width: 600px) {
+  .slider {
+
+    gap: 6px;
+  }
+
+  .buttonPrev {
+    display: none;
+  }
+
+  .buttonNext {
+    display: none;
+  }
 }

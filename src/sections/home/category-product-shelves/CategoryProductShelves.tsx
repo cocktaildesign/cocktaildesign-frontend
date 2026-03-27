@@ -1,10 +1,11 @@
 import Link from "next/link";
 
+import Container from "@/components/layout/Container";
 import ProductsSlider from "../../../components/ui/products-slider/ProductsSlider";
 import ProductCard from "../product-card/HomeProductCard";
-import type { CatalogCollection } from "@/lib/api/catalog/types";
-import PageLayout from "@/components/layout/PageLayout";
+import ArrowRightIcon from "@/components/icons/ArrowRightIcon";
 
+import type { CatalogCollection } from "@/lib/api/catalog/types";
 
 import styles from "./CategoryProductShelves.module.css";
 
@@ -13,29 +14,38 @@ type CategoryProductShelvesProps = {
   collectionSlug: string;
 };
 
-export default async function CategoryProductShelves({ collections, collectionSlug }: CategoryProductShelvesProps) {
-  const safeSlug = collectionSlug.trim();
+export default function CategoryProductShelves({ collections, collectionSlug }: CategoryProductShelvesProps) {
+  const normalizedSlug = collectionSlug.trim();
 
-  if (!safeSlug) return null;
+  if (!normalizedSlug) {
+    return null;
+  }
 
-  const collection = collections.find((item) => item.slug === safeSlug);
+  const collection = collections.find((item) => item.slug === normalizedSlug);
 
-  if (!collection) return null;
-  if (collection.products.length === 0) return null;
+  if (!collection) {
+    return null;
+  }
+
+  if (collection.products.length === 0) {
+    return null;
+  }
 
   return (
-    <PageLayout>
-      <section className={styles.section}>
+    <section className={styles.section}>
+      <Container>
         <div className={styles.shelf}>
           <div className={styles.header}>
             <h2 className={styles.title}>{collection.title}</h2>
 
             {collection.viewAllHref && (
-              <Link href={collection.viewAllHref} className={styles.viewAll}>
-                Смотреть всё →
+              <Link href="/catalog" className={styles.viewAllLink}>
+                <span className={styles.viewAllText}>Все</span>
+                <ArrowRightIcon className={styles.viewAllIcon} title="Вперёд" />
               </Link>
             )}
           </div>
+
           <ProductsSlider>
             {collection.products.map((product) => (
               <div key={product.id} className={styles.slide}>
@@ -44,7 +54,7 @@ export default async function CategoryProductShelves({ collections, collectionSl
             ))}
           </ProductsSlider>
         </div>
-      </section>
-    </PageLayout>
+      </Container>
+    </section>
   );
 }

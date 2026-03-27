@@ -124,7 +124,7 @@
 
 @media (max-width: 600px) {
   .mainBar {
-    background-color: var(--color-white);
+    background-color: var(--color-light);
     border-radius: 0px 0px 12px 12px;
   }
   .mainBarRight {
@@ -137,6 +137,6 @@
 
   .mainBarCenter {
     gap: 0px;
-    padding: 0px 10px;
+    padding: 0px 15px;
   }
 }

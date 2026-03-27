@@ -1,10 +1,10 @@
 // src/sections/home/about-company/AboutCompany.tsx
-// Информационный блок "О компании" на главной.
 
-import styles from "./AboutCompany.module.css";
 import PageLayout from "@/components/layout/PageLayout";
 
-// Данные вынесены в константу — легко редактировать без правки JSX
+import styles from "./AboutCompany.module.css";
+
+// Данные блока вынесены в константу
 const POINTS = [
   {
     id: "1",
@@ -43,13 +43,15 @@ const POINTS = [
       "Проектируем и производим барный инвентарь под бренд клиента. Нанесение логотипа на металлические изделия, выполнение заказов по проекту клиента.",
   },
 ];
+
 export default function AboutCompany() {
   return (
     <PageLayout>
       <section className={styles.section}>
-        {/* Заголовок и описание */}
+        {/* Вступительная часть */}
         <div className={styles.intro}>
           <h2 className={styles.title}>Cocktail Design — барный инвентарь собственного производства</h2>
+
           <p className={styles.description}>
             Компания Cocktail Design предлагает широкий ассортимент барного инвентаря собственного производства.
             Стильная, функциональная и эргономичная продукция для комфортной работы сотрудников и качественного
@@ -57,7 +59,7 @@ export default function AboutCompany() {
           </p>
         </div>
 
-        {/* 6 пунктов — сетка 3 колонки как в рефе */}
+        {/* Сетка преимуществ */}
         <div className={styles.grid}>
           {POINTS.map((point) => (
             <div key={point.id} className={styles.point}>

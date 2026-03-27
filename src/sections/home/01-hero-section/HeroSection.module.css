@@ -1,133 +1,119 @@
-/* Hero container */
+/* ==========================================================================
+   HERO
+   Корневой контейнер секции
+   ========================================================================== */
 
 .hero {
   position: relative;
   width: 100%;
 }
 
-/* =========================
-   POSITION
-========================= */
+.desktopSlider {
+  display: block;
+}
 
-/* позиционирование карточки поверх баннера */
+.mobileSlider {
+  display: none;
+}
+
+/* ==========================================================================
+   WEEKLY PRODUCT
+   Позиция карточки поверх слайдера
+   ========================================================================== */
+
 .weeklyProduct {
   position: absolute;
-  bottom: 20px;
   right: 20px;
+  bottom: 20px;
   z-index: 2;
 }
 
-/* =========================
+/* ==========================================================================
    CARD
-========================= */
+   Карточка товара недели
+   ========================================================================== */
 
-/* основной контейнер карточки */
 .weeklyProductCard {
+  display: block;
   width: 400px;
-
-  border-radius: 12px;
   padding: 14px 16px;
+  border: 1px solid var(--color-gray-light);
+  border-radius: 12px;
 
   background: hsla(0, 0%, 100%, 0.25);
   backdrop-filter: blur(3rem);
-  border: 1px solid var(--color-gray-light);
 
-  /* ссылка выглядит как обычный блок */
-  display: block;
   color: inherit;
   text-decoration: none;
+
+  transition:
+    background-color var(--dur) var(--ease),
+    border-color var(--dur) var(--ease);
 }
 
-/* hover эффект карточки */
 .weeklyProductCard:hover {
   background-color: var(--color-light-soft);
 }
 
-/* =========================
+/* ==========================================================================
    HEADER
-========================= */
+   Верхняя часть карточки
+   ========================================================================== */
 
 .weeklyProductHeader {
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  justify-content: space-between;
   gap: 12px;
-
   padding-bottom: 10px;
-
   border-bottom: 1px solid var(--color-gray-light);
 }
 
-.weeklyProductTitleGroup {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-  min-width: 0;
-}
-
-/* заголовок */
 .weeklyProductTitle {
+  min-width: 0;
   color: var(--color-dark-blue);
   font-size: 18px;
   font-weight: 500;
   white-space: nowrap;
 }
 
-/* бренд */
-.weeklyProductBrand {
-  color: var(--color-bg);
-  font-size: 12px;
-  opacity: 0.6;
-  font-weight: 400;
-  font-family: var(--font-display);
-  white-space: nowrap;
-}
-
-/* бейдж скидки */
 .weeklyProductDiscount {
-  color: var(--color-bg);
-  font-size: 16px;
-  font-weight: 500;
-
   padding: 5px 10px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
   border-radius: 999px;
 
   background: rgba(255, 255, 255, 0.14);
-  border: 1px solid rgba(255, 255, 255, 0.18);
+  color: var(--color-bg);
+  font-size: 16px;
+  font-weight: 500;
 }
 
-/* =========================
+/* ==========================================================================
    CONTENT
-========================= */
+   Основной контент карточки
+   ========================================================================== */
 
-.weeklyProductContent {
+.weeklyProductMain {
+  display: flex;
+  align-items: stretch;
+  justify-content: space-between;
+  gap: 16px;
   margin-top: 12px;
 }
 
-.weeklyProductBody {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
+.weeklyProductInfo {
+  min-width: 0;
 }
 
-/* основной layout карточки */
-.weeklyProductMain {
-  display: flex;
-  justify-content: space-between;
-  flex-direction: row;
-  gap: 16px;
-  align-items: stretch;
-}
-
-/* описание товара */
 .weeklyProductDescription {
-  font-size: 14px;
   color: var(--color-dark-blue);
+  font-size: 14px;
 }
 
-/* =========================
+/* ==========================================================================
    PRICE
-========================= */
+   Блок цен
+   ========================================================================== */
 
 .weeklyProductPriceBlock {
   display: flex;
@@ -144,41 +130,65 @@
 }
 
 .weeklyProductOldPrice {
-  font-size: 18px;
-  text-decoration: line-through;
   color: var(--color-dark-blue-soft);
+  font-size: 18px;
   font-weight: 400;
+  text-decoration: line-through;
 }
 
-/* =========================
+/* ==========================================================================
    IMAGE
-========================= */
+   Картинка товара
+   ========================================================================== */
 
 .weeklyProductImageWrapper {
-  width: 100%;
-  height: 100%;
-  max-width: 100px;
-
+  flex: 0 0 100px;
+  width: 100px;
   aspect-ratio: 1 / 1;
-  flex-shrink: 0;
-
-  border-radius: 18px;
-  overflow: hidden;
-
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.14);
 
   display: flex;
   align-items: center;
   justify-content: center;
+
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.06);
 }
 
 .weeklyProductImage {
+  display: block;
   width: 100%;
   height: 100%;
-
   object-fit: cover;
-  display: block;
-
   transform: scale(1.04);
+}
+
+/* ==========================================================================
+   TABLET
+   Планшетная версия
+   ========================================================================== */
+
+@media (max-width: 1024px) {
+}
+
+@media (max-width: 768px) {
+  .weeklyProduct {
+    display: none;
+  }
+}
+
+/* ==========================================================================
+   MOBILE
+   Мобильная версия
+   ========================================================================== */
+
+@media (max-width: 600px) {
+  .desktopSlider {
+    display: none;
+  }
+
+  .mobileSlider {
+    display: block;
+  }
 }

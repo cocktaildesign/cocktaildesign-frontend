@@ -1,50 +1,68 @@
-/* src/sections/home/knowledge-preview/knowledge-preview-tabs/KnowledgePreviewTabs.module.css */
+/* ==========================================================================
+   SECTION
+   Корневой контейнер блока
+   ========================================================================== */
 
-/* Шапка: табы слева, ссылка справа */
+.section {
+  display: flex;
+  flex-direction: column;
+}
+
+/* ==========================================================================
+   HEADER
+   Шапка блока: табы слева, ссылка справа
+   ========================================================================== */
+
 .header {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 16px;
   margin-bottom: 24px;
 }
 
-/* Общий контейнер табов — серый фон, единая капсула */
+/* ==========================================================================
+   TABS
+   Контейнер табов и кнопки
+   ========================================================================== */
+
 .tabs {
   display: inline-flex;
-  background: var(--color-light);
-  border-radius: 20px;
+  height: 50px;
   padding: 6px;
-	height: 50px;
+  border-radius: 20px;
+  background: var(--color-light);
 }
 
-/* Обычная кнопка таба */
 .tab {
   padding: 8px 24px;
+  border: 1px solid transparent;
   border-radius: 16px;
-  border: none;
   background: transparent;
+
   font-size: 14px;
-  cursor: pointer;
   color: var(--color-dark-blue);
-  transition: background 200ms ease;
+  cursor: pointer;
+
+  transition:
+    background-color 200ms ease,
+    border-color 200ms ease;
 }
 
 .tab:hover {
   background: rgba(255, 255, 255, 0.5);
 }
 
-/* Активный таб — белый фон внутри серого контейнера */
 .tabActive {
-  padding: 8px 24px;
-  border-radius: 16px;
-  border: 1px solid var(--color-gray-light);
+  border-color: var(--color-gray-light);
   background: #fff;
-  font-size: 14px;
-  cursor: pointer;
-  color: var(--color-dark-blue);
 }
 
-/* Ссылка "Смотреть все" */
+/* ==========================================================================
+   VIEW ALL
+   Ссылка "смотреть все" в шапке
+   ========================================================================== */
+
 .viewAll {
   font-size: 14px;
   color: var(--color-dark-blue);
@@ -55,9 +73,126 @@
   text-decoration: underline;
 }
 
-/* 4 колонки под десктоп */
+/* ==========================================================================
+   GRID
+   Сетка карточек
+   ========================================================================== */
+
 .grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 16px;
+}
+
+.cardItem {
+  min-width: 0;
+}
+
+/* ==========================================================================
+   FOOTER
+   Нижняя кнопка для mobile
+   ========================================================================== */
+
+.footer {
+  display: none;
+}
+
+.viewAllMobile {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  min-height: 40px;
+  padding: 10px 16px;
+  border-radius: 12px;
+
+  background: var(--color-light);
+  color: var(--color-dark-blue);
+  font-size: 14px;
+  font-weight: 500;
+  text-decoration: none;
+}
+
+/* ==========================================================================
+   TABLET
+   Планшетная версия
+   ========================================================================== */
+
+@media (max-width: 1024px) {
+  .grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .header {
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* ==========================================================================
+   MOBILE
+   Мобильная версия
+   ========================================================================== */
+
+@media (max-width: 600px) {
+  .header {
+    margin-bottom: 16px;
+    padding: 0 15px;
+  }
+
+  .tabs {
+    width: 100%;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .tabs::-webkit-scrollbar {
+    display: none;
+  }
+
+  .cardItem:first-child {
+    padding-left: 15px;
+  }
+
+  .tab {
+    white-space: nowrap;
+    padding: 8px 16px;
+  }
+
+  /* Карточки идут горизонтально */
+  .grid {
+    display: flex;
+    gap: 6px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scrollbar-width: none;
+    scroll-snap-type: x mandatory;
+  }
+
+  .grid::-webkit-scrollbar {
+    display: none;
+  }
+
+  .cardItem {
+    flex: 0 0 82%;
+    scroll-snap-align: start;
+  }
+
+  /* Верхнюю ссылку скрываем */
+  .viewAll {
+    display: none;
+  }
+
+  /* Нижнюю кнопку показываем */
+  .footer {
+    display: flex;
+    justify-content: flex-end;
+    margin: 10px 10px 0 10px;
+  }
 }

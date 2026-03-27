@@ -1,9 +1,20 @@
+/* ==========================================================================
+   SECTION
+   Общая секция полки
+   ========================================================================== */
+
 .section {
-  margin-top: 40px;
   display: flex;
   flex-direction: column;
   gap: 80px;
+  margin-top: 40px;
+  padding: 24px 0;
 }
+
+/* ==========================================================================
+   SHELF
+   Одна товарная полка
+   ========================================================================== */
 
 .shelf {
   display: flex;
@@ -11,37 +22,100 @@
   gap: 24px;
 }
 
+/* Верхняя часть полки */
 .header {
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  justify-content: space-between;
+  gap: 16px;
 }
 
 .title {
-  margin: 0 0 24px;
+  margin: 0;
   font-size: var(--text-2xl);
   font-weight: 450;
 }
 
-.viewAll {
+.viewAllLink {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+}
+
+.viewAllText {
   font-size: 14px;
+  color: var(--color-gray);
   text-decoration: none;
-  color: var(--text-secondary);
-  transition: opacity 0.2s ease;
+  transition: color var(--dur-fast) var(--ease);
+  text-wrap: nowrap;
 }
 
 .viewAll:hover {
-  opacity: 0.7;
+  color: var(--color-dark-blue);
 }
 
-.grid {
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  gap: 24px;
+.viewAllIcon {
+  color: var(--color-gray);
+  width: 10px;
+  height: 10px;
+  position: relative;
+  top: 1px;
 }
+
+/* ==========================================================================
+   SLIDE
+   Один слайд внутри ProductsSlider
+   ========================================================================== */
+
 .slide {
   flex: 0 0 calc((100% - 16px * 4) / 5);
-  scroll-snap-align: start;
   align-self: stretch;
+  scroll-snap-align: start;
 }
-	
+
+/* ==========================================================================
+   TABLET
+   Планшетная версия
+   ========================================================================== */
+
+@media (max-width: 1024px) {
+}
+
+@media (max-width: 768px) {
+}
+
+/* ==========================================================================
+   MOBILE
+   Мобильная версия
+   ========================================================================== */
+
+@media (max-width: 600px) {
+  .section {
+    margin-top: 0px;
+    background-color: var(--color-white);
+    padding: 15px 0px;
+    border-radius: 24px;
+  }
+
+  .header {
+    padding: 0 15px;
+  }
+
+  .shelf {
+    gap: 8px;
+  }
+
+  .title {
+    font-size: var(--text-lg);
+    font-weight: 550;
+  }
+
+  .slide {
+    flex: 0 0 46%;
+  }
+
+  .slide:first-child {
+    padding-left: 15px;
+  }
+}

@@ -1,3 +1,7 @@
+.footer {
+  width: 100%;
+}
+
 .feedbackBar {
   height: 60px;
   background: #e0e7ef;
@@ -34,14 +38,16 @@
 }
 
 .footerSection {
-  background: radial-gradient(50% 50% at 50% 28.91%, #0f172a 1.44%, #0b0f14 100%);
   padding: 40px 0;
+  background: radial-gradient(50% 50% at 50% 28.91%, #0f172a 1.44%, #0b0f14 100%);
+  border-radius: 24px 24px 0 0;
 }
 
 .footerGrid {
   display: grid;
   grid-template-columns: repeat(6, 1fr);
   gap: 16px;
+  align-items: start;
 }
 
 .footerColumn {
@@ -49,6 +55,7 @@
   flex-direction: column;
   gap: 20px;
   overflow: hidden;
+  min-width: 0;
 }
 
 .footerNav {
@@ -61,19 +68,28 @@
   color: #fff;
   font-size: 16px;
   font-weight: 500;
+  line-height: 1.3;
 }
 
 .footerList {
   display: flex;
   flex-direction: column;
   gap: 2px;
-
+  margin: 0;
+  padding: 0;
   list-style: none;
+}
+
+.footerItem {
+  margin: 0;
+  padding: 0;
 }
 
 .footerLink {
   color: #b7b9bf;
   font-size: 14px;
+  line-height: 1.45;
+  text-decoration: none;
   transition: color 160ms ease;
 }
 
@@ -82,14 +98,19 @@
 }
 
 /* ==========================================================================
-1 колонка из 6
+   Левая колонка
    ========================================================================== */
+
+.logo {
+  display: inline-flex;
+	width: 150px;
+}
 
 .footerRating {
   display: flex;
-  flex-direction: row;
-  gap: 10px;
   align-items: center;
+  gap: 10px;
+  text-decoration: none;
 }
 
 .footerRatingContent {
@@ -102,10 +123,10 @@
   color: #fff;
   font-size: 14px;
   font-family: var(--font-sans);
-  opacity: 1;
   transition: color 160ms ease;
 }
-.footerRatingContent:hover .footerRatingContentText {
+
+.footerRating:hover .footerRatingContentText {
   color: #e0e7ef;
 }
 
@@ -118,24 +139,6 @@
   color: #ffdd00;
 }
 
-.footerMarketplaces {
-  display: flex;
-  gap: 4px;
-  flex-direction: column;
-}
-
-.footerMarketplacesTitle {
-  font-size: 16px;
-  font-weight: 600;
-  color: #fff;
-}
-
-.footerMarketplacesList {
-  display: flex;
-  flex-direction: row;
-  gap: 5px;
-}
-
 .footerYandexIcon {
   opacity: 1;
   transition: opacity 160ms ease;
@@ -145,16 +148,40 @@
   opacity: 0.7;
 }
 
+.footerMarketplaces {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.footerMarketplacesTitle {
+  color: #fff;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.footerMarketplacesList {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
 .footerMarketplacesItem {
   opacity: 1;
   transition: opacity 160ms ease;
 }
+
 .footerMarketplacesItem:hover {
   opacity: 0.7;
 }
 
+.footerPhoneLink {
+  color: var(--color-white);
+  font-weight: 500;
+}
+
 /* ==========================================================================
-6 колонка из 6
+   Правая колонка
    ========================================================================== */
 
 .footerColumnSocial {
@@ -163,12 +190,21 @@
   justify-content: space-between;
   gap: 60px;
   overflow: hidden;
+  min-width: 0;
 }
+
 .socialList {
   display: flex;
-  flex-direction: row;
-  gap: 10px;
   flex-wrap: wrap;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.socialItem {
+  margin: 0;
+  padding: 0;
 }
 
 .socialLink {
@@ -184,10 +220,11 @@
   display: flex;
   flex-direction: column;
   gap: 15px;
-  border: 1px solid #b7b9bf;
   padding: 20px;
+  border: 1px solid #b7b9bf;
   border-radius: 12px;
 }
+
 .tgHeader {
   display: flex;
   flex-direction: column;
@@ -196,58 +233,161 @@
   gap: 10px;
 }
 
-.tgHeader {
-  font-size: 16px;
+.tgHeaderTitle {
   color: #fff;
+  font-size: 16px;
+  font-weight: 500;
 }
 
 .tgHeaderSubTitle {
-  font-size: 12px;
   color: #fff;
+  font-size: 12px;
+  text-align: center;
+  line-height: 1.45;
 }
+
+.tgQr {
+  display: flex;
+  justify-content: center;
+}
+
 .tgActions {
   width: 100%;
 }
 
 .tgButton {
   display: flex;
-  flex-direction: row;
+  align-items: center;
+  justify-content: center;
   gap: 10px;
 
-  justify-content: center;
-  align-items: center;
+  width: 100%;
+  padding: 10px 0;
+  border-radius: 8px;
 
   background: #245ca5;
   color: #fff;
-  border-radius: 8px;
-  padding: 10px 0;
-
   font-size: 14px;
-  width: 100%;
-  transition: background 160ms ease;
-}
+  text-decoration: none;
 
-.line {
-  width: 100%;
-  display: block;
-  height: 1px;
-  background-color: #b7b9bf;
-  margin: 20px 0;
+  transition: background 160ms ease;
 }
 
 .tgButton:hover {
   background: #1a4e91;
 }
 
+.tgButtonIcon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.tgButtonText {
+  display: inline-flex;
+  align-items: center;
+}
+
 /* ==========================================================================
-нижняя часть футера
+   Mobile blocks
+   ========================================================================== */
+
+.footerMobileTelegram {
+  display: none;
+}
+
+.footerMobileSocial {
+  display: none;
+}
+
+.footerMobileAccordion {
+  display: none;
+}
+
+.footerAccordion {
+  border-top: 1px solid rgba(183, 185, 191, 0.35);
+}
+
+.footerAccordion:last-child {
+  border-bottom: 1px solid rgba(183, 185, 191, 0.35);
+}
+
+.footerAccordionSummary {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  padding: 18px 32px 18px 0;
+  list-style: none;
+  cursor: pointer;
+
+  color: #fff;
+  font-size: 18px;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.footerAccordionSummary::-webkit-details-marker {
+  display: none;
+}
+
+.footerAccordionSummary::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  right: 4px;
+
+  width: 10px;
+  height: 10px;
+
+  border-right: 2px solid #fff;
+  border-bottom: 2px solid #fff;
+
+  transform: translateY(-60%) rotate(45deg);
+  transition: transform 160ms ease;
+}
+
+.footerAccordion[open] .footerAccordionSummary::after {
+  transform: translateY(-20%) rotate(-135deg);
+}
+
+.footerAccordionBody {
+  padding: 0 0 18px;
+}
+
+.footerAccordionBody .footerList {
+  gap: 10px;
+}
+
+.footerAccordionBody .footerLink {
+  display: inline-block;
+  color: #d5d7dd;
+  font-size: 16px;
+  line-height: 1.45;
+}
+
+/* ==========================================================================
+   Разделитель
+   ========================================================================== */
+
+.line {
+  display: block;
+  width: 100%;
+  height: 1px;
+  margin: 20px 0;
+  background-color: #b7b9bf;
+}
+
+/* ==========================================================================
+   Нижняя часть футера
    ========================================================================== */
 
 .footerBottomGrid {
   display: grid;
   grid-template-columns: 2fr 1.5fr;
-  gap: 24px;
   align-items: start;
+  gap: 24px;
 }
 
 .footerBottomLeft {
@@ -255,9 +395,11 @@
   flex-direction: column;
   gap: 10px;
 }
+
 .footerBottomText {
-  font-size: 12px;
   color: #b7b9bf;
+  font-size: 12px;
+  line-height: 1.5;
 }
 
 .footerInlineLink {
@@ -271,28 +413,160 @@
 }
 
 .footerBottomRight {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  gap: 10px;
-  text-align: right;
   display: grid;
   gap: 10px;
+  text-align: right;
 }
 
 .footerDev {
   color: #b7b9bf;
   font-size: 14px;
+  text-decoration: none;
 }
+
 .footerDevName {
   color: #4000ff;
   font-weight: 700;
 }
 
 .footerCopyright {
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-end;
   color: #b7b9bf;
   font-size: 12px;
-  display: flex;
-  justify-content: flex-end;
-  align-items: flex-end;
+  line-height: 1.5;
+}
+
+/* ==========================================================================
+   TABLET
+   Планшетная версия
+   ========================================================================== */
+
+@media (max-width: 1024px) {
+  .footerSection {
+    padding: 32px 0;
+  }
+
+  .footerGrid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+
+  .footerColumn,
+  .footerColumnSocial {
+    gap: 20px;
+  }
+
+  .tgCard {
+    padding: 16px;
+  }
+
+  .footerBottomGrid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .footerBottomRight {
+    text-align: left;
+  }
+
+  .footerCopyright {
+    justify-content: flex-start;
+  }
+}
+
+/* ==========================================================================
+   MOBILE
+   Мобильная версия
+   ========================================================================== */
+
+@media (max-width: 600px) {
+  .footerSection {
+    padding: 34px 15px;
+    padding-bottom: 70px;
+  }
+
+  .footerGrid {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+
+  .footerGrid > .footerColumn:not(:first-child),
+  .footerGrid > .footerColumnSocial {
+    display: none;
+  }
+
+  .footerColumn {
+    gap: 18px;
+  }
+
+  .logo {
+    width: 200px;
+  }
+
+  .footerRating {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .footerRatingContentText {
+    font-size: 13px;
+  }
+
+  .footerMarketplacesTitle {
+    font-size: 15px;
+  }
+
+  .footerMarketplacesList {
+    flex-wrap: wrap;
+  }
+
+  .footerMobileSocial {
+    display: block;
+    margin: 20px 0;
+  }
+
+  .footerMobileAccordion {
+    display: block;
+  }
+
+  .footerMobileTelegram {
+    display: block;
+    margin-top: 20px;
+  }
+
+  .footerMobileTelegram .tgCard {
+    padding: 16px;
+  }
+
+  .socialList {
+    gap: 12px;
+  }
+
+  .line {
+    margin: 24px 0 20px;
+  }
+
+  .footerBottomGrid {
+    grid-template-columns: 1fr;
+    gap: 14px;
+  }
+
+  .footerBottomText,
+  .footerCopyright {
+    font-size: 11px;
+  }
+
+  .footerBottomRight {
+    text-align: left;
+  }
+
+  .footerCopyright {
+    justify-content: flex-start;
+  }
+
+  .footerDev {
+    font-size: 13px;
+  }
 }

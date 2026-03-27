@@ -41,7 +41,7 @@
 .search {
   position: relative;
   z-index: var(--z-search-panel);
-  padding: 0px 10px;
+  padding: 0px 5px;
 
   display: grid;
   gap: 8px;
@@ -54,6 +54,7 @@
 
 .searchIcon {
   color: var(--color-gray-light);
+  display: none;
 }
 
 .inputRow {
@@ -76,7 +77,7 @@
   min-width: 0;
   width: 100%;
   height: 100%;
-  padding: 0 16px;
+  padding: 0 6px;
   border: 0;
   border-radius: var(--radius);
   background-color: var(--color-white);
@@ -124,8 +125,7 @@
    ========================================================================== */
 
 .button {
-  margin: 2px;
-  padding: 0 16px;
+  padding: 10 16px;
   border: 0;
   border-radius: 9px;
 
@@ -554,5 +554,14 @@
     grid-template-columns: 1fr;
     gap: 16px;
     align-items: start;
+  }
+
+  .search {
+    padding: 0px 10px;
+    border: 1px solid var(--color-gray-ligh);
+  }
+
+  .searchIcon {
+    display: block;
   }
 }

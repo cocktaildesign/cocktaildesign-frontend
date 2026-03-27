@@ -1,61 +1,127 @@
+/* ==========================================================================
+   SECTION
+   Два блока соцсетей
+   ========================================================================== */
+
 .section {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 16px;
 }
 
+/* ==========================================================================
+   CARD
+   Одна карточка соцсети
+   ========================================================================== */
+
 .card {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: 16px;
+
   padding: 20px 24px;
   border-radius: 12px;
   background: var(--color-light-soft);
 }
 
+/* ==========================================================================
+   CONTENT
+   Текст внутри карточки
+   ========================================================================== */
+
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
 .name {
   font-size: 16px;
   font-weight: 600;
-  white-space: nowrap;
 }
 
 .description {
-  flex: 1; /* растягивается, толкает кнопку вправо */
   font-size: 14px;
   color: var(--color-dark-blue);
+
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  text-wrap: balance;
 }
 
-.buttonVk {
+/* ==========================================================================
+   BUTTON
+   Общая база кнопок
+   ========================================================================== */
+
+.button {
   display: flex;
   align-items: center;
   gap: 8px;
+
   padding: 10px 20px;
   border-radius: 8px;
-  background: #066de3;
-  color: #fff;
+
   font-size: 14px;
   text-decoration: none;
+  color: #fff;
   white-space: nowrap;
-  transition: opacity 200ms ease;
+
+  transition: opacity var(--dur-fast) var(--ease);
 }
 
-.buttonVk:hover {
+.button:hover {
   opacity: 0.85;
+}
+
+.button svg {
+  flex-shrink: 0;
+  width: 16px;
+  height: 16px;
+}
+
+/* Варианты кнопок */
+
+.buttonVk {
+  background: #066de3;
 }
 
 .buttonTg {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 10px 20px;
-  border-radius: 8px;
   background: #2c9fd7;
-  color: #fff;
-  font-size: 14px;
-  text-decoration: none;
-  white-space: nowrap;
-  transition: opacity 200ms ease;
 }
-.buttonTg:hover {
-  opacity: 0.85;
+
+/* ==========================================================================
+   TABLET
+   ========================================================================== */
+
+@media (max-width: 1024px) {
+  .section {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ==========================================================================
+   MOBILE
+   ========================================================================== */
+
+@media (max-width: 600px) {
+  .section {
+    border-radius: 24px;
+    background-color: var(--color-white);
+    padding: 20px 15px;
+  }
+  .card {
+    gap: 12px;
+  }
+
+  .button {
+    justify-content: center;
+  }
+
+  .description {
+    white-space: normal;
+  }
 }

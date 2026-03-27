@@ -1,21 +1,20 @@
 // src/sections/home/knowledge-preview/knowledge-preview-tabs/KnowledgePreviewTabs.tsx
-// Client Component — нужен useState для переключения табов.
-// Данные приходят с сервера через props, фильтруем на клиенте.
+
 "use client";
 
 import { useState } from "react";
 import Link from "next/link";
+
 import KnowledgeCard from "@/app/knowledge/knowledge-content/knowledge-card/KnowledgeCard";
 import type { KnowledgeItemPreview, KnowledgeFormat } from "@/app/knowledge/types";
+
 import styles from "./KnowledgePreviewTabs.module.css";
 
-// Тип одного таба
 type Tab = {
-  id: KnowledgeFormat | "all"; // "all" | "video" | "article" | "material"
+  id: KnowledgeFormat | "all";
   label: string;
 };
 
-// Список табов — константа вне компонента, не пересоздаётся при ререндере
 const TABS: Tab[] = [
   { id: "all", label: "Все" },
   { id: "video", label: "Видео" },
@@ -24,50 +23,93 @@ const TABS: Tab[] = [
 ];
 
 type KnowledgePreviewTabsProps = {
-  // Все материалы приходят с сервера — фильтруем здесь на клиенте
   items: KnowledgeItemPreview[];
 };
 
+// Ссылка и текст кнопки зависят от активного таба
+function getViewAllConfig(activeTab: KnowledgeFormat | "all") {
+  if (activeTab === "video") {
+    return {
+      href: "/knowledge?format=video",
+      label: "Все видео",
+    };
+  }
+
+  if (activeTab === "article") {
+    return {
+      href: "/knowledge?format=article",
+      label: "Все статьи",
+    };
+  }
+
+  if (activeTab === "material") {
+    return {
+      href: "/knowledge?format=material",
+      label: "Все материалы",
+    };
+  }
+
+  return {
+    href: "/knowledge",
+    label: "Смотреть все",
+  };
+}
+
 export default function KnowledgePreviewTabs({ items }: KnowledgePreviewTabsProps) {
-  // Активный таб — по умолчанию "все"
+  // Активный таб
   const [activeTab, setActiveTab] = useState<KnowledgeFormat | "all">("all");
 
-  // Фильтрация: если "all" — показываем всё, иначе только нужный формат
+  // Фильтруем материалы по активному табу
   const filteredItems = activeTab === "all" ? items : items.filter((item) => item.format === activeTab);
 
   // Показываем только первые 4 карточки
   const visibleItems = filteredItems.slice(0, 4);
 
+  const viewAll = getViewAllConfig(activeTab);
+
   return (
-    <div>
-      {/* Шапка: табы слева, ссылка справа — одна строка */}
+    <div className={styles.section}>
+      {/* Верхняя часть блока */}
       <div className={styles.header}>
-        {/* Группа табов в одном контейнере-капсуле */}
-        <div className={styles.tabs} role="tablist">
-          {TABS.map((tab) => (
-            <button
-              key={tab.id}
-              role="tab"
-              // aria-selected сообщает скринридеру какой таб активен
-              aria-selected={activeTab === tab.id}
-              className={activeTab === tab.id ? styles.tabActive : styles.tab}
-              onClick={() => setActiveTab(tab.id)}>
-              {tab.label}
-            </button>
-          ))}
+        {/* Табы */}
+        <div className={styles.tabs} role="tablist" aria-label="Формат материалов">
+          {TABS.map((tab) => {
+            const isActive = activeTab === tab.id;
+
+            return (
+              <button
+                key={tab.id}
+                type="button"
+                role="tab"
+                aria-selected={isActive}
+                className={`${styles.tab} ${isActive ? styles.tabActive : ""}`}
+                onClick={() => setActiveTab(tab.id)}>
+                {tab.label}
+              </button>
+            );
+          })}
         </div>
 
-        {/* Ссылка на полный раздел — справа от табов */}
-        <Link href="/knowledge" className={styles.viewAll}>
-          Смотреть все →
+        {/* Ссылка на полный раздел — desktop/tablet */}
+        <Link href={viewAll.href} className={styles.viewAll}>
+          {viewAll.label} →
         </Link>
       </div>
 
-      {/* Грид карточек — отдельно под шапкой */}
+      {/* Карточки материалов */}
       <div className={styles.grid}>
         {visibleItems.map((item) => (
-          <KnowledgeCard key={item.id} item={item} />
+          <div key={item.id} className={styles.cardItem}>
+            <KnowledgeCard item={item} />
+          </div>
         ))}
+      </div>
+
+      {/* Кнопка снизу — mobile */}
+      <div className={styles.footer}>
+        <Link href={viewAll.href} className={styles.viewAllMobile}>
+          {viewAll.label}
+        </Link>
       </div>
     </div>
   );

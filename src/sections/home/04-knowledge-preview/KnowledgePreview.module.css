@@ -13,19 +13,33 @@
   margin: 0;
 }
 
-.viewAll {
-  font-size: 14px;
-  color: var(--color-dark-blue);
-  text-decoration: none;
-}
-
-.viewAll:hover {
-  text-decoration: underline;
-}
-
 /* 4 колонки — под десктоп */
 .grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 16px;
+}
+/* ==========================================================================
+   TABLET
+   Планшетная версия
+   ========================================================================== */
+
+@media (max-width: 1024px) {
+}
+
+@media (max-width: 768px) {
+}
+
+/* ==========================================================================
+   MOBILE
+   Мобильная версия
+   ========================================================================== */
+
+@media (max-width: 600px) {
+  .section {
+    padding: 20px 0px;
+    background-color: var(--color-white);
+    border-radius: 24px;
+    margin-bottom: 10px;
+  }
 }

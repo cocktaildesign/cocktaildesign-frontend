@@ -1,13 +1,26 @@
-/* src/sections/home/sale-products-shelf/SaleProductsShelf.module.css */
+/* ==========================================================================
+   SECTION
+   Общая секция полки со скидками
+   ========================================================================== */
 
 .section {
   width: 100%;
-  background-color: var(--color-light-soft);
-  padding: 50px 26px;
-  border-radius: 12px;
-  border: 1px solid var(--color-light);
   margin-top: 70px;
+  padding: 20px 26px;
+
+  border: 1px solid var(--color-light);
+  border-radius: 12px;
+
+  background-image: url("/images/Hero/bg-sale.webp");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
 }
+
+/* ==========================================================================
+   SHELF
+   Внутренний контейнер полки
+   ========================================================================== */
 
 .shelf {
   display: flex;
@@ -15,6 +28,7 @@
   gap: 24px;
 }
 
+/* Верхняя часть полки */
 .header {
   display: flex;
   align-items: center;
@@ -23,29 +37,101 @@
 }
 
 .title {
+  margin: 0;
+  color: var(--color-white);
   font-size: var(--text-2xl);
-  font-weight: 450;
+  font-weight: 500;
 }
 
-.grid {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 20px;
+.desktopOnly {
+  display: inline;
 }
 
-.viewAll {
+.viewAllLink {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+}
+
+.viewAllText {
   font-size: 14px;
+  color: var(--color-white);
   text-decoration: none;
-  color: var(--text-secondary);
-  transition: opacity 0.2s ease;
+  transition: color var(--dur-fast) var(--ease);
+  text-wrap: nowrap;
 }
 
 .viewAll:hover {
-  opacity: 0.7;
+  color: var(--color-dark-blue);
 }
+
+.viewAllIcon {
+  color: var(--color-white);
+  width: 10px;
+  height: 10px;
+  position: relative;
+  top: 1px;
+}
+
+/* ==========================================================================
+   SLIDE
+   Один слайд внутри ProductsSlider
+   ========================================================================== */
 
 .slide {
   flex: 0 0 calc((100% - 16px * 4) / 5);
-  scroll-snap-align: start;
   align-self: stretch;
+  scroll-snap-align: start;
+}
+
+/* ==========================================================================
+   TABLET
+   Планшетная версия
+   ========================================================================== */
+
+@media (max-width: 1024px) {
+}
+
+@media (max-width: 768px) {
+}
+
+/* ==========================================================================
+   MOBILE
+   Мобильная версия
+   ========================================================================== */
+
+@media (max-width: 600px) {
+  .section {
+    margin-top: 0px;
+    padding: 15px 0px 10px 0px;
+
+    border: 1px solid transparent;
+    border-radius: 24px;
+  }
+
+  .title {
+    font-size: var(--text-lg);
+    font-weight: 550;
+  }
+
+  .slide:first-child {
+    padding-left: 15px;
+  }
+
+  .shelf {
+    gap: 12px;
+  }
+
+  .slide {
+    flex: 0 0 46%;
+  }
+
+  .header {
+    padding: 0 15px;
+  }
+
+  .desktopOnly {
+    display: none;
+  }
 }

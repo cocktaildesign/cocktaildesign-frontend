@@ -3,6 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import PageLayout from "@/components/layout/PageLayout";
+import ArrowRightIcon from "@/components/icons/ArrowRightIcon";
 
 import { getTopCategoriesFromStrapi } from "@/lib/api/catalog";
 
@@ -11,7 +12,6 @@ import styles from "./PopularCategories.module.css";
 export default async function PopularCategories() {
   const categories = await getTopCategoriesFromStrapi();
 
-  // берем только 12
   const visibleCategories = categories.slice(0, 12);
 
   if (!visibleCategories.length) return null;
@@ -22,8 +22,9 @@ export default async function PopularCategories() {
         <div className={styles.header}>
           <h2 className={styles.title}>Популярные категории</h2>
 
-          <Link href="/catalog" className={styles.viewAll}>
-            Смотреть всё →
+          <Link href="/catalog" className={styles.viewAllLink}>
+            <span className={styles.viewAllText}>Все</span>
+            <ArrowRightIcon className={styles.viewAllIcon} title="Вперёд" />
           </Link>
         </div>
 
@@ -38,7 +39,7 @@ export default async function PopularCategories() {
                 <div className={styles.imageWrapper}>
                   <Image
                     src={category.imageSrc || "/images/catalog/product-placeholder.webp"}
-                    sizes="(max-width: 768px) 100vw, 33vw"
+                    sizes="(max-width: 600px) 50vw, (max-width: 1024px) 33vw, 16vw"
                     fill
                     alt={category.name ? `Категория: ${category.name}` : "Категория"}
                     className={styles.image}

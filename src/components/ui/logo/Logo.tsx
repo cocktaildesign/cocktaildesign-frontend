@@ -2,8 +2,8 @@ import Link from "next/link";
 
 type LogoProps = {
   href?: string;
-  linkClassName?: string; // стили для тега <a> (отступы, display и т.д.)
-  className?: string; // размер и цвет SVG
+  linkClassName?: string;
+  className?: string;
   "aria-label"?: string;
   color?: string;
 };
@@ -19,8 +19,6 @@ export default function Logo({
     <Link href={href} aria-label={ariaLabel} className={linkClassName}>
       <svg
         viewBox="0 0 120 42"
-        width="120"
-        height="42"
         className={className}
         fill="none"
         xmlns="http://www.w3.org/2000/svg"

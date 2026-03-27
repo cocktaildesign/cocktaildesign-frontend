@@ -10,6 +10,7 @@
     background 300ms ease,
     border 300ms ease,
     transform 500ms ease;
+  height: 100%;
 }
 
 .card:hover {

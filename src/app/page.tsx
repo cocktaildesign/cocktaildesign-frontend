@@ -1,4 +1,5 @@
 // src/app/page.tsx
+import styles from "./HomePage.module.css";
 
 import type { Metadata } from "next";
 import HeroSection from "@/sections/home/01-hero-section/HeroSection";
@@ -11,6 +12,7 @@ import KnowledgePreview from "@/sections/home/04-knowledge-preview/KnowledgePrev
 import Banners from "@/sections/home/05-banners/Banners";
 import SocialLinks from "@/sections/home/06-social-links/SocialLinks";
 import AboutCompany from "@/sections/home/07-about-company/AboutCompany";
+import MobileCatalogShortcuts from "@/sections/home/mobile-catalog-shortcuts/MobileCatalogShortcuts";
 
 import { pageMetadata } from "@/lib/seo/metadata";
 import { getCatalogCollectionsWithProductsFromStrapi, getWeeklyProductBlock } from "@/lib/api/catalog";
@@ -27,8 +29,9 @@ export default async function HomePage() {
   const weeklyProduct = await getWeeklyProductBlock();
 
   return (
-    <>
+    <main className={styles.homePage}>
       <HeroSection weeklyProduct={weeklyProduct} />
+      <MobileCatalogShortcuts />
       <CategoryProductShelves collections={collections} collectionSlug="novinki" />
       <PopularCategories />
       <Advantages />
@@ -39,7 +42,7 @@ export default async function HomePage() {
       <Banners />
       <CategoryProductShelves collections={collections} collectionSlug="novinki" />
       <SocialLinks />
-      {/* <AboutCompany /> */}
-    </>
+      <AboutCompany />
+    </main>
   );
 }

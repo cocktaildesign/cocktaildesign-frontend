@@ -1,94 +1,100 @@
-import styles from "./Advantages.module.css";
-import PageLayout from "@/components/layout/PageLayout";
+"use client";
+
+import { useState } from "react";
 import Link from "next/link";
 
-export default async function Advantages() {
+import PageLayout from "@/components/layout/PageLayout";
+import styles from "./Advantages.module.css";
+import { PromoModal } from "./PromoModal";
+
+const cards = [
+  {
+    front: "Пожизненная гарантия",
+    back: "Пожизненная гарантия на продукцию CocktailDesign. Берём на себя ремонт или замену — без лишних формальностей.",
+  },
+  {
+    front: "The World's 50 Best Bars",
+    back: "Наш инвентарь используют ведущие бары мира. Лучший продукт России 2017 и 2019 по версии Barproof.",
+  },
+  {
+    front: "Работа с юр. лицами",
+    back: "Возврат НДС, оптовые скидки, постоплата для компаний.",
+  },
+  {
+    front: "Быстрая доставка",
+    back: "Оперативно доставляем заказы по всей России и СНГ.",
+  },
+];
+
+export default function Advantages() {
+  const [openIndex, setOpenIndex] = useState<number | null>(null);
+  const [isPromoOpen, setIsPromoOpen] = useState(false);
+
+  function handleCardClick(index: number) {
+    setOpenIndex((current) => (current === index ? null : index));
+  }
+
   return (
     <PageLayout>
-      <section className={styles.advantages} aria-labelledby="advantages-title">
-        <h2 id="advantages-title" className={styles.title}>
-          Профессиональный барный инвентарь
-        </h2>
+      <section className={styles.section}>
+        <h2 className={styles.title}>Профессиональный барный инвентарь</h2>
 
         <div className={styles.grid}>
-          {/* Левый высокий акцентный блок */}
-          <article className={`${styles.card} ${styles.cardTall} ${styles.saleCard}`}>
-            <div className={styles.cardSaleBadge}>
-              <span>Для новых клиентов</span>
-            </div>
+          {cards.map((card, index) => {
+            const isOpen = openIndex === index;
 
-            <div className={styles.saleContent}>
-              <p className={styles.cardSalePercent}>-20%</p>
-              <p className={styles.cardSaleDescription}>Подарок на выбор</p>
-              <p className={styles.cardSaleDescriptionText}>К первому заказу</p>
-            </div>
+            return (
+              <button
+                key={card.front}
+                type="button"
+                className={styles.flipCard}
+                onClick={() => handleCardClick(index)}
+                aria-expanded={isOpen}>
+                <div className={`${styles.flipCardInner} ${isOpen ? styles.flipped : ""}`}>
+                  <div className={styles.front}>
+                    <div className={styles.frontTop}>
+                      <span className={styles.number}>{String(index + 1).padStart(2, "0")}</span>
+                      <span className={styles.toggleIcon}>+</span>
+                    </div>
+                    <h3 className={styles.cardTitle}>{card.front}</h3>
+                  </div>
 
-            <div className={styles.saleFooter}>
-              <Link href="/catalog" className={styles.cardSaleLink}>
-                Перейти в каталог
-              </Link>
-            </div>
-          </article>
+                  <div className={styles.back}>
+                    <span className={styles.toggleIcon}>−</span>
+                    <p className={styles.cardText}>{card.back}</p>
+                  </div>
+                </div>
+              </button>
+            );
+          })}
 
-          {/* Верхняя центральная */}
-          <article className={styles.card}>
-            <div className={styles.cardContent}>
-              <h3 className={styles.cardHeading}>Пожизненная гарантия</h3>
-              <p className={styles.cardText}>Мы предоставляем пожизненную гарантию на наш барный инвентарь.</p>
-            </div>
-          </article>
-
-          {/* Верхняя правая */}
-          <article className={styles.card}>
-            <div className={styles.cardContent}>
-              <h3 className={styles.cardHeading}>Для юридических лиц</h3>
-              <p className={styles.cardText}>Возврат НДС, оптовые скидки и постоплата для компаний.</p>
-            </div>
-          </article>
-
-          {/* Широкая центральная */}
-          <article className={`${styles.card} ${styles.cardWide}`}>
-            <div className={styles.cardContent}>
-              <div className={styles.wideHeader}>
-                <h3 className={styles.cardHeading}>Используется лучшими барами</h3>
+          {/* Акцентная карточка */}
+          <div className={styles.promoCard}>
+            <div>
+              <span className={styles.promoBadge}>Для новых клиентов</span>
+              <p className={styles.promoPercent}>-20%</p>
+              <div className={styles.promoRow}>
+                <span className={styles.promoTitle}>Подарок на выбор</span>
+                <span className={styles.promoSubtitle}>от 20 000₽</span>
               </div>
-
-              <p className={styles.cardText}>
-                Наш инвентарь использует множество ведущих баров из списка The World&apos;s 50 Best Bars. Лучший продукт
-                России 2017 и 2019 по версии Barproof.
-              </p>
             </div>
-          </article>
 
-          {/* Нижний ряд */}
-          <article className={styles.card}>
-            <div className={styles.cardContent}>
-              <h3 className={styles.cardHeading}>10 лет опыта</h3>
-              <p className={styles.cardText}>Опыт работы с барным инвентарем и оборудованием более 10 лет.</p>
-            </div>
-          </article>
-
-          <article className={styles.card}>
-            <div className={styles.cardContent}>
-              <div className={styles.smallCardHeader}>
-                <h3 className={styles.cardHeadingSmall}>Гибкая система скидок</h3>
+            <div className={styles.promoBottom}>
+              <span className={styles.promoCode}>STARTCD20</span>
+              <div className={styles.promoFooter}>
+                <Link href="/catalog" className={styles.promoLink}>
+                  В каталог →
+                </Link>
+                <button type="button" className={styles.promoBtn} onClick={() => setIsPromoOpen(true)}>
+                  Подробнее
+                </button>
               </div>
-
-              <p className={styles.cardText}>Индивидуальные скидки и предложения для наших клиентов.</p>
             </div>
-          </article>
-
-          <article className={styles.card}>
-            <div className={styles.cardContent}>
-              <div className={styles.smallCardHeader}>
-                <h3 className={styles.cardHeadingSmall}>Быстрая доставка</h3>
-              </div>
-
-              <p className={styles.cardText}>Оперативно доставляем заказы по всей России и СНГ.</p>
-            </div>
-          </article>
+          </div>
         </div>
       </section>
+
+      <PromoModal isOpen={isPromoOpen} onClose={() => setIsPromoOpen(false)} />
     </PageLayout>
   );
 }

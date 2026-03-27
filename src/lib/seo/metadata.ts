@@ -2,7 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { SITE_DESCRIPTION, SITE_NAME, siteUrl } from "./site";
 
 export const viewport: Viewport = {
-  themeColor: "#ffffff",
+  themeColor: "#e0e7ef",
 };
 
 export const rootMetadata: Metadata = {

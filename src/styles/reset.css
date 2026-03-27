@@ -92,3 +92,12 @@ p {
     transition-duration: 1ms !important;
   }
 }
+
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* 
+* {
+  outline: 1px solid red;
+} */

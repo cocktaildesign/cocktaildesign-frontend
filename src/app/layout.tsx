@@ -5,6 +5,7 @@ import GridOverlay from "@/components/layout/GridOverlay";
 import ScrollToTopInstant from "@/components/layout/ScrollToTopInstant";
 import NavBar from "@/components/layout/nav-bar/NavBar";
 import ScrollToTopButton from "@/components/ui/scroll-to-top-button/ScrollToTopButton";
+import MobileBottomNav from "@/components/layout/mobile-bottom-nav/MobileBottomNav";
 
 export { rootMetadata as metadata, viewport } from "@/lib/seo/metadata";
 import { hikasamiSans, montserrat } from "@/lib/fonts";
@@ -19,6 +20,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         <Header />
         <NavBar />
         {children}
+        <MobileBottomNav />
         <Footer />
         {/* <GridOverlay /> */}
         <ScrollToTopButton />
