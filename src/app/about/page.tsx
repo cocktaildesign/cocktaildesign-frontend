@@ -48,8 +48,77 @@ export default async function AboutPage() {
         {/* Hero */}
         <section className={styles.hero}>
           <div className={styles.heroInner}>
-            <span className={styles.eyebrow}>О asdasd</span>
-9 г.
+            <span className={styles.eyebrow}>О компании</span>
+
+            <h1 className={styles.heroTitle}>
+              Cocktail
+              <br />
+              <em>Design</em>
+            </h1>
+
+            <p className={styles.heroLead}>
+              Производственная компания и интернет-магазин барного инвентаря собственного производства. Стильные,
+              функциональные и эргономичные решения для баров, ресторанов и профессионалов индустрии.
+            </p>
+          </div>
+        </section>
+
+        {/* Краткий блок */}
+        <div className={styles.taglineBlock}>
+          <p className={styles.taglineText}>
+            Продукцией пользуются сильнейшие представители барной индустрии, лучшие барные амбассадоры мира и
+            алкогольные компании.
+          </p>
+
+          <div className={styles.taglineMeta}>
+            <span className={styles.taglineBadge}>Barproof 2017</span>
+            <span className={styles.taglineBadge}>Barproof 2019</span>
+          </div>
+        </div>
+
+        {/* Ассортимент */}
+        <section className={styles.section}>
+          <div className={styles.sectionInner}>
+            <div className={styles.sectionMeta}>
+              <span className={styles.sectionTag}>Ассортимент</span>
+            </div>
+
+            <div className={styles.textBlock}>
+              <p>
+                Компания Cocktail Design предлагает широкий ассортимент барного инвентаря собственного производства. В
+                каталоге нашего интернет-магазина постоянно пополняемый ассортимент барного инвентаря и аксессуаров по
+                конкурентным ценам.
+              </p>
+
+              <p>
+                Обеспечиваем потребителей стильной, функциональной и эргономичной продукцией для комфортной работы
+                сотрудников и качественного обслуживания посетителей заведения. Предлагаем наборы и готовые решения,
+                товары для молекулярной кухни, бариста и многое другое.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        {/* Репутация */}
+        <section className={styles.highlight}>
+          <span className={styles.highlightTag}>Репутация</span>
+          <h2 className={styles.highlightTitle}>Признание на международном рынке</h2>
+
+          <div className={styles.highlightBadges}>
+            <span className={styles.badge}>Barproof 2017</span>
+            <span className={styles.badge}>Barproof 2019</span>
+          </div>
+
+          <div className={styles.highlightBody}>
+            <p className={styles.highlightText}>
+              Производственная компания Cocktail Design активно себя зарекомендовала на международном рынке барных
+              продуктов премиального уровня, являясь одним из ведущих производителей эксклюзивного барного инвентаря.
+            </p>
+
+            <p className={styles.highlightText}>
+              Выпускаемой предприятием продукцией пользуются сильнейшие представители барной индустрии, без
+              преувеличения лучшие барные амбассадоры мира и алкогольные компании. Наш продукт признан лучшим по версии
+              Barproof 2017 г. и 2019 г.
             </p>
           </div>
         </section>
