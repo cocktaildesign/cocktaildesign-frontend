@@ -1,3 +1,4 @@
+// src/app/legal/terms/page.tsx
 import styles from "./Terms.module.css";
 import PageLayout from "@/components/layout/PageLayout";
 import { pageMetadata } from "@/lib/seo/metadata";

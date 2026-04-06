@@ -51,10 +51,13 @@ export default function SideModal(props: ModalProps) {
       onMouseDown={(event) => {
         if (event.target === event.currentTarget) onClose();
       }}>
+      {/* Панель модального окна */}
       <div className={styles.panel} ref={contentRef} tabIndex={-1} role="dialog" aria-modal="true" aria-label={title}>
         <button type="button" className={styles.closeButton} onClick={onClose} aria-label="Закрыть модальное окно">
           ×
         </button>
+
+        {/* Контент модалки */}
         <div>{children}</div>
       </div>
     </div>,

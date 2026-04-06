@@ -22,6 +22,8 @@ type ProductPurchaseControlsProps = {
   slug: string;
   imageUrl: string | null;
   code?: string | null;
+  // Флаг — товар не участвует в скидках и промокодах
+  discountExcluded: boolean;
 };
 
 function formatPrice(price: number): string {
@@ -48,6 +50,7 @@ export default function ProductPurchaseControls({
   slug,
   imageUrl,
   code,
+  discountExcluded,
 }: ProductPurchaseControlsProps) {
   const [quantity, setQuantity] = useState<number>(1);
   const [engravingChecked, setEngravingChecked] = useState<boolean>(false);
@@ -79,6 +82,7 @@ export default function ProductPurchaseControls({
       slug: slug,
       quantity: quantity,
       engraving: engravingChecked,
+      discountExcluded: discountExcluded,
       code: code ?? "",
     };
 

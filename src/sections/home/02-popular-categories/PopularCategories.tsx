@@ -2,7 +2,9 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import PageLayout from "@/components/layout/PageLayout";
+
+import Container from "@/components/layout/Container";
+
 import ArrowRightIcon from "@/components/icons/ArrowRightIcon";
 
 import { getTopCategoriesFromStrapi } from "@/lib/api/catalog";
@@ -17,8 +19,8 @@ export default async function PopularCategories() {
   if (!visibleCategories.length) return null;
 
   return (
-    <PageLayout>
-      <section className={styles.section}>
+    <section className={styles.section}>
+      <Container>
         <div className={styles.header}>
           <h2 className={styles.title}>Популярные категории</h2>
 
@@ -49,7 +51,7 @@ export default async function PopularCategories() {
             </li>
           ))}
         </ul>
-      </section>
-    </PageLayout>
+      </Container>
+    </section>
   );
 }

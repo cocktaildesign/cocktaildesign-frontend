@@ -1,7 +1,7 @@
+// frontend/src/app/knowledge/page.tsx
 import PageLayout from "@/components/layout/PageLayout";
 import { pageMetadata } from "@/lib/seo/metadata";
 import styles from "./KnowledgePage.module.css";
-// import { getKnowledgeItems } from "./data";
 import { getKnowledgeItemsFromStrapi } from "@/lib/api/knowledge";
 
 import KnowledgeContent from "./knowledge-content/KnowledgeContent";
@@ -15,8 +15,6 @@ export const metadata = pageMetadata({
   canonical: "/knowledge",
 });
 
-// const items = getKnowledgeItems();
-
 type KnowledgePageProps = {
   searchParams: Promise<{
     tab?: string;
@@ -25,17 +23,16 @@ type KnowledgePageProps = {
 };
 
 export default async function KnowledgePage({ searchParams }: KnowledgePageProps) {
-  // Получаем параметры фильтрации из URL
   const { tab, format } = await searchParams;
   const activeTab = tab ?? null;
   const activeFormat = format ?? null;
 
-  // Фильтруем материалы по выбранному разделу и формату
   const filteredItems = await getKnowledgeItemsFromStrapi(activeTab, activeFormat);
 
   return (
     <PageLayout>
       <section className={styles.knowledgePage}>
+        {/* Верхняя часть страницы */}
         <div className={styles.pageHeader}>
           <h1 className={styles.pageHeaderTitle}>База знаний</h1>
 
@@ -47,12 +44,14 @@ export default async function KnowledgePage({ searchParams }: KnowledgePageProps
 
         <hr className={styles.line} />
 
+        {/* Фильтры и контент */}
         <div className={styles.layout}>
           <KnowledgeFilters />
 
           <KnowledgeContent items={filteredItems} />
         </div>
       </section>
+
       <TelegramBanner />
     </PageLayout>
   );

@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-import Container from "@/components/layout/Container";
+import ContainerNoPaddingMobil from "@/components/layout/ContainerNoPaddingMobil";
 import ProductsSlider from "../../../components/ui/products-slider/ProductsSlider";
 import ProductCard from "../product-card/HomeProductCard";
 import ArrowRightIcon from "@/components/icons/ArrowRightIcon";
@@ -33,7 +33,7 @@ export default function CategoryProductShelves({ collections, collectionSlug }: 
 
   return (
     <section className={styles.section}>
-      <Container>
+      <ContainerNoPaddingMobil>
         <div className={styles.shelf}>
           <div className={styles.header}>
             <h2 className={styles.title}>{collection.title}</h2>
@@ -54,7 +54,7 @@ export default function CategoryProductShelves({ collections, collectionSlug }: 
             ))}
           </ProductsSlider>
         </div>
-      </Container>
+      </ContainerNoPaddingMobil>
     </section>
   );
 }

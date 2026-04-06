@@ -68,3 +68,49 @@
   font-size: var(--text-base);
   text-overflow: ellipsis;
 }
+
+/* ==========================================================================
+   TABLET
+   ========================================================================== */
+
+@media (max-width: 1024px) {
+}
+
+/* ==========================================================================
+   MOBILE
+   ========================================================================== */
+/* ==========================================================================
+   MOBILE
+   ========================================================================== */
+
+@media (max-width: 600px) {
+  .engravingControl {
+    height: 40px;
+    padding: 6px 10px;
+    border-radius: 9px;
+    justify-content: center;
+
+    gap: 8px;
+    flex: 1 1 auto;
+  }
+
+  .switch {
+    width: 36px;
+    height: 20px;
+  }
+
+  .switch::before {
+    width: 14px;
+    height: 14px;
+    top: 2px;
+    left: 2px;
+  }
+
+  .engravingCheckbox:checked + .switch::before {
+    transform: translateX(16px);
+  }
+
+  .label {
+    font-size: 14px;
+  }
+}

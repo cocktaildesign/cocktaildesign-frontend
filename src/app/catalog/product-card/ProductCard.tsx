@@ -242,6 +242,8 @@ export default function ProductCard({ product, colorMap = {} }: ProductCardProps
       slug: product.slug,
       quantity,
       engraving: engravingChecked,
+      // Берём флаг от товара — вариант наследует его от родителя
+      discountExcluded: product.discountExcluded,
       code: activeVariant?.code ?? product.code ?? "",
     };
 

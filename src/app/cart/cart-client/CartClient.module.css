@@ -1,9 +1,20 @@
-/* Пустая корзина */
+/* ==========================================================================
+   PAGE
+   ========================================================================== */
+
+.cartPage {
+  position: relative;
+}
+
+/* ==========================================================================
+   EMPTY CART
+   ========================================================================== */
+
 .emptyCart {
-  background-color: var(--color-white);
-  padding: 26px;
-  border-radius: 12px;
   width: 70%;
+  padding: 26px;
+  background-color: var(--color-white);
+  border-radius: 12px;
 }
 
 .emptyTitle {
@@ -18,23 +29,23 @@
 }
 
 .emptyActions {
-  margin-top: 15px;
   display: flex;
   gap: 15px;
+  margin-top: 15px;
 }
 
 .primaryButton {
   display: flex;
-  justify-content: center;
   align-items: center;
+  justify-content: center;
+  width: fit-content;
   height: 48px;
   padding: 10px 20px;
-  border-radius: 12px;
   background-color: var(--color-dark-blue);
+  border-radius: 12px;
   color: var(--color-white);
   font-family: var(--font-display);
   font-size: 16px;
-  width: fit-content;
   transition: background-color var(--dur) var(--ease);
 }
 
@@ -44,16 +55,16 @@
 
 .secondaryButton {
   display: flex;
-  justify-content: center;
   align-items: center;
+  justify-content: center;
+  width: fit-content;
   height: 48px;
   padding: 10px 20px;
-  border-radius: 12px;
   border: 1px solid var(--color-dark-blue);
+  border-radius: 12px;
   color: var(--color-dark-blue);
   font-family: var(--font-display);
   font-size: 16px;
-  width: fit-content;
   transition: opacity var(--dur) var(--ease);
 }
 
@@ -61,7 +72,10 @@
   opacity: 0.5;
 }
 
-/* Основной грид корзины */
+/* ==========================================================================
+   CART LAYOUT
+   ========================================================================== */
+
 .cart {
   display: grid;
   grid-template-columns: 1fr 320px;
@@ -70,14 +84,20 @@
   border-radius: 12px;
 }
 
-/* Левая колонка */
 .cartItems {
+  padding: 26px;
   background-color: var(--color-white);
   border-radius: 12px;
-  padding: 26px;
 }
 
-/* Заголовок + кнопки */
+.cartSummary {
+  min-width: 0;
+}
+
+/* ==========================================================================
+   TITLE ROW
+   ========================================================================== */
+
 .cartTitleRow {
   display: flex;
   align-items: center;
@@ -116,14 +136,16 @@
 .cartIcon {
   color: var(--color-dark-blue);
   transition: color var(--dur) var(--ease);
-
 }
 
 .cartActionButton:hover .cartIcon {
-	opacity: 0.7;
+  opacity: 0.7;
 }
 
-/* Шапка списка товаров */
+/* ==========================================================================
+   CART HEADER
+   ========================================================================== */
+
 .cartHeader {
   display: flex;
   align-items: center;
@@ -140,15 +162,18 @@
   cursor: pointer;
 }
 
-/* Кастомный чекбокс */
+/* ==========================================================================
+   CHECKBOX
+   ========================================================================== */
+
 .itemCheckbox {
   appearance: none;
   -webkit-appearance: none;
+  flex-shrink: 0;
   width: 20px;
   height: 20px;
   border: 1px solid var(--color-dark-blue);
   border-radius: 4px;
-  flex-shrink: 0;
   cursor: pointer;
   transition:
     background-color 0.15s,
@@ -164,6 +189,7 @@
 }
 
 .buttonDeleteAll {
+  height: fit-content;
   padding: 10px 0;
   border: 1px solid transparent;
   border-radius: 12px;
@@ -171,12 +197,160 @@
   color: var(--color-dark-blue);
   font-size: 14px;
   font-family: var(--font-display);
-  height: fit-content;
 }
 
-/* При печати скрываем основной UI */
-@media print {
+/* ==========================================================================
+   MOBILE CHECKOUT BAR
+   ========================================================================== */
+
+.mobileCheckoutBar {
+  display: none;
+}
+
+.mobileCheckoutInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.mobileCheckoutLabel {
+  font-size: 12px;
+  color: var(--color-gray);
+}
+
+.mobileCheckoutPrice {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--color-black);
+  white-space: nowrap;
+}
+
+.mobileCheckoutButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 168px;
+  height: 48px;
+  padding: 10px 18px;
+  background-color: var(--color-dark-blue);
+  border-radius: 12px;
+  color: var(--color-white);
+  font-family: var(--font-display);
+  font-size: 15px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+/* ==========================================================================
+   TABLET
+   ========================================================================== */
+
+@media (max-width: 1024px) {
   .cart {
+    grid-template-columns: 1fr;
+  }
+
+  .emptyCart {
+    width: 100%;
+  }
+}
+
+/* ==========================================================================
+   MOBILE
+   ========================================================================== */
+
+@media (max-width: 600px) {
+  .cartPage {
+    padding-bottom: 108px;
+  }
+
+  .emptyCart {
+    width: 100%;
+    padding: 20px 16px;
+  }
+
+  .emptyTitle {
+    font-size: var(--text-lg);
+  }
+
+  .emptyText {
+    font-size: 14px;
+    text-wrap: initial;
+  }
+
+  .emptyActions {
+    flex-direction: column;
+    width: 100%;
+    gap: 10px;
+  }
+
+  .primaryButton,
+  .secondaryButton {
+    width: 100%;
+  }
+
+  .cart {
+    gap: 16px;
+  }
+
+  .cartItems {
+    padding: 18px;
+  }
+
+  .cartTitleRow {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+    margin-bottom: 18px;
+  }
+
+  .cartActions {
+    width: 100%;
+  }
+
+  .cartActionButton {
+    justify-content: center;
+    flex: 1 1 calc(50% - 4px);
+    min-height: 44px;
+    border-radius: 10px;
+    background-color: var(--color-light-soft);
+  }
+
+  .cartHeader {
+    flex-direction: column;
+    align-items: flex-start;
+    height: auto;
+    padding: 12px 0;
+    gap: 8px;
+  }
+
+  .mobileCheckoutBar {
+    position: fixed;
+    right: 12px;
+    bottom: 76px;
+    left: 12px;
+    z-index: 30;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 12px;
+    background-color: rgba(255, 255, 255, 0.96);
+    border: 1px solid rgba(15, 23, 42, 0.08);
+    border-radius: 16px;
+    box-shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
+    backdrop-filter: blur(10px);
+  }
+}
+
+/* ==========================================================================
+   PRINT
+   ========================================================================== */
+
+@media print {
+  .cart,
+  .mobileCheckoutBar {
     display: none;
   }
 }

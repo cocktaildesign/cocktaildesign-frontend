@@ -1,29 +1,24 @@
 // frontend/src/app/knowledge/videos/[slug]/page.tsx
 
-import { notFound } from "next/navigation"; // Next.js: серверный 404 для App Router
-import { pageMetadata } from "@/lib/seo/metadata"; // Внутренняя утилита для SEO-метаданных
-import BackButton from "@/components/ui/back-button/BackButton"; // UI: кнопка "назад" (client component)
+import { notFound } from "next/navigation";
+import { pageMetadata } from "@/lib/seo/metadata";
+import BackButton from "@/components/ui/back-button/BackButton";
 
-import PageLayout from "@/components/layout/PageLayout"; // Общий лэйаут страницы + хлебные крошки
+import PageLayout from "@/components/layout/PageLayout";
 import { getKnowledgeVideoBySlugFromStrapi } from "@/lib/api/knowledge";
-import styles from "./VideoPage.module.css"; // CSS Modules: стили только для этой страницы
-import { formatRelativeFromIsoDate } from "@/lib/date/relativeDate"; // Утилита: "2 месяца назад"
-import ShareButton from "@/components/ui/share-button/ShareButton"; // UI: поделиться (client component)
+import styles from "./VideoPage.module.css";
+import { formatRelativeFromIsoDate } from "@/lib/date/relativeDate";
+import ShareButton from "@/components/ui/share-button/ShareButton";
 import ReadMoreText from "../read-more-text/ReadMoreText";
 
 type Params = {
-  slug: string; // Динамический сегмент маршрута: /knowledge/videos/[slug]
+  slug: string;
 };
 
 type PageProps = {
-  // В твоей версии Next params приходит как Promise -> обязательно await
   params: Promise<Params>;
 };
 
-/**
- * Next.js (App Router): генерация SEO метаданных на сервере.
- * Здесь нельзя вызывать notFound() — просто возвращаем {} если данных нет.
- */
 export async function generateMetadata({ params }: PageProps) {
   const { slug } = await params;
 
@@ -40,80 +35,57 @@ export async function generateMetadata({ params }: PageProps) {
   });
 }
 
-/**
- * Серверная страница видео: рендерится на сервере, iframe отдаём как есть.
- */
 export default async function KnowledgeVideoPage({ params }: PageProps) {
-  // 1) Получаем slug
   const { slug } = await params;
 
-  // 2) Берём детальные данные видео (embedUrl обязателен на этой странице)
   const item = await getKnowledgeVideoBySlugFromStrapi(slug);
 
-  // 3) Если видео по slug не найдено (или нет embedUrl) — отдаём 404
   if (!item) notFound();
 
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "";
 
   return (
     <PageLayout
-      // Хлебные крошки — часть UX и SEO: помогают навигации и пониманию структуры сайта
       breadcrumbsItems={[
         { href: "/", label: "Главная" },
         { href: "/knowledge", label: "Знания" },
         { href: `/knowledge/videos/${item.slug}`, label: item.title },
       ]}>
-      {/* Семантика: article — самостоятельный материал */}
       <article className={styles.videoPage}>
-        {/* Кнопка "назад" (client): возвращает в историю или на /knowledge */}
+        {/* Верхняя часть страницы */}
         <BackButton />
 
-        {/* Общий контейнер карточки-контента: фон, скругления, цвет текста */}
         <div className={styles.content}>
-          {/* Плеер: контейнер отвечает за пропорции 16:9 и обрезку */}
+          {/* Плеер */}
           <div className={styles.player} role="group" aria-label="Видео">
             <iframe
-              // src берём из данных (важно: не вставляем HTML из CMS, только URL)
               src={item.embedUrl}
-              // a11y: название фрейма (скринридер)
               title={item.title}
-              // perf: lazy-iframe (не грузим сразу, если ниже экрана)
               loading="lazy"
-              // Разрешения для плеера
               allow="autoplay; encrypted-media; fullscreen; picture-in-picture"
-              // Полноэкранный режим
               allowFullScreen
-              // Растягиваем на контейнер
               className={styles.iframe}
             />
           </div>
 
-          {/* Header: заголовок + мета-информация + действия (поделиться) */}
+          {/* Заголовок и действия */}
           <header className={styles.header}>
-            {/* H1 — единственный заголовок страницы */}
             <h1 className={styles.title}>{item.title}</h1>
 
-            {/* Ряд меты и действий: слева дата, справа кнопка */}
             <div className={styles.metaRow}>
-              {/* Мета-информация: дата публикации */}
               <p className={styles.meta}>
-                {/* dateTime = ISO для семантики/SEO, текст = "2 месяца назад" для UX */}
                 <time dateTime={item.date} title={item.date}>
                   {formatRelativeFromIsoDate(item.date)}
                 </time>
               </p>
 
-              {/* Действия: кнопка "поделиться" */}
               <div className={styles.actions}>
-                <ShareButton
-                  // Абсолютный URL (чтобы корректно копировалось/шарилось)
-                  url={`${siteUrl}/knowledge/videos/${item.slug}`}
-                  title={item.title}
-                />
+                <ShareButton url={`${siteUrl}/knowledge/videos/${item.slug}`} title={item.title} />
               </div>
             </div>
           </header>
 
+          {/* Описание */}
           {item.description ? <ReadMoreText text={item.description} /> : null}
         </div>
       </article>

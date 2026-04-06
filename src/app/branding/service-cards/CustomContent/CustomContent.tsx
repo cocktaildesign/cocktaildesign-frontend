@@ -1,13 +1,16 @@
+//frontend/src/app/branding/service-cards/CustomContent/CustomContent.tsx
 import Image from "next/image";
 import styles from "./CustomContent.module.css";
 
 export function CustomContent() {
   return (
     <div className={styles.customContent}>
+      {/* Верхний блок */}
       <section className={styles.content}>
         <div className={styles.contentLeft}>
           <header className={styles.intro}>
             <h1 className={styles.introTitle}>Индивидуальное производство </h1>
+
             <p className={styles.introDescription}>
               Когда готовые решения не подходят, мы создаем инвентарь по вашим эскизам. Полный контроль над дизайном,
               размерами и функционалом для воплощения любой барной концепции.
@@ -77,6 +80,7 @@ export function CustomContent() {
         </div>
       </section>
 
+      {/* Инструкция */}
       <section className={styles.instructions}>
         <h2 className={styles.lazerTitleH2}>Как сделать заказ</h2>
 
@@ -86,6 +90,7 @@ export function CustomContent() {
               <span className={styles.stepsItemHeaderStep}>1</span>
               <h3 className={styles.stepsItemHeaderTitle}>Обсуждение задачи</h3>
             </div>
+
             <p className={styles.stepsItemDescription}>
               Вы рассказываете нам идею. Мы задаём уточняющие вопросы, чтобы понять суть.
             </p>
@@ -96,6 +101,7 @@ export function CustomContent() {
               <span className={styles.stepsItemHeaderStep}>2</span>
               <h3 className={styles.stepsItemHeaderTitle}>Проектирование макета</h3>
             </div>
+
             <p className={styles.stepsItemDescription}>
               Наши специалисты разрабатывают детальный макет или технический чертёж.
             </p>
@@ -106,6 +112,7 @@ export function CustomContent() {
               <span className={styles.stepsItemHeaderStep}>3</span>
               <h3 className={styles.stepsItemHeaderTitle}>Согласование и запуск</h3>
             </div>
+
             <p className={styles.stepsItemDescription}>
               Вы утверждаете проект. Только после этого мы запускаем станки.
             </p>
@@ -116,6 +123,7 @@ export function CustomContent() {
               <span className={styles.stepsItemHeaderStep}>4</span>
               <h3 className={styles.stepsItemHeaderTitle}>Отправка</h3>
             </div>
+
             <p className={styles.stepsItemDescription}>
               Мы тщательно упаковываем и оперативно отправляем вам готовый заказ.
             </p>
@@ -127,6 +135,7 @@ export function CustomContent() {
         </button>
       </section>
 
+      {/* Таблица стоимости */}
       <section className={styles.priceSection}>
         <h2 className={styles.priceSectionTitle}>Стоимость производства</h2>
 

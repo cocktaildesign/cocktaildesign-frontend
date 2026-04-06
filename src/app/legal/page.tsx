@@ -54,11 +54,14 @@ export default function LegalPage() {
   return (
     <PageLayout>
       <section className={styles.legalSection}>
+        {/* Заголовок страницы */}
         <h1 className={styles.legalTitle}>Правовая информация</h1>
 
+        {/* Сетка карточек */}
         <div className={styles.legalGrid}>
           {CARDS.map((card) => (
             <Link key={card.href} href={card.href} className={styles.legalCard}>
+              {/* Изображение */}
               <div className={styles.legalCardMedia} aria-hidden="true">
                 <Image
                   src={card.imageSrc}
@@ -70,6 +73,7 @@ export default function LegalPage() {
                 />
               </div>
 
+              {/* Контент */}
               <div className={styles.legalCardBody}>
                 <h2 className={styles.legalCardTitle}>{card.title}</h2>
                 <p className={styles.legalCardDesc}>{card.description}</p>

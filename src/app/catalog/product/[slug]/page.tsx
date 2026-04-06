@@ -1,19 +1,21 @@
 // src/app/catalog/product/[slug]/page.tsx
 //
-// Server Component — данные грузятся на сервере, клиенту уходит готовый HTML.
-// Интерактивные части (галерея, варианты, цена) вынесены в VariantSelector.
+// Server Component — данные грузятся на сервере.
+// Интерактивные части страницы вынесены в клиентские компоненты.
+
+import { notFound } from "next/navigation";
+import Link from "next/link";
+import Image from "next/image";
+
+import PageLayout from "@/components/layout/PageLayout";
+import ProductsSlider from "@/components/ui/products-slider/ProductsSlider";
+import BundleItems from "./bundle/BundleItems";
+import VariantSelector from "./VariantSelector";
 
 import { pageMetadata } from "@/lib/seo/metadata";
 import { siteUrl } from "@/lib/seo/site";
-import ProductsSlider from "@/components/ui/products-slider/ProductsSlider";
-import { notFound } from "next/navigation";
 import { getStrapiMediaUrl } from "@/lib/api/strapi/media";
-import Link from "next/link";
-import Image from "next/image";
-import PageLayout from "@/components/layout/PageLayout";
 import { getProductBySlugFromStrapi, getColorMap } from "@/lib/api/catalog";
-import BundleItems from "./bundle/BundleItems";
-import VariantSelector from "./VariantSelector";
 
 import styles from "./ProductPage.module.css";
 
@@ -22,7 +24,9 @@ const PLACEHOLDER_IMG = "/images/catalog/product-placeholder.webp";
 type Params = { slug: string };
 type PageProps = { params: Promise<Params> };
 
-type ImageFormat = { url: string };
+type ImageFormat = {
+  url: string;
+};
 
 type ProductImageFormats = {
   thumbnail?: ImageFormat;
@@ -67,25 +71,33 @@ async function getRelatedProducts(params: {
 }): Promise<RelatedProductsResponse | null> {
   const { categorySlug, limit, offset } = params;
 
-  if (!categorySlug) return null;
+  if (!categorySlug) {
+    return null;
+  }
 
   const url = new URL(`${API_BASE}/catalog/products`);
   url.searchParams.set("categorySlug", categorySlug);
   url.searchParams.set("limit", String(limit));
   url.searchParams.set("offset", String(offset));
 
-  const res = await fetch(url.toString(), { next: { revalidate: 60 } });
+  const response = await fetch(url.toString(), {
+    next: { revalidate: 60 },
+  });
 
-  if (!res.ok) return null;
+  if (!response.ok) {
+    return null;
+  }
 
-  return (await res.json()) as RelatedProductsResponse;
+  return (await response.json()) as RelatedProductsResponse;
 }
 
 export async function generateMetadata({ params }: PageProps) {
   const { slug } = await params;
   const data = await getProductBySlugFromStrapi(slug);
 
-  if (!data) return {};
+  if (!data) {
+    return {};
+  }
 
   const { product } = data;
   const ogImage = product.images[0]?.src;
@@ -109,7 +121,9 @@ export default async function ProductPage({ params }: PageProps) {
 
   const [data, colorMap] = await Promise.all([getProductBySlugFromStrapi(slug), getColorMap()]);
 
-  if (!data) notFound();
+  if (!data) {
+    notFound();
+  }
 
   const { product, breadcrumbsCategories } = data;
   const variants = data.variants ?? [];
@@ -125,7 +139,10 @@ export default async function ProductPage({ params }: PageProps) {
     sku: product.code ?? undefined,
     image: product.images.map((image) => image.src),
     url: productUrl,
-    brand: { "@type": "Brand", name: "CocktailDesign" },
+    brand: {
+      "@type": "Brand",
+      name: "CocktailDesign",
+    },
     offers: {
       "@type": "Offer",
       url: productUrl,
@@ -139,11 +156,14 @@ export default async function ProductPage({ params }: PageProps) {
   const breadcrumbsItems = [
     { href: "/", label: "Главная" },
     { href: "/catalog", label: "Каталог" },
-    ...breadcrumbsCategories.map((c) => ({
-      href: `/catalog/${c.slug}`,
-      label: c.name,
+    ...breadcrumbsCategories.map((category) => ({
+      href: `/catalog/${category.slug}`,
+      label: category.name,
     })),
-    { href: `/catalog/product/${product.slug}`, label: product.name },
+    {
+      href: `/catalog/product/${product.slug}`,
+      label: product.name,
+    },
   ];
 
   const breadcrumbsJsonLd = {
@@ -181,10 +201,10 @@ export default async function ProductPage({ params }: PageProps) {
         </header>
 
         <div className={styles.productLayout}>
-          {/* VariantSelector: галерея + варианты + О товаре + сайдбар */}
+          {/* Галерея, варианты, характеристики и блок покупки */}
           <VariantSelector product={product} variants={variants} specifications={specifications} colorMap={colorMap} />
 
-          {/* Состав комплекта — только для bundle товаров */}
+          {/* Состав комплекта */}
           {product.bundleItems.length > 0 && <BundleItems items={product.bundleItems} bundlePrice={product.price} />}
 
           {/* Описание */}
@@ -205,21 +225,22 @@ export default async function ProductPage({ params }: PageProps) {
                 const itemName = item.attributes.name ?? "Товар";
                 const itemPrice = item.attributes.price ?? 0;
 
-                const rawImg = item.attributes.image?.[0]?.url ?? undefined;
-                const itemImg = getStrapiMediaUrl(rawImg) ?? PLACEHOLDER_IMG;
+                const rawImage = item.attributes.image?.[0]?.url ?? undefined;
+                const itemImage = getStrapiMediaUrl(rawImage) ?? PLACEHOLDER_IMG;
 
                 return (
                   <div key={item.id} className={styles.relatedSlide}>
                     <Link href={`/catalog/product/${itemSlug}`} className={styles.relatedCard}>
                       <div className={styles.relatedImage}>
                         <Image
-                          src={itemImg}
+                          src={itemImage}
                           fill
-                          sizes="(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 25vw"
+                          sizes="(max-width: 600px) 45vw, (max-width: 1200px) 33vw, 200px"
                           alt={itemName}
                           className={styles.relatedImageImg}
                         />
                       </div>
+
                       <div className={styles.relatedCardPrice}>{itemPrice} ₽</div>
                       <div className={styles.relatedCardTitle}>{itemName}</div>
                     </Link>

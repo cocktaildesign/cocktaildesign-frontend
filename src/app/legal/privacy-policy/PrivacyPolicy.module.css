@@ -1,7 +1,12 @@
+/* src/app/legal/privacy-policy/PrivacyPolicy.module.css */
+
+/* ==========================================================================
+   PAGE
+   ========================================================================== */
+
 .section {
-  margin: 0 auto;
   max-width: 870px;
-  margin-bottom: 60px;
+  margin: 0 auto 60px;
 }
 
 .sectionTitle {
@@ -10,17 +15,20 @@
   font-weight: 450;
 }
 
+/* ==========================================================================
+   INTRO CARD
+   ========================================================================== */
+
 .card {
   display: grid;
-  align-items: center;
   grid-template-columns: 200px 1fr;
+  align-items: center;
   gap: 24px;
   padding: 32px 40px;
   border-radius: 12px;
   background: #f6f7f8;
 }
 
-/* Левая “иконка” */
 .media {
   position: relative;
   width: 100%;
@@ -37,33 +45,32 @@
   line-height: 24px;
 }
 
+/* ==========================================================================
+   ACCORDION
+   ========================================================================== */
+
 .accordion {
-  margin: 44px 0 120px;
   display: grid;
-  gap: 0px;
+  gap: 0;
+  margin: 44px 0 120px;
 }
 
-/* details */
 .item {
-  border-top: 1px solid rgba(0, 0, 0, 0.1);
-
   overflow: hidden;
   background: #fff;
+  border-top: 1px solid rgba(0, 0, 0, 0.1);
   transition: background-color 180ms ease;
 }
 
-/* summary */
 .summary {
-  list-style: none;
-  cursor: pointer;
-
   display: flex;
   align-items: center;
   justify-content: space-between;
-
-  padding: 18px 18px;
   gap: 16px;
+  padding: 18px 18px;
+  list-style: none;
   background-color: transparent;
+  cursor: pointer;
   user-select: none;
 }
 
@@ -81,12 +88,10 @@
   line-height: 1.25;
 }
 
-/* правая стрелка */
 .chevron {
   width: 10px;
   height: 10px;
   flex: 0 0 10px;
-
   border-right: 2px solid rgba(0, 0, 0, 0.6);
   border-bottom: 2px solid rgba(0, 0, 0, 0.6);
   transform: rotate(45deg);
@@ -97,14 +102,11 @@
   transform: rotate(-135deg);
 }
 
-/* content */
 .content {
-  padding: 18px;
-  border-top: 1px solid rgba(0, 0, 0, 0.08);
-
   display: grid;
   gap: 12px;
-
+  padding: 18px;
+  border-top: 1px solid rgba(0, 0, 0, 0.08);
   font-size: 12px;
   line-height: 1.7;
   color: rgba(0, 0, 0, 0.85);
@@ -115,16 +117,107 @@
 }
 
 .list {
-  margin: 0;
-  padding-left: 20px;
   display: grid;
   gap: 8px;
+  margin: 0;
+  padding-left: 20px;
 }
 
-/* =========================
-   Адаптивный
-   Breakpoints:
-   1) Desktop: 1025–1440
-   2) Tablet: 601–1024
-   3) Mobile: 320–600
-   ========================= */
+/* ==========================================================================
+   TABLET
+   ========================================================================== */
+
+@media (max-width: 1024px) {
+  .section {
+    margin-bottom: 48px;
+  }
+
+  .card {
+    grid-template-columns: 140px 1fr;
+    gap: 20px;
+    padding: 24px 24px;
+  }
+
+  .sectionTitle {
+    font-size: 22px;
+  }
+
+  .cardDescription {
+    font-size: 15px;
+    line-height: 1.6;
+  }
+
+  .accordion {
+    margin: 36px 0 96px;
+  }
+
+  .summary {
+    padding: 16px;
+  }
+
+  .content {
+    padding: 16px;
+  }
+}
+
+/* ==========================================================================
+   MOBILE
+   ========================================================================== */
+
+@media (max-width: 600px) {
+  .section {
+    margin-bottom: 36px;
+  }
+
+  .sectionTitle {
+    margin: 16px 0 14px;
+    font-size: 20px;
+  }
+
+  .card {
+    grid-template-columns: 1fr;
+    gap: 14px;
+    padding: 18px;
+  }
+
+  .media {
+    width: 88px;
+    margin: 0 auto;
+  }
+
+  .cardDescription {
+    font-size: 14px;
+    line-height: 1.55;
+  }
+
+  .accordion {
+    margin: 28px 0 72px;
+  }
+
+  .summary {
+    align-items: flex-start;
+    padding: 14px 12px;
+    gap: 12px;
+  }
+
+  .summaryTitle {
+    font-size: 14px;
+    line-height: 1.35;
+  }
+
+  .chevron {
+    margin-top: 4px;
+  }
+
+  .content {
+    gap: 10px;
+    padding: 14px 12px;
+    font-size: 12px;
+    line-height: 1.65;
+  }
+
+  .list {
+    gap: 6px;
+    padding-left: 18px;
+  }
+}

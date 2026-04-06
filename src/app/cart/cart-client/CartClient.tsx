@@ -1,15 +1,23 @@
-// src/app/cart/cart-client/CartClient.tsx
 "use client";
 
 import Link from "next/link";
+
 import CartPrint from "../cart-print/CartPrint";
 import CartItem from "../cart-item/CartItem";
 import CartSummary from "../cart-summary/CartSummary";
+
 import PrinterIcon from "@/components/icons/cart/PrinterIcon";
 import DownloadIcon from "@/components/icons/cart/DownloadIcon";
+
 import { useCartStore } from "@/lib/cart/cartStore";
 import { exportCartToXlsx } from "@/lib/cart/exportToXlsx";
+
 import styles from "./CartClient.module.css";
+
+// 1200 -> "1 200"
+function formatPrice(price: number): string {
+  return new Intl.NumberFormat("ru-RU").format(price);
+}
 
 export default function CartClient() {
   const items = useCartStore((s) => s.items);
@@ -31,48 +39,51 @@ export default function CartClient() {
   // Пустая корзина
   if (items.length === 0) {
     return (
-      <>
-        <div className={styles.emptyCart}>
-          <h2 className={styles.emptyTitle}>Ваша корзина пока пуста</h2>
-          <p className={styles.emptyText}>
-            Акции, специальные предложения и обзоры самых интересных товаров на главной странице помогут вам
-            определиться с выбором.
-          </p>
-        </div>
+      <div className={styles.emptyCart}>
+        <h2 className={styles.emptyTitle}>Ваша корзина пока пуста</h2>
+
+        <p className={styles.emptyText}>
+          Акции, специальные предложения и обзоры самых интересных товаров на главной странице помогут вам определиться
+          с выбором.
+        </p>
 
         <div className={styles.emptyActions}>
           <Link href="/catalog" className={styles.primaryButton}>
             Перейти в каталог
           </Link>
+
           <Link href="/" className={styles.secondaryButton}>
             На главную
           </Link>
         </div>
-      </>
+      </div>
     );
   }
 
-  // Считаем итоги для блока печати
+  // Считаем итоги для блока печати и mobile sticky bar
   let totalQuantity = 0;
   let totalPrice = 0;
+
   for (const item of items) {
     totalQuantity += item.quantity;
     totalPrice += item.price * item.quantity;
   }
 
   return (
-    <div>
+    <div className={styles.cartPage}>
       <section className={styles.cart}>
         {/* Левая колонка — список товаров */}
         <div className={styles.cartItems}>
-          {/* Заголовок + кнопки скачать/печать */}
+          {/* Заголовок и действия */}
           <div className={styles.cartTitleRow}>
             <h1 className={styles.cartTitle}>Корзина</h1>
+
             <div className={styles.cartActions}>
               <button type="button" className={styles.cartActionButton} onClick={() => exportCartToXlsx(items)}>
                 <DownloadIcon className={styles.cartIcon} color="#A1A1A1" width="15" height="15" />
                 <span>Скачать</span>
               </button>
+
               <button
                 type="button"
                 className={styles.cartActionButton}
@@ -84,7 +95,7 @@ export default function CartClient() {
             </div>
           </div>
 
-          {/* Шапка: чекбокс "выбрать все" + кнопка удаления */}
+          {/* Выбор товаров */}
           <div className={styles.cartHeader}>
             <label className={styles.selectAllLabel}>
               <input
@@ -109,13 +120,25 @@ export default function CartClient() {
           ))}
         </div>
 
-        {/* Правая колонка — итог и кнопка заказа */}
+        {/* Правая колонка — итог */}
         <div className={styles.cartSummary}>
           <CartSummary />
         </div>
       </section>
 
-      {/* Блок только для печати — скрыт в обычном режиме через CSS */}
+      {/* Sticky bar только для мобилки */}
+      <div className={styles.mobileCheckoutBar}>
+        <div className={styles.mobileCheckoutInfo}>
+          <span className={styles.mobileCheckoutLabel}>Итого</span>
+          <span className={styles.mobileCheckoutPrice}>{formatPrice(totalPrice)} ₽</span>
+        </div>
+
+        <Link href="/checkout" className={styles.mobileCheckoutButton}>
+          Оформить заказ
+        </Link>
+      </div>
+
+      {/* Блок только для печати */}
       <CartPrint items={items} totalPrice={totalPrice} totalQuantity={totalQuantity} />
     </div>
   );

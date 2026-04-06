@@ -1,3 +1,9 @@
+/* frontend/src/app/shipping/shipping-tabs/ShippingTabs.module.css */
+
+/* ==========================================================================
+   LAYOUT
+   ========================================================================== */
+
 .tabs {
   display: grid;
   grid-template-columns: 320px minmax(0, 1fr);
@@ -11,6 +17,25 @@
   flex-direction: column;
   gap: 10px;
 }
+
+.tabContent {
+  padding: 16px;
+  border-radius: 12px;
+  background: var(--color-light-soft);
+  box-shadow: 0 2px 12px rgba(16, 24, 40, 0.06);
+}
+
+.tabPane {
+  height: 100%;
+  padding: 28px;
+  border-radius: 12px;
+  background: #ffffff;
+  box-shadow: 0 2px 8px rgba(16, 24, 40, 0.05);
+}
+
+/* ==========================================================================
+   TAB BUTTONS
+   ========================================================================== */
 
 .tabButton {
   display: flex;
@@ -45,20 +70,9 @@
   font-weight: 500;
 }
 
-.tabContent {
-  padding: 16px;
-  border-radius: 12px;
-  background: var(--color-light-soft);
-  box-shadow: 0 2px 12px rgba(16, 24, 40, 0.06);
-}
-
-.tabPane {
-  height: 100%;
-  padding: 28px;
-  border-radius: 12px;
-  background: #ffffff;
-  box-shadow: 0 2px 8px rgba(16, 24, 40, 0.05);
-}
+/* ==========================================================================
+   CONTENT
+   ========================================================================== */
 
 .tabTitle {
   margin: 0 0 24px;
@@ -104,6 +118,10 @@
   line-height: 1.65;
 }
 
+/* ==========================================================================
+   CONTACTS
+   ========================================================================== */
+
 .contactInfo {
   margin-top: 24px;
   padding: 20px;
@@ -146,4 +164,117 @@
 
 .contactLink:hover {
   opacity: 0.75;
+}
+
+/* ==========================================================================
+   TABLET
+   ========================================================================== */
+
+@media (max-width: 1024px) {
+  .tabs {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .tabButtons {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+
+  .tabButton {
+    flex: 1 1 calc(50% - 5px);
+    padding: 18px 18px;
+  }
+
+  .tabPane {
+    padding: 22px;
+  }
+
+  .tabTitle {
+    font-size: 22px;
+  }
+
+  .deliveryRegion {
+    font-size: 16px;
+  }
+
+  .deliveryMethod,
+  .noteText,
+  .contactText,
+  .contactItem {
+    font-size: var(--text-sm);
+  }
+}
+
+/* ==========================================================================
+   MOBILE
+   ========================================================================== */
+@media (max-width: 600px) {
+  .tabs {
+    gap: 14px;
+    margin-top: 18px;
+  }
+
+  .tabButtons {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .tabButton {
+    width: fit-content;
+    flex: 0 1 auto;
+    padding: 10px 12px;
+    border: 1px solid var(--color-light);
+    border-radius: 6px;
+    font-size: 14px;
+    line-height: 1.35;
+    white-space: normal;
+  }
+
+  .tabContent {
+    padding: 10px;
+  }
+
+  .tabPane {
+    padding: 16px;
+  }
+
+  .tabTitle {
+    margin-bottom: 18px;
+    font-size: 18px;
+    line-height: 1.2;
+  }
+
+  .infoList {
+    gap: 16px;
+  }
+
+  .deliveryRegion {
+    font-size: 14px;
+    line-height: 1.4;
+  }
+
+  .deliveryMethod {
+    font-size: 14px;
+    line-height: 1.5;
+  }
+
+  .noteText {
+    margin-top: 18px;
+    font-size: 14px;
+    line-height: 1.55;
+  }
+
+  .contactInfo {
+    margin-top: 18px;
+    padding: 16px;
+  }
+
+  .contactText,
+  .contactItem {
+    font-size: 14px;
+    line-height: 1.5;
+  }
 }

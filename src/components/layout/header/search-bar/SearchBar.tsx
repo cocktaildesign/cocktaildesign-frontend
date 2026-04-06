@@ -19,6 +19,7 @@ const PLACEHOLDER_IMG = "/images/catalog/product-placeholder.webp";
 type Props = {
   placeholder?: string;
   categories: CatalogCategoryPreview[];
+  onOpenChange?: (isOpen: boolean) => void;
 };
 
 type Product = {
@@ -138,7 +139,7 @@ function buildChips(query: string, products: Product[]): string[] {
     .map(([token]) => token);
 }
 
-export default function SearchBar({ placeholder = "Поиск в CocktailDesign", categories }: Props) {
+export default function SearchBar({ placeholder = "Поиск в CocktailDesign", categories, onOpenChange }: Props) {
   const router = useRouter();
   const panelId = useId();
   const inputRef = useRef<HTMLInputElement>(null);
@@ -253,10 +254,16 @@ export default function SearchBar({ placeholder = "Поиск в CocktailDesign"
 
   function openPanel() {
     setIsOpen(true);
+    if (onOpenChange) {
+      onOpenChange(true);
+    }
   }
 
   function closePanel() {
     setIsOpen(false);
+    if (onOpenChange) {
+      onOpenChange(false);
+    }
     setActiveIndex(-1);
     setRandomProducts([]);
     setShowAllCategories(false);
@@ -407,7 +414,7 @@ export default function SearchBar({ placeholder = "Поиск в CocktailDesign"
           )}
 
           <button className={styles.button} type="submit">
-            Найти
+            <SearchIcon />
           </button>
         </div>
       </form>

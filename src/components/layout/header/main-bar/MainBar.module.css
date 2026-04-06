@@ -140,3 +140,44 @@
     padding: 0px 15px;
   }
 }
+
+/* ==========================================================================
+   BACK BUTTON
+   Кнопка назад — видна только на мобилке
+   ========================================================================== */
+
+/* По умолчанию скрыта на десктопе */
+.backButton {
+  display: none;
+}
+
+.backIcon {
+  width: 24px;
+  height: 24px;
+  color: var(--color-black);
+}
+
+@media (max-width: 600px) {
+  .backButton {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 auto;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding-left: 15px;
+    margin-left: 0; /* Компенсируем padding чтобы иконка была у края */
+    transition: color var(--dur-fast) var(--ease);
+  }
+
+  .backIcon {
+    width: 12px;
+    height: 18px;
+    color: #9d9d9d
+  }
+
+  .mainBarCenterInner {
+    padding-left: 0px;
+  }
+}

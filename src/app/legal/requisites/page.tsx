@@ -1,3 +1,4 @@
+// src/app/legal/requisites/page.tsx
 import PageLayout from "@/components/layout/PageLayout";
 import { pageMetadata } from "@/lib/seo/metadata";
 import Image from "next/image";

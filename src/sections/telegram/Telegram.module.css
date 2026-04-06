@@ -1,16 +1,26 @@
+/* Telegram.module.css */
+
+/* ==========================================================================
+   BANNER
+   Основной контейнер баннера.
+   ========================================================================== */
+
 .banner {
-  /* border: 1px solid var(--color-gray-light); */
-  padding: 50px 300px;
-  border-radius: var(--radius);
+  position: relative;
   display: flex;
   flex-direction: row;
   gap: 20px;
-  /* background: linear-gradient(93.49deg, #ffffff 6.02%, #f3f5f9 106.43%); */
-  background: linear-gradient(88.22deg, #e0e7ef 36.91%, #f6f7f8 96%);
-
   margin-top: 70px;
-  position: relative;
+  padding: 50px 300px;
+  border-radius: var(--radius);
+  background: linear-gradient(88.22deg, #e0e7ef 36.91%, #f6f7f8 96%);
 }
+
+/* ==========================================================================
+   CONTENT
+   Текстовый блок баннера.
+   ========================================================================== */
+
 .content {
   display: flex;
   flex-direction: column;
@@ -18,19 +28,19 @@
 }
 
 .title {
+  width: 70%;
   font-size: 35px;
   font-family: var(--font-display);
   font-weight: 500;
-  text-wrap: balance;
   line-height: 1.2;
-  width: 70%;
+  text-wrap: balance;
 }
 
 .description {
-  font-size: var(--text-sm);
-  text-wrap: balance;
-  color: var(--color-gray);
   width: 70%;
+  font-size: var(--text-sm);
+  color: var(--color-gray);
+  text-wrap: balance;
 }
 
 .ctaButton {
@@ -38,34 +48,29 @@
   flex-direction: row;
   align-items: center;
   gap: 10px;
-  background-color: #4c8ce2;
-  color: var(--color-white);
   width: fit-content;
   padding: 10px 30px;
   border-radius: var(--radius);
+  background-color: #4c8ce2;
+  color: var(--color-white);
   font-size: var(--text-base);
   transition: background-color var(--dur) var(--ease);
+  text-wrap: nowrap;
 }
 
 .ctaButton:hover {
   background-color: #3b7ad1;
 }
 
-.qrBlock {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 10px;
-  background-color: var(--color-white);
-  border: 1px solid var(--color-gray-light);
-  padding: 15px;
-  border-radius: 12px;
-}
+/* ==========================================================================
+   QR
+   Блок с изображением QR-кода.
+   ========================================================================== */
 
 .qrFrame {
   position: absolute;
-  bottom: 0;
   right: 250px;
+  bottom: 0;
   width: 320px;
   height: 320px;
 }
@@ -74,28 +79,72 @@
   object-fit: contain;
 }
 
-.qrHint {
-  font-size: 11px;
-  color: var(--color-gray);
-}
 /* ==========================================================================
    TABLET
-   Планшетная версия
    ========================================================================== */
 
 @media (max-width: 1024px) {
-}
+  .banner {
+    margin-top: 56px;
+    padding: 40px 72px;
+  }
 
-@media (max-width: 768px) {
+  .title {
+    width: 62%;
+    font-size: 30px;
+  }
+
+  .description {
+    width: 58%;
+  }
+
+  .ctaButton {
+    padding: 10px 24px;
+  }
+
+  .qrFrame {
+    right: 40px;
+    width: 240px;
+    height: 240px;
+  }
 }
 
 /* ==========================================================================
    MOBILE
-   Мобильная версия
    ========================================================================== */
 
 @media (max-width: 600px) {
   .banner {
+    margin-top: 0px;
+    border-radius: 0px;
+    margin-bottom: 20px;
+		padding: 20px;
+  }
+
+  .title {
+    width: 100%;
+    font-size: 26px;
+    text-align: center;
+  }
+
+  .qrFrame {
     display: none;
+  }
+  .description {
+    width: 100%;
+    text-align: center;
+  }
+
+  .ctaButton {
+    gap: 6px;
+    padding: 10px 15px;
+
+    font-size: var(--text-sm);
+  }
+
+  .content {
+    align-items: center;
+    flex-direction: column;
+    gap: 15px;
   }
 }

@@ -1,14 +1,25 @@
-/* ===== Страница базы знаний (/knowledge) ===== */
+/* frontend/src/app/knowledge/KnowledgePage.module.css */
+
+/* ==========================================================================
+   PAGE
+   Страница базы знаний.
+   ========================================================================== */
+
 .knowledgePage {
   min-height: 100vh;
   margin-bottom: 50px;
 }
 
+/* ==========================================================================
+   HEADER
+   Заголовок и описание блока.
+   ========================================================================== */
+
 .pageHeader {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  gap: 8px;
+  gap: 24px;
 }
 
 .pageHeaderTitle {
@@ -17,26 +28,78 @@
 }
 
 .pageHeaderDescription {
-  width: 700px;
-  font-size: var(--text-sm);
-  text-align: end;
-  text-wrap: balance;
+  display: none;
 }
 
 .line {
   width: 100%;
+  margin: 20px 0;
   border: none;
   border-top: 1px dashed var(--color-light);
-  margin: 20px 0;
 }
+
+/* ==========================================================================
+   LAYOUT
+   Фильтры и контент.
+   ========================================================================== */
 
 .layout {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr; /* 1 колонка меню + 3 колонки контент */
+  grid-template-columns: 1fr 1fr 1fr 1fr;
   gap: 16px;
   margin-top: 24px;
 }
 
-.sidebar {
-  grid-column: 1 / 2;
+/* ==========================================================================
+   TABLET
+   ========================================================================== */
+
+@media (max-width: 1024px) {
+  .knowledgePage {
+    margin-bottom: 40px;
+  }
+
+  .pageHeader {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .line {
+    margin: 16px 0;
+  }
+
+  .layout {
+    grid-template-columns: 1fr;
+    gap: 14px;
+    margin-top: 16px;
+  }
+}
+
+/* ==========================================================================
+   MOBILE
+   ========================================================================== */
+
+@media (max-width: 600px) {
+  .knowledgePage {
+    margin-bottom: 32px;
+  }
+
+  .pageHeader {
+    gap: 10px;
+  }
+
+  .pageHeaderTitle {
+    font-size: var(--text-xl);
+    line-height: 1.15;
+  }
+
+  .line {
+    display: none;
+  }
+
+  .layout {
+    gap: 0;
+    margin-top: 12px;
+  }
 }

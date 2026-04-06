@@ -1,3 +1,20 @@
+/* frontend/src/app/branding/service-cards/CustomContent/CustomContent.module.css */
+
+/* ==========================================================================
+   WRAPPER
+   Общий контейнер контента.
+   ========================================================================== */
+
+.customContent {
+  display: flex;
+  flex-direction: column;
+}
+
+/* ==========================================================================
+   CONTENT
+   Верхний блок с текстом и галереей.
+   ========================================================================== */
+
 .content {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -5,11 +22,16 @@
 }
 
 .contentLeft {
-  height: 100%;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  height: 100%;
 }
+
+/* ==========================================================================
+   INTRO
+   Вводный текст.
+   ========================================================================== */
 
 .intro {
   display: flex;
@@ -30,15 +52,18 @@
   text-wrap: balance;
 }
 
-/* Блок - Мы можем сделать */
+/* ==========================================================================
+   FEATURES
+   Блок возможностей.
+   ========================================================================== */
 
 .features {
   display: flex;
   flex-direction: column;
   gap: 10px;
-  background-color: var(--color-light-soft);
   padding: 20px;
   border-radius: 12px;
+  background-color: var(--color-light-soft);
 }
 
 .featuresTitle {
@@ -54,17 +79,17 @@
 }
 
 .featuresItem {
+  position: relative;
   display: flex;
   flex-direction: column;
   gap: 10px;
-  position: relative;
 }
 
 .featuresItem::before {
   content: "•";
   position: absolute;
-  left: 0;
   top: 0;
+  left: 0;
   color: #000;
   font-size: 20px;
 }
@@ -81,58 +106,70 @@
   color: var(--color-gray);
 }
 
+/* ==========================================================================
+   GALLERY
+   Галерея изображений.
+   ========================================================================== */
+
 .gallery {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 16px;
 }
+
 .image {
   width: 100%;
 }
 
-/* Блок инструкций */
+/* ==========================================================================
+   INSTRUCTIONS
+   Блок с шагами заказа.
+   ========================================================================== */
 
 .instructions {
   display: flex;
   flex-direction: column;
   gap: 15px;
-  margin-bottom: 40px;
   margin-top: 20px;
+  margin-bottom: 40px;
 }
 
 .lazerTitleH2 {
   font-size: var(--text-xl);
   font-weight: 450;
 }
+
+/* ==========================================================================
+   STEPS
+   Список шагов заказа.
+   ========================================================================== */
+
 .stepsList {
   display: flex;
-  gap: 16px;
   flex-direction: row;
+  gap: 16px;
 }
 
 .stepsItem {
+  position: relative;
   display: flex;
+  flex: 1;
   flex-direction: column;
   gap: 10px;
-  border: 1px solid var(--color-light);
   padding: 10px;
+  border: 1px solid var(--color-light);
   border-radius: 6px;
   background-color: var(--color-light-soft);
-  flex: 1;
-  position: relative;
 }
 
 .stepsItem:not(:last-child)::after {
   content: "";
   position: absolute;
-
   top: 50%;
-  transform: translateY(-50%);
   left: 100%;
-
   width: 17px;
   height: 1px;
-
+  transform: translateY(-50%);
   background-color: var(--color-light);
 }
 
@@ -147,16 +184,12 @@
   display: flex;
   align-items: center;
   justify-content: center;
-
   width: 24px;
   aspect-ratio: 1 / 1;
-
-  border-radius: 50%;
-
-  background-color: transparent;
   border: 2px solid var(--color-dark-blue);
+  border-radius: 50%;
+  background-color: transparent;
   color: var(--color-dark-blue);
-
   font-size: 10px;
   font-weight: 550;
 }
@@ -172,69 +205,80 @@
   color: var(--color-gray);
 }
 
-.line {
-  width: 30px;
-  border: 0.5px dashed var(--color-gray-light);
-  align-self: center;
-}
+/* ==========================================================================
+   BUTTON
+   Кнопка действия.
+   ========================================================================== */
 
 .lazerButton {
   display: block;
   width: fit-content;
-  background-color: var(--color-dark-blue);
   padding: 14px 25px;
+  border: none;
+  border-radius: 12px;
+  background-color: var(--color-dark-blue);
   color: var(--color-white);
   font-family: var(--font-display);
   font-size: 14px;
-  border-radius: 12px;
   font-weight: 450;
-  border: none;
 }
 
 .lazerButton:hover {
   background-color: var(--color-dark-blue-hover);
 }
 
-/* Секция с таблицей */
+/* ==========================================================================
+   PRICE
+   Секция стоимости и таблица.
+   ========================================================================== */
+
 .priceSection {
   margin-bottom: 50px;
 }
 
 .priceSectionTitle {
+  margin-bottom: 20px;
   font-size: var(--text-xl);
   font-weight: 450;
-  margin-bottom: 20px;
 }
 
-/* Обёртка таблицы (для скролла на мобилках) */
+.priceNote {
+  font-size: 12px;
+  color: var(--color-gray);
+  font-style: italic;
+}
+
+/* ==========================================================================
+   TABLE
+   Таблица стоимости.
+   ========================================================================== */
+
 .tableWrapper {
-  overflow-x: auto;
   margin-bottom: 16px;
+  overflow-x: auto;
+  overflow: hidden;
   border-radius: 12px;
-  overflow: hidden; /* обрезает углы */
 }
 
-/* Таблица */
 .priceTable {
   width: 100%;
   border-collapse: collapse;
-  background-color: #fff;
-  border-radius: 12px;
   overflow: hidden;
+  border-radius: 12px;
+  background-color: #fff;
 }
 
-/* Заголовок таблицы */
 .tableHead {
   background-color: var(--color-dark-blue-hover);
 }
 
 .tableHeadCell {
   padding: 12px 16px;
-  text-align: center;
+  border-right: 1px solid var(--color-light);
+  color: #fff;
   font-size: 14px;
   font-weight: 500;
-  color: #fff;
-  border-right: 1px solid var(--color-light);
+  text-align: center;
 }
 
 .tableHeadCell:last-child {
@@ -259,20 +303,172 @@
 
 .tableCell {
   padding: 12px 16px;
-  font-size: 14px;
   color: var(--color-dark-blue);
-  text-align: center;
+  font-size: 14px;
   font-weight: 450;
+  text-align: center;
 }
 
 .tableCell:first-child {
-  font-weight: 500;
   color: var(--color-dark-blue);
+  font-weight: 500;
 }
 
-/* Примечание под таблицей */
-.priceNote {
-  font-size: 12px;
-  color: var(--color-gray);
-  font-style: italic;
+/* ==========================================================================
+   TABLET
+   ========================================================================== */
+
+@media (max-width: 1024px) {
+  .content {
+    gap: 14px;
+  }
+
+  .intro {
+    margin-bottom: 28px;
+  }
+
+  .features {
+    padding: 16px;
+  }
+
+  .gallery {
+    gap: 14px;
+  }
+
+  .instructions {
+    margin-top: 18px;
+    margin-bottom: 32px;
+  }
+
+  .stepsList {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+  }
+
+  .stepsItem:not(:last-child)::after {
+    display: none;
+  }
+
+  .priceSection {
+    margin-bottom: 40px;
+  }
+
+  .tableHeadCell,
+  .tableCell {
+    padding: 10px 12px;
+    font-size: 13px;
+  }
+}
+
+/* ==========================================================================
+   MOBILE
+   ========================================================================== */
+
+@media (max-width: 600px) {
+  .content {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .intro {
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+
+  .introTitle {
+    font-size: var(--text-xl);
+    line-height: 1.2;
+  }
+
+  .introDescription {
+    line-height: 1.55;
+    text-wrap: initial;
+  }
+
+  .features {
+    padding: 14px;
+  }
+
+  .featuresItem {
+    gap: 8px;
+  }
+
+  .featuresItemTitle {
+    font-size: 15px;
+    line-height: 1.35;
+  }
+
+  .featuresItemDescription {
+    line-height: 1.55;
+  }
+
+  .gallery {
+    gap: 12px;
+  }
+
+  .instructions {
+    gap: 12px;
+    margin-top: 16px;
+    margin-bottom: 24px;
+  }
+
+  .lazerTitleH2 {
+    font-size: 20px;
+    line-height: 1.25;
+  }
+
+  .stepsList {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .stepsItem {
+    gap: 8px;
+    padding: 12px;
+  }
+
+  .stepsItemHeader {
+    gap: 12px;
+  }
+
+  .stepsItemDescription {
+    line-height: 1.55;
+    text-wrap: initial;
+  }
+
+  .lazerButton {
+    width: 100%;
+    padding: 12px 18px;
+    text-align: center;
+  }
+
+  .priceSection {
+    margin-bottom: 28px;
+  }
+
+  .priceSectionTitle {
+    margin-bottom: 14px;
+    font-size: 20px;
+    line-height: 1.25;
+  }
+
+  .tableWrapper {
+    margin-bottom: 12px;
+  }
+
+  .priceTable {
+    min-width: 620px;
+  }
+
+  .tableHeadCell,
+  .tableCell {
+    padding: 10px;
+    font-size: 12px;
+    white-space: nowrap;
+  }
+
+  .priceNote {
+    line-height: 1.5;
+  }
 }

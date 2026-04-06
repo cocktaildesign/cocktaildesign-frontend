@@ -54,3 +54,29 @@
   -moz-appearance: textfield;
   appearance: textfield;
 }
+
+/* ==========================================================================
+   TABLET
+   ========================================================================== */
+
+@media (max-width: 1024px) {
+}
+
+/* ==========================================================================
+   MOBILE
+   ========================================================================== */
+
+@media (max-width: 600px) {
+  .quantityControl {
+    display: flex;
+    flex: 1;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 0px;
+    border: 1px solid #ebeaea;
+    border-radius: 9px;
+    width: fit-content;
+    padding: 2px;
+  }
+}

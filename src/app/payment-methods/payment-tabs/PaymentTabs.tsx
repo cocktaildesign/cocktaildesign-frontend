@@ -1,3 +1,4 @@
+// frontend/src/app/payment-methods/payment-tabs/PaymentTabs.tsx
 "use client";
 
 import { useState } from "react";

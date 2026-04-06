@@ -1,3 +1,4 @@
+// frontend/src/app/payment-methods/page.tsx
 import { pageMetadata } from "@/lib/seo/metadata";
 import PageLayout from "@/components/layout/PageLayout";
 import styles from "./PaymentMethods.module.css";

@@ -1,3 +1,4 @@
+// frontend/src/components/ui/modal/Modal.tsx
 "use client";
 
 import type { ReactNode } from "react";
@@ -51,6 +52,7 @@ export function Modal(props: ModalProps) {
       onMouseDown={(event) => {
         if (event.target === event.currentTarget) onClose();
       }}>
+      {/* Контейнер модального окна */}
       <div
         className={`${styles.content} ${size === "large" ? styles.contentLarge : ""}`}
         ref={contentRef}
@@ -61,6 +63,8 @@ export function Modal(props: ModalProps) {
         <button type="button" className={styles.closeButton} onClick={onClose} aria-label="Закрыть модальное окно">
           ×
         </button>
+
+        {/* Контент модалки */}
         <div>{children}</div>
       </div>
     </div>,

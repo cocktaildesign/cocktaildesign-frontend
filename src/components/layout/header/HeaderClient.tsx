@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Container from "@/components/layout/Container";
+import ContainerHeader from "@/components/layout/ContainerNoPaddingMobil";
 import TopNav from "@/components/layout/header/top-nav/TopNav";
 import MainBar from "@/components/layout/header/main-bar/MainBar";
 import InfoIcon from "@/components/icons/InfoIcon";
@@ -41,7 +41,7 @@ export default function HeaderClient({ categories, collections }: HeaderClientPr
 
   return (
     <header className={`${styles.header} ${isScrolled ? styles.headerScrolled : ""}`}>
-      <Container>
+      <ContainerHeader>
         {/* Верхняя строка хедера */}
         <div className={styles.topBar}>
           {/* Левая часть: текст и соцсети */}
@@ -114,7 +114,7 @@ export default function HeaderClient({ categories, collections }: HeaderClientPr
 
         {/* Основная строка хедера */}
         <MainBar categories={categories} collections={collections} />
-      </Container>
+      </ContainerHeader>
     </header>
   );
 }

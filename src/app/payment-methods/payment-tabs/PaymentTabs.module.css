@@ -1,3 +1,9 @@
+/* frontend/src/app/payment-methods/payment-tabs/PaymentTabs.module.css */
+
+/* ==========================================================================
+   LAYOUT
+   ========================================================================== */
+
 .tabs {
   display: grid;
   grid-template-columns: 320px minmax(0, 1fr);
@@ -11,6 +17,25 @@
   flex-direction: column;
   gap: 10px;
 }
+
+.tabContent {
+  padding: 16px;
+  border-radius: 12px;
+  background: var(--color-light-soft);
+  box-shadow: 0 2px 12px rgba(16, 24, 40, 0.06);
+}
+
+.tabPane {
+  min-height: 100%;
+  padding: 28px;
+  border-radius: 12px;
+  background: #ffffff;
+  box-shadow: 0 2px 8px rgba(16, 24, 40, 0.05);
+}
+
+/* ==========================================================================
+   TAB BUTTONS
+   ========================================================================== */
 
 .tabButton {
   display: flex;
@@ -45,33 +70,25 @@
   font-weight: 500;
 }
 
+.tabButtonText {
+  min-width: 0;
+}
+
 .tabButtonIcon {
-  flex-shrink: 0;
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  flex-shrink: 0;
 }
 
 .icon {
   color: currentColor;
 }
 
-.tabContent {
-  padding: 16px;
-  border-radius: 12px;
-  background: var(--color-light-soft);
-  box-shadow: 0 2px 12px rgba(16, 24, 40, 0.06);
-}
+/* ==========================================================================
+   HEADER
+   ========================================================================== */
 
-.tabPane {
-  min-height: 100%;
-  padding: 28px;
-  border-radius: 12px;
-  background: #ffffff;
-  box-shadow: 0 2px 8px rgba(16, 24, 40, 0.05);
-}
-
-/* Верхний блок справа */
 .headerBlock {
   display: flex;
   align-items: flex-start;
@@ -80,10 +97,10 @@
 }
 
 .headerIcon {
-  flex-shrink: 0;
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  flex-shrink: 0;
   color: var(--color-dark-blue);
 }
 
@@ -111,7 +128,14 @@
   line-height: 1.55;
 }
 
-/* Секционный заголовок */
+/* ==========================================================================
+   LEGAL TAB
+   ========================================================================== */
+
+.innerCard {
+  min-width: 0;
+}
+
 .sectionTitle {
   margin: 0 0 24px;
   color: var(--color-black);
@@ -121,7 +145,6 @@
   line-height: 1.15;
 }
 
-/* Шаги */
 .stepsList {
   display: flex;
   flex-direction: column;
@@ -170,7 +193,6 @@
   line-height: 1.55;
 }
 
-/* Плашка */
 .noteBox {
   margin-top: 24px;
   padding: 20px;
@@ -207,7 +229,10 @@
   opacity: 0.75;
 }
 
-/* Физические лица */
+/* ==========================================================================
+   PHYSICAL TAB
+   ========================================================================== */
+
 .physicalCards {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -234,4 +259,157 @@
   color: var(--color-gray);
   font-size: var(--text-base);
   line-height: 1.6;
+}
+
+/* ==========================================================================
+   TABLET
+   ========================================================================== */
+
+@media (max-width: 1024px) {
+  .tabs {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .tabButtons {
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+
+  .tabButton {
+    flex: 1 1 calc(50% - 5px);
+    padding: 18px 18px;
+  }
+
+  .tabPane {
+    padding: 22px;
+  }
+
+  .pageTitle {
+    font-size: 22px;
+  }
+
+  .pageSubtitle {
+    font-size: var(--text-sm);
+  }
+
+  .physicalCards {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+/* ==========================================================================
+   MOBILE
+   ========================================================================== */
+
+@media (max-width: 600px) {
+  .tabs {
+    gap: 14px;
+    margin-top: 18px;
+  }
+
+  .tabButtons {
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .tabButton {
+    width: fit-content;
+    flex: 0 1 auto;
+    padding: 10px 12px;
+    border: 1px solid var(--color-light);
+    border-radius: 6px;
+    font-size: 14px;
+    line-height: 1.35;
+    white-space: normal;
+  }
+
+  .tabContent {
+    padding: 10px;
+  }
+
+  .tabPane {
+    padding: 16px;
+  }
+
+  .headerBlock {
+    margin-bottom: 18px;
+  }
+
+  .pageTitle {
+    font-size: 18px;
+    line-height: 1.2;
+  }
+
+  .pageSubtitle {
+    margin-top: 6px;
+    font-size: 14px;
+    line-height: 1.5;
+  }
+
+  .sectionTitle {
+    margin-bottom: 18px;
+    font-size: 16px;
+  }
+
+  .stepsList {
+    gap: 16px;
+  }
+
+  .stepItem {
+    gap: 12px;
+  }
+
+  .stepNumber {
+    width: 34px;
+    height: 34px;
+    font-size: 16px;
+  }
+
+  .stepTitle {
+    font-size: 14px;
+  }
+
+  .stepDescription {
+    font-size: 13px;
+    line-height: 1.5;
+  }
+
+  .noteBox {
+    margin-top: 18px;
+    padding: 16px;
+  }
+
+  .noteTitle {
+    font-size: 15px;
+  }
+
+  .noteText {
+    font-size: 14px;
+    line-height: 1.5;
+  }
+
+  .paymentLink {
+    margin-top: 18px;
+    font-size: 14px;
+  }
+
+  .physicalCards {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .physicalCard {
+    padding: 16px;
+  }
+
+  .cardTitle {
+    font-size: 16px;
+  }
+
+  .cardText {
+    font-size: 14px;
+    line-height: 1.55;
+  }
 }

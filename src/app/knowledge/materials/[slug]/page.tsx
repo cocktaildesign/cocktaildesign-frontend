@@ -56,6 +56,7 @@ export default async function KnowledgeMaterialPage({ params }: PageProps) {
         { href: `/knowledge/materials/${item.slug}`, label: item.title },
       ]}>
       <article className={styles.detailPage}>
+        {/* Верхняя строка */}
         <div className={styles.up}>
           <BackButton />
 
@@ -67,6 +68,7 @@ export default async function KnowledgeMaterialPage({ params }: PageProps) {
           </p>
         </div>
 
+        {/* Заголовок материала */}
         <header className={styles.detailHeader}>
           <h1 className={styles.detailTitle}>{item.title}</h1>
 
@@ -83,6 +85,7 @@ export default async function KnowledgeMaterialPage({ params }: PageProps) {
           </div>
         </header>
 
+        {/* Контент материала */}
         <div className={styles.detailBody}>
           {item.blocks.map((block) => {
             switch (block.type) {

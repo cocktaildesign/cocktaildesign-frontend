@@ -1,3 +1,4 @@
+// src/app/legal/returns/page.tsx
 import styles from "./Returns.module.css";
 import PageLayout from "@/components/layout/PageLayout";
 import { pageMetadata } from "@/lib/seo/metadata";

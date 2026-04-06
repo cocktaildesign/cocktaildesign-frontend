@@ -1,19 +1,19 @@
+// frontend/src/app/knowledge/knowledge-filters/KnowledgeFilters.tsx
 "use client";
 
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 
 import styles from "./KnowledgeFilters.module.css";
 import type { KnowledgeTab, KnowledgeFormat } from "../types";
 
-// Один пункт списка "Разделы"
 type CategoryItem = {
-  label: string; // текст для пользователя
-  href: string; // ссылка, которая меняет URL
-  matchTab: KnowledgeTab | null; // null = "Все материалы"
+  label: string;
+  href: string;
+  matchTab: KnowledgeTab | null;
 };
 
-// Меню (разделы)
 const CATEGORY_ITEMS: CategoryItem[] = [
   { label: "Все материалы", href: "/knowledge", matchTab: null },
   { label: "Техники и фишки", href: "/knowledge?tab=techniques", matchTab: "techniques" },
@@ -23,13 +23,11 @@ const CATEGORY_ITEMS: CategoryItem[] = [
   { label: "Материалы и ресурсы", href: "/knowledge?tab=resources", matchTab: "resources" },
 ];
 
-// Один пункт списка "Форматы"
 type FormatItem = {
   label: string;
   value: KnowledgeFormat;
 };
 
-// Меню (форматы)
 const FORMAT_ITEMS: FormatItem[] = [
   { label: "Видео", value: "video" },
   { label: "Статья", value: "article" },
@@ -37,33 +35,46 @@ const FORMAT_ITEMS: FormatItem[] = [
 ];
 
 export default function KnowledgeFilters() {
-  // Query-параметры читаем на клиенте (это UI-сайдбар).
   const searchParams = useSearchParams();
 
-  // Активные фильтры из URL:
-  // /knowledge -> tab=null, format=null
-  // /knowledge?tab=podcasts -> tab="podcasts"
-  // /knowledge?tab=education&format=video -> оба выбраны
-  const activeTab = searchParams.get("tab"); // string | null
-  const activeFormat = searchParams.get("format"); // string | null
+  const [isMobileOpen, setIsMobileOpen] = useState(false);
 
-  // Сбросить раздел: переходим на "Все материалы", но сохраняем выбранный формат.
+  const activeTab = searchParams.get("tab");
+  const activeFormat = searchParams.get("format");
+
   let resetCategoryHref = CATEGORY_ITEMS.find((item) => item.matchTab === null)?.href ?? "/knowledge";
   if (activeFormat) {
     resetCategoryHref = `${resetCategoryHref}?format=${activeFormat}`;
   }
 
-  // Сбросить формат: убираем format, но сохраняем выбранный tab.
   const resetFormatHref = activeTab ? `/knowledge?tab=${activeTab}` : "/knowledge";
+  const resetAllHref = "/knowledge";
 
-  return (
-    <aside className={styles.containerR} aria-label="Разделы знаний">
-      {/* ===== Разделы ===== */}
+  const hasActiveFilters = Boolean(activeTab || activeFormat);
+
+  useEffect(() => {
+    if (!isMobileOpen) return;
+
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+
+    return () => {
+      document.body.style.overflow = previousOverflow;
+    };
+  }, [isMobileOpen]);
+
+  function closeMobileSheet() {
+    setIsMobileOpen(false);
+  }
+
+  function renderCategoryCard(onNavigate?: () => void) {
+    return (
       <div className={styles.categoryCard}>
+        {/* Заголовок секции */}
         <div className={styles.sectionHeader}>
           <h3 className={styles.sectionHeaderTitle}>Раздел</h3>
 
-          <Link scroll={false} href={resetCategoryHref} className={styles.resetLink}>
+          <Link scroll={false} href={resetCategoryHref} className={styles.resetLink} onClick={onNavigate}>
             Сбросить
           </Link>
         </div>
@@ -71,16 +82,13 @@ export default function KnowledgeFilters() {
         <hr className={styles.divider} />
         <span className={styles.sectionLabel}>Тематика материалов</span>
 
+        {/* Список разделов */}
         <nav aria-label="Разделы знаний">
           <ul className={styles.categoryList}>
             {CATEGORY_ITEMS.map((item) => {
-              // Пункт активен, если совпадает tab из URL (включая null для "Все материалы").
               const isActive = item.matchTab === activeTab;
 
-              // Базовая ссылка категории
               let href = item.href;
-
-              // Если выбран формат — сохраняем его при переключении раздела.
               if (activeFormat) {
                 href = `${href}${href.includes("?") ? "&" : "?"}format=${activeFormat}`;
               }
@@ -89,7 +97,8 @@ export default function KnowledgeFilters() {
                 <li key={item.href} className={styles.categoryItem}>
                   <Link
                     href={href}
-                    scroll={false} // при переключении фильтров не прыгаем наверх
+                    scroll={false}
+                    onClick={onNavigate}
                     className={`${styles.categoryLink} ${isActive ? styles.categoryLinkActive : ""}`}
                     aria-current={isActive ? "page" : undefined}>
                     {item.label}
@@ -100,13 +109,17 @@ export default function KnowledgeFilters() {
           </ul>
         </nav>
       </div>
+    );
+  }
 
-      {/* ===== Фильтры (форматы) ===== */}
+  function renderFormatCard(onNavigate?: () => void) {
+    return (
       <div className={styles.filtersCard}>
+        {/* Заголовок секции */}
         <div className={styles.sectionHeader}>
           <h3 className={styles.sectionHeaderTitle}>Форматы</h3>
 
-          <Link scroll={false} href={resetFormatHref} className={styles.resetLink}>
+          <Link scroll={false} href={resetFormatHref} className={styles.resetLink} onClick={onNavigate}>
             Сбросить
           </Link>
         </div>
@@ -114,21 +127,17 @@ export default function KnowledgeFilters() {
         <hr className={styles.divider} />
         <span className={styles.sectionLabel}>Тип контента</span>
 
+        {/* Список форматов */}
         <nav className={styles.formatNav} aria-label="Форматы материалов">
           <ul className={styles.formatList}>
             {FORMAT_ITEMS.map((format) => {
-              // Активный формат — тот, что в URL.
               const isActive = activeFormat === format.value;
 
-              // Базовый URL
               let href = "/knowledge";
-
-              // Если выбрана категория — сохраняем её
               if (activeTab) {
                 href = `${href}?tab=${activeTab}`;
               }
 
-              // Повторный клик по активному формату снимает format (оставляем только tab).
               if (!isActive) {
                 href = `${href}${activeTab ? "&" : "?"}format=${format.value}`;
               }
@@ -138,6 +147,7 @@ export default function KnowledgeFilters() {
                   <Link
                     href={href}
                     scroll={false}
+                    onClick={onNavigate}
                     className={`${styles.formatLink} ${isActive ? styles.formatLinkActive : ""}`}
                     aria-current={isActive ? "page" : undefined}>
                     {format.label}
@@ -148,6 +158,69 @@ export default function KnowledgeFilters() {
           </ul>
         </nav>
       </div>
-    </aside>
+    );
+  }
+
+  return (
+    <>
+      <aside className={styles.containerR} aria-label="Фильтры базы знаний">
+        {/* Desktop / tablet */}
+        <div className={styles.desktopFilters}>
+          {renderCategoryCard()}
+          {renderFormatCard()}
+        </div>
+      </aside>
+
+      {/* Mobile fixed button */}
+      <button
+        type="button"
+        className={styles.mobileOpenButton}
+        onClick={() => setIsMobileOpen(true)}
+        aria-haspopup="dialog"
+        aria-expanded={isMobileOpen}>
+        <span className={styles.mobileOpenButtonText}>Фильтры</span>
+
+        {hasActiveFilters && <span className={styles.mobileOpenButtonBadge}>есть</span>}
+      </button>
+
+      {/* Mobile overlay */}
+      {isMobileOpen && (
+        <div className={styles.mobileSheetRoot} role="dialog" aria-modal="true" aria-label="Фильтры базы знаний">
+          <button type="button" className={styles.mobileBackdrop} onClick={closeMobileSheet} aria-label="Закрыть" />
+
+          <div className={styles.mobileSheet}>
+            {/* Верхняя часть sheet */}
+            <div className={styles.mobileSheetHeader}>
+              <h2 className={styles.mobileSheetTitle}>Фильтры</h2>
+
+              <button type="button" className={styles.mobileCloseButton} onClick={closeMobileSheet}>
+                Закрыть
+              </button>
+            </div>
+
+            {/* Контент sheet */}
+            <div className={styles.mobileSheetContent}>
+              {renderCategoryCard(closeMobileSheet)}
+              {renderFormatCard(closeMobileSheet)}
+            </div>
+
+            {/* Действия sheet */}
+            <div className={styles.mobileSheetFooter}>
+              <Link
+                href={resetAllHref}
+                scroll={false}
+                className={styles.mobileResetAllButton}
+                onClick={closeMobileSheet}>
+                Сбросить всё
+              </Link>
+
+              <button type="button" className={styles.mobileApplyButton} onClick={closeMobileSheet}>
+                Показать материалы
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </>
   );
 }

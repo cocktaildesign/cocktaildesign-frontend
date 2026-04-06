@@ -1,3 +1,4 @@
+/* frontend/src/app/contacts/page.tsx */
 import { pageMetadata } from "@/lib/seo/metadata";
 import PageLayout from "@/components/layout/PageLayout";
 import styles from "./Contacts.module.css";
@@ -15,11 +16,14 @@ export default function Contacts() {
   return (
     <PageLayout>
       <section className={styles.contactsPage}>
+        {/* Заголовок страницы */}
         <div className={styles.contactsPageHeader}>
           <h1 className={styles.contactsPageTitle}>Контакты</h1>
         </div>
 
+        {/* Основная сетка */}
         <div className={styles.contactGrid}>
+          {/* Контактная информация */}
           <div className={`${styles.contactSection} ${styles.contactInfo}`}>
             <div className={styles.infoItem}>
               <h2 className={styles.itemTitle}>Сделать заказ или уточнить наличие можно по телефону</h2>
@@ -40,6 +44,7 @@ export default function Contacts() {
             </Link>
           </div>
 
+          {/* Реквизиты */}
           <div className={`${styles.contactSection} ${styles.contactRequisites}`}>
             <h2 className={styles.itemTitle}>Наши реквизиты</h2>
 
@@ -71,6 +76,7 @@ export default function Contacts() {
             </Link>
           </div>
 
+          {/* Адрес, режим работы и карта */}
           <div className={`${styles.contactSection} ${styles.contactAddress}`}>
             <div className={styles.addressDetails}>
               <div className={styles.detailsSection}>

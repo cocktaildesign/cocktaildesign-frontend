@@ -1,17 +1,56 @@
+/* src/app/support/feedback/FeedbackPage.module.css */
+
+/* ==========================================================================
+   PAGE
+   ========================================================================== */
+
 .section {
   max-width: 650px;
-  margin: 0 auto;
   min-height: 70vh;
+  margin: 0 auto;
 }
 
 .card {
+  padding: 40px;
+  border: 1px solid rgb(229, 229, 229);
   border-radius: 12px;
   background-color: #f9f9f9;
-  border: 1px solid rgb(229, 229, 229);
-  padding: 40px;
 }
 
 .fallbackText {
   padding: 16px;
   font-size: 14px;
+}
+
+/* ==========================================================================
+   TABLET
+   ========================================================================== */
+
+@media (max-width: 1024px) {
+  .section {
+    max-width: 100%;
+  }
+
+  .card {
+    padding: 28px;
+  }
+}
+
+/* ==========================================================================
+   MOBILE
+   ========================================================================== */
+
+@media (max-width: 600px) {
+  .section {
+    min-height: auto;
+  }
+
+  .card {
+    padding: 18px 16px;
+  }
+
+  .fallbackText {
+    padding: 12px;
+    font-size: 13px;
+  }
 }

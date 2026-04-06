@@ -91,17 +91,18 @@ export default function CheckoutClient() {
 
   return (
     <div className={styles.page}>
-      {/* Назад в корзину */}
+      {/* Ссылка назад */}
       <Link href="/cart" className={styles.backLink}>
         ← Вернуться в корзину
       </Link>
 
+      {/* Заголовок страницы */}
       <h1 className={styles.title}>Оформление заказа</h1>
 
       <div className={styles.layout}>
-        {/* Левая колонка — тип покупателя + список товаров */}
+        {/* Левая колонка */}
         <div className={styles.leftColumn}>
-          {/* Переключатель типа покупателя */}
+          {/* Выбор типа покупателя */}
           <section className={styles.buyerTypeSection} aria-labelledby="buyer-type-title">
             <div className={styles.buyerTypeHeader}>
               <h2 id="buyer-type-title" className={styles.buyerTypeTitle}>
@@ -141,7 +142,7 @@ export default function CheckoutClient() {
             </div>
           </section>
 
-          {/* Список товаров из корзины */}
+          {/* Состав заказа */}
           <section className={styles.orderSummary}>
             <h2 className={styles.orderSummaryTitle}>Ваш заказ</h2>
 
@@ -174,8 +175,9 @@ export default function CheckoutClient() {
           </section>
         </div>
 
-        {/* Правая колонка — форма */}
+        {/* Правая колонка */}
         <section className={styles.form}>
+          {/* Заголовок формы */}
           <div className={styles.formHeader}>
             <h2 className={styles.formTitle}>
               {buyerType === "individual" ? "Контактные данные" : "Данные для оформления"}
@@ -187,8 +189,9 @@ export default function CheckoutClient() {
             </p>
           </div>
 
+          {/* Поля формы */}
           <div className={styles.formGrid}>
-            {/* Имя Фамилия — только для физлица */}
+            {/* Поля физического лица */}
             {buyerType === "individual" && (
               <div className={styles.field}>
                 <label className={styles.label} htmlFor="fullName">
@@ -211,7 +214,7 @@ export default function CheckoutClient() {
               </div>
             )}
 
-            {/* Контактное лицо — только для юрлица */}
+            {/* Поля юридического лица */}
             {buyerType === "legal" && (
               <div className={styles.field}>
                 <label className={styles.label} htmlFor="contactName">
@@ -234,7 +237,7 @@ export default function CheckoutClient() {
               </div>
             )}
 
-            {/* Телефон */}
+            {/* Контакты */}
             <div className={styles.field}>
               <label className={styles.label} htmlFor="phone">
                 Телефон <span className={styles.required}>*</span>
@@ -255,7 +258,6 @@ export default function CheckoutClient() {
               {errors.phone && <p className={styles.errorText}>{errors.phone}</p>}
             </div>
 
-            {/* Telegram */}
             <div className={styles.field}>
               <label className={styles.label} htmlFor="telegram">
                 Telegram
@@ -271,7 +273,6 @@ export default function CheckoutClient() {
               />
             </div>
 
-            {/* ИНН — только для юрлица */}
             {buyerType === "legal" && (
               <div className={styles.field}>
                 <label className={styles.label} htmlFor="inn">
@@ -292,7 +293,7 @@ export default function CheckoutClient() {
               </div>
             )}
 
-            {/* Адрес доставки — на всю ширину */}
+            {/* Доставка и комментарий */}
             <div className={`${styles.field} ${styles.fieldFull}`}>
               <label className={styles.label} htmlFor="address">
                 Адрес доставки <span className={styles.required}>*</span>
@@ -313,7 +314,6 @@ export default function CheckoutClient() {
               {errors.address && <p className={styles.errorText}>{errors.address}</p>}
             </div>
 
-            {/* Комментарий — на всю ширину */}
             <div className={`${styles.field} ${styles.fieldFull}`}>
               <label className={styles.label} htmlFor="comment">
                 Комментарий к заказу
@@ -330,7 +330,7 @@ export default function CheckoutClient() {
             </div>
           </div>
 
-          {/* Кнопка отправки */}
+          {/* Отправка формы */}
           <button
             type="button"
             className={styles.submitButton}

@@ -1,62 +1,203 @@
-.favoritesPage {
-  min-height: 60vh;
-  margin-bottom: 50px;
-  display: flex;
-  flex-direction: column;
-  display: flex;
-  flex-direction: column;
+/* src/app/favorites/Favorites.module.css */
 
-  /* важно: страница занимает доступную высоту */
-  flex: 1;
+/* ==========================================================================
+   LOADING
+   ========================================================================== */
+
+.favoritesLoading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 420px;
+}
+
+.favoritesLoadingCard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  max-width: 420px;
+  padding: 32px 24px;
+  background-color: var(--color-white);
+  border-radius: 12px;
+}
+
+.favoritesLoadingIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background-color: #fff4f4;
+  color: #d60001;
+}
+
+.favoritesLoadingText {
+  margin: 0;
+  font-size: var(--text-sm);
+  color: var(--color-gray);
+  text-align: center;
+}
+
+/* ==========================================================================
+   EMPTY STATE
+   ========================================================================== */
+
+.favoritesState {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 520px;
+}
+
+.favoritesStateCard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-width: 720px;
+  padding: 40px 28px;
+  background-color: var(--color-white);
+  border-radius: 12px;
+  text-align: center;
+}
+
+.favoritesStateIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 72px;
+  height: 72px;
+  margin-bottom: 18px;
+  border-radius: 50%;
+  background-color: #fff4f4;
+  color: #d60001;
 }
 
 .favoritesPageTitle {
-  margin: 0 0 24px;
   font-size: var(--text-2xl);
   font-weight: 450;
 }
 
-.favoritesState {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  flex: 1;
-  gap: 10px;
-}
-
-.favoritesStateIcon {
-  color: #d60001;
-}
-
-.favoritesStateTitle {
-  font-family: var(--font-display);
-  font-weight: 500;
-}
-.favoritesStateDescroption {
+.favoritesStateDescription {
+  max-width: 460px;
+  margin: 12px 0 0;
   font-size: var(--text-base);
   color: var(--color-gray);
+  line-height: 1.5;
+  text-wrap: balance;
 }
-.favoritesStateButtons {
-  background-color: var(--color-dark-blue);
-  height: 48px;
-  color: var(--color-white);
-  font-family: var(--font-display);
-  display: flex;
-  font-size: var(--text-base);
 
+.favoritesStateActions {
+  display: flex;
+  gap: 15px;
+  margin-top: 24px;
+}
+
+/* ==========================================================================
+   BUTTONS
+   ========================================================================== */
+
+.primaryButton {
+  display: flex;
   align-items: center;
   justify-content: center;
+  width: fit-content;
+  height: 48px;
   padding: 10px 20px;
   border-radius: 12px;
-  margin-top: 20px;
+  background-color: var(--color-dark-blue);
+  color: var(--color-white);
+  font-family: var(--font-display);
+  font-size: 16px;
+  transition: background-color var(--dur) var(--ease);
 }
 
-.favoritesLoading {
-  flex: 1;
-  color: var(--color-gray-light);
-  font-size: var(--text-sm);
+.primaryButton:hover {
+  background-color: var(--color-dark-blue-hover);
+}
+
+.secondaryButton {
   display: flex;
   align-items: center;
   justify-content: center;
+  width: fit-content;
+  height: 48px;
+  padding: 10px 20px;
+  border: 1px solid var(--color-dark-blue);
+  border-radius: 12px;
+  color: var(--color-dark-blue);
+  font-family: var(--font-display);
+  font-size: 16px;
+  transition: opacity var(--dur) var(--ease);
+}
+
+.secondaryButton:hover {
+  opacity: 0.5;
+}
+
+/* ==========================================================================
+   TABLET
+   ========================================================================== */
+
+@media (max-width: 1024px) {
+  .favoritesState {
+    min-height: 460px;
+  }
+
+  .favoritesStateCard {
+    max-width: 100%;
+  }
+}
+
+/* ==========================================================================
+   MOBILE
+   ========================================================================== */
+
+@media (max-width: 600px) {
+  .favoritesLoading {
+    min-height: 320px;
+  }
+
+  .favoritesLoadingCard {
+    padding: 24px 18px;
+    border-radius: 12px;
+  }
+
+  .favoritesState {
+    min-height: 420px;
+  }
+
+  .favoritesStateCard {
+    padding: 28px 18px;
+    border-radius: 12px;
+  }
+
+  .favoritesStateIcon {
+    width: 64px;
+    height: 64px;
+    margin-bottom: 16px;
+  }
+
+  .favoritesStateTitle {
+    font-size: var(--text-lg);
+  }
+
+  .favoritesStateDescription {
+    font-size: var(--text-sm);
+    text-wrap: initial;
+  }
+
+  .favoritesStateActions {
+    flex-direction: column;
+    width: 100%;
+    gap: 10px;
+  }
+
+  .primaryButton,
+  .secondaryButton {
+    width: 100%;
+  }
 }

@@ -1,3 +1,9 @@
+/* src/app/support/SupportPage.module.css */
+
+/* ==========================================================================
+   PAGE
+   ========================================================================== */
+
 .section {
   padding: 0;
 }
@@ -7,11 +13,19 @@
   font-size: 36px;
 }
 
+/* ==========================================================================
+   GRID
+   ========================================================================== */
+
 .grid {
   display: grid;
   gap: 16px;
   grid-template-columns: repeat(6, minmax(0, 1fr));
 }
+
+/* ==========================================================================
+   CARD
+   ========================================================================== */
 
 .card {
   text-decoration: none;
@@ -23,11 +37,11 @@
   position: relative;
   width: 100%;
   aspect-ratio: 1 / 1;
-  border-radius: 12px;
   overflow: hidden;
   pointer-events: none;
   background-color: #f9f9f9;
   border: 1px solid rgb(229, 229, 229);
+  border-radius: 12px;
   transition:
     box-shadow 160ms ease,
     transform 160ms ease,
@@ -36,8 +50,8 @@
 
 .card:hover .cardMedia {
   transform: translateY(-1px);
-  box-shadow: 0 14px 40px rgba(0, 0, 0, 0.1);
   border: 1px solid var(--color-border);
+  box-shadow: 0 14px 40px rgba(0, 0, 0, 0.1);
 }
 
 .card:focus-visible .cardMedia {
@@ -67,8 +81,52 @@
 
 .cardDesc {
   margin: 0;
+  max-width: 36ch;
   font-size: 14px;
   line-height: 1.35;
   color: rgba(0, 0, 0, 0.6);
-  max-width: 36ch;
+}
+
+/* ==========================================================================
+   TABLET
+   ========================================================================== */
+
+@media (max-width: 1024px) {
+  .title {
+    font-size: 30px;
+  }
+
+  .grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+/* ==========================================================================
+   MOBILE
+   ========================================================================== */
+
+@media (max-width: 600px) {
+  .title {
+    margin-bottom: 20px;
+    font-size: 24px;
+    line-height: 1.2;
+  }
+
+  .grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+  }
+
+  .cardBody {
+    padding: 12px 4px 4px;
+  }
+
+  .cardTitle {
+    font-size: 16px;
+  }
+
+  .cardDesc {
+    font-size: 12px;
+    line-height: 1.4;
+  }
 }

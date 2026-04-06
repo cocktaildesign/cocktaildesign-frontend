@@ -1,10 +1,9 @@
-// src/lib/api/catalog/index.ts
-
 export {
   // Категории
   getTopCategoriesFromStrapi,
   getCategoryBySlugFromStrapi,
   getCatalogTreeFromStrapi,
+  getChildCategoriesFromStrapi, 
 
   // Товары (категория + все потомки, пагинация)
   getProductsByCategorySlugFromStrapi,
@@ -24,6 +23,6 @@ export {
   getCollectionProductsFromStrapi,
   getCollectionCategoriesTreeFromStrapi,
 
-  //каталог цветов
+  // каталог цветов
   getColorMap,
 } from "./queries";

@@ -1,3 +1,4 @@
+// src/app/legal/privacy-policy/page.tsx
 import styles from "./PrivacyPolicy.module.css";
 import PageLayout from "@/components/layout/PageLayout";
 import { pageMetadata } from "@/lib/seo/metadata";

@@ -1,7 +1,12 @@
+/* src/app/legal/requisites/Requisites.module.css */
+
+/* ==========================================================================
+   PAGE
+   ========================================================================== */
+
 .section {
-  margin: 0 auto;
   max-width: 870px;
-  margin-bottom: 60px;
+  margin: 0 auto 60px;
 }
 
 .sectionTitle {
@@ -10,7 +15,10 @@
   font-weight: 450;
 }
 
-/* Карточка  */
+/* ==========================================================================
+   CARD
+   ========================================================================== */
+
 .card {
   display: grid;
   grid-template-columns: 200px 1fr;
@@ -20,7 +28,10 @@
   background: #f6f7f8;
 }
 
-/* Левая “иконка” */
+/* ==========================================================================
+   MEDIA
+   ========================================================================== */
+
 .media {
   position: relative;
   width: 100%;
@@ -31,6 +42,10 @@
 .mediaImage {
   object-fit: cover;
 }
+
+/* ==========================================================================
+   CONTENT
+   ========================================================================== */
 
 .title {
   margin: 0 0 14px;
@@ -48,27 +63,96 @@
 }
 
 .term {
+  font-size: 16px;
   font-weight: 500;
   color: var(--color-text);
-  font-size: 16px;
 }
 
 .desc {
-  color: var(--color-text);
-  word-break: break-word;
-  font-weight: 300;
-  font-size: 16px;
-
   display: flex;
-  gap: 4px;
   flex-direction: row;
   align-items: center;
+  gap: 4px;
+  flex-wrap: wrap;
+  font-size: 16px;
+  font-weight: 300;
+  color: var(--color-text);
+  word-break: break-word;
 }
 
-/* =========================
-   Адаптивный
-   Breakpoints:
-   1) Desktop: 1025–1440
-   2) Tablet: 601–1024
-   3) Mobile: 320–600
-   ========================= */
+/* ==========================================================================
+   TABLET
+   ========================================================================== */
+
+@media (max-width: 1024px) {
+  .section {
+    margin-bottom: 48px;
+  }
+
+  .sectionTitle {
+    font-size: 22px;
+  }
+
+  .card {
+    grid-template-columns: 140px 1fr;
+    gap: 20px;
+    padding: 24px 24px;
+  }
+
+  .list {
+    grid-template-columns: minmax(120px, 1fr) 2fr;
+  }
+
+  .term,
+  .desc,
+  .title {
+    font-size: 15px;
+  }
+}
+
+/* ==========================================================================
+   MOBILE
+   ========================================================================== */
+
+@media (max-width: 600px) {
+  .section {
+    margin-bottom: 36px;
+  }
+
+  .sectionTitle {
+    margin: 16px 0 14px;
+    font-size: 20px;
+  }
+
+  .card {
+    grid-template-columns: 1fr;
+    gap: 14px;
+    padding: 18px;
+  }
+
+  .media {
+    width: 88px;
+    margin: 0 auto;
+  }
+
+  .title {
+    margin-bottom: 12px;
+    font-size: 14px;
+    text-wrap: initial;
+  }
+
+  .list {
+    grid-template-columns: 1fr;
+    row-gap: 6px;
+  }
+
+  .term {
+    margin-top: 6px;
+    font-size: 14px;
+  }
+
+  .desc {
+    font-size: 14px;
+    line-height: 1.45;
+  }
+}

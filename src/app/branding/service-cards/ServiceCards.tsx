@@ -1,4 +1,6 @@
+// frontend/src/app/branding/service-cards/ServiceCards.tsx
 "use client";
+
 import { useState } from "react";
 import styles from "./ServiceCards.module.css";
 import SideModal from "@/components/ui/side-modal/SideModal";
@@ -6,15 +8,11 @@ import { LaserContent } from "./LaserContent/LaserContent";
 import { CustomContent } from "./CustomContent/CustomContent";
 
 export default function ServiceCards() {
-  // Состояние: пустая строка = закрыто, "laser"/"custom" = открыто
   const [activeService, setActiveService] = useState("");
-  /* "" = модалка закрыта
-   "laser" = открыта Лазерная гравировка
-   "custom" = открыто Индивидуальное производство */
 
   return (
     <div className={styles.servicesGrid}>
-      {/* Карточка 1 */}
+      {/* Карточка лазерной гравировки */}
       <button
         type="button"
         className={`${styles.serviceCard} ${styles.serviceCardLaser}`}
@@ -26,10 +24,11 @@ export default function ServiceCards() {
             инвентарь в элемент бренда.
           </p>
         </div>
+
         <span className={styles.cardOverlay}>Подробнее...</span>
       </button>
 
-      {/* Карточка 2 */}
+      {/* Карточка индивидуального производства */}
       <button
         type="button"
         className={`${styles.serviceCard} ${styles.serviceCardCustom}`}
@@ -41,6 +40,7 @@ export default function ServiceCards() {
             решения для вашего бренда.
           </p>
         </div>
+
         <span className={styles.cardOverlay}>Подробнее...</span>
       </button>
 

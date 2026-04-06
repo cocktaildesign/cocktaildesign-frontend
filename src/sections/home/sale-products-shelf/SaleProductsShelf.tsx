@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-import PageLayout from "@/components/layout/PageLayout";
+import ContainerNoPaddingMobil from "@/components/layout/ContainerNoPaddingMobil";
 import ProductsSlider from "../../../components/ui/products-slider/ProductsSlider";
 import ProductCard from "../product-card/HomeProductCard";
 import ArrowRightIcon from "@/components/icons/ArrowRightIcon";
@@ -34,15 +34,15 @@ export default function SaleProductsShelf({ collections, collectionSlug = "sale"
   }
 
   return (
-    <PageLayout>
-      <section className={styles.section}>
+    <section className={styles.section}>
+      <ContainerNoPaddingMobil>
         <div className={styles.shelf}>
           {/* Верхняя часть полки */}
           <div className={styles.header}>
             <h2 className={styles.title}>
               Скидки <span className={styles.desktopOnly}>в Cocktail Design</span>
             </h2>
-						
+
             {collection.viewAllHref && (
               <Link href={collection.viewAllHref} className={styles.viewAllLink}>
                 <span className={styles.viewAllText}>Все</span>
@@ -60,7 +60,7 @@ export default function SaleProductsShelf({ collections, collectionSlug = "sale"
             ))}
           </ProductsSlider>
         </div>
-      </section>
-    </PageLayout>
+      </ContainerNoPaddingMobil>
+    </section>
   );
 }

@@ -1,3 +1,9 @@
+/* frontend/src/app/payment-methods/PaymentMethods.module.css */
+
+/* ==========================================================================
+   PAGE
+   ========================================================================== */
+
 .paymentMethodsPage {
   min-height: 60vh;
   margin-bottom: 50px;
@@ -11,5 +17,35 @@
 .paymentMethodsPageDescription {
   margin-top: 15px;
   font-size: var(--text-base);
-	color: var(--color-gray);
+  color: var(--color-gray);
+}
+
+/* ==========================================================================
+   TABLET
+   ========================================================================== */
+
+@media (max-width: 1024px) {
+  .paymentMethodsPage {
+    margin-bottom: 40px;
+  }
+}
+
+/* ==========================================================================
+   MOBILE
+   ========================================================================== */
+
+@media (max-width: 600px) {
+  .paymentMethodsPage {
+    margin-bottom: 32px;
+  }
+
+  .paymentMethodsPageTitle {
+    font-size: var(--text-xl);
+  }
+
+  .paymentMethodsPageDescription {
+    margin-top: 12px;
+    font-size: var(--text-sm);
+    line-height: 1.5;
+  }
 }

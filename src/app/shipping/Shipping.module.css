@@ -1,3 +1,9 @@
+/* frontend/src/app/shipping/Shipping.module.css */
+
+/* ==========================================================================
+   PAGE
+   ========================================================================== */
+
 .shippingPage {
   min-height: 60vh;
   margin-bottom: 50px;
@@ -12,4 +18,34 @@
   margin-top: 15px;
   font-size: var(--text-base);
   color: var(--color-gray);
+}
+
+/* ==========================================================================
+   TABLET
+   ========================================================================== */
+
+@media (max-width: 1024px) {
+  .shippingPage {
+    margin-bottom: 40px;
+  }
+}
+
+/* ==========================================================================
+   MOBILE
+   ========================================================================== */
+
+@media (max-width: 600px) {
+  .shippingPage {
+    margin-bottom: 32px;
+  }
+
+  .shippingPageTitle {
+    font-size: var(--text-xl);
+  }
+
+  .shippingPageDescription {
+    margin-top: 12px;
+    font-size: var(--text-sm);
+    line-height: 1.5;
+  }
 }

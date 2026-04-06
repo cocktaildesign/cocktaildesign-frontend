@@ -118,6 +118,50 @@ export function mapCategoryPreview(item: StrapiCategoryItem): CatalogCategoryPre
   };
 }
 
+// Маппер с полным деревом children (для мобильного drill-down).
+// В отличие от mapCategoryPreview — НЕ обрезает children у дочерних категорий.
+export function mapCategoryPreviewWithChildren(item: StrapiCategoryItem): CatalogCategoryPreview | null {
+  const source = item.attributes ?? item;
+
+  const name = source.name?.trim() ?? "";
+  const slug = source.slug?.trim() ?? "";
+
+  if (!name || !slug) return null;
+
+  const image = source.image;
+
+  const imagePath =
+    image?.formats?.medium?.url ?? image?.formats?.small?.url ?? image?.formats?.thumbnail?.url ?? image?.url ?? null;
+
+  const imageUrl = imagePath ? (getStrapiMediaUrl(imagePath) ?? null) : null;
+  const altFromStrapi = image?.alternativeText?.trim() ?? "";
+  const alt = altFromStrapi || name;
+
+  const rawCount = source.productsCount;
+  const productsCount = typeof rawCount === "number" && Number.isFinite(rawCount) && rawCount > 0 ? rawCount : 0;
+
+  // Рекурсивно маппим детей — и у них тоже сохраняем children
+  const childrenData = source.children?.data ?? [];
+  const children: CatalogCategoryPreview[] = [];
+
+  for (const child of childrenData) {
+    const mappedChild = mapCategoryPreviewWithChildren(child);
+    if (mappedChild) {
+      children.push(mappedChild); // ← НЕ обрезаем children у детей
+    }
+  }
+
+  return {
+    id: String(item.id),
+    name,
+    slug,
+    imageSrc: imageUrl,
+    alt,
+    productsCount,
+    children: children.length > 0 ? children : undefined,
+  };
+}
+
 // ============================================================================
 // SLUG
 // ============================================================================
@@ -282,6 +326,8 @@ export function mapProductPreview(item: StrapiProductItem): CatalogProductPrevie
   const images = mapPreviewImageUrls(source.image);
 
   const engravingEnabled = source.engravingEnabled === true;
+  const discountExcluded = source.discountExcluded === true;
+
   const slug = makeProductSlug(moyskladId, name);
 
   // Варианты могут прийти:
@@ -300,6 +346,7 @@ export function mapProductPreview(item: StrapiProductItem): CatalogProductPrevie
     imageUrl,
     images,
     engravingEnabled,
+    discountExcluded,
     code,
     variants,
   };
@@ -427,6 +474,7 @@ export function mapProductDetail(
   const rawCode = source.code;
   const code = typeof rawCode === "string" && rawCode.trim() ? rawCode.trim() : null;
   const engravingEnabled = source.engravingEnabled === true;
+  const discountExcluded = source.discountExcluded === true;
 
   const images = mapMediaArray(source.image, name);
   const specifications = mapProductSpecifications(source.specifications);
@@ -443,6 +491,7 @@ export function mapProductDetail(
     images,
     specifications,
     engravingEnabled,
+    discountExcluded,
     code,
     bundleItems,
   };

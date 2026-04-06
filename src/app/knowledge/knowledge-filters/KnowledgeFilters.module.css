@@ -1,25 +1,42 @@
-/* ===== Контейнер сайдбара ===== */
+/* frontend/src/app/knowledge/knowledge-filters/KnowledgeFilters.module.css */
+
+/* ==========================================================================
+   WRAPPER
+   Обёртка фильтров и desktop/tablet-колонка.
+   ========================================================================== */
+
 .containerR {
   display: flex;
   flex-direction: column;
   gap: 20px;
-  position: sticky;
-  top: 145px;
   height: fit-content;
 }
 
-/* ===== Разделы ===== */
+.desktopFilters {
+  position: sticky;
+  top: 145px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  height: fit-content;
+}
+
+/* ==========================================================================
+   CATEGORY CARD
+   Карточка разделов знаний.
+   ========================================================================== */
+
 .categoryCard {
-  background-color: var(--color-light-soft);
   padding: 20px;
   border-radius: var(--radius);
+  background-color: var(--color-light-soft);
 }
 
 .sectionHeader {
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
   align-items: center;
+  justify-content: space-between;
 }
 
 .sectionHeaderTitle {
@@ -40,24 +57,24 @@
 
 .divider {
   width: 100%;
+  margin: 10px 0 5px;
   border: none;
-  margin: 10px 0 5px 0;
-  border: 0.5px dashed var(--color-light);
+  border-top: 0.5px dashed var(--color-light);
 }
 
 .sectionLabel {
+  display: block;
+  margin-bottom: 10px;
   color: var(--color-gray);
   font-size: var(--text-xs);
-  margin-bottom: 10px;
-  display: block;
 }
 
 .categoryList {
-  list-style: none;
-  padding: 0;
-  margin: 0;
   display: grid;
   gap: 5px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
 }
 
 .categoryItem {
@@ -66,13 +83,12 @@
 
 .categoryLink {
   display: inline-block;
-  text-decoration: none;
-  color: var(--color-gray);
-  transition: color var(--dur) var(--ease);
   padding: 4px 10px;
   border-radius: 6px;
   font-size: 16px;
   color: var(--color-black);
+  text-decoration: none;
+  transition: color var(--dur) var(--ease);
 }
 
 .categoryLink:hover {
@@ -80,29 +96,29 @@
 }
 
 .categoryLinkActive {
+  background-color: var(--color-light);
   color: var(--color-text);
   font-weight: 500;
-  background-color: var(--color-light);
 }
 
-/* ===== Фильтры (форматы) ===== */
+/* ==========================================================================
+   FORMAT CARD
+   Карточка форматов контента.
+   ========================================================================== */
+
 .filtersCard {
-  background-color: var(--color-light-soft);
   padding: 20px;
   border-radius: var(--radius);
-}
-
-.formatNav {
-  /* контейнер для nav форматов — при необходимости расширишь */
+  background-color: var(--color-light-soft);
 }
 
 .formatList {
-  list-style: none;
-  padding: 0;
-  margin: 0;
   display: flex;
-  gap: 10px;
   flex-wrap: wrap;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
 }
 
 .formatItem {
@@ -111,7 +127,6 @@
   border: 1px solid var(--color-light);
   border-radius: 6px;
   font-size: 16px;
-
   transition:
     border-color 160ms ease,
     background-color 260ms ease;
@@ -148,15 +163,210 @@
   color: var(--color-black);
 }
 
-/* ===== A11y утилиты ===== */
-.visuallyHidden {
+/* ==========================================================================
+   MOBILE OPEN BUTTON
+   Fixed-кнопка открытия фильтров.
+   ========================================================================== */
+
+.mobileOpenButton,
+.mobileSheetRoot {
+  display: none;
+}
+
+.mobileOpenButton {
+  position: fixed;
+  right: 15px;
+  bottom: 78px;
+  z-index: 40;
+  display: none;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 15px 24px;
+  border: 1px solid var(--color-light-soft);
+  border-radius: 12px;
+  background-image: url("/images/Hero/bg-sale.webp");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  box-shadow: 0 8px 24px rgba(6, 20, 53, 0.18);
+  color: var(--color-white);
+  cursor: pointer;
+}
+
+.mobileOpenButtonText {
+  font-size: 16px;
+  font-weight: 450;
+  line-height: 1;
+}
+
+.mobileOpenButtonBadge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 32px;
+  min-height: 20px;
+  padding: 0 8px;
+  border-radius: 999px;
+  background-color: rgba(255, 255, 255, 0.18);
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 1;
+}
+
+/* ==========================================================================
+   MOBILE SHEET
+   Overlay, backdrop и нижняя панель фильтров.
+   ========================================================================== */
+
+.mobileSheetRoot {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+}
+
+.mobileBackdrop {
   position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  white-space: nowrap;
+  inset: 0;
   border: 0;
+  background: rgba(0, 0, 0, 0.42);
+  cursor: pointer;
+}
+
+.mobileSheet {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  max-height: 82vh;
+  overflow: auto;
+  padding: 16px 16px calc(16px + env(safe-area-inset-bottom));
+  border-radius: 18px 18px 0 0;
+  background: var(--color-white);
+}
+
+.mobileSheetHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.mobileSheetTitle {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 500;
+}
+
+.mobileCloseButton {
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--color-gray);
+  font-size: 14px;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.mobileSheetContent {
+  display: grid;
+  gap: 12px;
+}
+
+.mobileSheetFooter {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.mobileResetAllButton,
+.mobileApplyButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 10px 14px;
+  border-radius: 10px;
+  font-size: 14px;
+  text-decoration: none;
+}
+
+.mobileResetAllButton {
+  border: 1px solid var(--color-light);
+  background-color: var(--color-light-soft);
+  color: var(--color-black);
+}
+
+.mobileApplyButton {
+  border: 0;
+  background-color: var(--color-dark-blue);
+  color: var(--color-white);
+  cursor: pointer;
+}
+
+/* ==========================================================================
+   TABLET
+   На планшете убираем sticky sidebar и кладём фильтры сверху.
+   ========================================================================== */
+
+@media (max-width: 1024px) {
+  .desktopFilters {
+    position: static;
+    gap: 12px;
+  }
+
+  .containerR {
+    gap: 0;
+  }
+}
+
+/* ==========================================================================
+   MOBILE
+   На телефоне фильтры доступны через fixed-кнопку и bottom sheet.
+   ========================================================================== */
+
+@media (max-width: 600px) {
+  .containerR {
+    display: none;
+  }
+
+  .mobileOpenButton,
+  .mobileSheetRoot {
+    display: block;
+  }
+
+  .categoryCard,
+  .filtersCard {
+    padding: 16px;
+  }
+
+  .sectionHeaderTitle {
+    font-size: 16px;
+  }
+
+  .sectionLabel {
+    margin-bottom: 8px;
+    font-size: 12px;
+  }
+
+  .categoryList {
+    gap: 4px;
+  }
+
+  .categoryLink {
+    padding: 6px 10px;
+    font-size: 14px;
+    line-height: 1.35;
+  }
+
+  .formatList {
+    gap: 8px;
+  }
+
+  .formatItem {
+    padding: 4px 12px;
+    font-size: 14px;
+  }
 }

@@ -2,7 +2,6 @@
 import { notFound } from "next/navigation";
 import Image from "next/image";
 
-
 import { pageMetadata } from "@/lib/seo/metadata";
 import { formatRelativeFromIsoDate } from "@/lib/date/relativeDate";
 
@@ -58,6 +57,7 @@ export default async function KnowledgeArticlePage({ params }: PageProps) {
         { href: `/knowledge/articles/${item.slug}`, label: item.title },
       ]}>
       <article className={styles.detailPage}>
+        {/* Верхняя строка */}
         <div className={styles.up}>
           <BackButton />
 
@@ -69,6 +69,7 @@ export default async function KnowledgeArticlePage({ params }: PageProps) {
           </p>
         </div>
 
+        {/* Заголовок статьи */}
         <header className={styles.detailHeader}>
           <h1 className={styles.detailTitle}>{item.title}</h1>
 
@@ -84,6 +85,7 @@ export default async function KnowledgeArticlePage({ params }: PageProps) {
           </div>
         </header>
 
+        {/* Контент статьи */}
         <div className={styles.detailBody}>
           {item.blocks.map((block, index) => {
             const blockKey = `${block.type}-${block.id}-${index}`;

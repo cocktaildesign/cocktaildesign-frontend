@@ -108,6 +108,8 @@ export default function VariantSelector({ product, variants, specifications, col
 
       {/* Колонка информации */}
       <div className={styles.productInfo}>
+        <h1 className={styles.productPageTitleMobile}>{product.name}</h1>
+
         {/* Артикул */}
         <div className={styles.productMetaSku}>
           <p className={styles.productMetaSkuTitle}>
@@ -219,6 +221,8 @@ export default function VariantSelector({ product, variants, specifications, col
             name={activeVariant ? activeVariant.name : product.name}
             slug={product.slug}
             imageUrl={activeImages[0]?.src ?? null}
+            code={activeCode}
+            discountExcluded={product.discountExcluded}
           />
         </div>
       </div>

@@ -25,6 +25,11 @@ const items: Item[] = [
     image: "/images/catalog/product-placeholder.webp",
   },
   {
+    href: "/branding",
+    title: "Брендинг",
+    image: "/images/catalog/product-placeholder.webp",
+  },
+  {
     href: "/contacts",
     title: "Контакты",
     image: "/images/catalog/product-placeholder.webp",

@@ -63,18 +63,25 @@ export async function getCategoryBySlugFromStrapi(slug: string): Promise<Catalog
   const safeSlug = slug.trim();
   if (!safeSlug) return null;
 
-  const params: Record<string, string> = {
-    "filters[slug][$eq]": safeSlug,
-    "populate[image]": "true",
-    "populate[children]": "true",
-  };
+  // Берём полное дерево — оно уже содержит children на всех уровнях
+  const tree = await getCatalogTreeFromStrapi();
 
-  const response: StrapiCategoryListResponse = await fetchStrapi("/api/moysklad-categories", params);
+  // Ищем категорию рекурсивно по слагу
+  return findCategoryInTree(tree, safeSlug);
+}
 
-  const first = response.data[0];
-  if (!first) return null;
+// Рекурсивный поиск категории в дереве по слагу
+function findCategoryInTree(items: CatalogCategoryPreview[], slug: string): CatalogCategoryPreview | null {
+  for (const item of items) {
+    if (item.slug === slug) return item;
 
-  return mapCategoryPreview(first);
+    if (item.children && item.children.length > 0) {
+      const found = findCategoryInTree(item.children, slug);
+      if (found) return found;
+    }
+  }
+
+  return null;
 }
 
 // ============================================================================
@@ -146,6 +153,40 @@ export async function getCatalogTreeFromStrapi(): Promise<CatalogCategoryPreview
   const flat: FlatCategory[] = await fetchStrapi("/api/catalog/categories-flat");
 
   return buildCatalogTree(flat);
+}
+
+// ============================================================================
+// ДОЧЕРНИЕ КАТЕГОРИИ С КАРТИНКАМИ (для мобильного drill-down)
+// ============================================================================
+
+export async function getChildCategoriesFromStrapi(parentSlug: string): Promise<CatalogCategoryPreview[]> {
+  const safeSlug = parentSlug.trim();
+  if (!safeSlug) return [];
+
+  const params: Record<string, string> = {
+    "filters[slug][$eq]": safeSlug,
+    "populate[children][populate][image]": "true",
+    "populate[children][sort]": "name:asc",
+  };
+
+  const response: StrapiCategoryListResponse = await fetchStrapi("/api/moysklad-categories", params);
+
+
+  const parent = response.data[0];
+  if (!parent) return [];
+
+  const source = parent.attributes ?? parent;
+  const childrenData = Array.isArray(source.children) ? source.children : (source.children?.data ?? []);
+
+
+  const result: CatalogCategoryPreview[] = [];
+
+  for (const child of childrenData) {
+    const mapped = mapCategoryPreview(child);
+    if (mapped) result.push(mapped);
+  }
+
+  return result;
 }
 
 // ============================================================================

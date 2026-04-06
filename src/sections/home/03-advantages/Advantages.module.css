@@ -304,8 +304,7 @@
 
 @media (max-width: 600px) {
   .section {
-    margin: 0px 0;
-    padding: 20px 15px;
+    margin: 20px 0px;
   }
 
   .title {

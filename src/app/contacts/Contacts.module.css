@@ -1,3 +1,8 @@
+/* ==========================================================================
+   PAGE
+   Обёртка страницы и заголовок.
+   ========================================================================== */
+
 .contactsPage {
   min-height: 60vh;
   margin-bottom: 50px;
@@ -9,6 +14,11 @@
   font-weight: 450;
 }
 
+/* ==========================================================================
+   GRID
+   Основная сетка страницы и базовая карточка секции.
+   ========================================================================== */
+
 .contactGrid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -16,57 +26,64 @@
 }
 
 .contactSection {
+  padding: 24px;
   background: var(--color-light-soft);
   border-radius: 12px;
-  padding: 24px;
 }
+
+/* ==========================================================================
+   CONTACT INFO
+   Телефон, email и кнопка обратной связи.
+   ========================================================================== */
 
 .contactInfo {
   display: grid;
-  gap: 24px;
   grid-template-columns: 1fr 1fr;
+  gap: 24px;
 }
 
 .itemTitle {
+  margin-bottom: 10px;
   font-size: 16px;
   font-weight: 500;
   text-wrap: balance;
-  margin-bottom: 10px;
 }
 
 .itemLink {
   font-size: 14px;
 }
 
-.itemText {
-  font-size: 14px;
-}
-
 .feedbackButton {
-  background-color: var(--color-dark-blue);
-  padding: 12px 20px;
-  border-radius: 12px;
-  font-size: 14px;
-  font-weight: 500;
-  color: var(--color-white);
   display: flex;
   align-items: center;
   justify-content: center;
   width: fit-content;
   height: fit-content;
+  padding: 12px 20px;
+  background-color: var(--color-dark-blue);
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--color-white);
   transition:
     background-color 260ms ease,
     color 260ms ease;
 }
+
 .feedbackButton:hover {
   background-color: var(--color-dark-blue-hover);
 }
 
+/* ==========================================================================
+   REQUISITES
+   Блок с реквизитами компании.
+   ========================================================================== */
+
 .requisitesOwner {
   margin-bottom: 10px;
   font-size: var(--text-sm);
-  color: var(--color-black);
   font-weight: 500;
+  color: var(--color-black);
 }
 
 .requisitesList {
@@ -78,20 +95,20 @@
 }
 
 .requisitesTerm {
+  font-size: 14px;
   font-weight: 500;
   color: var(--color-black);
-  font-size: 14px;
 }
 
 .requisitesDesc {
-  color: var(--color-black);
-  font-weight: 400;
-  word-break: break-word;
-  font-size: 14px;
-  text-wrap: balance;
   display: flex;
   flex-direction: row;
   align-items: center;
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--color-black);
+  word-break: break-word;
+  text-wrap: balance;
 }
 
 .requisitesLink {
@@ -99,18 +116,27 @@
   text-decoration: underline;
 }
 
+/* ==========================================================================
+   ADDRESS
+   Адрес, режим работы, схема проезда и изображение.
+   ========================================================================== */
+
 .contactAddress {
-  grid-column: span 2;
-  gap: 16px;
   display: grid;
   grid-template-columns: 1fr 1fr;
+  grid-column: span 2;
+  gap: 16px;
+}
+
+.itemText {
+  font-size: 14px;
 }
 
 .addressDetails {
   display: grid;
+  grid-template-columns: 1fr 1fr;
   gap: 24px;
   padding-right: 24px;
-  grid-template-columns: 1fr 1fr;
 }
 
 .hoursList {
@@ -118,21 +144,20 @@
 }
 
 .routeList {
+  display: grid;
+  gap: 16px;
   margin: 0;
   padding-left: 0;
   list-style: none;
-  display: grid;
-  gap: 16px;
 }
 
 .routeFrom {
-  font-size: 16px;
   margin: 0 0 8px;
+  font-size: 16px;
 }
 
 .routeSublist {
   margin: 0;
-
   font-size: 16px;
 }
 
@@ -140,6 +165,7 @@
   position: relative;
   width: 100%;
   height: 100%;
+  min-height: 260px;
   overflow: hidden;
   border-radius: 12px;
 }
@@ -148,17 +174,135 @@
   object-fit: cover;
 }
 
+/* ==========================================================================
+   MAP
+   Встроенная карта.
+   ========================================================================== */
+
 .mapEmbed {
   width: 100%;
   min-height: 100px;
   overflow: hidden;
-  border-radius: 12px;
   background: var(--color-light);
+  border-radius: 12px;
 }
 
 .mapIframe {
+  display: block;
   width: 100%;
   height: 100%;
+  min-height: 100%;
   border: 0;
-  display: block;
+}
+
+/* ==========================================================================
+   TABLET
+   ========================================================================== */
+
+@media (max-width: 1024px) {
+  .contactGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .contactInfo {
+    grid-template-columns: 1fr;
+  }
+
+  .contactAddress {
+    grid-template-columns: 1fr;
+    grid-column: auto;
+  }
+
+  .addressDetails {
+    grid-template-columns: 1fr;
+    padding-right: 0;
+  }
+
+  .mapEmbed {
+    min-height: 360px;
+  }
+}
+
+/* ==========================================================================
+   MOBILE
+   ========================================================================== */
+
+@media (max-width: 600px) {
+  .contactsPage {
+    margin-bottom: 32px;
+  }
+
+  .contactsPageTitle {
+    margin-bottom: 20px;
+  }
+
+  .contactGrid {
+    gap: 12px;
+  }
+
+  .contactSection {
+    padding: 18px;
+    border-radius: 12px;
+  }
+
+  .contactInfo {
+    gap: 18px;
+  }
+
+  .itemTitle {
+    margin-bottom: 8px;
+    font-size: 15px;
+    text-wrap: initial;
+  }
+
+  .itemLink,
+  .itemText {
+    font-size: 14px;
+    line-height: 1.45;
+  }
+
+  .feedbackButton {
+    width: 100%;
+    min-height: 48px;
+  }
+
+  .requisitesList {
+    grid-template-columns: 1fr;
+    row-gap: 4px;
+  }
+
+  .requisitesTerm {
+    margin-top: 6px;
+  }
+
+  .requisitesDesc {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .addressDetails {
+    gap: 18px;
+  }
+
+  .routeList {
+    gap: 12px;
+  }
+
+  .routeFrom {
+    font-size: 14px;
+  }
+
+  .routeSublist {
+    padding-left: 18px;
+    font-size: 14px;
+    line-height: 1.45;
+  }
+
+  .officeImage {
+    min-height: 220px;
+  }
+
+  .mapEmbed {
+    min-height: 260px;
+  }
 }

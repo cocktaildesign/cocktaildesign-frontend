@@ -1,32 +1,31 @@
 // src/app/favorites/FavoritesClient.tsx
 "use client";
 
-import HeartIcon from "@/components/icons/HeartIcon";
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
+
+import HeartIcon from "@/components/icons/HeartIcon";
+import ProductList from "@/app/catalog/product-grid/ProductList";
 
 import { useFavoritesStore } from "@/lib/favorites/favoritesStore";
 import { getProductsByIdsFromStrapi } from "@/lib/api/catalog/queries";
 
-import ProductList from "@/app/catalog/product-grid/ProductList";
 import type { CatalogProductPreview } from "@/lib/api/catalog/types";
 
 import styles from "./Favorites.module.css";
 
 export default function FavoritesClient() {
-  // 1) Подписываемся на ids и hydration
-  // ids — объект, ссылка меняется только когда ты делаешь toggle
+  // Избранные id и состояние hydration из zustand
   const ids = useFavoritesStore((s) => s.ids);
   const hasHydrated = useFavoritesStore((s) => s.hasHydrated);
 
-  // 2) Получаем массив id стабильно (не в селекторе zustand!)
+  // Стабильный массив id
   const favoriteIds = useMemo(() => Object.keys(ids), [ids]);
 
   const [products, setProducts] = useState<CatalogProductPreview[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // До hydration не лезем в API, иначе будет "пусто" при рефреше
     if (!hasHydrated) return;
 
     let cancelled = false;
@@ -43,6 +42,7 @@ export default function FavoritesClient() {
       const response = await getProductsByIdsFromStrapi(favoriteIds);
 
       if (cancelled) return;
+
       setProducts(response.items);
       setLoading(false);
     }
@@ -54,23 +54,45 @@ export default function FavoritesClient() {
     };
   }, [hasHydrated, favoriteIds]);
 
-  // Пока hydration не завершился — показываем лоадер (без "мигания" пустого состояния)
+  // Пока zustand не гидратировался или идёт загрузка
   if (!hasHydrated || loading) {
-    return <div className={styles.favoritesLoading}>Загрузка...</div>;
+    return (
+      <div className={styles.favoritesLoading}>
+        <div className={styles.favoritesLoadingCard}>
+          <div className={styles.favoritesLoadingIcon}>
+            <HeartIcon />
+          </div>
+          <p className={styles.favoritesLoadingText}>Загружаем избранные товары...</p>
+        </div>
+      </div>
+    );
   }
 
   // Пустое состояние
   if (products.length === 0) {
     return (
       <div className={styles.favoritesState}>
-        <div className={styles.favoritesStateIcon}>
-          <HeartIcon />
+        <div className={styles.favoritesStateCard}>
+          <div className={styles.favoritesStateIcon}>
+            <HeartIcon />
+          </div>
+
+          <h2 className={styles.favoritesStateTitle}>В избранном пока ничего нет</h2>
+
+          <p className={styles.favoritesStateDescription}>
+            Сохраняйте товары в избранное, чтобы быстро вернуться к ним позже.
+          </p>
+
+          <div className={styles.favoritesStateActions}>
+            <Link href="/catalog" className={styles.primaryButton}>
+              Перейти в каталог
+            </Link>
+
+            <Link href="/" className={styles.secondaryButton}>
+              На главную
+            </Link>
+          </div>
         </div>
-        <h2 className={styles.favoritesStateTitle}>Здесь будут ваши избранные товары</h2>
-        <p className={styles.favoritesStateDescroption}>Добавьте товары, чтобы не искать их снова</p>
-        <Link href="/catalog" className={styles.favoritesStateButtons}>
-          Перейти в каталог
-        </Link>
       </div>
     );
   }

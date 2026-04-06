@@ -1,3 +1,4 @@
+// frontend/src/app/branding/page.tsx
 import { pageMetadata } from "@/lib/seo/metadata";
 import PageLayout from "@/components/layout/PageLayout";
 import styles from "./Branding.module.css";
@@ -15,6 +16,7 @@ export default function Branding() {
   return (
     <PageLayout>
       <section className={styles.brandingPage}>
+        {/* Верхний промо-блок */}
         <div className={styles.brandingContainer}>
           <div className={styles.brandingContainerTextContent}>
             <h1 className={styles.brandingContainerTitle}>Брендинг барного инвентаря и аксессуаров</h1>
@@ -28,6 +30,7 @@ export default function Branding() {
           <Logo className={styles.logo} />
         </div>
 
+        {/* Вводный текст перед карточками услуг */}
         <div className={styles.servicesIntro}>
           <p className={styles.servicesIntroText}>
             Мы предлагаем два формата брендинга барного инвентаря, которые позволяют адаптировать изделия под стиль
@@ -35,6 +38,7 @@ export default function Branding() {
           </p>
         </div>
 
+        {/* Карточки услуг */}
         <ServiceCards />
       </section>
     </PageLayout>

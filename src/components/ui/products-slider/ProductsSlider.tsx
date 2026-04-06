@@ -1,3 +1,4 @@
+// frontend/src/components/ui/products-slider/ProductsSlider.tsx
 "use client";
 
 import { useEffect, useRef, useState } from "react";

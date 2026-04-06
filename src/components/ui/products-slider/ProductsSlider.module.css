@@ -57,7 +57,7 @@
   overflow-x: auto;
   scroll-snap-type: x mandatory;
   scrollbar-width: none;
-  padding: 10px 0;
+  padding: 0px 0;
 }
 
 .slider::-webkit-scrollbar {

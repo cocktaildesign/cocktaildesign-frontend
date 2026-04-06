@@ -1,3 +1,4 @@
+// src/app/support/page.tsx
 import Image from "next/image";
 import Link from "next/link";
 import PageLayout from "@/components/layout/PageLayout";

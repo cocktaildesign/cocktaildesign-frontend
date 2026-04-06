@@ -1,3 +1,4 @@
+// src/app/support/feedback/page.tsx
 import PageLayout from "@/components/layout/PageLayout";
 import FeedbackForm from "@/components/ui/feedback-form/FeedbackForm";
 import { pageMetadata } from "@/lib/seo/metadata";

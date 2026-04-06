@@ -86,6 +86,7 @@ export type StrapiProductAttributes = {
   priceOld?: number | null;
   description?: string | null;
   engravingEnabled?: boolean | null;
+  discountExcluded?: boolean | null;
   specifications?: StrapiProductSpecification[] | null;
   code?: string | null;
   displayTitle?: string | null;
@@ -115,6 +116,7 @@ export type StrapiProductItem = {
   priceOld?: number | null;
   description?: string | null;
   engravingEnabled?: boolean | null;
+  discountExcluded?: boolean | null;
   specifications?: StrapiProductSpecification[] | null;
   code?: string | null;
   displayTitle?: string | null;
@@ -252,6 +254,7 @@ export type CatalogProductPreview = {
   imageUrl: string | null;
   images: string[];
   engravingEnabled: boolean;
+  discountExcluded: boolean;
   code: string | null;
   variants: CatalogVariant[];
 };
@@ -331,6 +334,7 @@ export type CatalogProductDetail = {
   images: CatalogProductImage[];
   specifications: CatalogProductSpecification[];
   engravingEnabled: boolean;
+  discountExcluded: boolean;
   code: string | null;
 
   // Состав комплекта — пустой массив для обычных товаров

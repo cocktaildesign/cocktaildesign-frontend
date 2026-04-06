@@ -2,14 +2,14 @@
 
 import VKIcon from "@/components/icons/social-network/VKIcon";
 import TelegramIcon from "@/components/icons/social-network/TelegramIcon";
-import PageLayout from "@/components/layout/PageLayout";
+import ContainerNoPaddingMobil from "@/components/layout/ContainerNoPaddingMobil";
 
 import styles from "./SocialLinks.module.css";
 
 export default function SocialLinks() {
   return (
-    <PageLayout>
-      <section className={styles.section}>
+    <section className={styles.section}>
+      <ContainerNoPaddingMobil>
         {/* ВКонтакте */}
         <div className={styles.card}>
           <div className={styles.content}>
@@ -43,7 +43,7 @@ export default function SocialLinks() {
             Подписаться
           </a>
         </div>
-      </section>
-    </PageLayout>
+      </ContainerNoPaddingMobil>
+    </section>
   );
 }

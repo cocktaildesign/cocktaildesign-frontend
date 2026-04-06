@@ -1,0 +1,92 @@
+/* ==========================================================================
+   PROGRESS BLOCK
+   ========================================================================== */
+
+.progressBlock {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--color-border);
+}
+
+/* ==========================================================================
+   CIRCLE
+   ========================================================================== */
+
+.progressCircleWrapper {
+  position: relative;
+  flex-shrink: 0;
+  width: 52px;
+  height: 52px;
+}
+
+.progressSvg {
+  width: 52px;
+  height: 52px;
+}
+
+.progressIcon {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transform: translate(-50%, -50%);
+}
+
+/* ==========================================================================
+   TEXT
+   ========================================================================== */
+
+.progressText {
+  font-size: var(--text-sm, 13px);
+  line-height: 1.4;
+  color: var(--color-text-secondary);
+
+  /* важно для мобильных */
+  word-break: break-word;
+}
+
+.progressAmount {
+  font-weight: 550;
+  color: var(--color-text-primary, #000);
+}
+
+.progressPercent {
+  font-weight: 550;
+  color: var(--color-text-primary, #000);
+}
+
+/* ==========================================================================
+   TABLET
+   ========================================================================== */
+
+@media (max-width: 1024px) {
+  .progressBlock {
+    align-items: flex-start;
+  }
+}
+
+/* ==========================================================================
+   MOBILE
+   ========================================================================== */
+
+@media (max-width: 600px) {
+  .progressBlock {
+    gap: 10px;
+    padding: 10px 0;
+  }
+
+  .progressCircleWrapper,
+  .progressSvg {
+    width: 44px;
+    height: 44px;
+  }
+
+  .progressText {
+    font-size: 12px;
+    line-height: 1.45;
+  }
+}

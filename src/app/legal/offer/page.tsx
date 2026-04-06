@@ -1,3 +1,4 @@
+// src/app/legal/offer/page.tsx
 import styles from "./Offer.module.css";
 import PageLayout from "@/components/layout/PageLayout";
 import { pageMetadata } from "@/lib/seo/metadata";

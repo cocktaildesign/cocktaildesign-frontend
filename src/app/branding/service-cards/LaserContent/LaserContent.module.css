@@ -1,3 +1,20 @@
+/* frontend/src/app/branding/service-cards/LaserContent/LaserContent.module.css */
+
+/* ==========================================================================
+   WRAPPER
+   Общий контейнер контента.
+   ========================================================================== */
+
+.lazerContent {
+  display: flex;
+  flex-direction: column;
+}
+
+/* ==========================================================================
+   HEADER
+   Заголовок и вводный текст.
+   ========================================================================== */
+
 .lazerContentHeader {
   display: flex;
   flex-direction: column;
@@ -15,13 +32,11 @@
 .lazerContentHeaderText {
   display: grid;
   grid-template-columns: 1fr 1fr;
-
-  background-color: var(--color-light-soft);
-  border-radius: 12px;
-  padding: 20px;
-
   gap: 16px;
   width: 100%;
+  padding: 20px;
+  border-radius: 12px;
+  background-color: var(--color-light-soft);
 }
 
 .lazerContentHeaderParagraph {
@@ -30,7 +45,10 @@
   text-wrap: balance;
 }
 
-/* Блок изображений */
+/* ==========================================================================
+   IMAGES
+   Галерея изображений.
+   ========================================================================== */
 
 .containerImage {
   display: grid;
@@ -47,7 +65,10 @@
   border-radius: 12px;
 }
 
-/* Блок инструкций */
+/* ==========================================================================
+   INSTRUCTIONS
+   Блок с шагами заказа.
+   ========================================================================== */
 
 .instructions {
   display: flex;
@@ -60,22 +81,39 @@
   font-size: var(--text-xl);
   font-weight: 450;
 }
+
+/* ==========================================================================
+   STEPS
+   Список шагов заказа.
+   ========================================================================== */
+
 .stepsList {
   display: flex;
-  gap: 16px;
   flex-direction: row;
+  gap: 16px;
 }
 
 .stepsItem {
+  position: relative;
   display: flex;
+  flex: 1;
   flex-direction: column;
   gap: 10px;
-  border: 1px solid var(--color-light);
   padding: 10px;
+  border: 1px solid var(--color-light);
   border-radius: 6px;
   background-color: var(--color-light-soft);
-  flex: 1;
-  position: relative;
+}
+
+.stepsItem:not(:last-child)::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 100%;
+  width: 17px;
+  height: 1px;
+  transform: translateY(-50%);
+  background-color: var(--color-light);
 }
 
 .stepsItemHeader {
@@ -89,16 +127,12 @@
   display: flex;
   align-items: center;
   justify-content: center;
-
   width: 24px;
   aspect-ratio: 1 / 1;
-
-  border-radius: 50%;
-
-  background-color: transparent;
   border: 2px solid var(--color-dark-blue);
+  border-radius: 50%;
+  background-color: transparent;
   color: var(--color-dark-blue);
-
   font-size: 10px;
   font-weight: 550;
 }
@@ -114,28 +148,32 @@
   color: var(--color-gray);
 }
 
-.line {
-  width: 30px;
-  border: 0.5px dashed var(--color-gray-light);
-  align-self: center;
-}
+/* ==========================================================================
+   BUTTON
+   Кнопки действий.
+   ========================================================================== */
 
 .lazerButton {
   display: block;
   width: fit-content;
-  background-color: var(--color-dark-blue);
   padding: 14px 25px;
+  border: none;
+  border-radius: 12px;
+  background-color: var(--color-dark-blue);
   color: var(--color-white);
   font-family: var(--font-display);
   font-size: 14px;
-  border-radius: 12px;
   font-weight: 450;
-  border: none;
 }
 
 .lazerButton:hover {
   background-color: var(--color-dark-blue-hover);
 }
+
+/* ==========================================================================
+   FOOTER
+   Нижний текстовый блок.
+   ========================================================================== */
 
 .lazerFooter {
   display: flex;
@@ -144,22 +182,126 @@
 }
 
 .lazerFooterText {
-  font-size: 14px;
   width: 70%;
+  font-size: 14px;
   text-wrap: balance;
   color: var(--color-gray);
 }
 
-.stepsItem:not(:last-child)::after {
-  content: "";
-  position: absolute;
+/* ==========================================================================
+   TABLET
+   ========================================================================== */
 
-  top: 50%;
-  transform: translateY(-50%);
-  left: 100%;
+@media (max-width: 1024px) {
+  .lazerContentHeader {
+    gap: 14px;
+  }
 
-  width: 17px;
-  height: 1px;
+  .lazerContentHeaderText {
+    padding: 16px;
+    gap: 14px;
+  }
 
-  background-color: var(--color-light);
+  .containerImage {
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+    margin-bottom: 32px;
+  }
+
+  .instructions {
+    margin-bottom: 32px;
+  }
+
+  .stepsList {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+  }
+
+  .stepsItem:not(:last-child)::after {
+    display: none;
+  }
+
+  .lazerFooterText {
+    width: 100%;
+    max-width: 720px;
+  }
+}
+
+/* ==========================================================================
+   MOBILE
+   ========================================================================== */
+
+@media (max-width: 600px) {
+  .lazerContentHeader {
+    gap: 12px;
+    margin-bottom: 14px;
+  }
+
+  .lazerContentHeaderTitle {
+    font-size: var(--text-xl);
+  }
+
+  .lazerContentHeaderText {
+    grid-template-columns: 1fr;
+    gap: 12px;
+    padding: 14px;
+  }
+
+  .lazerContentHeaderParagraph {
+    font-size: 14px;
+    line-height: 1.55;
+    text-wrap: initial;
+  }
+
+  .containerImage {
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+
+  .instructions {
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+
+  .lazerTitleH2 {
+    font-size: 20px;
+    line-height: 1.25;
+  }
+
+  .stepsList {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .stepsItem {
+    gap: 8px;
+    padding: 12px;
+  }
+
+  .stepsItemHeader {
+    gap: 12px;
+  }
+
+  .stepsItemDescription {
+    line-height: 1.55;
+    text-wrap: initial;
+  }
+
+  .lazerButton {
+    width: 100%;
+    padding: 12px 18px;
+    text-align: center;
+  }
+
+  .lazerFooter {
+    gap: 12px;
+  }
+
+  .lazerFooterText {
+    width: 100%;
+    line-height: 1.55;
+    text-wrap: initial;
+  }
 }

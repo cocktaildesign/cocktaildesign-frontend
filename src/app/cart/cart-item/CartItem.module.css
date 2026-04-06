@@ -1,23 +1,29 @@
-/* Строка товара — грид из 5 колонок */
+/* ==========================================================================
+   ITEM
+   ========================================================================== */
+
 .item {
   display: grid;
   grid-template-columns: 20px 150px 1fr 200px auto;
   align-items: center;
   gap: 16px;
+  min-height: 180px;
   padding: 24px 0;
   border-bottom: 1px solid #eee;
-  min-height: 180px;
 }
 
-/* Кастомный чекбокс */
+/* ==========================================================================
+   CHECKBOX
+   ========================================================================== */
+
 .itemCheckbox {
   appearance: none;
   -webkit-appearance: none;
+  flex-shrink: 0;
   width: 20px;
   height: 20px;
   border: 1px solid var(--color-dark-blue);
   border-radius: 4px;
-  flex-shrink: 0;
   cursor: pointer;
   transition:
     background-color 0.15s,
@@ -32,7 +38,10 @@
   background-size: 70%;
 }
 
-/* Картинка */
+/* ==========================================================================
+   IMAGE
+   ========================================================================== */
+
 .image {
   position: relative;
   width: 150px;
@@ -40,11 +49,15 @@
   height: 100%;
 }
 
-/* Название + гравировка */
+/* ==========================================================================
+   INFO
+   ========================================================================== */
+
 .info {
   display: flex;
   flex-direction: column;
   gap: 4px;
+  min-width: 0;
 }
 
 .name {
@@ -57,13 +70,31 @@
   color: var(--color-dark-blue);
 }
 
-.engravingNote {
-  font-size: var(--text-xs);
+.discountExcludedBadge {
+  width: fit-content;
+  padding: 2px 8px;
+  background: #f5f5f5;
+  border-radius: 4px;
+  font-size: 11px;
   color: var(--color-gray);
-  margin: 4px 0 0;
 }
 
-/* Цена */
+.sku {
+  margin-top: 5px;
+  font-size: var(--text-sm);
+  color: #888;
+}
+
+.engravingNote {
+  margin: 4px 0 0;
+  font-size: var(--text-xs);
+  color: var(--color-gray);
+}
+
+/* ==========================================================================
+   PRICE
+   ========================================================================== */
+
 .blockPrice {
   display: flex;
   align-items: center;
@@ -82,7 +113,10 @@
   text-decoration: line-through;
 }
 
-/* Правая колонка — избранное/удаление/количество */
+/* ==========================================================================
+   CONTROLS
+   ========================================================================== */
+
 .itemControls {
   display: flex;
   flex-direction: column;
@@ -115,13 +149,130 @@
 }
 
 .quantitySmall {
-  height: 40px;
   min-width: 120px;
+  height: 40px;
   background-color: var(--color-light-soft);
 }
 
-.sku {
-  font-size: var(--text-sm);
-  margin-top: 5px;
-  color: #888;
+/* ==========================================================================
+   TABLET
+   ========================================================================== */
+
+@media (max-width: 1024px) {
+  .item {
+    grid-template-columns: 20px 120px 1fr 160px auto;
+    gap: 14px;
+    min-height: 150px;
+    padding: 20px 0;
+  }
+
+  .image {
+    width: 120px;
+    min-height: 120px;
+  }
+
+  .blockPrice {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
+
+  .price {
+    font-size: 20px;
+  }
+
+  .priceOld {
+    font-size: 16px;
+  }
+
+  .quantitySmall {
+    min-width: 110px;
+  }
+}
+
+/* ==========================================================================
+   MOBILE
+   ========================================================================== */
+
+@media (max-width: 600px) {
+  .item {
+    grid-template-columns: 20px 88px 1fr;
+    align-items: start;
+    gap: 12px;
+    min-height: unset;
+    padding: 18px 0;
+  }
+
+  .itemCheckbox {
+    margin-top: 4px;
+  }
+
+  .image {
+    width: 88px;
+    min-height: 88px;
+    height: 88px;
+  }
+
+  .info {
+    gap: 3px;
+  }
+
+  .name {
+    font-size: var(--text-sm);
+    line-height: 1.4;
+  }
+
+  .discountExcludedBadge {
+    font-size: 10px;
+  }
+
+  .sku {
+    margin-top: 2px;
+    font-size: 12px;
+  }
+
+  .engravingNote {
+    margin-top: 2px;
+    font-size: 12px;
+  }
+
+  .blockPrice {
+    grid-column: 2 / 4;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+    margin-top: 4px;
+  }
+
+  .price {
+    font-size: 18px;
+  }
+
+  .priceOld {
+    font-size: 14px;
+  }
+
+  .itemControls {
+    grid-column: 2 / 4;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    height: auto;
+    margin-top: 4px;
+  }
+
+  .itemActions {
+    order: 2;
+    justify-content: flex-start;
+  }
+
+  .quantity {
+    order: 1;
+  }
+
+  .quantitySmall {
+    min-width: 108px;
+    height: 38px;
+  }
 }

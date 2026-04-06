@@ -1,3 +1,4 @@
+// Telegram.tsx
 import Image from "next/image";
 import styles from "./Telegram.module.css";
 import TelegramIcon from "@/components/icons/social-network/TelegramIcon";
@@ -5,13 +6,14 @@ import TelegramIcon from "@/components/icons/social-network/TelegramIcon";
 export default function TelegramBanner() {
   return (
     <section className={styles.banner} aria-labelledby="tg-banner-title">
+      {/* Текстовый блок */}
       <div className={styles.content}>
         <h2 id="tg-banner-title" className={styles.title}>
           Подписывайтесь на наш Telegram
         </h2>
 
         <p className={styles.description}>
-          Новинки, акции и советы по выбору барного инвентаря — первыми узнаете в канале.{" "}
+          Новинки, акции и советы по выбору барного инвентаря — первыми узнаете в канале.
         </p>
 
         <a
@@ -25,6 +27,7 @@ export default function TelegramBanner() {
         </a>
       </div>
 
+      {/* QR-код */}
       <div className={styles.qrFrame}>
         <Image
           src="/images/qr/iphoneTgQr.png"

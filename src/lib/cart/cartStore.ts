@@ -13,7 +13,9 @@ export type CartItem = {
   imageUrl: string | null;
   slug: string;
   quantity: number;
-  engraving: boolean; // ← новое поле
+  engraving: boolean;
+  // Флаг — товар не участвует в скидках и промокодах
+  discountExcluded: boolean;
   code: string;
 };
 
@@ -94,6 +96,7 @@ export const useCartStore = create<CartState>()(
               imageUrl: item.imageUrl,
               slug: item.slug,
               engraving: item.engraving,
+              discountExcluded: item.discountExcluded,
               code: item.code,
               quantity: i.quantity + item.quantity,
             };

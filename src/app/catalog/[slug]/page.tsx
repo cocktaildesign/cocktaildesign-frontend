@@ -1,4 +1,8 @@
-// src/app/catalog/[slug]/page.tsx
+// Страница категории каталога.
+// Десктоп (> 1024px): сайдбар слева + товары справа — как раньше.
+// Мобилка (< 1024px): если есть дочерние категории — показываем drill-down список.
+//                     если дочерних нет — показываем товары без сайдбара.
+// Мобилка + ?showAll=true: показываем все товары категории минуя drill-down.
 
 import PageLayout from "@/components/layout/PageLayout";
 import styles from "./CategoryPage.module.css";
@@ -7,20 +11,22 @@ import { notFound } from "next/navigation";
 import { Metadata } from "next";
 import CatalogSidebar from "./catalog-sidebar/CatalogSidebar";
 import ProductGrid from "../product-grid/ProductGrid";
-import { getCatalogTreeFromStrapi, getCategoryBySlugFromStrapi } from "@/lib/api/catalog";
+import MobileCategoryDrillDown from "./mobile-category-drill-down/MobileCategoryDrillDown";
+import { getCatalogTreeFromStrapi, getCategoryBySlugFromStrapi, getChildCategoriesFromStrapi } from "@/lib/api/catalog";
 
 type Params = {
-  slug: string; //catalog/[slug]
+  slug: string;
 };
 
 type PageProps = {
   params: Promise<Params>;
+  searchParams: Promise<{ showAll?: string }>;
 };
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug } = await params;
-
   const category = await getCategoryBySlugFromStrapi(slug);
+
   if (!category) return {};
 
   return pageMetadata({
@@ -30,8 +36,10 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   });
 }
 
-export default async function CatalogCategoryPage({ params }: PageProps) {
+export default async function CatalogCategoryPage({ params, searchParams }: PageProps) {
   const { slug } = await params;
+  const { showAll } = await searchParams;
+
   const category = await getCategoryBySlugFromStrapi(slug);
 
   if (!category) {
@@ -39,6 +47,15 @@ export default async function CatalogCategoryPage({ params }: PageProps) {
   }
 
   const categories = await getCatalogTreeFromStrapi();
+
+  // Есть ли дочерние категории у текущей?
+  const hasChildren = Boolean(category.children && category.children.length > 0);
+
+  // Показываем drill-down только если есть дети И не нажали "Все товары"
+  const showDrillDown = hasChildren && showAll !== "true";
+
+  // Загружаем детей с картинками — только если нужен drill-down
+  const childCategories = showDrillDown ? await getChildCategoriesFromStrapi(category.slug) : [];
 
   return (
     <PageLayout
@@ -48,21 +65,34 @@ export default async function CatalogCategoryPage({ params }: PageProps) {
         { href: `/catalog/${category.slug}`, label: category.name },
       ]}>
       <section className={styles.page} aria-label="Каталог категорий">
-        {/* Заголовок страницы — над сеткой, чтобы не зависел от колонок */}
         <header className={styles.header}>
           <h1 className={styles.headerTitle}>{category.name}</h1>
         </header>
 
-        {/* 12-колоночная сетка sidebar (3) + content (9) */}
-        <div className={styles.layout}>
-          <aside className={styles.sidebar} aria-label="Фильтры и категории">
+        {/* =========================================================
+            ДЕСКТОП — сайдбар + товары (скрыт на мобилке через CSS)
+            ========================================================= */}
+        <div className={styles.desktopLayout}>
+          <aside aria-label="Фильтры и категории">
             <CatalogSidebar items={categories} activeSlug={category.slug} />
           </aside>
 
-          <section className={styles.content} aria-label="Список товаров">
-            {/* category.slug = ms-xxxx — это то, что ждёт backend */}
+          <section aria-label="Список товаров">
             <ProductGrid categorySlug={category.slug} />
           </section>
+        </div>
+
+        {/* =========================================================
+            МОБИЛКА — drill-down или товары (скрыт на десктопе через CSS)
+            ========================================================= */}
+        <div className={styles.mobileLayout}>
+          {showDrillDown ? (
+            // Есть подкатегории и "Все товары" не нажато — показываем список
+            <MobileCategoryDrillDown categories={childCategories} currentSlug={category.slug} />
+          ) : (
+            // Конечная категория или нажато "Все товары" — показываем товары
+            <ProductGrid categorySlug={category.slug} />
+          )}
         </div>
       </section>
     </PageLayout>

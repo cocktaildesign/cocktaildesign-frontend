@@ -1,3 +1,4 @@
+// frontend/src/app/about/page.tsx
 import Image from "next/image";
 import Link from "next/link";
 
@@ -23,17 +24,14 @@ function formatProductsCount(count: number): string {
   const lastTwo = count % 100;
   const last = count % 10;
 
-  // исключение
   if (lastTwo >= 11 && lastTwo <= 14) {
     return `${count} товаров`;
   }
 
-  // 1 товар
   if (last === 1) {
     return `${count} товар`;
   }
 
-  // 2-4 товара
   if (last >= 2 && last <= 4) {
     return `${count} товара`;
   }
@@ -43,18 +41,21 @@ function formatProductsCount(count: number): string {
 
 export default async function AboutPage() {
   const categories = await getTopCategoriesFromStrapi();
+
   return (
     <PageLayout>
       <div className={styles.page}>
-        {/* ───────────── HERO ───────────── */}
+        {/* Hero */}
         <section className={styles.hero}>
           <div className={styles.heroInner}>
             <span className={styles.eyebrow}>О компании</span>
+
             <h1 className={styles.heroTitle}>
               Cocktail
               <br />
               <em>Design</em>
             </h1>
+
             <p className={styles.heroLead}>
               Производственная компания и интернет-магазин барного инвентаря собственного производства. Стильные,
               функциональные и эргономичные решения для баров, ресторанов и профессионалов индустрии.
@@ -62,30 +63,33 @@ export default async function AboutPage() {
           </div>
         </section>
 
-        {/* ───────────── TAGLINE ───────────── */}
+        {/* Краткий блок */}
         <div className={styles.taglineBlock}>
           <p className={styles.taglineText}>
             Продукцией пользуются сильнейшие представители барной индустрии, лучшие барные амбассадоры мира и
             алкогольные компании.
           </p>
+
           <div className={styles.taglineMeta}>
             <span className={styles.taglineBadge}>Barproof 2017</span>
             <span className={styles.taglineBadge}>Barproof 2019</span>
           </div>
         </div>
 
-        {/* ───────────── АССОРТИМЕНТ ───────────── */}
+        {/* Ассортимент */}
         <section className={styles.section}>
           <div className={styles.sectionInner}>
             <div className={styles.sectionMeta}>
               <span className={styles.sectionTag}>Ассортимент</span>
             </div>
+
             <div className={styles.textBlock}>
               <p>
                 Компания Cocktail Design предлагает широкий ассортимент барного инвентаря собственного производства. В
                 каталоге нашего интернет-магазина постоянно пополняемый ассортимент барного инвентаря и аксессуаров по
                 конкурентным ценам.
               </p>
+
               <p>
                 Обеспечиваем потребителей стильной, функциональной и эргономичной продукцией для комфортной работы
                 сотрудников и качественного обслуживания посетителей заведения. Предлагаем наборы и готовые решения,
@@ -95,19 +99,22 @@ export default async function AboutPage() {
           </div>
         </section>
 
-        {/* ───────────── РЕПУТАЦИЯ (DARK) ───────────── */}
+        {/* Репутация */}
         <section className={styles.highlight}>
           <span className={styles.highlightTag}>Репутация</span>
           <h2 className={styles.highlightTitle}>Признание на международном рынке</h2>
+
           <div className={styles.highlightBadges}>
             <span className={styles.badge}>Barproof 2017</span>
             <span className={styles.badge}>Barproof 2019</span>
           </div>
+
           <div className={styles.highlightBody}>
             <p className={styles.highlightText}>
               Производственная компания Cocktail Design активно себя зарекомендовала на международном рынке барных
               продуктов премиального уровня, являясь одним из ведущих производителей эксклюзивного барного инвентаря.
             </p>
+
             <p className={styles.highlightText}>
               Выпускаемой предприятием продукцией пользуются сильнейшие представители барной индустрии, без
               преувеличения лучшие барные амбассадоры мира и алкогольные компании. Наш продукт признан лучшим по версии
@@ -116,17 +123,19 @@ export default async function AboutPage() {
           </div>
         </section>
 
-        {/* ───────────── БРЕНДИНГ ───────────── */}
+        {/* Брендинг */}
         <section className={styles.section}>
           <div className={styles.sectionInner}>
             <div className={styles.sectionMeta}>
               <span className={styles.sectionTag}>Брендинг</span>
             </div>
+
             <div className={styles.textBlock}>
               <p>
                 Кроме того, мы занимаемся брендингом, проектируя, разрабатывая и производя барный инвентарь, аксессуары
                 и прочую рекламную продукцию для ведущих брендов сегмента Horeca.
               </p>
+
               <p>
                 Мастерская оказывает услуги по нанесению логотипа на любые металлические изделия из нашего
                 интернет-магазина, при этом возможно выполнение заказов по проекту клиента.
@@ -135,12 +144,13 @@ export default async function AboutPage() {
           </div>
         </section>
 
-        {/* ───────────── СЕРВИС ───────────── */}
+        {/* Сервис */}
         <section className={styles.section}>
           <div className={styles.sectionInner}>
             <div className={styles.sectionMeta}>
               <span className={styles.sectionTag}>Сервис</span>
             </div>
+
             <div className={styles.servicesGrid}>
               <article className={styles.serviceCard}>
                 <h3 className={styles.serviceTitle}>Консультация</h3>
@@ -149,6 +159,7 @@ export default async function AboutPage() {
                   использованию и уходу выбранных моделей, а также проконсультировать по техническим вопросам.
                 </p>
               </article>
+
               <article className={styles.serviceCard}>
                 <h3 className={styles.serviceTitle}>Условия покупки</h3>
                 <p className={styles.serviceText}>
@@ -156,6 +167,7 @@ export default async function AboutPage() {
                   ваши покупки максимально комфортными.
                 </p>
               </article>
+
               <article className={styles.serviceCard}>
                 <h3 className={styles.serviceTitle}>Доставка</h3>
                 <p className={styles.serviceText}>
@@ -167,21 +179,23 @@ export default async function AboutPage() {
           </div>
         </section>
 
-        {/* ───────────── BANNER → КАТАЛОГ ───────────── */}
+        {/* Баннер каталога */}
         <div className={styles.catalogBanner}>
           <p className={styles.catalogBannerText}>
             Более 1&nbsp;000 позиций барного инвентаря — для тех, кто создаёт атмосферу в заведении
           </p>
         </div>
 
-        {/* ───────────── КАТАЛОГ ───────────── */}
+        {/* Каталог */}
         <section className={styles.catalogSection}>
           <div className={styles.catalogHeader}>
             <span className={styles.sectionTag}>Каталог</span>
+
             <Link href="/catalog" className={styles.catalogLink}>
               Смотреть все →
             </Link>
           </div>
+
           <ul className={styles.grid}>
             {categories.map((category) => (
               <li key={category.id} className={styles.card}>
@@ -190,6 +204,7 @@ export default async function AboutPage() {
                     <h3 className={styles.title}>{category.name}</h3>
                     <span className={styles.count}>{formatProductsCount(category.productsCount)}</span>
                   </div>
+
                   <div className={styles.imageWrapper}>
                     <Image
                       src={category.imageSrc || "/images/catalog/product-placeholder.webp"}
@@ -205,12 +220,13 @@ export default async function AboutPage() {
           </ul>
         </section>
 
-        {/* ───────────── СОЦСЕТИ ───────────── */}
+        {/* Соцсети */}
         <section className={styles.socialSection}>
           <div className={styles.socialSectionInner}>
             <div className={styles.socialSectionLeft}>
               <span className={styles.sectionTag}>Соцсети</span>
               <h2 className={styles.socialSectionTitle}>Подписывайтесь и будьте в курсе последних событий</h2>
+
               <ul className={styles.socialLinksList}>
                 <li>
                   <a
@@ -222,6 +238,7 @@ export default async function AboutPage() {
                     <TelegramIcon />
                   </a>
                 </li>
+
                 <li>
                   <a
                     href="https://vk.ru/cocktail_design"
@@ -232,6 +249,7 @@ export default async function AboutPage() {
                     <VKIcon />
                   </a>
                 </li>
+
                 <li>
                   <a
                     href="https://max.ru/join/QQKS8__nbdrJTvRVrRSCdMBqinbSTzi34ReNX1TJw80"
@@ -242,6 +260,7 @@ export default async function AboutPage() {
                     <MaxIcon />
                   </a>
                 </li>
+
                 <li>
                   <a
                     href="https://youtube.com/@cocktaildesign-d7n?si=xtR34NMhHFghKq02"

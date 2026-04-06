@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 
-import Container from "@/components/layout/Container";
+import ContainerNoPaddingMobil from "@/components/layout/ContainerNoPaddingMobil";
 import Slider from "@/components/ui/slider/Slider";
 import MobileSlider from "@/components/ui/slider/mobile-slider/MobileSlider";
 
@@ -67,11 +67,11 @@ export default function HeroSection({ weeklyProduct }: HeroSectionProps) {
   // Если блок выключен — показываем только слайдер
   if (!weeklyProduct || !weeklyProduct.product) {
     return (
-      <Container>
-        <section className={styles.hero}>
+      <section className={styles.hero}>
+        <ContainerNoPaddingMobil>
           <Slider images={BANNER_IMAGES} autoPlayInterval={7000} />
-        </section>
-      </Container>
+        </ContainerNoPaddingMobil>
+      </section>
     );
   }
 
@@ -80,8 +80,8 @@ export default function HeroSection({ weeklyProduct }: HeroSectionProps) {
   const discount = product.priceOld ? calculateDiscount(product.price, product.priceOld) : null;
 
   return (
-    <Container>
-      <section className={styles.hero}>
+    <section className={styles.hero}>
+      <ContainerNoPaddingMobil>
         {/* Слайдер баннеров */}
         <div className={styles.desktopSlider}>
           <Slider images={BANNER_IMAGES} autoPlayInterval={7000} />
@@ -133,7 +133,7 @@ export default function HeroSection({ weeklyProduct }: HeroSectionProps) {
             </div>
           </Link>
         </aside>
-      </section>
-    </Container>
+      </ContainerNoPaddingMobil>
+    </section>
   );
 }

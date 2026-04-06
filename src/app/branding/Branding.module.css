@@ -1,6 +1,18 @@
+/* frontend/src/app/branding/Branding.module.css */
+
+/* ==========================================================================
+   PAGE
+   Общий контейнер страницы брендинга.
+   ========================================================================== */
+
 .brandingPage {
   margin-bottom: 60px;
 }
+
+/* ==========================================================================
+   HERO
+   Верхний промо-блок с декоративными кругами.
+   ========================================================================== */
 
 .brandingContainer {
   position: relative;
@@ -8,12 +20,10 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-
   width: 100%;
   min-height: 360px;
   margin-bottom: 60px;
   padding: 100px;
-
   overflow: hidden;
   border: 1px solid #bdc0c4;
   border-radius: 12px;
@@ -50,10 +60,14 @@
   z-index: 0;
 }
 
+/* ==========================================================================
+   HERO CONTENT
+   Текстовый контент и логотип.
+   ========================================================================== */
+
 .brandingContainerTextContent {
   position: relative;
   z-index: 2;
-
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -83,11 +97,19 @@
   left: 50%;
   bottom: 28px;
   z-index: 1;
-
   transform: translateX(-50%);
   opacity: 0.5;
   pointer-events: none;
+
+  /* Маленький размер */
+  width: 80px ;
+  height: auto ;
 }
+
+/* ==========================================================================
+   INTRO
+   Вводный текст перед карточками услуг.
+   ========================================================================== */
 
 .servicesIntro {
   margin-bottom: 20px;
@@ -99,6 +121,11 @@
   font-size: 14px;
   text-wrap: balance;
 }
+
+/* ==========================================================================
+   ANIMATIONS
+   Декоративное вращение кругов.
+   ========================================================================== */
 
 @keyframes rotate {
   from {
@@ -117,5 +144,116 @@
 
   to {
     transform: translateX(-50%) rotate(-360deg);
+  }
+}
+
+/* ==========================================================================
+   TABLET
+   ========================================================================== */
+
+@media (max-width: 1024px) {
+  .brandingPage {
+    margin-bottom: 48px;
+  }
+
+  .brandingContainer {
+    min-height: 320px;
+    margin-bottom: 48px;
+    padding: 72px 48px;
+  }
+
+  .brandingContainer::before {
+    top: -80px;
+    width: 760px;
+    height: 760px;
+  }
+
+  .brandingContainer::after {
+    top: 40px;
+    width: 500px;
+    height: 500px;
+  }
+
+  .brandingContainerTitle {
+    width: 100%;
+    max-width: 560px;
+    font-size: 28px;
+  }
+
+  .brandingContainerDescription {
+    max-width: 620px;
+  }
+
+  .logo {
+    bottom: 20px;
+  }
+
+  .servicesIntro {
+    margin-bottom: 16px;
+  }
+
+  .servicesIntroText {
+    width: 80%;
+  }
+}
+
+/* ==========================================================================
+   MOBILE
+   ========================================================================== */
+
+@media (max-width: 600px) {
+  .brandingPage {
+    margin-bottom: 36px;
+  }
+
+  .brandingContainer {
+    min-height: 280px;
+    margin-bottom: 32px;
+    padding: 40px 20px 72px;
+  }
+
+  .brandingContainer::before {
+    top: -40px;
+    width: 520px;
+    height: 520px;
+  }
+
+  .brandingContainer::after {
+    top: 50px;
+    width: 340px;
+    height: 340px;
+  }
+
+  .brandingContainerTextContent {
+    gap: 8px;
+  }
+
+  .brandingContainerTitle {
+    width: 100%;
+    font-size: 24px;
+    line-height: 1.2;
+  }
+
+  .brandingContainerDescription {
+    max-width: none;
+    font-size: 14px;
+    line-height: 1.55;
+  }
+
+  .logo {
+    bottom: 14px;
+    transform: translateX(-50%) scale(0.82);
+    transform-origin: center bottom;
+  }
+
+  .servicesIntro {
+    margin-bottom: 14px;
+  }
+
+  .servicesIntroText {
+    width: 100%;
+    font-size: 14px;
+    line-height: 1.55;
+    text-wrap: initial;
   }
 }
