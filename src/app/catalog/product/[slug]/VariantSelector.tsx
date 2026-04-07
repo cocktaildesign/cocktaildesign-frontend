@@ -188,7 +188,6 @@ export default function VariantSelector({ product, variants, specifications, col
             <h2 className={styles.productInfoTitle}>О товаре</h2>
             <ScrollToDescriptionButton />
           </div>
-
           {specifications.map((spec) => (
             <div key={spec.id} className={styles.specRow}>
               <div className={styles.specLeft}>

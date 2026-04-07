@@ -1,4 +1,5 @@
 // ============================================================================
+//frontend/src/lib/api/catalog/mappers.ts
 // Преобразование Strapi → Domain types для каталога.
 // Это ЕДИНСТВЕННОЕ место, где мы:
 // - лезем в item.attributes
@@ -397,17 +398,28 @@ function mapProductSpecifications(raw: unknown): CatalogProductSpecification[] {
       label?: unknown;
       value?: unknown;
       href?: unknown;
+      specification?: {
+        id?: unknown;
+        name?: unknown;
+      } | null;
     };
+
+    const relationName =
+      spec.specification && typeof spec.specification === "object" && typeof spec.specification.name === "string"
+        ? spec.specification.name.trim()
+        : "";
 
     const label = typeof spec.label === "string" ? spec.label.trim() : "";
     const value = typeof spec.value === "string" ? spec.value.trim() : "";
     const href = typeof spec.href === "string" ? spec.href.trim() : "";
 
-    if (!label || !value) continue;
+    const finalLabel = relationName || label;
+
+    if (!finalLabel || !value) continue;
 
     result.push({
-      id: String(spec.id ?? `${label}-${value}`),
-      label,
+      id: String(spec.id ?? `${finalLabel}-${value}`),
+      label: finalLabel,
       value,
       href: href || null,
     });
@@ -478,6 +490,7 @@ export function mapProductDetail(
 
   const images = mapMediaArray(source.image, name);
   const specifications = mapProductSpecifications(source.specifications);
+  console.log("RAW SPECIFICATIONS:", JSON.stringify(source.specifications, null, 2));
   const bundleItems = mapBundleItems(rawBundleItems);
 
   return {
