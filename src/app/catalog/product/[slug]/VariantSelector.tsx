@@ -5,10 +5,13 @@ import { useState } from "react";
 import type { CatalogProductDetail, CatalogProductSpecification, CatalogVariant } from "@/lib/api/catalog/types";
 import ProductGallery from "./ProductGallery";
 import ProductPurchaseControls from "./ProductPurchaseControls";
+import ArrowRightIcon from "@/components/icons/ArrowRightIcon";
+
 import ScrollToDescriptionButton from "./ScrollToDescriptionButton";
 import CopyButton from "@/components/ui/copy-button/CopyButton";
 import Link from "next/link";
 import styles from "./ProductPage.module.css";
+import Image from "next/image";
 
 // Название характеристики цвета в МойСклад
 const COLOR_CHARACTERISTIC_NAME = "Выбор цвета";
@@ -109,7 +112,6 @@ export default function VariantSelector({ product, variants, specifications, col
       {/* Колонка информации */}
       <div className={styles.productInfo}>
         <h1 className={styles.productPageTitleMobile}>{product.name}</h1>
-
         {/* Артикул */}
         <div className={styles.productMetaSku}>
           <p className={styles.productMetaSkuTitle}>
@@ -181,7 +183,6 @@ export default function VariantSelector({ product, variants, specifications, col
             })}
           </div>
         )}
-
         {/* О товаре — спецификации */}
         <div>
           <div className={styles.productAboutHeader}>
@@ -206,6 +207,28 @@ export default function VariantSelector({ product, variants, specifications, col
             </div>
           ))}
         </div>
+
+        <button className={styles.buttonSale}>
+          {/* Картинка */}
+          <div className={styles.buttonSaleImageWrapper}>
+            <Image
+              src="/images/catalog/saleImage.webp"
+              alt="Скидка"
+              width={40}
+              height={40}
+              className={styles.buttonSaleImage}
+            />
+          </div>
+
+          {/* Текст */}
+          <div className={styles.buttonSaleText}>
+            <span className={styles.buttonSaleTitle}>Как получить скидку</span>
+            <span className={styles.buttonSaleSubtitle}>Нажмите, чтобы узнать условия</span>
+          </div>
+
+          {/* Стрелка */}
+          <ArrowRightIcon className={styles.buttonSaleArrow} />
+        </button>
       </div>
 
       {/* Сайдбар с ценой и кнопками */}

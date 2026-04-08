@@ -167,11 +167,6 @@ export default function ProductPurchaseControls({
         </div>
       </div>
 
-      {/* Быстрый заказ */}
-      <button type="button" className={styles.quickOrderButton}>
-        <span>Быстрый заказ</span>
-      </button>
-
       {/* Доставка */}
       <div className={styles.deliveryBlock}>
         <h3 className={styles.deliveryTitle}>Доставка</h3>
