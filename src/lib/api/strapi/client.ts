@@ -11,7 +11,7 @@ function getBaseUrl(): string {
   }
 
   // На сервере доступны оба варианта
-  return process.env.STRAPI_URL ?? process.env.NEXT_PUBLIC_STRAPI_URL ?? "http://localhost:1337";
+  return process.env.STRAPI_URL ?? process.env.NEXT_PUBLIC_STRAPI_URL ?? "http://localhost:1338";
 }
 
 export function getStrapiUrl(): string {
@@ -30,7 +30,7 @@ export async function fetchStrapi<T>(path: string, params?: Record<string, strin
 
   const response = await fetch(url.toString(), {
     // На клиенте будет проигнорировано — ок
-    next: { revalidate: 3600 },
+    next: { revalidate: 60 },
   });
 
   if (!response.ok) {
