@@ -12,37 +12,37 @@ const items: Item[] = [
   {
     href: "/catalog",
     title: "Каталог",
-    image: "/images/catalog/product-placeholder.webp",
+    image: "/images/home/1.webp",
   },
   {
     href: "/knowledge",
     title: "Знания",
-    image: "/images/catalog/product-placeholder.webp",
+    image: "/images/home/2.webp",
   },
   {
     href: "/legal/requisites",
     title: "Реквизиты",
-    image: "/images/catalog/product-placeholder.webp",
+    image: "/images/home/3.webp",
   },
   {
     href: "/branding",
     title: "Брендинг",
-    image: "/images/catalog/product-placeholder.webp",
+    image: "/images/home/5.webp",
   },
   {
     href: "/contacts",
     title: "Контакты",
-    image: "/images/catalog/product-placeholder.webp",
+    image: "/images/home/4.webp",
   },
   {
     href: "/shipping",
     title: "Доставка",
-    image: "/images/catalog/product-placeholder.webp",
+    image: "/images/home/6.webp",
   },
   {
     href: "/payment-methods",
     title: "Оплата",
-    image: "/images/catalog/product-placeholder.webp",
+    image: "/images/home/7.webp",
   },
 ];
 

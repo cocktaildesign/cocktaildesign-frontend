@@ -1,9 +1,12 @@
+// src/app/discounts/page.tsx
+
 import { pageMetadata } from "@/lib/seo/metadata";
 import PageLayout from "@/components/layout/PageLayout";
-import styles from "./Discounts.module.css";
-// Импортируем данные — page.tsx серверный, может читать данные напрямую
-import { discounts } from "./data";
+import VolumeTiers from "./VolumeTiers";
 import DiscountCard from "./discounts-card/DiscountsCard";
+import { discounts } from "./data";
+
+import styles from "./Discounts.module.css";
 
 export const metadata = pageMetadata({
   title: "Система скидок — CocktailDesign",
@@ -15,18 +18,24 @@ export const metadata = pageMetadata({
 export default function DiscountsPage() {
   return (
     <PageLayout>
-      <section className={styles.discountsSection}>
-        <h1 className={styles.discountsSectionTitle}>Система скидок</h1>
+      <div className={styles.page}>
+        <h1 className={styles.pageTitle}>Система скидок</h1>
+        <p className={styles.description}>
+          Мы заинтересованы в долгосрочной работе и предусмотрели систему скидок в зависимости от объёма заказов. Скидка
+          вступает в силу, когда стоимость товаров в корзине превышает 10&nbsp;000&nbsp;₽.
+        </p>
+        {/* Блок скидки от объёма */}
+        <VolumeTiers />
 
-        <ul className={styles.discountsList}>
+        {/* Сетка остальных акций */}
+        <ul className={styles.grid}>
           {discounts.map((discount) => (
-            <li key={discount.id} className={styles.discountsItem}>
-              {/* Передаём один объект акции в карточку */}
+            <li key={discount.id}>
               <DiscountCard discount={discount} />
             </li>
           ))}
         </ul>
-      </section>
+      </div>
     </PageLayout>
   );
 }

@@ -1,6 +1,6 @@
 // src/sections/home/about-company/AboutCompany.tsx
 
-import PageLayout from "@/components/layout/PageLayout";
+import Container from "@/components/layout/Container";
 
 import styles from "./AboutCompany.module.css";
 
@@ -46,8 +46,8 @@ const POINTS = [
 
 export default function AboutCompany() {
   return (
-    <PageLayout>
-      <section className={styles.section}>
+    <section className={styles.section}>
+      <Container>
         {/* Вступительная часть */}
         <div className={styles.intro}>
           <h2 className={styles.title}>Cocktail Design — барный инвентарь собственного производства</h2>
@@ -68,7 +68,7 @@ export default function AboutCompany() {
             </div>
           ))}
         </div>
-      </section>
-    </PageLayout>
+      </Container>
+    </section>
   );
 }

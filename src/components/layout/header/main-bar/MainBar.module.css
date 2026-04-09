@@ -33,6 +33,7 @@
   flex: 1 1 auto;
   min-width: 0;
   gap: 8px;
+	z-index: 1;
 }
 
 /* Правый блок с действиями */

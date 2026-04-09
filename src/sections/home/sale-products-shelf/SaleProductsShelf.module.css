@@ -5,10 +5,10 @@
 
 .section {
   width: 100%;
-  margin-top: 70px;
-  padding: 20px 26px;
+  margin-top: 44px;
+  margin-bottom: 44px;
+  padding: 44px 26px;
 
-  border: 1px solid var(--color-light);
   border-radius: 12px;
 
   background-image: url("/images/Hero/bg-sale.webp");
@@ -108,7 +108,7 @@
 
     border: 1px solid transparent;
     border-radius: 24px;
-		margin-bottom: 15px;
+    margin-bottom: 15px;
   }
 
   .title {

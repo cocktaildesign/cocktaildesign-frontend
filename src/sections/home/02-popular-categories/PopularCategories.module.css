@@ -77,6 +77,7 @@
   aspect-ratio: 1 / 1;
 
   transition:
+    background-color var(--dur-fast) var(--ease),
     box-shadow var(--dur-fast) var(--ease),
     transform var(--dur-fast) var(--ease),
     border-color var(--dur-fast) var(--ease);
@@ -159,7 +160,7 @@
     background-color: var(--color-white);
     padding: 20px 0px;
     border-radius: 24px;
-    height: fit-content¢;
+    height: fit-content;
   }
 
   .header {
@@ -185,5 +186,15 @@
     font-size: 13px;
     font-weight: 500;
     text-align: left;
+  }
+
+  .card:hover {
+    background-color: var(--color-light-soft);
+    box-shadow: none;
+    transform: none;
+  }
+
+  .card:hover .imageWrapper {
+    transform: none;
   }
 }

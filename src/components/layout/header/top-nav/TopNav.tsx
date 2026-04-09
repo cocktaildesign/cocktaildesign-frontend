@@ -1,12 +1,20 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
+
 import styles from "./TopNav.module.css";
 
-// Типы для ссылок
-type NavLink = { label: string; href: string };
-type TopNavItem = NavLink & { children?: NavLink[] };
+// Тип ссылки
+type NavLink = {
+  label: string;
+  href: string;
+};
+
+// Тип пункта верхнего меню
+type TopNavItem = NavLink & {
+  children?: NavLink[];
+};
 
 // Ссылки верхнего меню
 const TOP_NAV_ITEMS: TopNavItem[] = [
@@ -23,7 +31,7 @@ const TOP_NAV_ITEMS: TopNavItem[] = [
   { label: "Система скидок", href: "/discounts" },
   {
     label: "О нас",
-    href: "#",
+    href: "/about",
     children: [
       { label: "О компании", href: "/about" },
       { label: "Реквизиты", href: "/legal/requisites" },
@@ -33,10 +41,13 @@ const TOP_NAV_ITEMS: TopNavItem[] = [
 ];
 
 export default function TopNav() {
-  // Какой dropdown сейчас открыт на мобильных
+  // Какой dropdown сейчас открыт
   const [openItemLabel, setOpenItemLabel] = useState<string | null>(null);
 
-  // Открытие и закрытие dropdown по клику
+  // Ссылка на весь блок меню
+  const navRef = useRef<HTMLElement | null>(null);
+
+  // Переключение dropdown по клику
   function handleToggle(label: string) {
     setOpenItemLabel((currentLabel) => {
       if (currentLabel === label) {
@@ -47,22 +58,56 @@ export default function TopNav() {
     });
   }
 
-  // Закрываем dropdown после перехода по ссылке
+  // Закрытие dropdown
   function handleCloseDropdown() {
     setOpenItemLabel(null);
   }
 
+  // Закрытие по клику вне меню
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (!navRef.current) return;
+
+      const target = event.target as Node;
+
+      if (!navRef.current.contains(target)) {
+        setOpenItemLabel(null);
+      }
+    }
+
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
+  // Закрытие по клавише Escape
+  useEffect(() => {
+    function handleKeyDown(event: KeyboardEvent) {
+      if (event.key === "Escape") {
+        setOpenItemLabel(null);
+      }
+    }
+
+    document.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, []);
+
   return (
-    <nav className={styles.topBarNav} aria-label="Верхнее меню">
+    <nav ref={navRef} className={styles.topBarNav} aria-label="Верхнее меню">
       {/* Список пунктов меню */}
       <ul className={styles.topNavList}>
         {TOP_NAV_ITEMS.map((item) => {
-          const hasChildren = !!item.children?.length;
+          const hasChildren = Boolean(item.children?.length);
           const isOpen = openItemLabel === item.label;
 
           return (
             <li key={item.label} className={`${styles.topNavItem} ${isOpen ? styles.topNavItemOpen : ""}`}>
-              {/* Кнопка если есть dropdown */}
+              {/* Кнопка для пункта с dropdown */}
               {hasChildren ? (
                 <button
                   type="button"
@@ -87,12 +132,12 @@ export default function TopNav() {
               )}
 
               {/* Dropdown */}
-              {hasChildren && (
+              {hasChildren && item.children && (
                 <div className={styles.dropdown}>
                   <ul className={styles.dropdownList}>
-                    {item.children!.map((child) => (
+                    {item.children.map((child) => (
                       <li key={child.href}>
-                        <Link className={styles.dropdownLink} href={child.href} onClick={handleCloseDropdown}>
+                        <Link href={child.href} className={styles.dropdownLink} onClick={handleCloseDropdown}>
                           {child.label}
                         </Link>
                       </li>

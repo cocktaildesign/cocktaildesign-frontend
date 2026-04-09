@@ -103,7 +103,7 @@
 
 .logo {
   display: inline-flex;
-	width: 150px;
+  width: 150px;
 }
 
 .footerRating {
@@ -177,7 +177,9 @@
 
 .footerPhoneLink {
   color: var(--color-white);
-  font-weight: 500;
+  font-weight: 450;
+  font-size: 14px;
+  display: none;
 }
 
 /* ==========================================================================
@@ -568,5 +570,9 @@
 
   .footerDev {
     font-size: 13px;
+  }
+
+  .footerPhoneLink {
+    display: block;
   }
 }

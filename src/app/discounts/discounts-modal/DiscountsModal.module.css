@@ -1,95 +1,159 @@
 /* DiscountsModal.module.css */
 
-/* ===== ГОРИЗОНТАЛЬНАЯ РАСКЛАДКА ===== */
+/* ==========================================================================
+   LAYOUT
+   ========================================================================== */
+
 .layout {
   display: flex;
   flex-direction: row;
   gap: 32px;
-  align-items: flex-start; /* картинка и текст выравниваются по верху */
+  align-items: flex-start;
 }
 
-/* Левая колонка — картинка */
+/* ==========================================================================
+   ЛЕВАЯ КОЛОНКА — картинка
+   ========================================================================== */
+
 .imageSide {
-  /* Фиксированная ширина, не сжимается */
-  flex: 0 0 300px;
+  flex: 0 0 260px;
+  position: sticky;
+  top: 0;
 }
 
 .sideImage {
   width: 100%;
   height: auto;
-  border-radius: 12px;
-  display: block; /* убирает лишний отступ снизу у img */
+  border-radius: 16px;
+  display: block;
 }
 
-/* Правая колонка — весь текст */
+/* ==========================================================================
+   ПРАВАЯ КОЛОНКА — контент
+   ========================================================================== */
+
 .contentSide {
-  flex: 1; /* занимает оставшееся место */
-  min-width: 0; /* важно: без этого flex-дети могут вылезать за границы */
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
 }
 
-/* ===== АДАПТИВ ===== */
-/* Когда добавишь медиазапросы для планшета/мобилки — раскомментируй: */
-/*
-@media (max-width: 768px) {
-  .layout {
-    flex-direction: column;
-  }
+/* ==========================================================================
+   ТИПОГРАФИКА
+   ========================================================================== */
 
-  .imageSide {
-    flex: none;
-    width: 100%;
-  }
-}
-*/
-
-/* ===== ТИПОГРАФИКА ===== */
 .title {
-  font-family: var(--font-display);
+  font-size: var(--text-2xl);
   font-weight: 500;
-  text-align: left;
-  margin-bottom: 20px;
+  margin: 0 0 16px;
+  line-height: 1.2;
 }
 
 .heading2 {
+  font-size: var(--text-lg);
   font-weight: 550;
-  font-size: var(--text-xl);
-  margin-bottom: 10px;
-  margin-top: 10px;
-  text-wrap: balance;
+  margin: 16px 0 6px;
+  color: var(--color-dark);
 }
 
 .heading3 {
-  font-size: var(--text-lg);
+  font-size: var(--text-base);
   font-weight: 550;
-  margin-top: 10px;
-  margin-bottom: 10px;
+  margin: 16px 0 6px;
+  color: var(--color-dark);
 }
 
 .text {
   font-size: var(--text-base);
+  color: var(--color-dark);
+  line-height: 1.6;
+  margin: 0;
 }
 
 .textSmall {
   font-size: var(--text-xs);
+  color: var(--color-gray);
   background-color: var(--color-light-soft);
-  padding: 10px;
-  border-radius: 12px;
+  padding: 12px 14px;
+  border-radius: 10px;
+  line-height: 1.6;
+  margin: 8px 0 0;
 }
 
-/* Картинка внутри contentSide (если попадёт туда — для акций без первого image-блока) */
+/* ==========================================================================
+   СПИСКИ
+   ========================================================================== */
+
+.list {
+  font-size: var(--text-base);
+  line-height: 1.7;
+  padding-left: 18px;
+  margin: 4px 0 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.list li {
+  color: var(--color-dark);
+}
+
+/* ==========================================================================
+   КАРТИНКА ВНУТРИ КОНТЕНТА (если нет sideImage)
+   ========================================================================== */
+
 .figure {
-  margin: 0;
-  margin-bottom: 20px;
+  margin: 0 0 16px;
 }
 
 .image {
   width: 100%;
   border-radius: 12px;
-  height: 347px;
+  height: auto;
+  display: block;
 }
 
-.list {
+/* ==========================================================================
+   ССЫЛКА
+   ========================================================================== */
+
+.linkBlock {
+  margin-top: 8px;
+}
+
+.link {
   font-size: var(--text-base);
-  list-style-type: circle;
-  padding-left: 15px;
+  color: var(--color-dark-blue);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.linkDescription {
+  font-size: var(--text-xs);
+  color: var(--color-gray);
+  margin: 4px 0 0;
+}
+
+/* ==========================================================================
+   АДАПТИВ
+   ========================================================================== */
+
+@media (max-width: 768px) {
+  .layout {
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .imageSide {
+    flex: none;
+    width: 100%;
+    position: static;
+  }
+
+  .sideImage {
+    max-height: 220px;
+    object-fit: cover;
+  }
 }

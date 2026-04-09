@@ -3,10 +3,11 @@
    Два блока соцсетей
    ========================================================================== */
 
-.section {
+.sectionSocial {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 16px;
+  margin-bottom: 44px;
 }
 
 /* ==========================================================================
@@ -98,7 +99,7 @@
    ========================================================================== */
 
 @media (max-width: 1024px) {
-  .section {
+  .sectionSocial {
     grid-template-columns: 1fr;
   }
 }
@@ -108,7 +109,7 @@
    ========================================================================== */
 
 @media (max-width: 600px) {
-  .section {
+  .sectionSocial {
     border-radius: 24px;
     background-color: var(--color-white);
     padding: 20px 15px;

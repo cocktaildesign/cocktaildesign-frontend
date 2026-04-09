@@ -490,7 +490,6 @@ export function mapProductDetail(
 
   const images = mapMediaArray(source.image, name);
   const specifications = mapProductSpecifications(source.specifications);
-  console.log("RAW SPECIFICATIONS:", JSON.stringify(source.specifications, null, 2));
   const bundleItems = mapBundleItems(rawBundleItems);
 
   return {

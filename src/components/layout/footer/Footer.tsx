@@ -172,7 +172,7 @@ export default async function Footer() {
                 <YandexIcon className={styles.footerYandexIcon} />
 
                 <div className={styles.footerRatingContent}>
-                  <span className={styles.footerRatingContentText}>Рейтинг магазина</span>
+                  <span className={styles.footerRatingContentText}>Отзывы на Яндекс</span>
 
                   <span className={styles.starRow} aria-hidden="true">
                     <StarIcon className={styles.footerRatingIcon} />

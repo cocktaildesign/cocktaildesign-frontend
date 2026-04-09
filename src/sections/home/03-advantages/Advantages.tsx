@@ -3,9 +3,10 @@
 import { useState } from "react";
 import Link from "next/link";
 
-import PageLayout from "@/components/layout/PageLayout";
+import Container from "@/components/layout/Container";
 import styles from "./Advantages.module.css";
 import { PromoModal } from "./PromoModal";
+import CopyButton from "@/components/ui/copy-button/CopyButton";
 
 const cards = [
   {
@@ -35,8 +36,8 @@ export default function Advantages() {
   }
 
   return (
-    <PageLayout>
-      <section className={styles.section}>
+    <section className={styles.section}>
+      <Container>
         <h2 className={styles.title}>Профессиональный барный инвентарь</h2>
 
         <div className={styles.grid}>
@@ -80,7 +81,14 @@ export default function Advantages() {
             </div>
 
             <div className={styles.promoBottom}>
-              <span className={styles.promoCode}>STARTCD20</span>
+              <div className={styles.promoBlock}>
+                <span className={styles.promoLabel}>Промокод</span>
+
+                <div className={styles.promoContent}>
+                  <span className={styles.promoCode}>STARTCD20</span>
+                  <CopyButton value="STARTCD20" label="Промокод" className={styles.promoCopyButton} />
+                </div>
+              </div>
               <div className={styles.promoFooter}>
                 <Link href="/catalog" className={styles.promoLink}>
                   В каталог →
@@ -92,9 +100,9 @@ export default function Advantages() {
             </div>
           </div>
         </div>
-      </section>
+      </Container>
 
       <PromoModal isOpen={isPromoOpen} onClose={() => setIsPromoOpen(false)} />
-    </PageLayout>
+    </section>
   );
 }

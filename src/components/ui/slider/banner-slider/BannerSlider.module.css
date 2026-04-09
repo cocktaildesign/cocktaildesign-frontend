@@ -1,0 +1,112 @@
+/* ==========================================================================
+   Корневой контейнер слайдера
+   ========================================================================== */
+
+.slider {
+  position: relative;
+  width: 100%;
+  height: 208px;
+  overflow: hidden;
+  background-color: #e0e7ef;
+}
+
+/* ==========================================================================
+   Слайды
+   ========================================================================== */
+
+.slides {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.slide {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 240ms ease;
+}
+
+.slideActive {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.image {
+  object-fit: cover;
+  object-position: center;
+}
+
+/* ==========================================================================
+   Навигация
+   ========================================================================== */
+
+.navButton {
+  position: absolute;
+  top: 50%;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border: none;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.9);
+  cursor: pointer;
+  transform: translateY(-50%);
+}
+
+.navButtonPrev {
+  left: 12px;
+}
+
+.navButtonNext {
+  right: 12px;
+}
+
+/* ==========================================================================
+   Точки
+   ========================================================================== */
+
+.dots {
+  position: absolute;
+  bottom: 10px;
+  left: 50%;
+  z-index: 2;
+  display: flex;
+  gap: 6px;
+  transform: translateX(-50%);
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  padding: 0;
+  border: none;
+  border-radius: 50%;
+  background-color: rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+}
+
+.dotActive {
+  background-color: rgba(0, 0, 0, 0.6);
+}
+
+/* ==========================================================================
+   Мобильная версия
+   ========================================================================== */
+
+@media (max-width: 600px) {
+  .slider {
+    height: 158px;
+  }
+
+  .navButton {
+    display: none;
+  }
+
+  .dots {
+    bottom: 8px;
+  }
+}

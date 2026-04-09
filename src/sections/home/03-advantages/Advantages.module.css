@@ -4,7 +4,7 @@
    ========================================================================== */
 
 .section {
-  margin: 60px 0;
+  margin: 44px 0;
 }
 
 .title {
@@ -218,9 +218,26 @@
   margin-top: 16px;
 }
 
+.promoBlock {
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+  gap: 6px;
+  margin-bottom: 10px;
+}
+
+.promoLabel {
+  color: var(--color-white);
+  font-size: 12px;
+  position: relative;
+}
+.promoCopyButton {
+  color: var(--color-white);
+}
+
 .promoCode {
   display: inline-flex;
-  margin-bottom: 14px;
+
   padding: 5px 12px;
   border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: 8px;
@@ -230,6 +247,11 @@
   font-family: var(--font-mono, monospace);
   font-size: 12px;
   letter-spacing: 0.05em;
+}
+
+.promoContent {
+  display: flex;
+  align-items: center;
 }
 
 .promoFooter {

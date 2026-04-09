@@ -1,5 +1,4 @@
 /* ==========================================================================
-   TOP NAV
    Верхнее меню
    ========================================================================== */
 
@@ -12,9 +11,9 @@
   display: flex;
   align-items: center;
   gap: 24px;
-  list-style: none;
   margin: 0;
   padding: 0;
+  list-style: none;
 }
 
 /* Один пункт меню */
@@ -27,24 +26,23 @@
   z-index: 2;
 }
 
-/* Ссылка / кнопка пункта */
+/* Ссылка или кнопка пункта */
 .topNavLink {
   display: flex;
   align-items: center;
   gap: 6px;
-  white-space: nowrap;
-
-  background: none;
-  border: none;
   padding: 0;
+  border: none;
+  background: none;
+  white-space: nowrap;
   cursor: pointer;
 }
 
 /* Базовый стиль текста */
 .linkBase {
+  color: var(--color-black);
   font-size: var(--text-sm);
   font-weight: 440;
-  color: var(--color-black);
   transition: color var(--dur) var(--ease);
 }
 
@@ -68,16 +66,15 @@
 }
 
 /* ==========================================================================
-   DROPDOWN
-   Выпадающее меню
+   Dropdown
    ========================================================================== */
 
-/* Буфер между пунктом и dropdown */
+/* Буфер между кнопкой и dropdown */
 .topNavItem::after {
   content: "";
   position: absolute;
-  left: 0;
   top: 100%;
+  left: 0;
   width: 100%;
   height: 15px;
 }
@@ -87,41 +84,36 @@
   position: absolute;
   top: calc(100% + 8px);
   left: 0;
-  min-width: 200px;
-  background: #fff;
-  border-radius: var(--radius);
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.14);
-  padding: 8px;
   z-index: 9011;
 
+  min-width: 200px;
+  padding: 8px;
+  border-radius: var(--radius);
+  background: #fff;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.14);
+
+  /* Закрытое состояние */
   opacity: 0;
-  transform: translateY(-6px);
   pointer-events: none;
+  transform: translateY(-6px);
+
   transition:
     opacity 140ms ease,
     transform 140ms ease;
 }
 
-/* Открытие dropdown на desktop */
-.topNavItem:hover .dropdown,
-.topNavItem:focus-within .dropdown {
-  opacity: 1;
-  transform: translateY(0);
-  pointer-events: auto;
-}
-
-/* Открытие dropdown через состояние */
+/* Открытое состояние */
 .topNavItemOpen .dropdown {
   opacity: 1;
-  transform: translateY(0);
   pointer-events: auto;
+  transform: translateY(0);
 }
 
-/* Список внутри dropdown */
+/* Список ссылок внутри dropdown */
 .dropdownList {
-  list-style: none;
   margin: 0;
   padding: 0;
+  list-style: none;
 }
 
 /* Ссылка внутри dropdown */
@@ -131,8 +123,8 @@
   height: 38px;
   padding: 0 10px;
   border-radius: var(--radius);
-  text-decoration: none;
   font-size: var(--text-sm);
+  text-decoration: none;
   transition:
     background-color var(--dur) var(--ease),
     color var(--dur) var(--ease);
@@ -148,23 +140,20 @@
 }
 
 /* ==========================================================================
-   TABLET
    Планшетная версия
    ========================================================================== */
-
-@media (min-width: 1024px) {
-}
 
 @media (max-width: 768px) {
   .topNavList {
     gap: 12px;
   }
+
   .linkBase {
     font-size: 13px;
   }
 }
+
 /* ==========================================================================
-   MOBILE
    Мобильная версия
    ========================================================================== */
 

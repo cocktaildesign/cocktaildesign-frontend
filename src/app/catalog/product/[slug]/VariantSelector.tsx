@@ -119,7 +119,6 @@ export default function VariantSelector({ product, variants, specifications, col
           </p>
           <CopyButton value={activeCode ?? ""} label="Артикул" />
         </div>
-
         {/* Варианты */}
         {variants.length > 0 && characteristicEntries.length > 0 && (
           <div className={styles.productVariants}>
@@ -208,7 +207,7 @@ export default function VariantSelector({ product, variants, specifications, col
           ))}
         </div>
 
-        <button className={styles.buttonSale}>
+        <Link href="/discounts" className={styles.buttonSale}>
           {/* Картинка */}
           <div className={styles.buttonSaleImageWrapper}>
             <Image
@@ -228,7 +227,7 @@ export default function VariantSelector({ product, variants, specifications, col
 
           {/* Стрелка */}
           <ArrowRightIcon className={styles.buttonSaleArrow} />
-        </button>
+        </Link>
       </div>
 
       {/* Сайдбар с ценой и кнопками */}

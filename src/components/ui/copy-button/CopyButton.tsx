@@ -7,9 +7,10 @@ import styles from "./CopyButton.module.css";
 type CopyButtonProps = {
   value: string;
   label: string;
+  className?: string;
 };
 
-export default function CopyButton({ value, label }: CopyButtonProps) {
+export default function CopyButton({ value, label, className }: CopyButtonProps) {
   const [copied, setCopied] = useState(false);
 
   async function handleCopy() {
@@ -27,7 +28,6 @@ export default function CopyButton({ value, label }: CopyButtonProps) {
         return;
       }
 
-      // Fallback (работает чаще в dev и без secure context)
       const textarea = document.createElement("textarea");
       textarea.value = value;
       textarea.setAttribute("readonly", "");
@@ -57,7 +57,7 @@ export default function CopyButton({ value, label }: CopyButtonProps) {
       onClick={handleCopy}
       aria-label={`Скопировать: ${label}`}
       title="Копировать"
-      className={styles.copyButton}>
+      className={`${styles.copyButton} ${className ?? ""}`}>
       {copied ? <span className={styles.iconSuccess}>✓</span> : <CopyIcon title={undefined} />}
     </button>
   );

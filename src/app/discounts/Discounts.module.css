@@ -1,16 +1,52 @@
-.discountsSection {
+/* src/app/discounts/Discounts.module.css */
+
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
   min-height: 70vh;
 }
 
-.discountsSectionTitle {
-  margin: 0 0 24px;
+.pageTitle {
   font-size: var(--text-2xl);
   font-weight: 450;
+  margin: 0;
 }
 
-/* Сетка списка акций — принадлежит странице, не карточке */
-.discountsList {
+.description {
+  font-size: var(--text-base);
+  color: var(--color-gray);
+  line-height: 1.6;
+  margin: 0;
+  max-width: 640px;
+}
+
+/* Сетка карточек акций */
+.grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 16px;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+/* ==========================================================================
+   TABLET
+   ========================================================================== */
+
+@media (max-width: 1024px) {
+  .grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* ==========================================================================
+   MOBILE
+   ========================================================================== */
+
+@media (max-width: 600px) {
+  .grid {
+    grid-template-columns: repeat(1, 1fr);
+  }
 }
