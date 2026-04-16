@@ -1,0 +1,190 @@
+/* ==========================================================================
+   SUCCESS STATE
+   ========================================================================== */
+
+.successState {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 80vh;
+}
+
+.successCard {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-width: 560px;
+  padding: 40px 28px;
+  background-color: var(--color-white);
+  border-radius: 12px;
+  text-align: center;
+}
+
+/* ==========================================================================
+   ICON
+   ========================================================================== */
+
+.successIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 72px;
+  height: 72px;
+  margin-bottom: 18px;
+  border-radius: 50%;
+  background-color: #edfaf3;
+  color: #27ae60;
+}
+
+/* ==========================================================================
+   TEXT
+   ========================================================================== */
+
+.successTitle {
+  font-size: var(--text-2xl);
+  font-weight: 450;
+  margin: 0;
+}
+
+.successOrder {
+  margin: 10px 0 0;
+  font-size: var(--text-base);
+  color: var(--color-gray);
+}
+
+.successOrder strong {
+  color: var(--color-dark-blue);
+}
+
+.successDescription {
+  max-width: 420px;
+  margin: 14px 0 0;
+  font-size: var(--text-base);
+  color: var(--color-gray);
+  line-height: 1.5;
+  text-wrap: balance;
+}
+
+/* ==========================================================================
+   CONTACTS
+   ========================================================================== */
+
+.successContacts {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  margin-top: 24px;
+  padding: 18px 24px;
+  background-color: #f7f9fc;
+  border-radius: 10px;
+  width: 100%;
+}
+
+.successContactsTitle {
+  margin: 0 0 4px;
+  font-size: var(--text-sm);
+  color: var(--color-gray);
+}
+
+.successContact {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: var(--text-base);
+  color: var(--color-dark-blue);
+  text-decoration: none;
+  transition: opacity var(--dur) var(--ease);
+}
+
+.successContact:hover {
+  opacity: 0.6;
+}
+
+/* ==========================================================================
+   BUTTONS
+   ========================================================================== */
+
+.successActions {
+  display: flex;
+  gap: 15px;
+  margin-top: 24px;
+}
+
+.primaryButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 48px;
+  padding: 10px 20px;
+  border-radius: 12px;
+  background-color: var(--color-dark-blue);
+  color: var(--color-white);
+  font-family: var(--font-display);
+  font-size: 16px;
+  transition: background-color var(--dur) var(--ease);
+}
+
+.primaryButton:hover {
+  background-color: var(--color-dark-blue-hover);
+}
+
+.secondaryButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 48px;
+  padding: 10px 20px;
+  border: 1px solid var(--color-dark-blue);
+  border-radius: 12px;
+  color: var(--color-dark-blue);
+  font-family: var(--font-display);
+  font-size: 16px;
+  transition: opacity var(--dur) var(--ease);
+}
+
+.secondaryButton:hover {
+  opacity: 0.5;
+}
+
+/* ==========================================================================
+   MOBILE
+   ========================================================================== */
+
+@media (max-width: 600px) {
+  .successState {
+    min-height: 420px;
+  }
+
+  .successCard {
+    padding: 28px 18px;
+    border-radius: 12px;
+  }
+
+  .successIcon {
+    width: 64px;
+    height: 64px;
+    margin-bottom: 16px;
+  }
+
+  .successTitle {
+    font-size: var(--text-lg);
+  }
+
+  .successDescription {
+    font-size: var(--text-sm);
+    text-wrap: initial;
+  }
+
+  .successActions {
+    flex-direction: column;
+    width: 100%;
+    gap: 10px;
+  }
+
+  .primaryButton,
+  .secondaryButton {
+    width: 100%;
+  }
+}

@@ -25,11 +25,13 @@ function formatProductsCount(count: number): string {
 
 export default function CartSummary() {
   const items = useCartStore((s) => s.items);
+  const promoCode = useCartStore((s) => s.promoCode);
+  const promoDiscount = useCartStore((s) => s.promoDiscount);
+  const setPromo = useCartStore((s) => s.setPromo);
+  const clearPromo = useCartStore((s) => s.clearPromo);
 
-  const [promoCode, setPromoCode] = useState("");
   const [promoStatus, setPromoStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
   const [promoError, setPromoError] = useState("");
-  const [promoDiscount, setPromoDiscount] = useState(0);
 
   const { tiers } = useDiscountTiers();
 
@@ -59,10 +61,12 @@ export default function CartSummary() {
   const finalPrice = totalPrice - promoDiscount - volumeDiscount;
 
   function handlePromoChange(e: React.ChangeEvent<HTMLInputElement>) {
-    setPromoCode(e.target.value);
     setPromoStatus("idle");
-    setPromoDiscount(0);
     setPromoError("");
+    clearPromo();
+
+    const value = e.target.value;
+    setPromo(value, 0);
   }
 
   async function handleApplyPromo() {
@@ -84,10 +88,11 @@ export default function CartSummary() {
       const data = await response.json();
 
       if (data.ok) {
-        setPromoDiscount(data.discountAmount);
+        setPromo(promoCode.trim(), data.discountAmount);
         setPromoStatus("success");
       } else {
         setPromoStatus("error");
+        clearPromo();
 
         const errorMessages: Record<string, string> = {
           not_found: "Промокод не найден",

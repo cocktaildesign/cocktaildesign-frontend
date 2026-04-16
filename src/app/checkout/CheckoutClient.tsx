@@ -1,26 +1,30 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useCartStore } from "@/lib/cart/cartStore";
+import { useDiscountTiers, getCurrentTier } from "@/lib/cart/discountTiers";
 import PersonIcon from "@/components/icons/payment-tabs/PersonIcon";
 import OrganizationIcon from "@/components/icons/payment-tabs/OrganizationIcon";
 import styles from "./Checkout.module.css";
 
 type BuyerType = "individual" | "legal";
 
-// 1200 -> "1 200"
 function formatPrice(price: number): string {
   return new Intl.NumberFormat("ru-RU").format(price);
 }
 
 export default function CheckoutClient() {
+  const router = useRouter();
   const items = useCartStore((s) => s.items);
+  const promoCode = useCartStore((s) => s.promoCode);
+  const promoDiscount = useCartStore((s) => s.promoDiscount);
+  const clearCart = useCartStore((s) => s.clearCart);
 
-  // По умолчанию лучше ставить "Физическое лицо" —
-  // обычно это самый частый сценарий в e-commerce.
+  const { tiers } = useDiscountTiers();
+
   const [buyerType, setBuyerType] = useState<BuyerType>("legal");
-
   const [phone, setPhone] = useState("");
   const [telegram, setTelegram] = useState("");
   const [address, setAddress] = useState("");
@@ -31,22 +35,28 @@ export default function CheckoutClient() {
   const [submitStatus, setSubmitStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
   const [errors, setErrors] = useState<Record<string, string>>({});
 
-  // Итоговая сумма заказа
+  // Считаем суммы
   let totalPrice = 0;
+  let discountableTotal = 0;
+
   for (const item of items) {
     totalPrice += item.price * item.quantity;
+
+    if (!item.discountExcluded) {
+      discountableTotal += item.price * item.quantity;
+    }
   }
 
-  // Сброс одной ошибки при вводе
+  const currentTier = getCurrentTier(tiers, discountableTotal);
+  const volumeDiscount = currentTier ? Math.round((discountableTotal * currentTier.percent) / 100) : 0;
+  const finalPrice = totalPrice - promoDiscount - volumeDiscount;
+
   function clearError(field: string) {
     setErrors((prev) => ({ ...prev, [field]: "" }));
   }
 
-  // При переключении типа покупателя убираем ошибки полей,
-  // которые больше не актуальны для текущей формы.
   function handleBuyerTypeChange(type: BuyerType) {
     setBuyerType(type);
-
     setErrors((prev) => {
       const nextErrors = { ...prev };
       delete nextErrors.fullName;
@@ -56,22 +66,18 @@ export default function CheckoutClient() {
     });
   }
 
-  // Валидация перед отправкой
   function validate(): boolean {
     const newErrors: Record<string, string> = {};
 
     if (buyerType === "legal" && !contactName.trim()) {
       newErrors.contactName = "Укажите контактное лицо";
     }
-
     if (buyerType === "individual" && !fullName.trim()) {
       newErrors.fullName = "Укажите имя и фамилию";
     }
-
     if (!phone.trim()) {
       newErrors.phone = "Укажите телефон";
     }
-
     if (!address.trim()) {
       newErrors.address = "Укажите адрес доставки";
     }
@@ -80,29 +86,65 @@ export default function CheckoutClient() {
     return Object.keys(newErrors).length === 0;
   }
 
-  function handleSubmit() {
+  async function handleSubmit() {
     if (!validate()) return;
 
     setSubmitStatus("loading");
 
-    // Здесь позже будет реальная отправка формы
-    console.log("Отправляем заказ...");
+    try {
+      const res = await fetch("https://api.cocktaildesign.ru/api/orders", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          buyerType,
+          fullName: buyerType === "individual" ? fullName : undefined,
+          contactName: buyerType === "legal" ? contactName : undefined,
+          phone,
+          telegram: telegram || undefined,
+          inn: buyerType === "legal" && inn ? inn : undefined,
+          address,
+          comment: comment || undefined,
+          // Скидки — передаём если есть
+          promoCode: promoCode || undefined,
+          promoDiscount: promoDiscount || undefined,
+          volumeDiscount: volumeDiscount || undefined,
+          volumeDiscountPercent: currentTier?.percent || undefined,
+          items: items.map((item) => ({
+            code: item.code,
+            name: item.name,
+            quantity: item.quantity,
+            price: item.price,
+            engraving: item.engraving,
+          })),
+        }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok || !data.ok) {
+        setSubmitStatus("error");
+        return;
+      }
+
+      // Очищаем корзину и редиректим на страницу успеха
+      clearCart();
+      router.push(`/checkout/success?order=${data.orderName}`);
+    } catch {
+      setSubmitStatus("error");
+    }
   }
 
   return (
     <div className={styles.page}>
-      {/* Ссылка назад */}
       <Link href="/cart" className={styles.backLink}>
         ← Вернуться в корзину
       </Link>
 
-      {/* Заголовок страницы */}
       <h1 className={styles.title}>Оформление заказа</h1>
 
       <div className={styles.layout}>
         {/* Левая колонка */}
         <div className={styles.leftColumn}>
-          {/* Выбор типа покупателя */}
           <section className={styles.buyerTypeSection} aria-labelledby="buyer-type-title">
             <div className={styles.buyerTypeHeader}>
               <h2 id="buyer-type-title" className={styles.buyerTypeTitle}>
@@ -162,22 +204,34 @@ export default function CheckoutClient() {
                   </div>
 
                   <span className={styles.orderItemQty}>{item.quantity} шт.</span>
-
                   <span className={styles.orderItemPrice}>{formatPrice(item.price * item.quantity)} ₽</span>
                 </div>
               ))}
             </div>
 
+            {volumeDiscount > 0 && (
+              <div className={styles.orderTotal}>
+                <span className={styles.orderTotalLabel}>Скидка за объём {currentTier?.percent}%</span>
+                <span className={styles.orderTotalPrice}>−{formatPrice(volumeDiscount)} ₽</span>
+              </div>
+            )}
+
+            {promoDiscount > 0 && (
+              <div className={styles.orderTotal}>
+                <span className={styles.orderTotalLabel}>Скидка по промокоду</span>
+                <span className={styles.orderTotalPrice}>−{formatPrice(promoDiscount)} ₽</span>
+              </div>
+            )}
+
             <div className={styles.orderTotal}>
               <span className={styles.orderTotalLabel}>Итого</span>
-              <span className={styles.orderTotalPrice}>{formatPrice(totalPrice)} ₽</span>
+              <span className={styles.orderTotalPrice}>{formatPrice(finalPrice)} ₽</span>
             </div>
           </section>
         </div>
 
         {/* Правая колонка */}
         <section className={styles.form}>
-          {/* Заголовок формы */}
           <div className={styles.formHeader}>
             <h2 className={styles.formTitle}>
               {buyerType === "individual" ? "Контактные данные" : "Данные для оформления"}
@@ -189,15 +243,12 @@ export default function CheckoutClient() {
             </p>
           </div>
 
-          {/* Поля формы */}
           <div className={styles.formGrid}>
-            {/* Поля физического лица */}
             {buyerType === "individual" && (
               <div className={styles.field}>
                 <label className={styles.label} htmlFor="fullName">
                   Имя Фамилия <span className={styles.required}>*</span>
                 </label>
-
                 <input
                   id="fullName"
                   type="text"
@@ -209,18 +260,15 @@ export default function CheckoutClient() {
                     clearError("fullName");
                   }}
                 />
-
                 {errors.fullName && <p className={styles.errorText}>{errors.fullName}</p>}
               </div>
             )}
 
-            {/* Поля юридического лица */}
             {buyerType === "legal" && (
               <div className={styles.field}>
                 <label className={styles.label} htmlFor="contactName">
                   Контактное лицо <span className={styles.required}>*</span>
                 </label>
-
                 <input
                   id="contactName"
                   type="text"
@@ -232,17 +280,14 @@ export default function CheckoutClient() {
                     clearError("contactName");
                   }}
                 />
-
                 {errors.contactName && <p className={styles.errorText}>{errors.contactName}</p>}
               </div>
             )}
 
-            {/* Контакты */}
             <div className={styles.field}>
               <label className={styles.label} htmlFor="phone">
                 Телефон <span className={styles.required}>*</span>
               </label>
-
               <input
                 id="phone"
                 type="tel"
@@ -254,7 +299,6 @@ export default function CheckoutClient() {
                   clearError("phone");
                 }}
               />
-
               {errors.phone && <p className={styles.errorText}>{errors.phone}</p>}
             </div>
 
@@ -262,7 +306,6 @@ export default function CheckoutClient() {
               <label className={styles.label} htmlFor="telegram">
                 Telegram
               </label>
-
               <input
                 id="telegram"
                 type="text"
@@ -278,7 +321,6 @@ export default function CheckoutClient() {
                 <label className={styles.label} htmlFor="inn">
                   ИНН компании
                 </label>
-
                 <input
                   id="inn"
                   type="text"
@@ -293,12 +335,10 @@ export default function CheckoutClient() {
               </div>
             )}
 
-            {/* Доставка и комментарий */}
             <div className={`${styles.field} ${styles.fieldFull}`}>
               <label className={styles.label} htmlFor="address">
                 Адрес доставки <span className={styles.required}>*</span>
               </label>
-
               <input
                 id="address"
                 type="text"
@@ -310,7 +350,6 @@ export default function CheckoutClient() {
                   clearError("address");
                 }}
               />
-
               {errors.address && <p className={styles.errorText}>{errors.address}</p>}
             </div>
 
@@ -318,7 +357,6 @@ export default function CheckoutClient() {
               <label className={styles.label} htmlFor="comment">
                 Комментарий к заказу
               </label>
-
               <textarea
                 id="comment"
                 className={styles.textarea}
@@ -330,7 +368,6 @@ export default function CheckoutClient() {
             </div>
           </div>
 
-          {/* Отправка формы */}
           <button
             type="button"
             className={styles.submitButton}

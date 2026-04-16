@@ -26,6 +26,10 @@ type CartState = {
   selectedIds: string[];
   hasHydrated: boolean;
 
+  // Промокод
+  promoCode: string;
+  promoDiscount: number;
+
   // Actions
 
   // Выбрать / снять один товар
@@ -51,6 +55,12 @@ type CartState = {
   // Изменить количество товара по id
   updateQuantity: (id: string, quantity: number) => void;
 
+  // Установить промокод
+  setPromo: (code: string, discount: number) => void;
+
+  // Очистить промокод
+  clearPromo: () => void;
+
   clearCart: () => void;
 };
 
@@ -67,6 +77,10 @@ export const useCartStore = create<CartState>()(
 
       // До загрузки localStorage — false, после — true
       hasHydrated: false,
+
+      // Промокод по умолчанию пустой
+      promoCode: "",
+      promoDiscount: 0,
 
       // Меняем флаг только через set
       setHasHydrated: (value) => set({ hasHydrated: value }),
@@ -135,9 +149,29 @@ export const useCartStore = create<CartState>()(
         set({ items: updatedItems });
       },
 
+      // Установить промокод и сумму скидки
+      setPromo: (code, discount) => {
+        set({
+          promoCode: code,
+          promoDiscount: discount,
+        });
+      },
+
+      // Очистить промокод
+      clearPromo: () => {
+        set({
+          promoCode: "",
+          promoDiscount: 0,
+        });
+      },
+
       // Очистить всю корзину
       clearCart: () => {
-        set({ items: [] });
+        set({
+          items: [],
+          promoCode: "",
+          promoDiscount: 0,
+        });
       },
 
       // Выбрать / снять один товар по id
@@ -182,7 +216,11 @@ export const useCartStore = create<CartState>()(
       name: STORAGE_KEY,
       storage: createJSONStorage(() => localStorage),
       // Сохраняем в localStorage только данные, без функций
-      partialize: (state) => ({ items: state.items }),
+      partialize: (state) => ({
+        items: state.items,
+        promoCode: state.promoCode,
+        promoDiscount: state.promoDiscount,
+      }),
 
       onRehydrateStorage: () => (state) => {
         state?.setHasHydrated(true);
