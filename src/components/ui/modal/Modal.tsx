@@ -14,10 +14,11 @@ type ModalProps = {
   children: ReactNode;
   title?: string;
   size?: "large";
+  hideCloseButton?: boolean;
 };
 
 export function Modal(props: ModalProps) {
-  const { isOpen, onClose, children, title, size } = props;
+  const { isOpen, onClose, children, title, size, hideCloseButton } = props;
   const contentRef = useRef(null);
 
   useEffect(() => {
@@ -60,9 +61,11 @@ export function Modal(props: ModalProps) {
         role="dialog"
         aria-modal="true"
         aria-label={title}>
-        <button type="button" className={styles.closeButton} onClick={onClose} aria-label="Закрыть модальное окно">
-          ×
-        </button>
+        {!hideCloseButton && (
+          <button type="button" className={styles.closeButton} onClick={onClose} aria-label="Закрыть модальное окно">
+            ×
+          </button>
+        )}
 
         {/* Контент модалки */}
         <div>{children}</div>

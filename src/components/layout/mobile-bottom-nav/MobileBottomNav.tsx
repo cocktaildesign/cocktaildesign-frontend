@@ -12,22 +12,24 @@ import HeartIcon from "@/components/icons/HeartIcon";
 import CartIcon from "@/components/icons/CartIcon";
 import CatalogIcon from "@/components/icons/CatalogIcon";
 import HomeIcon from "@/components/icons/HomeIcon";
+import ArrowBackIcon from "@/components/icons/ArrowBackIcon";
 
 import { useFavoritesStore } from "@/lib/favorites/favoritesStore";
 import { useCartStore } from "@/lib/cart/cartStore";
 import { Modal } from "@/components/ui/modal/Modal";
 
 const MENU_ITEMS = [
-  { href: "/", label: "Главная" },
-  { href: "/shipping", label: "Доставка" },
-  { href: "/payment-methods", label: "Оплата" },
-  { href: "/knowledge", label: "Знания" },
-  { href: "/legal/requisites", label: "Реквизиты" },
-  { href: "/branding", label: "Брендинг" },
-  { href: "/contacts", label: "Контакты" },
-];
+  { href: "/catalog", label: "Каталог", imageSrc: "/images/mobilBottomMenuImage/catalog.webp" },
 
-const PLACEHOLDER = "/images/catalog/product-placeholder.webp";
+  { href: "/contacts", label: "Контакты", imageSrc: "/images/mobilBottomMenuImage/contacts.webp" },
+  { href: "/shipping", label: "Доставка", imageSrc: "/images/mobilBottomMenuImage/delivery.webp" },
+
+  { href: "/payment-methods", label: "Оплата", imageSrc: "/images/mobilBottomMenuImage/pay.webp" },
+  { href: "/legal/requisites", label: "Реквизиты", imageSrc: "/images/mobilBottomMenuImage/requisites.webp" },
+  { href: "/branding", label: "Брендинг", imageSrc: "/images/mobilBottomMenuImage/branding.webp" },
+
+  { href: "/knowledge", label: "Знания", imageSrc: "/images/mobilBottomMenuImage/knowledge.webp" },
+];
 
 export default function MobileBottomNav() {
   const pathname = usePathname();
@@ -40,6 +42,10 @@ export default function MobileBottomNav() {
   const cartHasHydrated = useCartStore((state) => state.hasHydrated);
   const cartItems = useCartStore((state) => state.items);
   const cartCount = cartHasHydrated ? cartItems.reduce((total, item) => total + item.quantity, 0) : 0;
+
+  function handleCloseMenu() {
+    setIsMenuOpen(false);
+  }
 
   return (
     <>
@@ -85,25 +91,35 @@ export default function MobileBottomNav() {
         </Link>
       </nav>
 
-      {/* Меню внутри modal */}
-      <Modal isOpen={isMenuOpen} onClose={() => setIsMenuOpen(false)} title="Меню">
+      {/* Меню внутри modal. hideCloseButton — у нас своя стрелка "назад" */}
+      <Modal isOpen={isMenuOpen} onClose={handleCloseMenu} title="Меню" hideCloseButton>
         <div className={styles.menuContent}>
+          <div className={styles.menuHeader}>
+            <button type="button" className={styles.backButton} onClick={handleCloseMenu} aria-label="Назад">
+              <ArrowBackIcon />
+            </button>
+          </div>
           <h2 className={styles.menuTitle}>Меню</h2>
 
           <div className={styles.menuGrid}>
-            {MENU_ITEMS.map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                className={`${styles.menuCard} ${pathname === item.href ? styles.menuCardActive : ""}`}
-                onClick={() => setIsMenuOpen(false)}>
-                <div className={styles.menuCardImage}>
-                  <Image src={PLACEHOLDER} alt={item.label} fill sizes="50vw" className={styles.menuCardImg} />
-                </div>
+            {MENU_ITEMS.map((item) => {
+              const isActive = pathname === item.href;
 
-                <span className={styles.menuCardLabel}>{item.label}</span>
-              </Link>
-            ))}
+              let cardClassName = styles.menuCard;
+              if (isActive) {
+                cardClassName = `${styles.menuCard} ${styles.menuCardActive}`;
+              }
+
+              return (
+                <Link key={item.href} href={item.href} className={cardClassName} onClick={handleCloseMenu}>
+                  <span className={styles.menuCardLabel}>{item.label}</span>
+
+                  <div className={styles.menuCardImage}>
+                    <Image src={item.imageSrc} alt={item.label} fill sizes="40vw" className={styles.menuCardImg} />
+                  </div>
+                </Link>
+              );
+            })}
           </div>
         </div>
       </Modal>

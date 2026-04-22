@@ -32,15 +32,15 @@ export default async function HomePage() {
     <main className={styles.homePage}>
       <HeroSection weeklyProduct={weeklyProduct} />
       <MobileCatalogShortcuts />
-      <CategoryProductShelves collections={collections} collectionSlug="novinki" />
+      <CategoryProductShelves collections={collections} collectionSlug="nashe-proizvodstvo" />
       <PopularCategories />
       <Advantages />
       <Telegram />
       <SaleProductsShelf collections={collections} collectionSlug="sale" />
       <KnowledgePreview />
-      <CategoryProductShelves collections={collections} collectionSlug="dzhiggery" />
+      <CategoryProductShelves collections={collections} collectionSlug="vse-dlya-raboty-so-ldom" />
       <Banners />
-      <CategoryProductShelves collections={collections} collectionSlug="novinki" />
+      <CategoryProductShelves collections={collections} collectionSlug="vse-dlya-podachi" />
       <SocialLinks />
       <AboutCompany />
     </main>

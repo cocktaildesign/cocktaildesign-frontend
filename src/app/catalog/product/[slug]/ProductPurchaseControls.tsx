@@ -6,6 +6,7 @@ import Link from "next/link";
 import QuantityControl from "@/components/ui/quantity/QuantityControl";
 import EngravingToggle from "@/components/ui/engraving/EngravingToggle";
 import CartIcon from "@/components/icons/CartIcon";
+import ArrowRightIcon from "@/components/icons/ArrowRightIcon";
 import FavoriteButton from "@/components/ui/favorites/FavoriteButton";
 import DeliveryIcon from "@/components/icons/product-page/DeliveryIcon";
 import { useCartStore } from "@/lib/cart/cartStore";
@@ -26,10 +27,12 @@ type ProductPurchaseControlsProps = {
   discountExcluded: boolean;
 };
 
+// 1200 -> "1 200"
 function formatPrice(price: number): string {
   return new Intl.NumberFormat("ru-RU").format(price);
 }
 
+// Считаем разницу между старой и новой ценой
 function getSavingsAmount(price: number, priceOld: number): number | null {
   if (price <= 0) return null;
   if (priceOld <= price) return null;
@@ -52,25 +55,27 @@ export default function ProductPurchaseControls({
   code,
   discountExcluded,
 }: ProductPurchaseControlsProps) {
+  // Локальный стейт — используется пока товар НЕ в корзине
   const [quantity, setQuantity] = useState<number>(1);
   const [engravingChecked, setEngravingChecked] = useState<boolean>(false);
 
-  // Берём товар из store если он уже в корзине
+  // Берём товар из корзины (если он там есть)
   const cartItem = useCartStore((s) => s.items.find((i) => i.id === productId));
 
-  // Есть ли товар в корзине
+  // Actions из store
+  const addItem = useCartStore((s) => s.addItem);
+  const removeItem = useCartStore((s) => s.removeItem);
+  const updateQuantity = useCartStore((s) => s.updateQuantity);
+
+  // Товар уже в корзине?
   const isInCart = Boolean(cartItem);
 
-  // Если товар в корзине — берём значения из store, иначе локальный стейт
+  // Если в корзине — показываем значения из store, иначе — локальные
   const displayQuantity = cartItem?.quantity ?? quantity;
   const displayEngraving = cartItem?.engraving ?? engravingChecked;
 
   const hasDiscount = priceOld > price;
   const savingsAmount = getSavingsAmount(price, priceOld);
-
-  // Берём actions из store
-  const addItem = useCartStore((s) => s.addItem);
-  const removeItem = useCartStore((s) => s.removeItem);
 
   function handleAddToCart() {
     const item: CartItem = {
@@ -89,85 +94,92 @@ export default function ProductPurchaseControls({
     addItem(item);
   }
 
+  // Меняем количество. Вызывается из QuantityControl — и на десктопе, и на мобилке
+  function handleQuantityChange(next: number) {
+    // Ноль или меньше — удаляем товар из корзины
+    if (next < 1) {
+      removeItem(productId);
+      setQuantity(1);
+      return;
+    }
+
+    // Товар в корзине — обновляем количество в store
+    if (isInCart) {
+      updateQuantity(productId, next);
+      return;
+    }
+
+    // Товар не в корзине — меняем локальный стейт
+    setQuantity(next);
+  }
+
+  // Меняем гравировку. Если товар в корзине — обновляем store, иначе — локальный стейт
+  function handleEngravingChange(checked: boolean) {
+    if (isInCart) {
+      const updatedItems = useCartStore.getState().items.map((i) => {
+        if (i.id !== productId) return i;
+        return { ...i, engraving: checked };
+      });
+      useCartStore.setState({ items: updatedItems });
+      return;
+    }
+
+    setEngravingChecked(checked);
+  }
+
   return (
-    <div className={styles.productPurchaseControls}>
-      {/* Цена */}
-      <div className={styles.productPurchasePriceBlock}>
-        {hasDiscount && (
-          <div className={styles.productPurchasePriceTopRow}>
-            <span className={styles.productPurchasePriceOld}>{formatPrice(priceOld)} ₽</span>
+    <>
+      {/* ==========================================================
+          Десктопный блок — скрыт на мобилке
+          ========================================================== */}
+      <div className={styles.productPurchaseControls}>
+        {/* Цена */}
+        <div className={styles.productPurchasePriceBlock}>
+          {hasDiscount && (
+            <div className={styles.productPurchasePriceTopRow}>
+              <span className={styles.productPurchasePriceOld}>{formatPrice(priceOld)} ₽</span>
 
-            {savingsAmount !== null && (
-              <span className={styles.productPurchaseBenefitBadge}>Выгода {formatPrice(savingsAmount)} ₽</span>
-            )}
+              {savingsAmount !== null && (
+                <span className={styles.productPurchaseBenefitBadge}>Выгода {formatPrice(savingsAmount)} ₽</span>
+              )}
+            </div>
+          )}
+
+          <div className={styles.productPurchasePrice}>{formatPrice(price)} ₽</div>
+        </div>
+
+        {/* Количество и гравировка */}
+        <div className={styles.productInfoConfigurator}>
+          <div className={styles.productActions}>
+            <QuantityControl min={0} value={displayQuantity} onChange={handleQuantityChange} />
+
+            {engravingEnabled ? <EngravingToggle checked={displayEngraving} onChange={handleEngravingChange} /> : null}
           </div>
-        )}
+        </div>
 
-        <div className={styles.productPurchasePrice}>{formatPrice(price)} ₽</div>
-      </div>
-
-      {/* Количество и гравировка */}
-      <div className={styles.productInfoConfigurator}>
+        {/* Кнопка корзины + избранное */}
         <div className={styles.productActions}>
-          {/* Количество из store если в корзине, иначе локальный стейт */}
-          <QuantityControl
-            min={0}
-            value={displayQuantity}
-            onChange={(next) => {
-              if (next < 1) {
-                removeItem(productId);
-                setQuantity(1);
-                return;
-              }
-              if (isInCart) {
-                useCartStore.getState().updateQuantity(productId, next);
-              } else {
-                setQuantity(next);
-              }
-            }}
-          />
+          {isInCart ? (
+            <Link href="/cart" className={styles.goToCartButton}>
+              <CartIcon />
+              <span>В корзине</span>
+            </Link>
+          ) : (
+            <button type="button" className={styles.addToCartButton} onClick={handleAddToCart}>
+              <CartIcon />
+              <span>В корзину</span>
+            </button>
+          )}
 
-          {/* Гравировка из store если в корзине, иначе локальный стейт */}
-          {engravingEnabled ? (
-            <EngravingToggle
-              checked={displayEngraving}
-              onChange={(checked) => {
-                if (isInCart) {
-                  const updatedItems = useCartStore.getState().items.map((i) => {
-                    if (i.id !== productId) return i;
-                    return { ...i, engraving: checked };
-                  });
-                  useCartStore.setState({ items: updatedItems });
-                } else {
-                  setEngravingChecked(checked);
-                }
-              }}
-            />
-          ) : null}
+          <div className={styles.favoriteButton}>
+            <FavoriteButton productId={productId} />
+          </div>
         </div>
       </div>
 
-      {/* Кнопка корзины + избранное */}
-      <div className={styles.productActions}>
-        {/* Если в корзине — ссылка на корзину, иначе — кнопка добавления */}
-        {isInCart ? (
-          <Link href="/cart" className={styles.goToCartButton}>
-            <CartIcon />
-            <span>В корзине</span>
-          </Link>
-        ) : (
-          <button type="button" className={styles.addToCartButton} onClick={handleAddToCart}>
-            <CartIcon />
-            <span>В корзину</span>
-          </button>
-        )}
-
-        <div className={styles.favoriteButton}>
-          <FavoriteButton productId={productId} />
-        </div>
-      </div>
-
-      {/* Доставка */}
+      {/* ==========================================================
+          Блок доставки — видно всегда (и на десктопе, и на мобилке)
+          ========================================================== */}
       <div className={styles.deliveryBlock}>
         <h3 className={styles.deliveryTitle}>Доставка</h3>
 
@@ -181,6 +193,39 @@ export default function ProductPurchaseControls({
           </p>
         </div>
       </div>
-    </div>
+
+      {/* ==========================================================
+          Sticky bar — только для мобилки
+          ========================================================== */}
+      <div className={styles.mobileStickyBar}>
+        {/* Цена слева */}
+        <div className={styles.mobileStickyPriceBlock}>
+          {hasDiscount && <span className={styles.mobileStickyPriceOld}>{formatPrice(priceOld)} ₽</span>}
+          <span className={styles.mobileStickyPrice}>{formatPrice(price)} ₽</span>
+        </div>
+
+        {/* Действия справа */}
+        <div className={styles.mobileStickyActions}>
+          <div className={styles.mobileStickyFavorite}>
+            <FavoriteButton productId={productId} />
+          </div>
+
+          {isInCart ? (
+            <>
+              <QuantityControl min={0} value={displayQuantity} onChange={handleQuantityChange} />
+
+              <Link href="/cart" className={styles.mobileStickyArrowButton} aria-label="Перейти в корзину">
+                <ArrowRightIcon />
+              </Link>
+            </>
+          ) : (
+            <button type="button" className={styles.mobileStickyAddButton} onClick={handleAddToCart}>
+              <CartIcon />
+              <span>В корзину</span>
+            </button>
+          )}
+        </div>
+      </div>
+    </>
   );
 }

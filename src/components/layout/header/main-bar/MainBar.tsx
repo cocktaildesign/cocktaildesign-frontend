@@ -29,8 +29,25 @@ export default function MainBar({ categories, collections }: MainBarProps) {
   // Показываем стрелку назад на всех страницах кроме главной
   const isHome = pathname === "/";
 
-  // Открыт ли поиск — если да, стрелку скрываем
+  // Открыт ли поиск
   const [isSearchOpen, setIsSearchOpen] = useState(false);
+
+  // Счётчик-сигнал для закрытия поиска извне.
+  // Когда число меняется, SearchBar видит это и закрывает свою панель.
+  const [searchCloseSignal, setSearchCloseSignal] = useState(0);
+
+  // Стрелка показывается если: не главная ИЛИ поиск открыт
+  const showBackButton = !isHome || isSearchOpen;
+
+  function handleBackClick() {
+    // Если поиск открыт — закрываем его, не уходим со страницы
+    if (isSearchOpen) {
+      setSearchCloseSignal((value) => value + 1);
+      return;
+    }
+
+    router.back();
+  }
 
   // Количество избранных товаров после гидрации стора
   const favoritesHasHydrated = useFavoritesStore((state) => state.hasHydrated);
@@ -49,17 +66,17 @@ export default function MainBar({ categories, collections }: MainBarProps) {
         <Logo className={styles.logo} />
       </div>
 
-      {/* Кнопка назад — только мобилка, только не главная, только если поиск закрыт */}
-      {!isHome && !isSearchOpen && (
-        <button className={styles.backButton} onClick={() => router.back()}>
-          <ArrowBackIcon className={styles.backIcon} />
+      {/* Кнопка назад — на мобилке, когда не главная или поиск открыт */}
+      {showBackButton && (
+        <button className={styles.backButton} onClick={handleBackClick} aria-label="Назад">
+          <ArrowBackIcon className={styles.backIcon} color="red" />
         </button>
       )}
 
       {/* Каталог и поиск */}
-      <div className={`${styles.mainBarCenter} ${!isHome && !isSearchOpen ? styles.mainBarCenterInner : ""}`}>
+      <div className={`${styles.mainBarCenter} ${showBackButton ? styles.mainBarCenterInner : ""}`}>
         <CatalogMenu categories={categories} collections={collections} />
-        <SearchBar categories={categories} onOpenChange={setIsSearchOpen} />
+        <SearchBar categories={categories} onOpenChange={setIsSearchOpen} closeSignal={searchCloseSignal} />
       </div>
 
       {/* Избранное и корзина */}

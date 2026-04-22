@@ -485,7 +485,7 @@
 
 @media (max-width: 600px) {
   .footerSection {
-    padding: 34px 15px 0px 0px;
+    padding: 34px 0px 0px 0px;
     padding-bottom: 70px;
   }
 
@@ -504,7 +504,7 @@
   }
 
   .logo {
-    width: 200px;
+    width: 120px;
   }
 
   .footerRating {

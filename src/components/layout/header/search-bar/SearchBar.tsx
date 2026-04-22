@@ -20,6 +20,9 @@ type Props = {
   placeholder?: string;
   categories: CatalogCategoryPreview[];
   onOpenChange?: (isOpen: boolean) => void;
+  // Сигнал извне — когда число меняется, панель закрывается.
+  // Используется в MainBar чтобы закрыть поиск по клику на стрелку "назад".
+  closeSignal?: number;
 };
 
 type Product = {
@@ -139,7 +142,12 @@ function buildChips(query: string, products: Product[]): string[] {
     .map(([token]) => token);
 }
 
-export default function SearchBar({ placeholder = "Поиск в CocktailDesign", categories, onOpenChange }: Props) {
+export default function SearchBar({
+  placeholder = "Поиск в CocktailDesign",
+  categories,
+  onOpenChange,
+  closeSignal,
+}: Props) {
   const router = useRouter();
   const panelId = useId();
   const inputRef = useRef<HTMLInputElement>(null);
@@ -251,6 +259,25 @@ export default function SearchBar({ placeholder = "Поиск в CocktailDesign"
       isCancelled = true;
     };
   }, [isOpen, trimmedDebounced]);
+
+  // Внешний сигнал закрытия — когда closeSignal меняется, закрываем панель.
+  // Пропускаем первый рендер (когда значение приходит впервые).
+  const isFirstCloseSignalRef = useRef(true);
+
+  useEffect(() => {
+    if (closeSignal === undefined) {
+      return;
+    }
+
+    if (isFirstCloseSignalRef.current) {
+      isFirstCloseSignalRef.current = false;
+      return;
+    }
+
+    closePanel();
+    // closePanel — стабильный обработчик внутри компонента, eslint можно не ругать
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [closeSignal]);
 
   function openPanel() {
     setIsOpen(true);

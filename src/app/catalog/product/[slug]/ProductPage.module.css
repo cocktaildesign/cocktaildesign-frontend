@@ -120,6 +120,7 @@
    PRODUCT INFO
    Информация о товаре
    ========================================================================== */
+
 .productPageTitleMobile {
   display: none;
   margin: 0;
@@ -174,7 +175,11 @@
   height: 10px;
   transform: rotate(180deg);
 }
-/* КНОПКА */
+
+/* ==========================================================================
+   КНОПКА "КАК ПОЛУЧИТЬ СКИДКУ"
+   ========================================================================== */
+
 .buttonSale {
   display: flex;
   align-items: center;
@@ -191,7 +196,6 @@
   transition: background 0.2s ease;
 }
 
-/* КАРТИНКА */
 .buttonSaleImageWrapper {
   flex: 0 0 auto;
 }
@@ -201,7 +205,6 @@
   border-radius: 8px;
 }
 
-/* ТЕКСТ */
 .buttonSaleText {
   display: flex;
   flex-direction: column;
@@ -224,7 +227,6 @@
   text-align: left;
 }
 
-/* СТРЕЛКА */
 .buttonSaleArrow {
   flex: 0 0 auto;
   color: var(--color-gray-light);
@@ -387,7 +389,7 @@
 
 /* ==========================================================================
    SIDEBAR
-   Блок покупки
+   Блок покупки (цена, количество, кнопки) + блок доставки
    ========================================================================== */
 
 .productSidebar {
@@ -529,8 +531,17 @@
   background-color: var(--color-light);
 }
 
-.deliveryTitle {
+/* ==========================================================================
+   БЛОК ДОСТАВКИ
+   Показывается и на десктопе, и на мобилке
+   ========================================================================== */
+
+.deliveryBlock {
   margin-top: 20px;
+}
+
+.deliveryTitle {
+  margin-top: 0;
   margin-bottom: 10px;
   font-size: var(--text-lg);
   font-weight: 500;
@@ -665,6 +676,98 @@
 }
 
 /* ==========================================================================
+   MOBILE STICKY BAR
+   Плашка снизу на мобилке (цена + избранное + кнопка)
+   ========================================================================== */
+
+/* По умолчанию плашка скрыта (десктоп, планшет) */
+.mobileStickyBar {
+  display: none;
+}
+
+/* Цена слева */
+.mobileStickyPriceBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.mobileStickyPriceOld {
+  font-size: 13px;
+  font-weight: 400;
+  color: var(--color-gray-light);
+  text-decoration: line-through;
+  line-height: 1;
+}
+
+.mobileStickyPrice {
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--color-black);
+  white-space: nowrap;
+  line-height: 1.1;
+}
+
+/* Действия справа (сердечко + кнопка / QuantityControl + стрелка) */
+.mobileStickyActions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+/* Обёртка для сердечка в плашке */
+.mobileStickyFavorite {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Кнопка "В корзину" — если товара ещё нет в корзине */
+.mobileStickyAddButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-width: 140px;
+  height: 48px;
+  padding: 10px 18px;
+  background-color: var(--color-dark-blue);
+  border: none;
+  border-radius: 12px;
+  color: var(--color-white);
+  font-family: var(--font-display);
+  font-size: 15px;
+  font-weight: 500;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background-color var(--dur) var(--ease);
+}
+
+.mobileStickyAddButton:hover {
+  background-color: var(--color-dark-blue-hover);
+}
+
+/* Кнопка-стрелка "Перейти в корзину" — если товар уже в корзине */
+.mobileStickyArrowButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  flex-shrink: 0;
+  background-color: var(--color-dark-blue);
+  border-radius: 12px;
+  color: var(--color-white);
+  transition: background-color var(--dur) var(--ease);
+}
+
+.mobileStickyArrowButton:hover {
+  background-color: var(--color-dark-blue-hover);
+}
+
+/* ==========================================================================
    TABLET
    Планшетная версия
    ========================================================================== */
@@ -720,8 +823,11 @@
   .related {
     overflow: hidden;
   }
+
+  /* Отступ снизу чтобы sticky-плашка не перекрывала контент */
   .productPage {
     margin-bottom: 40px;
+    padding-bottom: 80px;
   }
 
   .productPageHeader {
@@ -765,6 +871,7 @@
     width: 56px;
     height: 56px;
   }
+
   .productGalleryMain {
     width: calc(100vw - 30px);
     height: calc(100vw - 30px);
@@ -798,18 +905,21 @@
     white-space: normal;
   }
 
+  /* Скрываем десктопный блок покупки (цена, количество, кнопки) на мобилке */
+  .productPurchaseControls {
+    display: none;
+  }
+
+  /* Убираем фон/padding у обёртки, т.к. внутри остался только блок доставки */
   .productPurchase {
-    padding: 20px;
-    border-radius: 16px;
+    padding: 0;
+    background-color: transparent;
+    box-shadow: none;
+    border-radius: 0;
   }
 
   .productActions {
     flex-wrap: wrap;
-  }
-
-  .favoriteButton {
-    width: 100%;
-    min-height: 46px;
   }
 
   .productDescription {
@@ -830,5 +940,35 @@
 
   .relatedSlide {
     flex: 0 0 40vw;
+  }
+
+  /* Показываем sticky-плашку только на мобилке */
+  .mobileStickyBar {
+    position: fixed;
+    right: 0;
+    bottom: 63px;
+    left: 0;
+    z-index: var(--z-modal);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 14px;
+    background-color: var(--color-light-soft);
+    border: 1px solid rgba(15, 23, 42, 0.08);
+    border-radius: 12px 12px 0 0;
+    box-shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
+    backdrop-filter: blur(10px);
+  }
+}
+
+/* ==========================================================================
+   PRINT
+   Прячем плашку при печати
+   ========================================================================== */
+
+@media print {
+  .mobileStickyBar {
+    display: none;
   }
 }

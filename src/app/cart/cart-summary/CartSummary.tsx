@@ -7,12 +7,10 @@ import { useDiscountTiers, getCurrentTier, getNextTier } from "@/lib/cart/discou
 import CartProgress from "./cart-progress/CartProgress";
 import styles from "./CartSummary.module.css";
 
-// 1200 -> "1 200"
 function formatPrice(price: number): string {
   return new Intl.NumberFormat("ru-RU").format(price);
 }
 
-// Склонение: 1 товар / 2 товара / 5 товаров
 function formatProductsCount(count: number): string {
   const lastTwo = count % 100;
   const last = count % 10;
@@ -27,6 +25,9 @@ export default function CartSummary() {
   const items = useCartStore((s) => s.items);
   const promoCode = useCartStore((s) => s.promoCode);
   const promoDiscount = useCartStore((s) => s.promoDiscount);
+  const promoType = useCartStore((s) => s.promoType);
+  const promoBonusMessage = useCartStore((s) => s.promoBonusMessage);
+  const promoReplacesVolumeDiscount = useCartStore((s) => s.promoReplacesVolumeDiscount);
   const setPromo = useCartStore((s) => s.setPromo);
   const clearPromo = useCartStore((s) => s.clearPromo);
 
@@ -35,6 +36,7 @@ export default function CartSummary() {
 
   const { tiers } = useDiscountTiers();
 
+  // Считаем суммы
   let totalQuantity = 0;
   let totalPrice = 0;
   let totalSavings = 0;
@@ -55,18 +57,35 @@ export default function CartSummary() {
 
   const currentTier = getCurrentTier(tiers, discountableTotal);
   const nextTier = getNextTier(tiers, discountableTotal);
-
   const volumeDiscount = currentTier ? Math.round((discountableTotal * currentTier.percent) / 100) : 0;
 
-  const finalPrice = totalPrice - promoDiscount - volumeDiscount;
+  // Промокод применён если есть скидка или тип (берётся из store — сохраняется после перезагрузки)
+  const promoApplied = promoDiscount > 0 || promoType === "inventory" || promoType === "startup";
 
+  // Если промокод заменяет объёмную скидку — берём ту что выгоднее для клиента
+  // Если не заменяет (fixed) — суммируем обе
+  let activeVolumeDiscount = volumeDiscount;
+  let activePromoDiscount = promoDiscount;
+
+  if (promoReplacesVolumeDiscount && promoApplied) {
+    if (volumeDiscount > promoDiscount) {
+      // Объёмная скидка выгоднее — промокод не применяется
+      activePromoDiscount = 0;
+    } else {
+      // Промокод выгоднее — объёмная скидка не применяется
+      activeVolumeDiscount = 0;
+    }
+  }
+
+  const finalPrice = totalPrice - activePromoDiscount - activeVolumeDiscount;
+
+  // Когда пользователь меняет текст в поле промокода — сбрасываем всё
   function handlePromoChange(e: React.ChangeEvent<HTMLInputElement>) {
     setPromoStatus("idle");
     setPromoError("");
     clearPromo();
-
-    const value = e.target.value;
-    setPromo(value, 0);
+    // Сохраняем только введённый код — скидка пока 0
+    setPromo({ code: e.target.value, discount: 0, type: "" });
   }
 
   async function handleApplyPromo() {
@@ -88,7 +107,13 @@ export default function CartSummary() {
       const data = await response.json();
 
       if (data.ok) {
-        setPromo(promoCode.trim(), data.discountAmount);
+        setPromo({
+          code: promoCode.trim(),
+          discount: data.discountAmount,
+          type: data.discountType,
+          bonusMessage: data.bonusMessage ?? "",
+          replacesVolumeDiscount: data.replacesVolumeDiscount ?? false,
+        });
         setPromoStatus("success");
       } else {
         setPromoStatus("error");
@@ -98,6 +123,7 @@ export default function CartSummary() {
           not_found: "Промокод не найден",
           not_active: "Промокод неактивен",
           limit_reached: "Промокод больше не действует",
+          min_amount_not_reached: `Промокод действует от ${formatPrice(data.minAmount ?? 0)} ₽`,
         };
 
         setPromoError(errorMessages[data.error] ?? "Что-то пошло не так");
@@ -135,7 +161,8 @@ export default function CartSummary() {
             onChange={handlePromoChange}
           />
 
-          {promoCode.length > 0 && promoStatus !== "success" && (
+          {/* Кнопка применить — показываем если промокод не применён */}
+          {promoCode.length > 0 && !promoApplied && promoStatus !== "success" && (
             <button
               type="button"
               className={styles.promoButton}
@@ -147,7 +174,19 @@ export default function CartSummary() {
 
           {promoStatus === "error" && <p className={styles.promoError}>{promoError}</p>}
 
-          {promoStatus === "success" && <p className={styles.promoSuccess}>Промокод применён!</p>}
+          {/* Обычный промокод применён */}
+          {promoApplied && promoType !== "inventory" && promoType !== "startup" && (
+            <p className={styles.promoSuccess}>Промокод применён!</p>
+          )}
+
+          {/* Плашка для подарка (inventory) и стартапа (startup) */}
+          {promoApplied && promoBonusMessage && (
+            <div className={styles.promoBonusMessage}>
+              {promoBonusMessage.split("\n").map((line, index) => (
+                <p key={index}>{line}</p>
+              ))}
+            </div>
+          )}
         </div>
 
         {/* Итоги */}
@@ -164,17 +203,17 @@ export default function CartSummary() {
             </div>
           )}
 
-          {volumeDiscount > 0 && (
+          {activeVolumeDiscount > 0 && (
             <div className={styles.totalRow}>
               <span>Скидка за объём {currentTier?.percent}%</span>
-              <span className={styles.savings}>−{formatPrice(volumeDiscount)} ₽</span>
+              <span className={styles.savings}>−{formatPrice(activeVolumeDiscount)} ₽</span>
             </div>
           )}
 
-          {promoDiscount > 0 && (
+          {activePromoDiscount > 0 && (
             <div className={styles.totalRow}>
-              <span>Промокод</span>
-              <span className={styles.savings}>−{formatPrice(promoDiscount)} ₽</span>
+              <span>{promoType === "startup" ? "Акция СТАРТАП −20%" : "Промокод"}</span>
+              <span className={styles.savings}>−{formatPrice(activePromoDiscount)} ₽</span>
             </div>
           )}
         </div>

@@ -100,6 +100,21 @@
   color: #2a9d4e;
 }
 
+/* Плашка с бонусами — для промокодов inventory и startup */
+.promoBonusMessage {
+  padding: 12px 14px;
+  border-radius: 8px;
+  background-color: #edfaf3;
+  border: 1px solid #b7eacb;
+}
+
+.promoBonusMessage p {
+  margin: 0;
+  font-size: var(--text-sm);
+  color: #1a6b3a;
+  line-height: 1.6;
+}
+
 /* ==========================================================================
    TOTALS
    ========================================================================== */

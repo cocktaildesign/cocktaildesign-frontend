@@ -39,7 +39,7 @@ export default function CategoryProductShelves({ collections, collectionSlug }: 
             <h2 className={styles.title}>{collection.title}</h2>
 
             {collection.viewAllHref && (
-              <Link href="/catalog" className={styles.viewAllLink}>
+              <Link href={`/catalog/collection/${collection.slug}`} className={styles.viewAllLink}>
                 <span className={styles.viewAllText}>Все</span>
                 <ArrowRightIcon className={styles.viewAllIcon} title="Вперёд" />
               </Link>

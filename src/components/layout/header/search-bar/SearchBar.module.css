@@ -556,6 +556,10 @@
     align-items: start;
   }
 
+  .randomProductList {
+    display: none;
+  }
+
   .search {
     padding: 0px 10px;
     border: 1px solid var(--color-gray-ligh);
@@ -563,5 +567,26 @@
 
   .searchIcon {
     display: block;
+  }
+
+  /* Панель вырывается из контейнера поиска и растягивается на всю ширину экрана.
+     fixed привязывается к viewport, поэтому ширина панели больше не зависит от
+     того, сужен поиск стрелкой или нет. */
+  .searchPanel,
+  .searchPanelOpen {
+    position: fixed;
+    top: 64px;
+    left: 0;
+    right: 0;
+    width: auto;
+
+    border: none;
+    border-radius: 12px;
+    margin: 0px 15px;
+    box-shadow: none;
+  }
+
+  .searchPanelContent {
+    max-height: calc(100dvh - 64px);
   }
 }

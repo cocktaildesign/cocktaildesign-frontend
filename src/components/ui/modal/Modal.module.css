@@ -87,7 +87,7 @@
 @keyframes modalContentIn {
   from {
     opacity: 0;
-    transform: translateY(8px) scale(0.98);
+    transform: translateY(0px) scale(1);
   }
 
   to {
@@ -128,15 +128,15 @@
 
 @media (max-width: 600px) {
   .overlay {
-    padding: 8px;
+    padding: 0px;
     align-items: flex-end;
   }
 
   .content {
     width: 100%;
-    max-height: 92vh;
+    max-height: 100vh;
     padding: 24px 16px 18px;
-    border-radius: 12px;
+    border-radius: 0px;
   }
 
   .contentLarge {

@@ -33,7 +33,7 @@
   flex: 1 1 auto;
   min-width: 0;
   gap: 8px;
-	z-index: 1;
+  z-index: 1;
 }
 
 /* Правый блок с действиями */
@@ -170,12 +170,13 @@
     padding-left: 15px;
     margin-left: 0; /* Компенсируем padding чтобы иконка была у края */
     transition: color var(--dur-fast) var(--ease);
+    z-index: var(--z-modal);
   }
 
   .backIcon {
     width: 12px;
     height: 18px;
-    color: #9d9d9d
+    color:var(--color-dark-blue);
   }
 
   .mainBarCenterInner {
