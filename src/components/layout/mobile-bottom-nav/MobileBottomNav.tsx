@@ -29,6 +29,7 @@ const MENU_ITEMS = [
   { href: "/branding", label: "Брендинг", imageSrc: "/images/mobilBottomMenuImage/branding.webp" },
 
   { href: "/knowledge", label: "Знания", imageSrc: "/images/mobilBottomMenuImage/knowledge.webp" },
+  { href: "/catalog/collection/sale", label: "Скидки", imageSrc: "/images/mobilBottomMenuImage/sale.webp" },
 ];
 
 export default function MobileBottomNav() {

@@ -1,3 +1,4 @@
+//frontend/src/components/layout/PageLayout.tsx
 import type { ReactNode } from "react";
 import Container from "./Container";
 import styles from "./Page.module.css";

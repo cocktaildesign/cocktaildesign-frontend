@@ -1,3 +1,4 @@
+//frontend/src/components/layout/ContainerNoPaddingRight.tsx
 import type { ReactNode } from "react";
 import styles from "./Container.module.css";
 

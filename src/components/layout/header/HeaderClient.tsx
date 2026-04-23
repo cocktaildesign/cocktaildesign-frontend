@@ -1,3 +1,4 @@
+//frontend/src/components/layout/header/HeaderClient.tsx
 "use client";
 
 import { useEffect, useState } from "react";

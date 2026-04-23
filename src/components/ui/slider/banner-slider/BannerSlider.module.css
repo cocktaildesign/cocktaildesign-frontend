@@ -1,13 +1,27 @@
 /* ==========================================================================
+   Обёртка: слайдер + точки под ним
+   ========================================================================== */
+
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  width: 100%;
+	margin-bottom: 15px;
+}
+
+/* ==========================================================================
    Корневой контейнер слайдера
    ========================================================================== */
 
 .slider {
   position: relative;
   width: 100%;
-  height: 208px;
+  /* Пропорция десктопной картинки: 1360 / 400 */
+  aspect-ratio: 1360 / 400;
   overflow: hidden;
   background-color: #e0e7ef;
+  border-radius: 12px;
 }
 
 /* ==========================================================================
@@ -25,7 +39,7 @@
   inset: 0;
   opacity: 0;
   pointer-events: none;
-  transition: opacity 240ms ease;
+  transition: opacity 400ms ease;
 }
 
 .slideActive {
@@ -33,50 +47,34 @@
   pointer-events: auto;
 }
 
+/* ==========================================================================
+   Картинки внутри слайда
+   ========================================================================== */
+
 .image {
+  width: 100%;
+  height: 100%;
   object-fit: cover;
   object-position: center;
 }
 
-/* ==========================================================================
-   Навигация
-   ========================================================================== */
-
-.navButton {
-  position: absolute;
-  top: 50%;
-  z-index: 2;
-  display: grid;
-  place-items: center;
-  width: 36px;
-  height: 36px;
-  border: none;
-  border-radius: 50%;
-  background-color: rgba(255, 255, 255, 0.9);
-  cursor: pointer;
-  transform: translateY(-50%);
+/* На десктопе показываем десктопную картинку, мобильную прячем */
+.imageDesktop {
+  display: block;
 }
 
-.navButtonPrev {
-  left: 12px;
-}
-
-.navButtonNext {
-  right: 12px;
+.imageMobile {
+  display: none;
 }
 
 /* ==========================================================================
-   Точки
+   Точки под слайдером
    ========================================================================== */
 
 .dots {
-  position: absolute;
-  bottom: 10px;
-  left: 50%;
-  z-index: 2;
   display: flex;
-  gap: 6px;
-  transform: translateX(-50%);
+  justify-content: center;
+  gap: 8px;
 }
 
 .dot {
@@ -87,26 +85,42 @@
   border-radius: 50%;
   background-color: rgba(0, 0, 0, 0.2);
   cursor: pointer;
+  transition: background-color 200ms ease;
+}
+
+.dot:hover {
+  background-color: rgba(0, 0, 0, 0.4);
 }
 
 .dotActive {
-  background-color: rgba(0, 0, 0, 0.6);
+  background-color: rgba(0, 0, 0, 0.7);
 }
 
 /* ==========================================================================
-   Мобильная версия
+   Мобильная и планшетная версия (до 1023px)
    ========================================================================== */
 
-@media (max-width: 600px) {
+@media (max-width: 1023px) {
   .slider {
-    height: 158px;
+    /* Пропорция мобильной картинки: 800 / 600 */
+    aspect-ratio: 800 / 600;
   }
 
-  .navButton {
+  .imageDesktop {
     display: none;
   }
 
-  .dots {
-    bottom: 8px;
+  .imageMobile {
+    display: block;
+  }
+}
+
+/* ==========================================================================
+   Маленькие телефоны (до 600px)
+   ========================================================================== */
+
+@media (max-width: 600px) {
+  .wrapper {
+    gap: 12px;
   }
 }

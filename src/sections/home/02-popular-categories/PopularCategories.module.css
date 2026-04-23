@@ -104,6 +104,7 @@
   display: flex;
   flex-direction: column;
   gap: 4px;
+  height: 65px;
 }
 
 .categoryTitle {
@@ -130,6 +131,7 @@
   overflow: hidden;
 
   transition: transform var(--dur-fast) var(--ease);
+  margin-bottom: 10px;
 }
 
 .card:hover .imageWrapper {
@@ -137,7 +139,7 @@
 }
 
 .image {
-  object-fit: contain;
+  object-fit: scale-down;
   object-position: center;
 }
 

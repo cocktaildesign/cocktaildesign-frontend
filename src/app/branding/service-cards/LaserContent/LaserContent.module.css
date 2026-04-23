@@ -166,8 +166,10 @@
   font-weight: 450;
 }
 
-.lazerButton:hover {
-  background-color: var(--color-dark-blue-hover);
+@media (hover: hover) {
+  .lazerButton:hover {
+    background-color: var(--color-dark-blue-hover);
+  }
 }
 
 /* ==========================================================================

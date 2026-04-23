@@ -44,7 +44,13 @@ export default function MobileCategoryDrillDown({ categories, currentSlug }: Mob
 
           <div className={styles.imageWrapperAll}>
             <span className={styles.allIcon} aria-hidden="true">
-              ⊞
+              <Image
+                src="/images/catalog/allProductsImage.webp"
+                alt="Все товары"
+                fill
+                sizes="(max-width: 600px) 33vw"
+                className={styles.image}
+              />
             </span>
           </div>
         </Link>

@@ -102,8 +102,8 @@
   pointer-events: none;
 
   /* Маленький размер */
-  width: 80px ;
-  height: auto ;
+  width: 80px;
+  height: auto;
 }
 
 /* ==========================================================================
@@ -203,6 +203,7 @@
 
 @media (max-width: 600px) {
   .brandingPage {
+    padding-top: 15px;
     margin-bottom: 36px;
   }
 
@@ -255,5 +256,12 @@
     font-size: 14px;
     line-height: 1.55;
     text-wrap: initial;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .brandingContainer::before,
+  .brandingContainer::after {
+    animation: none;
   }
 }

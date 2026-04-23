@@ -397,6 +397,12 @@
    ========================================================================== */
 
 @media (max-width: 600px) {
+  .buyerTypeDescription {
+    display: none;
+  }
+  .backLink {
+    display: none;
+  }
   .title {
     margin-bottom: 24px;
   }
@@ -404,8 +410,19 @@
   .buyerTypeSection,
   .orderSummary,
   .form {
-    padding: 18px;
+    padding: 0px;
     border-radius: 14px;
+  }
+
+  .orderSummary {
+    padding: 15px;
+    background-color: var(--color-light-soft);
+  }
+
+  .form {
+    padding: 15px;
+    border-radius: 12px;
+    background-color: var(--color-light-soft);
   }
 
   .segmentedControl {
@@ -427,5 +444,9 @@
 
   .orderItemQty {
     grid-column: 2;
+  }
+
+  .page {
+    padding-bottom: 20px;
   }
 }

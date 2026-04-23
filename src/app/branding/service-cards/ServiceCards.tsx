@@ -7,16 +7,30 @@ import SideModal from "@/components/ui/side-modal/SideModal";
 import { LaserContent } from "./LaserContent/LaserContent";
 import { CustomContent } from "./CustomContent/CustomContent";
 
+// Тип для активной услуги — либо одна из двух, либо ничего не выбрано
+type ActiveService = "laser" | "custom" | null;
+
 export default function ServiceCards() {
-  const [activeService, setActiveService] = useState("");
+  const [activeService, setActiveService] = useState<ActiveService>(null);
+
+  function openLaser() {
+    setActiveService("laser");
+  }
+
+  function openCustom() {
+    setActiveService("custom");
+  }
+
+  function closeModal() {
+    setActiveService(null);
+  }
+
+  const isModalOpen = activeService !== null;
 
   return (
     <div className={styles.servicesGrid}>
       {/* Карточка лазерной гравировки */}
-      <button
-        type="button"
-        className={`${styles.serviceCard} ${styles.serviceCardLaser}`}
-        onClick={() => setActiveService("laser")}>
+      <button type="button" className={`${styles.serviceCard} ${styles.serviceCardLaser}`} onClick={openLaser}>
         <div className={styles.serviceCardContent}>
           <h2 className={styles.servicesGridTitle}>Лазерная гравировка</h2>
           <p className={styles.servicesGridDescription}>
@@ -29,10 +43,7 @@ export default function ServiceCards() {
       </button>
 
       {/* Карточка индивидуального производства */}
-      <button
-        type="button"
-        className={`${styles.serviceCard} ${styles.serviceCardCustom}`}
-        onClick={() => setActiveService("custom")}>
+      <button type="button" className={`${styles.serviceCard} ${styles.serviceCardCustom}`} onClick={openCustom}>
         <div className={styles.serviceCardContent}>
           <h2 className={styles.servicesGridTitle}>Индивидуальное производство</h2>
           <p className={styles.servicesGridDescription}>
@@ -45,7 +56,7 @@ export default function ServiceCards() {
       </button>
 
       {/* Модалка */}
-      <SideModal isOpen={activeService !== ""} onClose={() => setActiveService("")}>
+      <SideModal isOpen={isModalOpen} onClose={closeModal}>
         {activeService === "laser" && <LaserContent />}
         {activeService === "custom" && <CustomContent />}
       </SideModal>

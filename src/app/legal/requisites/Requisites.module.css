@@ -69,7 +69,7 @@
 }
 
 .desc {
-	margin-inline-start: 0px;
+  margin-inline-start: 0px;
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -121,8 +121,8 @@
   }
 
   .sectionTitle {
-    margin: 16px 0 14px;
-    font-size: 20px;
+    margin: 15px 0 20px 0;
+    font-size: var(--text-xl);
   }
 
   .card {

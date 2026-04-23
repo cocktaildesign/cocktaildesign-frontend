@@ -82,6 +82,11 @@
     gap: 20px;
   }
 
+  .headerTitle {
+    margin: 15px 0 0px 0;
+    font-size: var(--text-xl);
+  }
+
   .header {
     gap: 14px;
   }

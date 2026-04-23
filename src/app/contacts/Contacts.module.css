@@ -109,6 +109,7 @@
   color: var(--color-black);
   word-break: break-word;
   text-wrap: balance;
+  margin-inline-start: 0px;
 }
 
 .requisitesLink {
@@ -233,7 +234,8 @@
   }
 
   .contactsPageTitle {
-    margin-bottom: 20px;
+    margin: 15px 0 20px 0;
+    font-size: var(--text-xl);
   }
 
   .contactGrid {
@@ -293,7 +295,6 @@
   }
 
   .routeSublist {
-    padding-left: 18px;
     font-size: 14px;
     line-height: 1.45;
   }

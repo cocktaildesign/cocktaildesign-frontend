@@ -1,3 +1,4 @@
+//frontend/src/components/layout/ContainerNoPaddingMobil.tsx
 import type { ReactNode } from "react";
 import styles from "./ContainerNoPaddingMobil.module.css";
 

@@ -26,21 +26,22 @@ export default function MainBar({ categories, collections }: MainBarProps) {
   const pathname = usePathname();
   const router = useRouter();
 
-  // Показываем стрелку назад на всех страницах кроме главной
+  // Находимся ли мы на главной странице
   const isHome = pathname === "/";
 
   // Открыт ли поиск
   const [isSearchOpen, setIsSearchOpen] = useState(false);
 
-  // Счётчик-сигнал для закрытия поиска извне.
-  // Когда число меняется, SearchBar видит это и закрывает свою панель.
+  // Сигнал для закрытия поиска извне
   const [searchCloseSignal, setSearchCloseSignal] = useState(0);
 
-  // Стрелка показывается если: не главная ИЛИ поиск открыт
+  // Показываем стрелку назад:
+  // - если это не главная
+  // - или если открыт поиск
   const showBackButton = !isHome || isSearchOpen;
 
   function handleBackClick() {
-    // Если поиск открыт — закрываем его, не уходим со страницы
+    // Если поиск открыт — просто закрываем его
     if (isSearchOpen) {
       setSearchCloseSignal((value) => value + 1);
       return;
@@ -49,14 +50,16 @@ export default function MainBar({ categories, collections }: MainBarProps) {
     router.back();
   }
 
-  // Количество избранных товаров после гидрации стора
+  // Избранное
   const favoritesHasHydrated = useFavoritesStore((state) => state.hasHydrated);
   const favoritesIds = useFavoritesStore((state) => state.ids);
-  const favoritesCount = favoritesHasHydrated ? Object.keys(favoritesIds).length : 0;
 
-  // Количество товаров в корзине после гидрации стора
+  // Корзина
   const cartHasHydrated = useCartStore((state) => state.hasHydrated);
   const cartItems = useCartStore((state) => state.items);
+
+  // Пока store не гидратирован — счётчики не показываем
+  const favoritesCount = favoritesHasHydrated ? Object.keys(favoritesIds).length : 0;
   const cartCount = cartHasHydrated ? cartItems.reduce((total, item) => total + item.quantity, 0) : 0;
 
   return (
@@ -66,9 +69,9 @@ export default function MainBar({ categories, collections }: MainBarProps) {
         <Logo className={styles.logo} />
       </div>
 
-      {/* Кнопка назад — на мобилке, когда не главная или поиск открыт */}
+      {/* Кнопка назад */}
       {showBackButton && (
-        <button className={styles.backButton} onClick={handleBackClick} aria-label="Назад">
+        <button type="button" className={styles.backButton} onClick={handleBackClick} aria-label="Назад">
           <ArrowBackIcon className={styles.backIcon} color="red" />
         </button>
       )}
