@@ -55,8 +55,11 @@ export default function CartSummary() {
     }
   }
 
-  const currentTier = getCurrentTier(tiers, discountableTotal);
-  const nextTier = getNextTier(tiers, discountableTotal);
+  // Порог скидки определяется по ОБЩЕЙ сумме корзины (totalPrice),
+  // а сама скидка применяется только к товарам без discountExcluded (discountableTotal).
+  // Так "лимитированные" товары помогают добраться до лучшего tier'а, но сами скидку не получают.
+  const currentTier = getCurrentTier(tiers, totalPrice);
+  const nextTier = getNextTier(tiers, totalPrice);
   const volumeDiscount = currentTier ? Math.round((discountableTotal * currentTier.percent) / 100) : 0;
 
   // Промокод применён если есть скидка или тип (берётся из store — сохраняется после перезагрузки)
@@ -143,7 +146,8 @@ export default function CartSummary() {
 
       {/* Основной блок */}
       <div className={styles.summary}>
-        <CartProgress discountableTotal={discountableTotal} currentTier={currentTier} nextTier={nextTier} />
+        {/* Прогресс считаем от общей суммы корзины, а не от discountableTotal */}
+        <CartProgress discountableTotal={totalPrice} currentTier={currentTier} nextTier={nextTier} />
 
         {/* Доставка */}
         <div className={styles.totalRow}>

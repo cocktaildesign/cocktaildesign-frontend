@@ -47,7 +47,9 @@ export default function CheckoutClient() {
     }
   }
 
-  const currentTier = getCurrentTier(tiers, discountableTotal);
+  // Порог скидки определяется по ОБЩЕЙ сумме корзины (totalPrice),
+  // а сама скидка применяется только к товарам без discountExcluded (discountableTotal)
+  const currentTier = getCurrentTier(tiers, totalPrice);
   const volumeDiscount = currentTier ? Math.round((discountableTotal * currentTier.percent) / 100) : 0;
   const finalPrice = totalPrice - promoDiscount - volumeDiscount;
 
