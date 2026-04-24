@@ -115,6 +115,7 @@ export default function CheckoutClient() {
             quantity: item.quantity,
             price: item.price,
             engraving: item.engraving,
+            discountExcluded: item.discountExcluded,
           })),
         }),
       });
