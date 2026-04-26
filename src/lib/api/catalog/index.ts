@@ -3,7 +3,11 @@ export {
   getTopCategoriesFromStrapi,
   getCategoryBySlugFromStrapi,
   getCatalogTreeFromStrapi,
-  getChildCategoriesFromStrapi, 
+  getChildCategoriesFromStrapi,
+
+  // НОВЫЕ — миграция на единый источник /catalog/categories-flat
+  getTopCategoriesFromTree,
+  getChildCategoriesFromTree,
 
   // Товары (категория + все потомки, пагинация)
   getProductsByCategorySlugFromStrapi,

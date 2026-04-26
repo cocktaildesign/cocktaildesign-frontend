@@ -1,4 +1,4 @@
-// src/sections/home/popular-categories/PopularCategories.tsx
+// src/sections/home/02-popular-categories/PopularCategories.tsx
 
 import Image from "next/image";
 import Link from "next/link";
@@ -7,12 +7,15 @@ import Container from "@/components/layout/Container";
 
 import ArrowRightIcon from "@/components/icons/ArrowRightIcon";
 
-import { getTopCategoriesFromStrapi } from "@/lib/api/catalog";
+// Используем единый источник дерева категорий — учитывает menuOrder и isHiddenInMenu
+import { getTopCategoriesFromTree } from "@/lib/api/catalog";
 
 import styles from "./PopularCategories.module.css";
 
 export default async function PopularCategories() {
-  const categories = await getTopCategoriesFromStrapi();
+  // Берём верхний уровень из общего дерева /catalog/categories-flat
+  // (раньше был отдельный запрос getTopCategoriesFromStrapi)
+  const categories = await getTopCategoriesFromTree();
 
   const visibleCategories = categories.slice(0, 12);
 
