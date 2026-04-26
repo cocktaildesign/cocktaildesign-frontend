@@ -16,7 +16,6 @@ import type {
   CatalogVariant,
   StrapiCatalogCollectionsResponse,
   StrapiCatalogProductBySlugResponse,
-  StrapiCategoryListResponse,
   StrapiCollectionSelectionMode,
   StrapiProductItem,
   StrapiWeeklyProductBlockResponse,
@@ -25,7 +24,6 @@ import type {
 
 import {
   mapCatalogCollectionBase,
-  mapCategoryPreview,
   mapProductDetail,
   mapProductPreview,
   mapVariants,
@@ -33,33 +31,8 @@ import {
 } from "./mappers";
 
 // ============================================================================
-// КАТЕГОРИИ
+// КАТЕГОРИИ — поиск конкретной категории по slug
 // ============================================================================
-
-const CATALOG_ROOT_PARENT_ID = 14;
-
-const TOP_CATEGORIES_PARAMS: Record<string, string> = {
-  sort: "name:asc",
-  "populate[image]": "true",
-  "populate[children][sort]": "name:asc",
-  "filters[parent][id][$eq]": String(CATALOG_ROOT_PARENT_ID),
-};
-
-export async function getTopCategoriesFromStrapi(): Promise<CatalogCategoryPreview[]> {
-  const response: StrapiCategoryListResponse = await fetchStrapi("/api/moysklad-categories", TOP_CATEGORIES_PARAMS);
-
-  const result: CatalogCategoryPreview[] = [];
-
-  for (const item of response.data) {
-    const mapped = mapCategoryPreview(item);
-
-    if (mapped !== null) {
-      result.push(mapped);
-    }
-  }
-
-  return result;
-}
 
 export async function getCategoryBySlugFromStrapi(slug: string): Promise<CatalogCategoryPreview | null> {
   const safeSlug = slug.trim();
@@ -88,14 +61,21 @@ function findCategoryInTree(items: CatalogCategoryPreview[], slug: string): Cata
 
 // ============================================================================
 // ДЕРЕВО КАТЕГОРИЙ (flat → tree)
+//
+// Единый источник данных для меню/навигации/плиток на всём сайте.
+// На бэке (/api/catalog/categories-flat):
+// - применена сортировка menuOrder + алфавит
+// - скрытые категории (isHiddenInMenu = true) отфильтрованы
+// - есть imageUrl и alt
 // ============================================================================
+
 type FlatCategory = {
   id: string;
   slug: string;
   name: string;
   productsCount: number;
   parentId: string | null;
-  // Новые поля из бэка — могут быть undefined для старых эндпоинтов
+  // Новые поля из бэка — могут быть undefined для других эндпоинтов
   // (например /catalog/collection/:slug/categories-tree пока их не отдаёт)
   imageUrl?: string | null;
   alt?: string | null;
@@ -162,29 +142,18 @@ function buildCatalogTree(flat: FlatCategory[]): CatalogCategoryPreview[] {
   return roots;
 }
 
-
-
-
-
 export async function getCatalogTreeFromStrapi(): Promise<CatalogCategoryPreview[]> {
   const flat: FlatCategory[] = await fetchStrapi("/api/catalog/categories-flat");
 
   return buildCatalogTree(flat);
 }
 
-
-
 // ============================================================================
 // ВЕРХНИЙ УРОВЕНЬ КАТЕГОРИЙ ИЗ ДЕРЕВА
 //
-// Заменяет getTopCategoriesFromStrapi — теперь данные берутся
-// из единого источника /api/catalog/categories-flat, где уже:
-// - применена сортировка menuOrder + алфавит
-// - скрытые категории отфильтрованы
-// - есть imageUrl и alt
-//
-// Возвращаем без поля children, чтобы по структуре результат совпадал
-// с тем, что отдавала getTopCategoriesFromStrapi (плоский верхний уровень).
+// Используется на главной (PopularCategories), на /catalog и на /about.
+// Возвращает только верхний уровень БЕЗ детей — чтобы плитки
+// не таскали лишние данные о подкатегориях.
 // ============================================================================
 
 export async function getTopCategoriesFromTree(): Promise<CatalogCategoryPreview[]> {
@@ -192,7 +161,6 @@ export async function getTopCategoriesFromTree(): Promise<CatalogCategoryPreview
   const tree = await getCatalogTreeFromStrapi();
 
   // Возвращаем только верхний уровень БЕЗ детей
-  // (чтобы плитки на /catalog не таскали лишние данные)
   return tree.map((node) => ({
     id: node.id,
     name: node.name,
@@ -207,7 +175,7 @@ export async function getTopCategoriesFromTree(): Promise<CatalogCategoryPreview
 // ============================================================================
 // ДЕТИ КОНКРЕТНОЙ КАТЕГОРИИ ИЗ ДЕРЕВА
 //
-// Заменяет getChildCategoriesFromStrapi — для мобильного drill-down.
+// Используется в мобильном drill-down на /catalog/[slug].
 // Находим родителя в дереве по slug и возвращаем его children.
 // ============================================================================
 
@@ -224,38 +192,6 @@ export async function getChildCategoriesFromTree(parentSlug: string): Promise<Ca
 
   // Возвращаем детей этого родителя (или пустой массив если детей нет)
   return parent.children ?? [];
-}
-
-// ============================================================================
-// ДОЧЕРНИЕ КАТЕГОРИИ С КАРТИНКАМИ (для мобильного drill-down)
-// ============================================================================
-
-export async function getChildCategoriesFromStrapi(parentSlug: string): Promise<CatalogCategoryPreview[]> {
-  const safeSlug = parentSlug.trim();
-  if (!safeSlug) return [];
-
-  const params: Record<string, string> = {
-    "filters[slug][$eq]": safeSlug,
-    "populate[children][populate][image]": "true",
-    "populate[children][sort]": "name:asc",
-  };
-
-  const response: StrapiCategoryListResponse = await fetchStrapi("/api/moysklad-categories", params);
-
-  const parent = response.data[0];
-  if (!parent) return [];
-
-  const source = parent.attributes ?? parent;
-  const childrenData = Array.isArray(source.children) ? source.children : (source.children?.data ?? []);
-
-  const result: CatalogCategoryPreview[] = [];
-
-  for (const child of childrenData) {
-    const mapped = mapCategoryPreview(child);
-    if (mapped) result.push(mapped);
-  }
-
-  return result;
 }
 
 // ============================================================================
