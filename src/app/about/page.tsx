@@ -3,7 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 import PageLayout from "@/components/layout/PageLayout";
-import { getTopCategoriesFromStrapi } from "@/lib/api/catalog";
+import { getTopCategoriesFromTree } from "@/lib/api/catalog";
 import { pageMetadata } from "@/lib/seo/metadata";
 
 import TelegramIcon from "@/components/icons/social-network/TelegramIcon";
@@ -40,7 +40,7 @@ function formatProductsCount(count: number): string {
 }
 
 export default async function AboutPage() {
-  const categories = await getTopCategoriesFromStrapi();
+  const categories = await getTopCategoriesFromTree();
 
   return (
     <PageLayout>
