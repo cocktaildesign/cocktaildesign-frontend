@@ -2,7 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 import PageLayout from "@/components/layout/PageLayout";
-import { getTopCategoriesFromStrapi } from "@/lib/api/catalog";
+import { getTopCategoriesFromTree } from "@/lib/api/catalog";
 import { pageMetadata } from "@/lib/seo/metadata";
 
 import styles from "./Catalog.module.css";
@@ -37,8 +37,9 @@ function formatProductsCount(count: number): string {
 }
 
 export default async function CatalogPage() {
-  // Загружаем категории из Strapi через наш API-слой
-  const categories = await getTopCategoriesFromStrapi();
+  // Берём верхний уровень из общего дерева /catalog/categories-flat
+  // (раньше был отдельный запрос getTopCategoriesFromStrapi)
+  const categories = await getTopCategoriesFromTree();
 
   return (
     <PageLayout>
