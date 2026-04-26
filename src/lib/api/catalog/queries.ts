@@ -5,6 +5,7 @@
 // ============================================================================
 
 import { fetchStrapi } from "@/lib/api/strapi/client";
+import { getStrapiMediaUrl } from "@/lib/api/strapi/media";
 
 import type {
   BreadcrumbCategory,
@@ -88,13 +89,16 @@ function findCategoryInTree(items: CatalogCategoryPreview[], slug: string): Cata
 // ============================================================================
 // ДЕРЕВО КАТЕГОРИЙ (flat → tree)
 // ============================================================================
-
 type FlatCategory = {
   id: string;
   slug: string;
   name: string;
   productsCount: number;
   parentId: string | null;
+  // Новые поля из бэка — могут быть undefined для старых эндпоинтов
+  // (например /catalog/collection/:slug/categories-tree пока их не отдаёт)
+  imageUrl?: string | null;
+  alt?: string | null;
 };
 
 function normalizeCount(value: unknown): number {
@@ -111,11 +115,19 @@ function buildCatalogTree(flat: FlatCategory[]): CatalogCategoryPreview[] {
   for (const item of flat) {
     if (!item.id || !item.slug || !item.name) continue;
 
+    // imageUrl с бэка приходит как относительный путь "/uploads/xxx.webp"
+    // Превращаем его в абсолютный URL через getStrapiMediaUrl
+    const imageSrc = item.imageUrl ? (getStrapiMediaUrl(item.imageUrl) ?? null) : null;
+
+    // alt: если бэк прислал alt — используем его, иначе фолбэк на name
+    const alt = typeof item.alt === "string" && item.alt.trim() ? item.alt.trim() : item.name;
+
     byId.set(item.id, {
       id: item.id,
       slug: item.slug,
       name: item.name,
-      imageSrc: null,
+      imageSrc,
+      alt,
       productsCount: normalizeCount(item.productsCount),
       children: undefined,
     });
@@ -149,7 +161,6 @@ function buildCatalogTree(flat: FlatCategory[]): CatalogCategoryPreview[] {
 
   return roots;
 }
-
 export async function getCatalogTreeFromStrapi(): Promise<CatalogCategoryPreview[]> {
   const flat: FlatCategory[] = await fetchStrapi("/api/catalog/categories-flat");
 
@@ -172,13 +183,11 @@ export async function getChildCategoriesFromStrapi(parentSlug: string): Promise<
 
   const response: StrapiCategoryListResponse = await fetchStrapi("/api/moysklad-categories", params);
 
-
   const parent = response.data[0];
   if (!parent) return [];
 
   const source = parent.attributes ?? parent;
   const childrenData = Array.isArray(source.children) ? source.children : (source.children?.data ?? []);
-
 
   const result: CatalogCategoryPreview[] = [];
 
