@@ -161,10 +161,69 @@ function buildCatalogTree(flat: FlatCategory[]): CatalogCategoryPreview[] {
 
   return roots;
 }
+
+
+
+
+
 export async function getCatalogTreeFromStrapi(): Promise<CatalogCategoryPreview[]> {
   const flat: FlatCategory[] = await fetchStrapi("/api/catalog/categories-flat");
 
   return buildCatalogTree(flat);
+}
+
+
+
+// ============================================================================
+// ВЕРХНИЙ УРОВЕНЬ КАТЕГОРИЙ ИЗ ДЕРЕВА
+//
+// Заменяет getTopCategoriesFromStrapi — теперь данные берутся
+// из единого источника /api/catalog/categories-flat, где уже:
+// - применена сортировка menuOrder + алфавит
+// - скрытые категории отфильтрованы
+// - есть imageUrl и alt
+//
+// Возвращаем без поля children, чтобы по структуре результат совпадал
+// с тем, что отдавала getTopCategoriesFromStrapi (плоский верхний уровень).
+// ============================================================================
+
+export async function getTopCategoriesFromTree(): Promise<CatalogCategoryPreview[]> {
+  // Берём полное дерево — оно уже отсортировано на бэке
+  const tree = await getCatalogTreeFromStrapi();
+
+  // Возвращаем только верхний уровень БЕЗ детей
+  // (чтобы плитки на /catalog не таскали лишние данные)
+  return tree.map((node) => ({
+    id: node.id,
+    name: node.name,
+    slug: node.slug,
+    imageSrc: node.imageSrc,
+    alt: node.alt,
+    productsCount: node.productsCount,
+    children: undefined,
+  }));
+}
+
+// ============================================================================
+// ДЕТИ КОНКРЕТНОЙ КАТЕГОРИИ ИЗ ДЕРЕВА
+//
+// Заменяет getChildCategoriesFromStrapi — для мобильного drill-down.
+// Находим родителя в дереве по slug и возвращаем его children.
+// ============================================================================
+
+export async function getChildCategoriesFromTree(parentSlug: string): Promise<CatalogCategoryPreview[]> {
+  const safeSlug = parentSlug.trim();
+  if (!safeSlug) return [];
+
+  // Берём всё дерево
+  const tree = await getCatalogTreeFromStrapi();
+
+  // Ищем родителя рекурсивно по слагу
+  const parent = findCategoryInTree(tree, safeSlug);
+  if (!parent) return [];
+
+  // Возвращаем детей этого родителя (или пустой массив если детей нет)
+  return parent.children ?? [];
 }
 
 // ============================================================================
