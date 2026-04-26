@@ -12,7 +12,7 @@ import { Metadata } from "next";
 import CatalogSidebar from "./catalog-sidebar/CatalogSidebar";
 import ProductGrid from "../product-grid/ProductGrid";
 import MobileCategoryDrillDown from "./mobile-category-drill-down/MobileCategoryDrillDown";
-import { getCatalogTreeFromStrapi, getCategoryBySlugFromStrapi, getChildCategoriesFromStrapi } from "@/lib/api/catalog";
+import { getCatalogTreeFromStrapi, getCategoryBySlugFromStrapi, getChildCategoriesFromTree } from "@/lib/api/catalog";
 
 type Params = {
   slug: string;
@@ -54,8 +54,9 @@ export default async function CatalogCategoryPage({ params, searchParams }: Page
   // Показываем drill-down только если есть дети И не нажали "Все товары"
   const showDrillDown = hasChildren && showAll !== "true";
 
-  // Загружаем детей с картинками — только если нужен drill-down
-  const childCategories = showDrillDown ? await getChildCategoriesFromStrapi(category.slug) : [];
+  // Берём детей категории из общего дерева /catalog/categories-flat
+  // (раньше был отдельный запрос getChildCategoriesFromStrapi)
+  const childCategories = showDrillDown ? await getChildCategoriesFromTree(category.slug) : [];
 
   return (
     <PageLayout
