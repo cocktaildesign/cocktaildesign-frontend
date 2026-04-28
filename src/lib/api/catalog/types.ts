@@ -86,6 +86,7 @@ export type StrapiProductAttributes = {
   slug?: string | null;
   priceOld?: number | null;
   description?: string | null;
+  composition?: string | null;
   engravingEnabled?: boolean | null;
   discountExcluded?: boolean | null;
   specifications?: StrapiProductSpecification[] | null;
@@ -331,7 +332,7 @@ export type CatalogProductDetail = {
   price: number;
   priceOld: number;
   description: string | null;
-
+  composition: string[];
   images: CatalogProductImage[];
   specifications: CatalogProductSpecification[];
   engravingEnabled: boolean;

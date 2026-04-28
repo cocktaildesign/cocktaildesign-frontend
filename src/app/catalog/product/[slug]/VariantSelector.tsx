@@ -5,6 +5,8 @@ import { useState } from "react";
 import type { CatalogProductDetail, CatalogProductSpecification, CatalogVariant } from "@/lib/api/catalog/types";
 import ProductGallery from "./ProductGallery";
 import ProductPurchaseControls from "./ProductPurchaseControls";
+import ProductComposition from "./ProductComposition";
+
 import ArrowRightIcon from "@/components/icons/ArrowRightIcon";
 
 import ScrollToDescriptionButton from "./ScrollToDescriptionButton";
@@ -207,6 +209,10 @@ export default function VariantSelector({ product, variants, specifications, col
           ))}
         </div>
 
+        {/* Комплектация — отображается только если поле composition заполнено в Strapi */}
+        <ProductComposition items={product.composition} />
+
+        {/* Кнопка "Как получить скидку" */}
         <Link href="/discounts" className={styles.buttonSale}>
           {/* Картинка */}
           <div className={styles.buttonSaleImageWrapper}>

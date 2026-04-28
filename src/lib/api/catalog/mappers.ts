@@ -164,6 +164,37 @@ export function mapCategoryPreviewWithChildren(item: StrapiCategoryItem): Catalo
 }
 
 // ============================================================================
+// COMPOSITION (комплектация)
+//
+// На бэке поле хранится как многострочный текст:
+//   "Окуриватель Gravity\nСменная чаша для щепы\nИнструкция"
+//
+// На фронте превращаем в массив строк для рендера в <ul><li>.
+// ============================================================================
+
+function parseComposition(raw: string | null | undefined): string[] {
+  // Если передали не строку или пустую строку — возвращаем пустой массив
+  if (typeof raw !== "string") return [];
+  if (raw.trim() === "") return [];
+
+  // Разбиваем текст по переводам строк
+  const lines = raw.split("\n");
+
+  // Складываем результат — только непустые строки без пробелов по краям
+  const result: string[] = [];
+
+  for (const line of lines) {
+    const cleanLine = line.trim();
+
+    if (cleanLine !== "") {
+      result.push(cleanLine);
+    }
+  }
+
+  return result;
+}
+
+// ============================================================================
 // SLUG
 // ============================================================================
 
@@ -483,6 +514,7 @@ export function mapProductDetail(
   const priceOld = typeof rawPriceOld === "number" && Number.isFinite(rawPriceOld) && rawPriceOld > 0 ? rawPriceOld : 0;
 
   const description = typeof source.description === "string" ? source.description : null;
+  const composition = parseComposition(source.composition);
   const rawCode = source.code;
   const code = typeof rawCode === "string" && rawCode.trim() ? rawCode.trim() : null;
   const engravingEnabled = source.engravingEnabled === true;
@@ -500,6 +532,7 @@ export function mapProductDetail(
     price,
     priceOld,
     description,
+    composition,
     images,
     specifications,
     engravingEnabled,
