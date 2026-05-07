@@ -6,11 +6,30 @@ export default function NotFoundPage() {
   return (
     <main className={styles.main}>
       <Container>
-        <h1 className={styles.title}>Страница не найдена</h1>
-        <p className={styles.text}>Возможно, ссылка устарела или страница была удалена.</p>
-        <Link className={styles.link} href="/catalog">
-          Перейти в каталог →
-        </Link>
+        <div className={styles.content}>
+          {/* Маленький лейбл сверху */}
+          <span className={styles.label}>404 — Страница не найдена</span>
+
+          {/* Тонкая линия */}
+          <div className={styles.line} aria-hidden="true" />
+
+          {/* Заголовок */}
+          <h1 className={styles.title}>Эта страница не нашлась :(</h1>
+
+          {/* Подсказка */}
+          <p className={styles.text}>Возможно, ссылка устарела или товар был удалён. Давайте вернёмся к покупкам.</p>
+
+          {/* Две кнопки */}
+          <div className={styles.actions}>
+            <Link href="/" className={styles.buttonPrimary}>
+              <span>На главную</span>
+            </Link>
+
+            <Link href="/catalog" className={styles.buttonSecondary}>
+              <span>В каталог</span>
+            </Link>
+          </div>
+        </div>
       </Container>
     </main>
   );

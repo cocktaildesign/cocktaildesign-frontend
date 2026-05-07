@@ -19,6 +19,10 @@ import { getProductBySlugFromStrapi, getColorMap } from "@/lib/api/catalog";
 
 import styles from "./ProductPage.module.css";
 
+// Кэш страницы товара — 3 минуты (180 секунд)
+// Менеджер скрыл товар или поменял цену → через 3 минуты обновится на сайте
+export const revalidate = 180;
+
 const PLACEHOLDER_IMG = "/images/catalog/product-placeholder.webp";
 
 type Params = { slug: string };

@@ -1,21 +1,232 @@
+/* ==========================================================================
+   404 — Страница не найдена
+   Минималистичный awwwards-стиль: лейбл, линия, текст, кнопки-пилюли
+   ========================================================================== */
+
 .main {
-  padding: 32px 0;
+  /* Естественная высота — отступы сверху/снизу как у обычной страницы */
+  padding: 80px 0 100px;
 }
+
+.content {
+  max-width: 560px;
+
+  /* Лёгкая анимация появления */
+  animation: contentAppear 0.7s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+@keyframes contentAppear {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ==========================================================================
+   Микро-лейбл сверху
+   ========================================================================== */
+
+.label {
+  display: block;
+  margin-bottom: 12px;
+
+  font-family: var(--font-display);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--color-gray);
+}
+
+/* ==========================================================================
+   Тонкая линия — растёт при загрузке
+   ========================================================================== */
+
+.line {
+  width: 60px;
+  height: 1px;
+  margin-bottom: 24px;
+
+  background-color: var(--color-dark-blue);
+  transform-origin: left center;
+  animation: lineGrow 0.6s cubic-bezier(0.2, 0.8, 0.2, 1) 0.3s both;
+}
+
+@keyframes lineGrow {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+/* ==========================================================================
+   Заголовок
+   ========================================================================== */
 
 .title {
-  font-size: var(--text-2xl);
-  line-height: var(--lh-tight);
-  margin-bottom: 12px;
+  margin: 0 0 16px;
+
   font-family: var(--font-display);
+  font-size: clamp(28px, 4vw, 44px);
+  font-weight: 350;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  color: var(--color-black);
+  text-wrap: balance;
 }
+
+/* Курсивный акцент на одно слово */
+.titleAccent {
+  font-style: italic;
+  font-weight: 450;
+  color: var(--color-dark-blue);
+}
+
+/* ==========================================================================
+   Подсказка
+   ========================================================================== */
 
 .text {
-  color: var(--color-text-muted);
-  margin-bottom: 16px;
-  line-height: var(--lh-relaxed);
+  margin: 0 0 32px;
+
+  max-width: 420px;
+  color: var(--color-gray);
+  font-size: var(--text-base);
+  font-weight: 300;
+  line-height: 1.5;
+  text-wrap: balance;
 }
 
-.link {
+/* ==========================================================================
+   Кнопки — пилюли с анимацией стрелки
+   ========================================================================== */
+
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.buttonPrimary,
+.buttonSecondary {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+
+  height: 48px;
+  padding: 0 24px;
+
+  border-radius: 999px;
+
+  font-family: var(--font-display);
+  font-size: var(--text-base);
+  font-weight: 450;
+  text-decoration: none;
+
+  transition:
+    background-color var(--dur) var(--ease),
+    color var(--dur) var(--ease),
+    border-color var(--dur) var(--ease);
+}
+
+.buttonPrimary {
+  background-color: var(--color-dark-blue);
+  color: var(--color-white);
+  border: 1px solid var(--color-dark-blue);
+}
+
+.buttonPrimary:hover {
+  background-color: var(--color-dark-blue-hover);
+  border-color: var(--color-dark-blue-hover);
+}
+
+.buttonSecondary {
+  background-color: transparent;
+  color: var(--color-black);
+  border: 1px solid var(--color-light);
+}
+
+.buttonSecondary:hover {
+  background-color: var(--color-light-soft);
+  border-color: var(--color-gray-light);
+}
+
+/* Стрелка едет вправо при hover */
+.buttonArrow {
   display: inline-block;
-  color: var(--color-link);
+  transition: transform var(--dur) var(--ease);
+}
+
+.buttonPrimary:hover .buttonArrow,
+.buttonSecondary:hover .buttonArrow {
+  transform: translateX(4px);
+}
+
+/* ==========================================================================
+   ПЛАНШЕТ
+   ========================================================================== */
+
+@media (max-width: 1024px) {
+  .main {
+    padding: 60px 0 80px;
+  }
+}
+
+/* ==========================================================================
+   МОБИЛКА
+   ========================================================================== */
+
+@media (max-width: 600px) {
+  .main {
+    padding: 40px 0 60px;
+  }
+
+  .label {
+    font-size: 11px;
+  }
+
+  .title {
+    font-size: 26px;
+  }
+
+  .text {
+    font-size: var(--text-sm);
+    margin-bottom: 24px;
+  }
+
+  /* Кнопки в столбик на всю ширину */
+  .actions {
+    flex-direction: column;
+    width: 100%;
+    max-width: 320px;
+    gap: 10px;
+  }
+
+  .buttonPrimary,
+  .buttonSecondary {
+    justify-content: space-between;
+    width: 100%;
+    height: 48px;
+  }
+}
+
+/* ==========================================================================
+   REDUCED MOTION
+   ========================================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  .content,
+  .line {
+    animation: none;
+  }
+
+  .buttonArrow {
+    transition: none;
+  }
 }
