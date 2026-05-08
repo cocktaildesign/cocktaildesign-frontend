@@ -227,17 +227,17 @@ export default function CheckoutClient() {
               ))}
             </div>
 
-            {volumeDiscount > 0 && (
+            {activeVolumeDiscount > 0 && (
               <div className={styles.orderTotal}>
                 <span className={styles.orderTotalLabel}>Скидка за объём {currentTier?.percent}%</span>
-                <span className={styles.orderTotalPrice}>−{formatPrice(volumeDiscount)} ₽</span>
+                <span className={styles.orderTotalPrice}>−{formatPrice(activeVolumeDiscount)} ₽</span>
               </div>
             )}
 
-            {promoDiscount > 0 && (
+            {activePromoDiscount > 0 && (
               <div className={styles.orderTotal}>
                 <span className={styles.orderTotalLabel}>Скидка по промокоду</span>
-                <span className={styles.orderTotalPrice}>−{formatPrice(promoDiscount)} ₽</span>
+                <span className={styles.orderTotalPrice}>−{formatPrice(activePromoDiscount)} ₽</span>
               </div>
             )}
 
