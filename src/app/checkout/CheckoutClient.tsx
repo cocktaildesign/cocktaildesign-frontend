@@ -20,6 +20,8 @@ export default function CheckoutClient() {
   const items = useCartStore((s) => s.items);
   const promoCode = useCartStore((s) => s.promoCode);
   const promoDiscount = useCartStore((s) => s.promoDiscount);
+  const promoType = useCartStore((s) => s.promoType);
+  const promoReplacesVolumeDiscount = useCartStore((s) => s.promoReplacesVolumeDiscount);
   const clearCart = useCartStore((s) => s.clearCart);
 
   const { tiers } = useDiscountTiers();
@@ -51,7 +53,20 @@ export default function CheckoutClient() {
   // а сама скидка применяется только к товарам без discountExcluded (discountableTotal)
   const currentTier = getCurrentTier(tiers, totalPrice);
   const volumeDiscount = currentTier ? Math.round((discountableTotal * currentTier.percent) / 100) : 0;
-  const finalPrice = totalPrice - promoDiscount - volumeDiscount;
+  const promoApplied = promoDiscount > 0 || promoType === "inventory" || promoType === "startup";
+
+  let activeVolumeDiscount = volumeDiscount;
+  let activePromoDiscount = promoDiscount;
+
+  if (promoReplacesVolumeDiscount && promoApplied) {
+    if (volumeDiscount > promoDiscount) {
+      activePromoDiscount = 0;
+    } else {
+      activeVolumeDiscount = 0;
+    }
+  }
+
+  const finalPrice = totalPrice - activePromoDiscount - activeVolumeDiscount;
 
   function clearError(field: string) {
     setErrors((prev) => ({ ...prev, [field]: "" }));
@@ -108,8 +123,8 @@ export default function CheckoutClient() {
           comment: comment || undefined,
           // Скидки — передаём если есть
           promoCode: promoCode || undefined,
-          promoDiscount: promoDiscount || undefined,
-          volumeDiscount: volumeDiscount || undefined,
+          promoDiscount: activePromoDiscount || undefined,
+          volumeDiscount: activeVolumeDiscount || undefined,
           volumeDiscountPercent: currentTier?.percent || undefined,
           items: items.map((item) => ({
             code: item.code,
