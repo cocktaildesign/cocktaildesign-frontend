@@ -124,6 +124,7 @@ export default function Slider({ images, autoPlayInterval = 7000 }: SliderProps)
         {images.map((image, index) => {
           const isActive = index === currentIndex;
           const slideClassName = isActive ? styles.slideActive : styles.slide;
+          const isLcpSlide = index === 0;
 
           if (image.href) {
             return (
@@ -134,8 +135,9 @@ export default function Slider({ images, autoPlayInterval = 7000 }: SliderProps)
                   className={styles.image}
                   width={1200}
                   height={500}
-                  sizes="100vw"
-                  priority={isActive}
+                  sizes="(max-width: 600px) 0px, 100vw"
+                  fetchPriority={isLcpSlide ? "high" : "auto"}
+                  loading={isLcpSlide ? "eager" : "lazy"}
                 />
               </Link>
             );
@@ -149,8 +151,9 @@ export default function Slider({ images, autoPlayInterval = 7000 }: SliderProps)
                 className={styles.image}
                 width={1200}
                 height={500}
-                sizes="100vw"
-                priority={isActive}
+                sizes="(max-width: 600px) 0px, 100vw"
+                fetchPriority={isLcpSlide ? "high" : "auto"}
+                loading={isLcpSlide ? "eager" : "lazy"}
               />
             </div>
           );

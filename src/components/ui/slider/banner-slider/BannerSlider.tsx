@@ -66,7 +66,6 @@ export default function BannerSlider({ images }: BannerSliderProps) {
           {images.map((image, index) => {
             const isActive = index === currentIndex;
             const slideClassName = `${styles.slide} ${isActive ? styles.slideActive : ""}`;
-            const isFirstSlide = index === 0;
 
             // Десктопная картинка — показывается на экранах от 1024px
             const desktopImage = (
@@ -75,7 +74,7 @@ export default function BannerSlider({ images }: BannerSliderProps) {
                 alt={image.alt}
                 width={1360}
                 height={400}
-                priority={isFirstSlide}
+                sizes="(max-width: 1023px) 0px, 100vw"
                 className={`${styles.image} ${styles.imageDesktop}`}
               />
             );
@@ -87,7 +86,7 @@ export default function BannerSlider({ images }: BannerSliderProps) {
                 alt={image.alt}
                 width={800}
                 height={600}
-                priority={isFirstSlide}
+                sizes="(max-width: 1023px) 100vw, 0px"
                 className={`${styles.image} ${styles.imageMobile}`}
               />
             );

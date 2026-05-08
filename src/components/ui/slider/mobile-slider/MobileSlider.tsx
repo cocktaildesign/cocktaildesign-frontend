@@ -25,6 +25,7 @@ export default function MobileSlider({ images }: MobileSliderProps) {
     <div className={styles.slider} aria-label="Мобильные баннеры">
       <div className={styles.track}>
         {images.map((image) => {
+          const isLcpSlide = image.id === images[0]?.id;
           const content = (
             <Image
               src={image.mobileUrl}
@@ -32,8 +33,9 @@ export default function MobileSlider({ images }: MobileSliderProps) {
               className={styles.image}
               width={480}
               height={600}
-              sizes="42vw"
-              priority={image.id === images[0]?.id}
+              sizes="(max-width: 600px) 42vw, 0px"
+              fetchPriority={isLcpSlide ? "high" : "auto"}
+              loading={isLcpSlide ? "eager" : "lazy"}
             />
           );
 
