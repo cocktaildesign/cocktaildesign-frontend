@@ -6,9 +6,10 @@ import type { CatalogProductPreview } from "@/lib/api/catalog/types";
 
 type ProductListProps = {
   products: CatalogProductPreview[];
+  colorMap?: Record<string, string>;
 };
 
-export default function ProductList({ products }: ProductListProps) {
+export default function ProductList({ products, colorMap }: ProductListProps) {
   if (products.length === 0) {
     return <p className={styles.state}>Ничего не найдено.</p>;
   }
@@ -16,7 +17,7 @@ export default function ProductList({ products }: ProductListProps) {
   return (
     <div className={styles.grid}>
       {products.map((product) => (
-        <ProductCard key={product.id} product={product} />
+        <ProductCard key={product.id} product={product} colorMap={colorMap} />
       ))}
     </div>
   );

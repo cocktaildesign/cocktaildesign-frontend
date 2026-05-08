@@ -1,10 +1,10 @@
 // src/app/catalog/product-grid/ProductGrid.tsx
 
 import styles from "./ProductGrid.module.css";
-import ProductCard from "../product-card/ProductCard";
 import { getProductsByCategorySlugFromStrapi, getCollectionProductsFromStrapi } from "@/lib/api/catalog";
 import type { CatalogProductPreview } from "@/lib/api/catalog/types";
 import { getColorMap } from "@/lib/api/catalog/index";
+import ProductGridClient from "./ProductGridClient";
 
 type ProductGridProps = {
   categorySlug?: string;
@@ -16,6 +16,7 @@ const PAGE_SIZE = 50;
 
 export default async function ProductGrid({ categorySlug, collectionSlug, filterCategorySlug }: ProductGridProps) {
   let products: CatalogProductPreview[] = [];
+  let hasMore = false;
 
   const colorMap = await getColorMap();
 
@@ -29,6 +30,7 @@ export default async function ProductGrid({ categorySlug, collectionSlug, filter
     });
 
     products = res.items;
+    hasMore = res.hasMore;
   } else if (categorySlug) {
     // Грузим товары категории — старая логика
     const res = await getProductsByCategorySlugFromStrapi({
@@ -38,17 +40,18 @@ export default async function ProductGrid({ categorySlug, collectionSlug, filter
     });
 
     products = res.items;
-  }
-
-  if (products.length === 0) {
-    return <p className={styles.state}>В этой категории пока нет товаров.</p>;
+    hasMore = res.hasMore;
   }
 
   return (
-    <div className={styles.grid}>
-      {products.map((product) => (
-        <ProductCard key={product.id} product={product} colorMap={colorMap} />
-      ))}
-    </div>
+    <ProductGridClient
+      initialProducts={products}
+      initialHasMore={hasMore}
+      pageSize={PAGE_SIZE}
+      categorySlug={categorySlug}
+      collectionSlug={collectionSlug}
+      filterCategorySlug={filterCategorySlug}
+      colorMap={colorMap}
+    />
   );
 }

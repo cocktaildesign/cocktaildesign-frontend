@@ -71,30 +71,34 @@ export default async function CatalogCategoryPage({ params, searchParams }: Page
         </header>
 
         {/* =========================================================
-            ДЕСКТОП — сайдбар + товары (скрыт на мобилке через CSS)
+            ДЕСКТОП — сайдбар + товары
             ========================================================= */}
-        <div className={styles.desktopLayout}>
+        <div
+          className={`${styles.desktopLayout} ${showDrillDown ? "" : styles.desktopLayoutShowOnMobile}`}
+          aria-label="Каталог категории">
           <aside aria-label="Фильтры и категории">
             <CatalogSidebar items={categories} activeSlug={category.slug} />
           </aside>
 
-          <section aria-label="Список товаров">
-            <ProductGrid categorySlug={category.slug} />
-          </section>
+          {showDrillDown ? (
+            <section aria-label="Список товаров">
+              <ProductGrid categorySlug={category.slug} />
+            </section>
+          ) : (
+            <section className={styles.productsSingleLayout} aria-label="Список товаров">
+              <ProductGrid categorySlug={category.slug} />
+            </section>
+          )}
         </div>
 
         {/* =========================================================
-            МОБИЛКА — drill-down или товары (скрыт на десктопе через CSS)
+            МОБИЛКА — drill-down (только когда showDrillDown=true)
             ========================================================= */}
-        <div className={styles.mobileLayout}>
-          {showDrillDown ? (
-            // Есть подкатегории и "Все товары" не нажато — показываем список
+        {showDrillDown && (
+          <div className={styles.mobileLayout}>
             <MobileCategoryDrillDown categories={childCategories} currentSlug={category.slug} />
-          ) : (
-            // Конечная категория или нажато "Все товары" — показываем товары
-            <ProductGrid categorySlug={category.slug} />
-          )}
-        </div>
+          </div>
+        )}
       </section>
     </PageLayout>
   );
