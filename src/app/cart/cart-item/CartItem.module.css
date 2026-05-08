@@ -237,7 +237,7 @@
   }
 
   .blockPrice {
-    grid-column: 2 / 4;
+    grid-column: 3 / 4;
     flex-direction: row;
     align-items: center;
     gap: 10px;
@@ -253,7 +253,7 @@
   }
 
   .itemControls {
-    grid-column: 2 / 4;
+    grid-column: 1 / 4;
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
