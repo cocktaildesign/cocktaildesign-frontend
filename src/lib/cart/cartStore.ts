@@ -59,6 +59,13 @@ type CartState = {
 };
 
 const STORAGE_KEY = "cocktaildesign:cart";
+const promoResetState = {
+  promoCode: "",
+  promoDiscount: 0,
+  promoType: "" as const,
+  promoBonusMessage: "",
+  promoReplacesVolumeDiscount: false,
+};
 
 export const useCartStore = create<CartState>()(
   persist(
@@ -96,17 +103,21 @@ export const useCartStore = create<CartState>()(
             };
           });
 
-          set({ items: updatedItems });
+          set({ items: updatedItems, ...promoResetState });
           return;
         }
 
         const newItems = [...get().items, item];
-        set({ items: newItems });
+        set({ items: newItems, ...promoResetState });
       },
 
       removeItem: (id) => {
-        const itemsWithoutRemoved = get().items.filter((i) => i.id !== id);
-        set({ items: itemsWithoutRemoved });
+        const currentItems = get().items;
+        const hasItem = currentItems.some((i) => i.id === id);
+        if (!hasItem) return;
+
+        const itemsWithoutRemoved = currentItems.filter((i) => i.id !== id);
+        set({ items: itemsWithoutRemoved, ...promoResetState });
       },
 
       updateQuantity: (id, quantity) => {
@@ -115,12 +126,17 @@ export const useCartStore = create<CartState>()(
           return;
         }
 
-        const updatedItems = get().items.map((i) => {
+        const currentItems = get().items;
+        const currentItem = currentItems.find((i) => i.id === id);
+        if (!currentItem) return;
+        if (currentItem.quantity === quantity) return;
+
+        const updatedItems = currentItems.map((i) => {
           if (i.id !== id) return i;
           return { ...i, quantity };
         });
 
-        set({ items: updatedItems });
+        set({ items: updatedItems, ...promoResetState });
       },
 
       // Установить промокод со всеми данными
@@ -178,8 +194,9 @@ export const useCartStore = create<CartState>()(
 
       removeSelected: () => {
         const selectedIds = get().selectedIds;
+        if (selectedIds.length === 0) return;
         const remainingItems = get().items.filter((item) => !selectedIds.includes(item.id));
-        set({ items: remainingItems, selectedIds: [] });
+        set({ items: remainingItems, selectedIds: [], ...promoResetState });
       },
     }),
     {
