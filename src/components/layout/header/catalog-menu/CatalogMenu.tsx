@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useId, useState, type FocusEvent } from "react";
+import { useId, useState, type FocusEvent, type KeyboardEvent, type MouseEvent, type PointerEvent } from "react";
 import { useRouter } from "next/navigation";
 
 import CatalogIcon from "@/components/icons/CatalogIcon";
@@ -40,6 +40,10 @@ export default function CatalogMenu({ categories, collections }: CatalogMenuProp
     setIsOpen(true);
   }
 
+  function toggleMenu() {
+    setIsOpen((currentValue) => !currentValue);
+  }
+
   function closeMenu() {
     setIsOpen(false);
   }
@@ -67,6 +71,28 @@ export default function CatalogMenu({ categories, collections }: CatalogMenuProp
     closeMenu();
   }
 
+  function handleSectionKeyDown(event: KeyboardEvent<HTMLDivElement>, sectionSlug: string) {
+    if (event.key === "Enter" || event.key === " ") {
+      event.preventDefault();
+      handleSectionClick(sectionSlug);
+    }
+  }
+
+  function handleCatalogPointerDown(event: PointerEvent<HTMLButtonElement>) {
+    if (event.pointerType === "touch" || event.pointerType === "pen") {
+      event.preventDefault();
+      toggleMenu();
+    }
+  }
+
+  function handleCatalogClick(event: MouseEvent<HTMLButtonElement>) {
+    // Клик с клавиатуры у button приходит с detail === 0.
+    // Мышь не трогаем: на десктопе открытие/закрытие остаётся через hover.
+    if (event.detail === 0) {
+      toggleMenu();
+    }
+  }
+
   return (
     <div className={styles.catalogMenu} onMouseLeave={closeMenu} onFocus={openMenu} onBlur={handleBlur}>
       {/* Кнопка открытия каталога */}
@@ -74,6 +100,8 @@ export default function CatalogMenu({ categories, collections }: CatalogMenuProp
         type="button"
         className={styles.buttonCta}
         onMouseEnter={openMenu}
+        onPointerDown={handleCatalogPointerDown}
+        onClick={handleCatalogClick}
         aria-expanded={isOpen}
         aria-controls={menuId}>
         <CatalogIcon className={styles.catalogIcon} />
@@ -136,7 +164,10 @@ export default function CatalogMenu({ categories, collections }: CatalogMenuProp
                       <div
                         key={section.id}
                         className={styles.subSection}
-                        onClick={() => handleSectionClick(section.slug)}>
+                        role="button"
+                        tabIndex={0}
+                        onClick={() => handleSectionClick(section.slug)}
+                        onKeyDown={(event) => handleSectionKeyDown(event, section.slug)}>
                         <span className={styles.subSectionTitle}>{section.name}</span>
 
                         {level3Items.length > 0 ? (
