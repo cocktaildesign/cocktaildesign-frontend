@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useCartStore } from "@/lib/cart/cartStore";
@@ -18,6 +18,7 @@ function formatPrice(price: number): string {
 export default function CheckoutClient() {
   const router = useRouter();
   const items = useCartStore((s) => s.items);
+  const hasHydrated = useCartStore((s) => s.hasHydrated);
   const promoCode = useCartStore((s) => s.promoCode);
   const promoDiscount = useCartStore((s) => s.promoDiscount);
   const promoType = useCartStore((s) => s.promoType);
@@ -68,6 +69,12 @@ export default function CheckoutClient() {
 
   const finalPrice = totalPrice - activePromoDiscount - activeVolumeDiscount;
 
+  useEffect(() => {
+    if (hasHydrated && items.length === 0) {
+      router.replace("/cart");
+    }
+  }, [hasHydrated, items.length, router]);
+
   function clearError(field: string) {
     setErrors((prev) => ({ ...prev, [field]: "" }));
   }
@@ -104,6 +111,12 @@ export default function CheckoutClient() {
   }
 
   async function handleSubmit() {
+    if (!hasHydrated) return;
+    if (items.length === 0) {
+      router.replace("/cart");
+      return;
+    }
+
     if (!validate()) return;
 
     setSubmitStatus("loading");
@@ -390,7 +403,7 @@ export default function CheckoutClient() {
             type="button"
             className={styles.submitButton}
             onClick={handleSubmit}
-            disabled={submitStatus === "loading"}>
+            disabled={submitStatus === "loading" || !hasHydrated || items.length === 0}>
             {submitStatus === "loading" ? "Отправляем..." : "Оформить заказ"}
           </button>
 
