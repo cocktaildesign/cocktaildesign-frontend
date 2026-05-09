@@ -184,14 +184,11 @@
   display: flex;
   align-items: center;
   gap: 12px;
-
   width: 100%;
-  padding: 10px 10px 10px 0px;
-
-  background: transparent;
+  padding: 10px 10px 10px 0;
   border: 1px solid transparent;
   border-radius: 12px;
-
+  background: transparent;
   cursor: pointer;
   transition: background 0.2s ease;
 }
@@ -209,21 +206,20 @@
   display: flex;
   flex-direction: column;
   gap: 2px;
-
   flex: 1;
   min-width: 0;
 }
 
 .buttonSaleTitle {
+  color: var(--color-dark-blue);
   font-size: 14px;
   font-weight: 500;
-  color: var(--color-dark-blue);
   text-align: left;
 }
 
 .buttonSaleSubtitle {
-  font-size: 12px;
   color: var(--color-gray);
+  font-size: 12px;
   text-align: left;
 }
 
@@ -328,7 +324,7 @@
 
 /* ==========================================================================
    SPECIFICATIONS
-   Таблица характеристик
+   Короткий список характеристик в верхней части карточки
    ========================================================================== */
 
 .specRow {
@@ -387,6 +383,35 @@
   opacity: 1;
 }
 
+.allSpecificationsLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  width: fit-content;
+  margin-top: 18px;
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: var(--color-black);
+  font-family: inherit;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 1.2;
+  text-decoration: none;
+  cursor: pointer;
+  transition: opacity var(--dur) var(--ease);
+}
+
+.allSpecificationsLink:hover {
+  opacity: 0.7;
+}
+
+.allSpecificationsLinkIcon {
+  width: 10px;
+  height: 10px;
+  flex-shrink: 0;
+}
+
 /* ==========================================================================
    COMPOSITION
    Блок "Комплектация" — список после характеристик
@@ -433,6 +458,7 @@
   position: sticky;
   top: 160px;
   padding: 24px;
+  border: 1px solid var(--color-gray-light);
   border-radius: 12px;
   background-color: var(--color-white);
   box-shadow: 0 6px 12px #e5e7e8;
@@ -649,6 +675,80 @@
 }
 
 /* ==========================================================================
+   FULL SPECIFICATIONS
+   Полный список характеристик под описанием
+   ========================================================================== */
+
+.productFullSpecifications {
+  grid-column: 1 / -1;
+  padding: 24px 0 0;
+  scroll-margin-top: 120px;
+}
+
+.productFullSpecificationsTitle {
+  margin: 0 0 22px;
+  color: var(--color-black);
+  font-size: var(--text-xl);
+  font-weight: 600;
+  line-height: 1.15;
+}
+
+.productFullSpecificationsList {
+  max-width: 1080px;
+}
+
+.productFullSpecificationRow {
+  display: grid;
+  grid-template-columns: minmax(180px, max-content) minmax(40px, 1fr) minmax(260px, 520px);
+  align-items: baseline;
+  gap: 12px;
+  min-height: 34px;
+  padding: 6px 0;
+}
+
+.productFullSpecificationLabel {
+  color: var(--color-gray);
+  font-size: 16px;
+  font-weight: 300;
+  line-height: 1.35;
+}
+
+.productFullSpecificationDots {
+  min-width: 40px;
+  border-bottom: 1px dotted var(--color-gray-light);
+  transform: translateY(-4px);
+}
+
+.productFullSpecificationValue {
+  color: var(--color-black);
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.35;
+}
+
+.productFullSpecificationFeatureList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.productFullSpecificationFeatureItem {
+  display: inline-flex;
+  align-items: center;
+  min-height: 28px;
+  padding: 5px 10px;
+  border-radius: 999px;
+  background-color: var(--color-light-soft);
+  color: var(--color-black);
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.2;
+}
+
+/* ==========================================================================
    RELATED
    Похожие товары
    ========================================================================== */
@@ -713,12 +813,10 @@
    Плашка снизу на мобилке (цена + избранное + кнопка)
    ========================================================================== */
 
-/* По умолчанию плашка скрыта (десктоп, планшет) */
 .mobileStickyBar {
   display: none;
 }
 
-/* Цена слева */
 .mobileStickyPriceBlock {
   display: flex;
   flex-direction: column;
@@ -727,22 +825,21 @@
 }
 
 .mobileStickyPriceOld {
+  color: var(--color-gray-light);
   font-size: 13px;
   font-weight: 400;
-  color: var(--color-gray-light);
-  text-decoration: line-through;
   line-height: 1;
+  text-decoration: line-through;
 }
 
 .mobileStickyPrice {
+  color: var(--color-black);
   font-size: 22px;
   font-weight: 600;
-  color: var(--color-black);
-  white-space: nowrap;
   line-height: 1.1;
+  white-space: nowrap;
 }
 
-/* Действия справа (сердечко + кнопка / QuantityControl + стрелка) */
 .mobileStickyActions {
   display: flex;
   align-items: center;
@@ -750,14 +847,12 @@
   flex-shrink: 0;
 }
 
-/* Обёртка для сердечка в плашке */
 .mobileStickyFavorite {
   display: flex;
   align-items: center;
   justify-content: center;
 }
 
-/* Кнопка "В корзину" — если товара ещё нет в корзине */
 .mobileStickyAddButton {
   display: flex;
   align-items: center;
@@ -766,9 +861,9 @@
   min-width: 140px;
   height: 48px;
   padding: 10px 18px;
-  background-color: var(--color-dark-blue);
   border: none;
   border-radius: 12px;
+  background-color: var(--color-dark-blue);
   color: var(--color-white);
   font-family: var(--font-display);
   font-size: 15px;
@@ -782,7 +877,6 @@
   background-color: var(--color-dark-blue-hover);
 }
 
-/* Кнопка-стрелка "Перейти в корзину" — если товар уже в корзине */
 .mobileStickyArrowButton {
   display: flex;
   align-items: center;
@@ -790,8 +884,8 @@
   width: 48px;
   height: 48px;
   flex-shrink: 0;
-  background-color: var(--color-dark-blue);
   border-radius: 12px;
+  background-color: var(--color-dark-blue);
   color: var(--color-white);
   transition: background-color var(--dur) var(--ease);
 }
@@ -857,7 +951,6 @@
     overflow: hidden;
   }
 
-  /* Отступ снизу чтобы sticky-плашка не перекрывала контент */
   .productPage {
     margin-bottom: 40px;
     padding-bottom: 80px;
@@ -881,8 +974,9 @@
   .productInfo,
   .productVariantSku,
   .productSidebar,
-  .related,
-  .productDescription {
+  .productDescription,
+  .productFullSpecifications,
+  .related {
     grid-column: 1 / -1;
   }
 
@@ -938,17 +1032,20 @@
     white-space: normal;
   }
 
-  /* Скрываем десктопный блок покупки (цена, количество, кнопки) на мобилке */
+  .allSpecificationsLink {
+    margin-top: 16px;
+    font-size: 15px;
+  }
+
   .productPurchaseControls {
     display: none;
   }
 
-  /* Убираем фон/padding у обёртки, т.к. внутри остался только блок доставки */
   .productPurchase {
     padding: 0;
+    border-radius: 0;
     background-color: transparent;
     box-shadow: none;
-    border-radius: 0;
   }
 
   .productActions {
@@ -965,6 +1062,52 @@
     grid-column: 1 / -1;
   }
 
+  .productFullSpecifications {
+    padding-top: 8px;
+  }
+
+  .productFullSpecificationsTitle {
+    margin-bottom: 16px;
+    font-size: var(--text-lg);
+  }
+
+  .productFullSpecificationsList {
+    max-width: none;
+  }
+
+  .productFullSpecificationRow {
+    grid-template-columns: 1fr;
+    gap: 4px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--color-light);
+  }
+
+  .productFullSpecificationRow:last-child {
+    border-bottom: none;
+  }
+
+  .productFullSpecificationDots {
+    display: none;
+  }
+
+  .productFullSpecificationLabel {
+    font-size: 14px;
+  }
+
+  .productFullSpecificationValue {
+    font-size: 15px;
+  }
+
+  .productFullSpecificationFeatureList {
+    gap: 6px;
+  }
+
+  .productFullSpecificationFeatureItem {
+    min-height: 26px;
+    padding: 5px 9px;
+    font-size: 13px;
+  }
+
   .relatedTitle {
     margin: 10px 0 16px;
     font-size: var(--text-lg);
@@ -975,7 +1118,6 @@
     flex: 0 0 40vw;
   }
 
-  /* Показываем sticky-плашку только на мобилке */
   .mobileStickyBar {
     position: fixed;
     right: 0;
@@ -987,9 +1129,9 @@
     justify-content: space-between;
     gap: 12px;
     padding: 14px;
-    background-color: var(--color-light-soft);
     border: 1px solid rgba(15, 23, 42, 0.08);
     border-radius: 12px 12px 0 0;
+    background-color: var(--color-light-soft);
     box-shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
     backdrop-filter: blur(10px);
   }

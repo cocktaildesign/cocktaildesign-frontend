@@ -18,6 +18,9 @@ import Image from "next/image";
 // Название характеристики цвета в МойСклад
 const COLOR_CHARACTERISTIC_NAME = "Выбор цвета";
 
+// Сколько характеристик показываем в верхней части карточки товара
+const PRODUCT_SPECIFICATIONS_PREVIEW_LIMIT = 5;
+
 type CharacteristicOption = {
   value: string;
   variantIds: string[];
@@ -29,6 +32,18 @@ type VariantSelectorProps = {
   specifications: CatalogProductSpecification[];
   colorMap: Record<string, string>;
 };
+
+function ProductSpecificationValue({ spec }: { spec: CatalogProductSpecification }) {
+  if (spec.href) {
+    return (
+      <Link href={spec.href} className={styles.specLink}>
+        {spec.value}
+      </Link>
+    );
+  }
+
+  return spec.value;
+}
 
 export default function VariantSelector({ product, variants, specifications, colorMap }: VariantSelectorProps) {
   const [activeVariantId, setActiveVariantId] = useState<string | null>(null);
@@ -55,6 +70,11 @@ export default function VariantSelector({ product, variants, specifications, col
   const activeImageIndex = activeVariant?.images[0]
     ? allImages.findIndex((img) => img.src === activeVariant.images[0].src)
     : 0;
+
+  // Верхний короткий список характеристик.
+  // Полный список выводится ниже, под описанием товара.
+  const previewSpecifications = specifications.slice(0, PRODUCT_SPECIFICATIONS_PREVIEW_LIMIT);
+  const hasSpecifications = specifications.length > 0;
 
   // ─── Группируем варианты по характеристикам ───────────────────────────
   // Результат: Map { "Выбор цвета" → [{ value: "красный", variantIds: ["1"] }] }
@@ -106,6 +126,17 @@ export default function VariantSelector({ product, variants, specifications, col
     return variantIds.includes(activeVariantId);
   }
 
+  function scrollToSpecifications() {
+    const element = document.getElementById("product-specifications");
+
+    if (!element) return;
+
+    element.scrollIntoView({
+      behavior: "smooth",
+      block: "start",
+    });
+  }
+
   return (
     <>
       {/* Галерея — key пересоздаёт компонент при смене варианта */}
@@ -114,6 +145,7 @@ export default function VariantSelector({ product, variants, specifications, col
       {/* Колонка информации */}
       <div className={styles.productInfo}>
         <h1 className={styles.productPageTitleMobile}>{product.name}</h1>
+
         {/* Артикул */}
         <div className={styles.productMetaSku}>
           <p className={styles.productMetaSkuTitle}>
@@ -121,6 +153,7 @@ export default function VariantSelector({ product, variants, specifications, col
           </p>
           <CopyButton value={activeCode ?? ""} label="Артикул" />
         </div>
+
         {/* Варианты */}
         {variants.length > 0 && characteristicEntries.length > 0 && (
           <div className={styles.productVariants}>
@@ -184,37 +217,42 @@ export default function VariantSelector({ product, variants, specifications, col
             })}
           </div>
         )}
-        {/* О товаре — спецификации */}
-        <div>
-          <div className={styles.productAboutHeader}>
-            <h2 className={styles.productInfoTitle}>О товаре</h2>
-            <ScrollToDescriptionButton />
-          </div>
-          {specifications.map((spec) => (
-            <div key={spec.id} className={styles.specRow}>
-              <div className={styles.specLeft}>
-                <span className={styles.specLabel}>{spec.label}</span>
-              </div>
 
-              <div className={styles.specValue}>
-                {spec.href ? (
-                  <Link href={spec.href} className={styles.specLink}>
-                    {spec.value}
-                  </Link>
-                ) : (
-                  spec.value
-                )}
-              </div>
+        {/* О товаре — короткий список характеристик */}
+        {hasSpecifications && (
+          <div>
+            <div className={styles.productAboutHeader}>
+              <h2 className={styles.productInfoTitle}>О товаре</h2>
+
+              {/* Старая кнопка перехода к описанию остаётся */}
+              <ScrollToDescriptionButton />
             </div>
-          ))}
-        </div>
+
+            {previewSpecifications.map((spec) => (
+              <div key={spec.id} className={styles.specRow}>
+                <div className={styles.specLeft}>
+                  <span className={styles.specLabel}>{spec.label}</span>
+                </div>
+
+                <div className={styles.specValue}>
+                  <ProductSpecificationValue spec={spec} />
+                </div>
+              </div>
+            ))}
+
+            {/* Новая кнопка перехода к полному блоку характеристик */}
+            <button type="button" onClick={scrollToSpecifications} className={styles.allSpecificationsLink}>
+              <span>Все характеристики</span>
+              <ArrowRightIcon className={styles.allSpecificationsLinkIcon} />
+            </button>
+          </div>
+        )}
 
         {/* Комплектация — отображается только если поле composition заполнено в Strapi */}
         <ProductComposition items={product.composition} />
 
         {/* Кнопка "Как получить скидку" */}
         <Link href="/discounts" className={styles.buttonSale}>
-          {/* Картинка */}
           <div className={styles.buttonSaleImageWrapper}>
             <Image
               src="/images/catalog/saleImage.webp"
@@ -225,13 +263,11 @@ export default function VariantSelector({ product, variants, specifications, col
             />
           </div>
 
-          {/* Текст */}
           <div className={styles.buttonSaleText}>
             <span className={styles.buttonSaleTitle}>Как получить скидку</span>
             <span className={styles.buttonSaleSubtitle}>Нажмите, чтобы узнать условия</span>
           </div>
 
-          {/* Стрелка */}
           <ArrowRightIcon className={styles.buttonSaleArrow} />
         </Link>
       </div>

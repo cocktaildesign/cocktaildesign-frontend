@@ -16,6 +16,7 @@ import { pageMetadata } from "@/lib/seo/metadata";
 import { siteUrl } from "@/lib/seo/site";
 import { getStrapiMediaUrl } from "@/lib/api/strapi/media";
 import { getProductBySlugFromStrapi, getColorMap } from "@/lib/api/catalog";
+import type { CatalogProductSpecification } from "@/lib/api/catalog/types";
 
 import styles from "./ProductPage.module.css";
 
@@ -24,6 +25,7 @@ import styles from "./ProductPage.module.css";
 export const revalidate = 180;
 
 const PLACEHOLDER_IMG = "/images/catalog/product-placeholder.webp";
+const FEATURES_SPECIFICATION_LABEL = "Особенности";
 
 type Params = { slug: string };
 type PageProps = { params: Promise<Params> };
@@ -67,6 +69,66 @@ type RelatedProductsResponse = {
 };
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL ?? "https://api.cocktaildesign.ru/api";
+
+function getFeatureItems(value: string): string[] {
+  return value
+    .split(";")
+    .map((item) => item.trim())
+    .filter(Boolean);
+}
+
+function ProductSpecificationValue({ spec }: { spec: CatalogProductSpecification }) {
+  const isFeatures = spec.label === FEATURES_SPECIFICATION_LABEL;
+  const featureItems = isFeatures ? getFeatureItems(spec.value) : [];
+
+  if (isFeatures && featureItems.length > 1) {
+    return (
+      <ul className={styles.productFullSpecificationFeatureList}>
+        {featureItems.map((item) => (
+          <li key={item} className={styles.productFullSpecificationFeatureItem}>
+            {item}
+          </li>
+        ))}
+      </ul>
+    );
+  }
+
+  if (spec.href) {
+    return (
+      <Link href={spec.href} className={styles.specLink}>
+        {spec.value}
+      </Link>
+    );
+  }
+
+  return spec.value;
+}
+
+function ProductFullSpecifications({ specifications }: { specifications: CatalogProductSpecification[] }) {
+  if (specifications.length === 0) {
+    return null;
+  }
+
+  return (
+    <section id="product-specifications" className={styles.productFullSpecifications}>
+      <h2 className={styles.productFullSpecificationsTitle}>Характеристики</h2>
+
+      <div className={styles.productFullSpecificationsList}>
+        {specifications.map((spec) => (
+          <div key={spec.id} className={styles.productFullSpecificationRow}>
+            <div className={styles.productFullSpecificationLabel}>{spec.label}</div>
+
+            <div className={styles.productFullSpecificationDots} aria-hidden="true" />
+
+            <div className={styles.productFullSpecificationValue}>
+              <ProductSpecificationValue spec={spec} />
+            </div>
+          </div>
+        ))}
+      </div>
+    </section>
+  );
+}
 
 async function getRelatedProducts(params: {
   categorySlug: string;
@@ -205,7 +267,7 @@ export default async function ProductPage({ params }: PageProps) {
         </header>
 
         <div className={styles.productLayout}>
-          {/* Галерея, варианты, характеристики и блок покупки */}
+          {/* Галерея, варианты, короткие характеристики и блок покупки */}
           <VariantSelector product={product} variants={variants} specifications={specifications} colorMap={colorMap} />
 
           {/* Состав комплекта */}
@@ -218,6 +280,9 @@ export default async function ProductPage({ params }: PageProps) {
               <div className={styles.productDescriptionText}>{product.description}</div>
             </div>
           ) : null}
+
+          {/* Полный список характеристик */}
+          <ProductFullSpecifications specifications={specifications} />
 
           {/* Похожие товары */}
           <section className={styles.related} aria-label="Похожие товары">
