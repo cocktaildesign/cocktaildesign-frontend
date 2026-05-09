@@ -11,6 +11,7 @@ import PageLayout from "@/components/layout/PageLayout";
 import ProductsSlider from "@/components/ui/products-slider/ProductsSlider";
 import BundleItems from "./bundle/BundleItems";
 import VariantSelector from "./VariantSelector";
+import ProductDetailsNavigation from "./ProductDetailsNavigation";
 
 import { pageMetadata } from "@/lib/seo/metadata";
 import { siteUrl } from "@/lib/seo/site";
@@ -104,6 +105,7 @@ function ProductSpecificationValue({ spec }: { spec: CatalogProductSpecification
   return spec.value;
 }
 
+
 function ProductFullSpecifications({ specifications }: { specifications: CatalogProductSpecification[] }) {
   if (specifications.length === 0) {
     return null;
@@ -195,6 +197,9 @@ export default async function ProductPage({ params }: PageProps) {
   const variants = data.variants ?? [];
   const specifications = product.specifications ?? [];
 
+  const hasDescription = Boolean(product.description?.trim());
+  const hasSpecifications = specifications.length > 0;
+
   const productUrl = `${siteUrl}/catalog/product/${product.slug}`;
 
   const productJsonLd = {
@@ -256,6 +261,8 @@ export default async function ProductPage({ params }: PageProps) {
     return itemSlug && itemSlug !== product.slug;
   });
 
+  const hasRelatedProducts = relatedItems.length > 0;
+
   return (
     <PageLayout breadcrumbsItems={breadcrumbsItems}>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(productJsonLd) }} />
@@ -273,51 +280,60 @@ export default async function ProductPage({ params }: PageProps) {
           {/* Состав комплекта */}
           {product.bundleItems.length > 0 && <BundleItems items={product.bundleItems} bundlePrice={product.price} />}
 
+          {/* Якорная навигация по нижним блокам */}
+          <ProductDetailsNavigation
+            hasDescription={hasDescription}
+            hasSpecifications={hasSpecifications}
+            hasRelatedProducts={hasRelatedProducts}
+          />
+
           {/* Описание */}
-          {product.description?.trim() ? (
-            <div id="product-description" className={styles.productDescription}>
+          {hasDescription ? (
+            <section id="product-description" className={styles.productDescription}>
               <h2 className={styles.productDescriptionTitle}>Описание</h2>
               <div className={styles.productDescriptionText}>{product.description}</div>
-            </div>
+            </section>
           ) : null}
 
           {/* Полный список характеристик */}
           <ProductFullSpecifications specifications={specifications} />
 
-          {/* Похожие товары */}
-          <section className={styles.related} aria-label="Похожие товары">
-            <h2 className={styles.relatedTitle}>Аналогичные товары</h2>
+          {/* Товары из этой категории */}
+          {hasRelatedProducts ? (
+            <section id="product-related" className={styles.related} aria-label="Товары из этой категории">
+              <h2 className={styles.relatedTitle}>Товары из категории</h2>
 
-            <ProductsSlider>
-              {relatedItems.map((item) => {
-                const itemSlug = item.attributes.slug ?? "";
-                const itemName = item.attributes.name ?? "Товар";
-                const itemPrice = item.attributes.price ?? 0;
+              <ProductsSlider>
+                {relatedItems.map((item) => {
+                  const itemSlug = item.attributes.slug ?? "";
+                  const itemName = item.attributes.name ?? "Товар";
+                  const itemPrice = item.attributes.price ?? 0;
 
-                const rawImage = item.attributes.image?.[0]?.url ?? undefined;
-                const itemImage = getStrapiMediaUrl(rawImage) ?? PLACEHOLDER_IMG;
+                  const rawImage = item.attributes.image?.[0]?.url ?? undefined;
+                  const itemImage = getStrapiMediaUrl(rawImage) ?? PLACEHOLDER_IMG;
 
-                return (
-                  <div key={item.id} className={styles.relatedSlide}>
-                    <Link href={`/catalog/product/${itemSlug}`} className={styles.relatedCard}>
-                      <div className={styles.relatedImage}>
-                        <Image
-                          src={itemImage}
-                          fill
-                          sizes="(max-width: 600px) 45vw, (max-width: 1200px) 33vw, 200px"
-                          alt={itemName}
-                          className={styles.relatedImageImg}
-                        />
-                      </div>
+                  return (
+                    <div key={item.id} className={styles.relatedSlide}>
+                      <Link href={`/catalog/product/${itemSlug}`} className={styles.relatedCard}>
+                        <div className={styles.relatedImage}>
+                          <Image
+                            src={itemImage}
+                            fill
+                            sizes="(max-width: 600px) 45vw, (max-width: 1200px) 33vw, 200px"
+                            alt={itemName}
+                            className={styles.relatedImageImg}
+                          />
+                        </div>
 
-                      <div className={styles.relatedCardPrice}>{itemPrice} ₽</div>
-                      <div className={styles.relatedCardTitle}>{itemName}</div>
-                    </Link>
-                  </div>
-                );
-              })}
-            </ProductsSlider>
-          </section>
+                        <div className={styles.relatedCardPrice}>{itemPrice} ₽</div>
+                        <div className={styles.relatedCardTitle}>{itemName}</div>
+                      </Link>
+                    </div>
+                  );
+                })}
+              </ProductsSlider>
+            </section>
+          ) : null}
         </div>
       </section>
     </PageLayout>

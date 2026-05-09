@@ -19,7 +19,8 @@ import Image from "next/image";
 const COLOR_CHARACTERISTIC_NAME = "Выбор цвета";
 
 // Сколько характеристик показываем в верхней части карточки товара
-const PRODUCT_SPECIFICATIONS_PREVIEW_LIMIT = 5;
+const PRODUCT_SPECIFICATIONS_PREVIEW_LIMIT = 4;
+const FEATURES_SPECIFICATION_LABEL = "Особенности";
 
 type CharacteristicOption = {
   value: string;
@@ -73,7 +74,10 @@ export default function VariantSelector({ product, variants, specifications, col
 
   // Верхний короткий список характеристик.
   // Полный список выводится ниже, под описанием товара.
-  const previewSpecifications = specifications.slice(0, PRODUCT_SPECIFICATIONS_PREVIEW_LIMIT);
+  const previewSpecifications = specifications
+    .filter((spec) => spec.label.trim() !== FEATURES_SPECIFICATION_LABEL)
+    .slice(0, PRODUCT_SPECIFICATIONS_PREVIEW_LIMIT);
+
   const hasSpecifications = specifications.length > 0;
 
   // ─── Группируем варианты по характеристикам ───────────────────────────
