@@ -91,8 +91,7 @@ export default function ProductCard({ product, colorMap = {} }: ProductCardProps
   const [visibleCount, setVisibleCount] = useState<number>(product.variants.length);
 
   const hasVariants = product.variants.length > 0;
-  const [activeVariant, setActiveVariant] = useState<CatalogVariant | null>(null);
-
+  const [activeVariant, setActiveVariant] = useState<CatalogVariant | null>(product.variants[0] ?? null);
   const variantGroupTitle = useMemo(() => getVariantGroupTitle(product.variants), [product.variants]);
   const isColorVariants = useMemo(() => isColorGroup(variantGroupTitle), [variantGroupTitle]);
 
