@@ -13,6 +13,7 @@ import { useCartStore } from "@/lib/cart/cartStore";
 import type { CartItem } from "@/lib/cart/cartStore";
 
 import type { CatalogProductPreview, CatalogVariant } from "@/lib/api/catalog/types";
+
 import styles from "./ProductCard.module.css";
 
 type ProductCardProps = {
@@ -44,6 +45,7 @@ function normalizeColorKey(value: string): string {
 
 function resolveColorHex(label: string, colorMap: Record<string, string>): string | null {
   const normalized = normalizeColorKey(label);
+
   return colorMap[normalized] ?? null;
 }
 
@@ -60,7 +62,9 @@ function getVariantLabel(variant: CatalogVariant): string {
 function getVariantGroupTitle(variants: CatalogVariant[]): string | null {
   const firstGroupName = variants[0]?.characteristics[0]?.name?.trim();
 
-  if (!firstGroupName) return null;
+  if (!firstGroupName) {
+    return null;
+  }
 
   return firstGroupName;
 }
@@ -71,6 +75,7 @@ function isColorGroup(groupTitle: string | null): boolean {
 
 function buildUniqueImages(product: CatalogProductPreview): string[] {
   const productImages = product.images ?? [];
+
   const variantImages = product.variants.flatMap((variant) => variant.images.map((image) => image.src));
 
   return Array.from(new Set([...productImages, ...variantImages]))
@@ -78,29 +83,53 @@ function buildUniqueImages(product: CatalogProductPreview): string[] {
     .slice(0, MAX_PREVIEW_IMAGES);
 }
 
+function getVariantImageIndex(variant: CatalogVariant | null, images: string[]): number {
+  const variantImage = variant?.images[0]?.src;
+
+  if (!variantImage) {
+    return 0;
+  }
+
+  const variantImageIndex = images.findIndex((image) => image === variantImage);
+
+  return variantImageIndex >= 0 ? variantImageIndex : 0;
+}
+
 function sumWidths(widths: number[], gap: number): number {
-  if (widths.length === 0) return 0;
+  if (widths.length === 0) {
+    return 0;
+  }
+
   return widths.reduce((total, width) => total + width, 0) + gap * (widths.length - 1);
 }
 
 export default function ProductCard({ product, colorMap = {} }: ProductCardProps) {
+  const uniqueImages = useMemo(() => buildUniqueImages(product), [product]);
+  const initialVariant = product.variants[0] ?? null;
+
   const [quantity, setQuantity] = useState<number>(1);
   const [engravingChecked, setEngravingChecked] = useState<boolean>(false);
-  const [activeImageIndex, setActiveImageIndex] = useState<number>(0);
+  const [activeVariant, setActiveVariant] = useState<CatalogVariant | null>(initialVariant);
+  const [activeImageIndex, setActiveImageIndex] = useState<number>(() =>
+    getVariantImageIndex(initialVariant, uniqueImages),
+  );
   const [expandedVariants, setExpandedVariants] = useState<boolean>(false);
   const [visibleCount, setVisibleCount] = useState<number>(product.variants.length);
 
   const hasVariants = product.variants.length > 0;
-  const [activeVariant, setActiveVariant] = useState<CatalogVariant | null>(product.variants[0] ?? null);
+
   const variantGroupTitle = useMemo(() => getVariantGroupTitle(product.variants), [product.variants]);
+
   const isColorVariants = useMemo(() => isColorGroup(variantGroupTitle), [variantGroupTitle]);
 
   const activeItemId = activeVariant?.id ?? product.id;
 
-  const cartItem = useCartStore((s) => s.items.find((item) => item.id === activeItemId));
-  const addItem = useCartStore((s) => s.addItem);
-  const removeItem = useCartStore((s) => s.removeItem);
-  const isInCart = useCartStore((s) => s.items.some((item) => item.id === activeItemId));
+  const cartItem = useCartStore((state) => state.items.find((item) => item.id === activeItemId));
+
+  const addItem = useCartStore((state) => state.addItem);
+  const removeItem = useCartStore((state) => state.removeItem);
+
+  const isInCart = useCartStore((state) => state.items.some((item) => item.id === activeItemId));
 
   const displayQuantity = cartItem?.quantity ?? quantity;
   const displayEngraving = cartItem?.engraving ?? engravingChecked;
@@ -108,16 +137,11 @@ export default function ProductCard({ product, colorMap = {} }: ProductCardProps
   const productHref = `/catalog/product/${product.slug}`;
 
   const activePrice = activeVariant?.price && activeVariant.price > 0 ? activeVariant.price : product.price;
+
   const activePriceOld =
     activeVariant?.priceOld && activeVariant.priceOld > 0 ? activeVariant.priceOld : product.priceOld;
 
-  const uniqueImages = useMemo(() => buildUniqueImages(product), [product]);
-  const activeVariantFirstImage = activeVariant?.images[0]?.src ?? null;
-
-  const currentImageIndex =
-    activeVariantFirstImage && uniqueImages.includes(activeVariantFirstImage)
-      ? uniqueImages.findIndex((src) => src === activeVariantFirstImage)
-      : activeImageIndex;
+  const currentImageIndex = activeImageIndex >= 0 && activeImageIndex < uniqueImages.length ? activeImageIndex : 0;
 
   const imageSrc = uniqueImages[currentImageIndex] ?? product.imageUrl ?? "/images/catalog/product-placeholder.webp";
 
@@ -129,11 +153,15 @@ export default function ProductCard({ product, colorMap = {} }: ProductCardProps
   const moreMeasureRef = useRef<HTMLButtonElement | null>(null);
 
   const safeVisibleCount = expandedVariants ? product.variants.length : visibleCount;
+
   const visibleVariants = expandedVariants ? product.variants : product.variants.slice(0, safeVisibleCount);
+
   const hiddenVariantsCount = Math.max(product.variants.length - safeVisibleCount, 0);
 
   useLayoutEffect(() => {
-    if (!hasVariants) return;
+    if (!hasVariants) {
+      return;
+    }
 
     function updateVisibleCount() {
       if (expandedVariants) {
@@ -144,17 +172,23 @@ export default function ProductCard({ product, colorMap = {} }: ProductCardProps
       const container = containerRef.current;
       const measureRoot = measureRootRef.current;
 
-      if (!container || !measureRoot) return;
+      if (!container || !measureRoot) {
+        return;
+      }
 
       const containerWidth = container.clientWidth;
-      if (containerWidth <= 0) return;
 
-      const styles = window.getComputedStyle(container);
-      const gapValue = styles.columnGap || styles.gap || "0";
+      if (containerWidth <= 0) {
+        return;
+      }
+
+      const containerStyles = window.getComputedStyle(container);
+      const gapValue = containerStyles.columnGap || containerStyles.gap || "0";
       const gap = Number.parseFloat(gapValue) || 0;
 
       const itemWidths = product.variants.map((_, index) => {
         const node = measureRoot.querySelector<HTMLElement>(`[data-measure-variant="${index}"]`);
+
         return node?.offsetWidth ?? 0;
       });
 
@@ -208,23 +242,26 @@ export default function ProductCard({ product, colorMap = {} }: ProductCardProps
   }, [expandedVariants, hasVariants, product.variants]);
 
   function handleMouseMove(event: React.MouseEvent<HTMLDivElement>) {
-    if (uniqueImages.length <= 1) return;
+    if (uniqueImages.length <= 1) {
+      return;
+    }
 
     const rect = event.currentTarget.getBoundingClientRect();
     const mouseX = event.clientX - rect.left;
     const fraction = mouseX / rect.width;
-    const index = Math.min(Math.floor(fraction * uniqueImages.length), uniqueImages.length - 1);
 
-    setActiveImageIndex(index);
+    const nextImageIndex = Math.min(Math.floor(fraction * uniqueImages.length), uniqueImages.length - 1);
+
+    setActiveImageIndex(nextImageIndex);
   }
 
   function handleMouseLeave() {
-    setActiveImageIndex(0);
+    setActiveImageIndex(getVariantImageIndex(activeVariant, uniqueImages));
   }
 
   function handleVariantSelect(variant: CatalogVariant) {
     setActiveVariant(variant);
-    setActiveImageIndex(0);
+    setActiveImageIndex(getVariantImageIndex(variant, uniqueImages));
   }
 
   function handleExpandVariants() {
@@ -241,7 +278,6 @@ export default function ProductCard({ product, colorMap = {} }: ProductCardProps
       slug: product.slug,
       quantity,
       engraving: engravingChecked,
-      // Берём флаг от товара — вариант наследует его от родителя
       discountExcluded: product.discountExcluded,
       code: activeVariant?.code ?? product.code ?? "",
     };
@@ -323,6 +359,7 @@ export default function ProductCard({ product, colorMap = {} }: ProductCardProps
         <div className={styles.productBody}>
           <div className={styles.priceBlock}>
             <p className={styles.price}>{formatPrice(activePrice)} ₽</p>
+
             {hasDiscount && <p className={styles.priceOld}>{formatPrice(activePriceOld)} ₽</p>}
           </div>
 
@@ -385,11 +422,19 @@ export default function ProductCard({ product, colorMap = {} }: ProductCardProps
               onChange={(checked) => {
                 if (isInCart) {
                   const updatedItems = useCartStore.getState().items.map((item) => {
-                    if (item.id !== activeItemId) return item;
-                    return { ...item, engraving: checked };
+                    if (item.id !== activeItemId) {
+                      return item;
+                    }
+
+                    return {
+                      ...item,
+                      engraving: checked,
+                    };
                   });
 
-                  useCartStore.setState({ items: updatedItems });
+                  useCartStore.setState({
+                    items: updatedItems,
+                  });
                 } else {
                   setEngravingChecked(checked);
                 }
