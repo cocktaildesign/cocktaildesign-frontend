@@ -30,8 +30,22 @@ type Product = {
   title: string;
   priceRub: number;
   categoryTitle?: string;
+  code?: string;
   imageUrl?: string;
   slug?: string;
+  variantId?: string;
+};
+
+type ApiImage = {
+  url: string;
+};
+
+type ApiMatchedVariant = {
+  id: number;
+  name?: string | null;
+  price?: number | null;
+  code?: string | null;
+  image?: ApiImage[] | null;
 };
 
 type ApiProductItem = {
@@ -39,9 +53,11 @@ type ApiProductItem = {
   attributes: {
     name?: string | null;
     price?: number | null;
+    code?: string | null;
     categoryName?: string | null;
     slug?: string | null;
-    image?: Array<{ url: string }> | null;
+    image?: ApiImage[] | null;
+    matchedVariant?: ApiMatchedVariant | null;
   };
 };
 
@@ -57,14 +73,18 @@ const SEARCH_DEBOUNCE_MS = 250;
 
 // Преобразуем ответ API в формат компонента
 function mapApiProductToProduct(item: ApiProductItem): Product {
-  const raw = item.attributes.image?.[0]?.url ?? undefined;
+  const matchedVariant = item.attributes.matchedVariant ?? null;
+
+  const raw = matchedVariant?.image?.[0]?.url ?? item.attributes.image?.[0]?.url ?? undefined;
 
   return {
     id: String(item.id),
-    title: item.attributes.name ?? "",
-    priceRub: item.attributes.price ?? 0,
+    title: matchedVariant?.name ?? item.attributes.name ?? "",
+    priceRub: matchedVariant?.price ?? item.attributes.price ?? 0,
     categoryTitle: item.attributes.categoryName ?? undefined,
+    code: matchedVariant?.code ?? item.attributes.code ?? undefined,
     slug: item.attributes.slug ?? undefined,
+    variantId: matchedVariant ? String(matchedVariant.id) : undefined,
     imageUrl: getStrapiMediaUrl(raw),
   };
 }
@@ -321,7 +341,11 @@ export default function SearchBar({
       return;
     }
 
-    router.push(`/catalog/product/${product.slug}`);
+    const productUrl = product.variantId
+      ? `/catalog/product/${product.slug}?variant=${encodeURIComponent(product.variantId)}`
+      : `/catalog/product/${product.slug}`;
+
+    router.push(productUrl);
   }
 
   function applyPopularQuery(popularQuery: string) {
@@ -573,6 +597,8 @@ export default function SearchBar({
 
                       <span className={styles.productInfo}>
                         <span className={styles.productTitle}>{product.title}</span>
+
+                        {product.code && <span className={styles.productCategory}>Артикул: {product.code}</span>}
 
                         {product.categoryTitle && (
                           <span className={styles.productCategory}>{product.categoryTitle}</span>

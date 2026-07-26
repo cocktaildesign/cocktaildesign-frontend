@@ -4,6 +4,7 @@
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 
 import ArrowRightIcon from "@/components/icons/ArrowRightIcon";
 import CopyButton from "@/components/ui/copy-button/CopyButton";
@@ -46,6 +47,9 @@ function ProductSpecificationValue({ spec }: { spec: CatalogProductSpecification
 }
 
 export default function VariantSelector({ product, variants, specifications, colorMap }: VariantSelectorProps) {
+  const searchParams = useSearchParams();
+  const requestedVariantId = searchParams.get("variant");
+
   /*
    * Собираем общую галерею.
    *
@@ -67,18 +71,26 @@ export default function VariantSelector({ product, variants, specifications, col
 
   const firstVariantId = variants[0]?.id ?? null;
 
-  const firstVariantImageIndex = firstVariantId
-    ? galleryImages.findIndex((image) => image.variantId === firstVariantId)
+  /*
+   * Если в URL передан существующий модификатор,
+   * выбираем его. Иначе выбираем первый вариант.
+   *
+   * Пример:
+   * /catalog/product/product-slug?variant=123
+   */
+  const initialVariantId =
+    requestedVariantId && variants.some((variant) => variant.id === requestedVariantId)
+      ? requestedVariantId
+      : firstVariantId;
+
+  const initialVariantImageIndex = initialVariantId
+    ? galleryImages.findIndex((image) => image.variantId === initialVariantId)
     : 0;
 
-  /*
-   * Если модификаторы существуют, сразу выбираем первый.
-   * Родительский товар с нулевой ценой не становится активным.
-   */
-  const [activeVariantId, setActiveVariantId] = useState<string | null>(firstVariantId);
+  const [activeVariantId, setActiveVariantId] = useState<string | null>(initialVariantId);
 
   const [activeImageIndex, setActiveImageIndex] = useState<number>(
-    firstVariantImageIndex >= 0 ? firstVariantImageIndex : 0,
+    initialVariantImageIndex >= 0 ? initialVariantImageIndex : 0,
   );
 
   const activeVariant = variants.find((variant) => variant.id === activeVariantId) ?? null;
