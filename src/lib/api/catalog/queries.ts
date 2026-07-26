@@ -301,7 +301,8 @@ function buildCollectionViewAllHref(params: {
 export async function getCatalogCollectionsWithProductsFromStrapi(): Promise<CatalogCollection[]> {
   const params: Record<string, string> = {
     sort: "sortOrder:asc",
-    "populate[products][populate]": "image",
+    "populate[products][populate][image]": "true",
+    "populate[products][populate][variants][populate][image]": "true",
     "populate[sourceCategory]": "true",
   };
 
@@ -464,7 +465,8 @@ export async function getProductsByIdsFromStrapi(productIds: string[]): Promise<
 
 export async function getWeeklyProductBlock(): Promise<WeeklyProductBlock | null> {
   const params: Record<string, string> = {
-    "populate[product][populate]": "image",
+    "populate[product][populate][image]": "true",
+    "populate[product][populate][variants][populate][image]": "true",
   };
 
   try {

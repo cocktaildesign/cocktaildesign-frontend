@@ -15,8 +15,7 @@ import ProductDetailsNavigation from "./ProductDetailsNavigation";
 
 import { pageMetadata } from "@/lib/seo/metadata";
 import { siteUrl } from "@/lib/seo/site";
-import { getStrapiMediaUrl } from "@/lib/api/strapi/media";
-import { getProductBySlugFromStrapi, getColorMap } from "@/lib/api/catalog";
+import { getColorMap, getProductBySlugFromStrapi, getProductsByCategorySlugFromStrapi } from "@/lib/api/catalog";
 import type { CatalogProductSpecification } from "@/lib/api/catalog/types";
 
 import styles from "./ProductPage.module.css";
@@ -30,46 +29,6 @@ const FEATURES_SPECIFICATION_LABEL = "Особенности";
 
 type Params = { slug: string };
 type PageProps = { params: Promise<Params> };
-
-type ImageFormat = {
-  url: string;
-};
-
-type ProductImageFormats = {
-  thumbnail?: ImageFormat;
-  small?: ImageFormat;
-  medium?: ImageFormat;
-  large?: ImageFormat;
-} | null;
-
-type ProductImage = {
-  url: string;
-  alternativeText?: string | null;
-  formats?: ProductImageFormats;
-};
-
-type RelatedProductAttributes = {
-  name: string | null;
-  slug: string | null;
-  price: number | null;
-  priceOld: number | null;
-  image: ProductImage[] | null;
-};
-
-type RelatedProduct = {
-  id: number;
-  attributes: RelatedProductAttributes;
-};
-
-type RelatedProductsResponse = {
-  items: RelatedProduct[];
-  total: number;
-  limit: number;
-  offset: number;
-  hasMore: boolean;
-};
-
-const API_BASE = process.env.NEXT_PUBLIC_API_URL ?? "https://api.cocktaildesign.ru/api";
 
 function getFeatureItems(value: string): string[] {
   return value
@@ -105,7 +64,6 @@ function ProductSpecificationValue({ spec }: { spec: CatalogProductSpecification
   return spec.value;
 }
 
-
 function ProductFullSpecifications({ specifications }: { specifications: CatalogProductSpecification[] }) {
   if (specifications.length === 0) {
     return null;
@@ -130,33 +88,6 @@ function ProductFullSpecifications({ specifications }: { specifications: Catalog
       </div>
     </section>
   );
-}
-
-async function getRelatedProducts(params: {
-  categorySlug: string;
-  limit: number;
-  offset: number;
-}): Promise<RelatedProductsResponse | null> {
-  const { categorySlug, limit, offset } = params;
-
-  if (!categorySlug) {
-    return null;
-  }
-
-  const url = new URL(`${API_BASE}/catalog/products`);
-  url.searchParams.set("categorySlug", categorySlug);
-  url.searchParams.set("limit", String(limit));
-  url.searchParams.set("offset", String(offset));
-
-  const response = await fetch(url.toString(), {
-    next: { revalidate: 60 },
-  });
-
-  if (!response.ok) {
-    return null;
-  }
-
-  return (await response.json()) as RelatedProductsResponse;
 }
 
 export async function generateMetadata({ params }: PageProps) {
@@ -250,16 +181,15 @@ export default async function ProductPage({ params }: PageProps) {
 
   const relatedCategorySlug = breadcrumbsCategories[0]?.slug ?? "";
 
-  const relatedResponse = await getRelatedProducts({
-    categorySlug: relatedCategorySlug,
-    limit: 1000,
-    offset: 0,
-  });
+  const relatedResponse = relatedCategorySlug
+    ? await getProductsByCategorySlugFromStrapi({
+        categorySlug: relatedCategorySlug,
+        limit: 100,
+        offset: 0,
+      })
+    : null;
 
-  const relatedItems = (relatedResponse?.items ?? []).filter((item) => {
-    const itemSlug = item.attributes.slug ?? "";
-    return itemSlug && itemSlug !== product.slug;
-  });
+  const relatedItems = (relatedResponse?.items ?? []).filter((item) => item.id !== product.id);
 
   const hasRelatedProducts = relatedItems.length > 0;
 
@@ -305,28 +235,23 @@ export default async function ProductPage({ params }: PageProps) {
 
               <ProductsSlider>
                 {relatedItems.map((item) => {
-                  const itemSlug = item.attributes.slug ?? "";
-                  const itemName = item.attributes.name ?? "Товар";
-                  const itemPrice = item.attributes.price ?? 0;
-
-                  const rawImage = item.attributes.image?.[0]?.url ?? undefined;
-                  const itemImage = getStrapiMediaUrl(rawImage) ?? PLACEHOLDER_IMG;
+                  const itemImage = item.imageUrl ?? PLACEHOLDER_IMG;
 
                   return (
                     <div key={item.id} className={styles.relatedSlide}>
-                      <Link href={`/catalog/product/${itemSlug}`} className={styles.relatedCard}>
+                      <Link href={`/catalog/product/${item.slug}`} className={styles.relatedCard}>
                         <div className={styles.relatedImage}>
                           <Image
                             src={itemImage}
                             fill
                             sizes="(max-width: 600px) 45vw, (max-width: 1200px) 33vw, 200px"
-                            alt={itemName}
+                            alt={item.name}
                             className={styles.relatedImageImg}
                           />
                         </div>
 
-                        <div className={styles.relatedCardPrice}>{itemPrice} ₽</div>
-                        <div className={styles.relatedCardTitle}>{itemName}</div>
+                        <div className={styles.relatedCardPrice}>{item.price.toLocaleString("ru-RU")} ₽</div>
+                        <div className={styles.relatedCardTitle}>{item.name}</div>
                       </Link>
                     </div>
                   );

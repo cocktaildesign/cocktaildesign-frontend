@@ -343,30 +343,39 @@ export function mapProductPreview(item: StrapiProductItem): CatalogProductPrevie
 
   if (!name || !moyskladId) return null;
 
+  // Сначала маппим модификации.
+  // Они нужны как запасной источник цены и фотографий,
+  // если эти данные не заполнены у родительского товара.
+  const rawVariants = item.variants ?? source.variants ?? [];
+  const variants = mapVariants(rawVariants);
+  const firstVariantWithPrice = variants.find((variant) => variant.price > 0) ?? null;
+
   const rawPrice = source.price;
-  const price = typeof rawPrice === "number" && Number.isFinite(rawPrice) && rawPrice > 0 ? rawPrice : 0;
+  const productPrice = typeof rawPrice === "number" && Number.isFinite(rawPrice) && rawPrice > 0 ? rawPrice : 0;
+
+  const price = productPrice > 0 ? productPrice : (firstVariantWithPrice?.price ?? 0);
 
   const rawPriceOld = source.priceOld;
+  const productPriceOld =
+    typeof rawPriceOld === "number" && Number.isFinite(rawPriceOld) && rawPriceOld > 0 ? rawPriceOld : 0;
+
   const priceOld =
-    typeof rawPriceOld === "number" && Number.isFinite(rawPriceOld) && rawPriceOld > 0 ? rawPriceOld : price;
+    productPrice > 0
+      ? productPriceOld || productPrice
+      : firstVariantWithPrice?.priceOld || firstVariantWithPrice?.price || price;
 
-  const firstImage = Array.isArray(source.image) ? source.image[0] : (source.image?.data?.[0]?.attributes ?? null);
+  // Сначала фотографии родительского товара,
+  // затем фотографии всех модификаций.
+  const productImages = mapPreviewImageUrls(source.image);
+  const variantImages = variants.flatMap((variant) => variant.images.map((image) => image.src));
 
-  const imagePath = pickBestImagePath(firstImage);
-  const imageUrl = imagePath ? (getStrapiMediaUrl(imagePath) ?? null) : null;
-
-  const images = mapPreviewImageUrls(source.image);
+  const images = Array.from(new Set([...productImages, ...variantImages])).slice(0, 4);
+  const imageUrl = images[0] ?? null;
 
   const engravingEnabled = source.engravingEnabled === true;
   const discountExcluded = source.discountExcluded === true;
 
   const slug = makeProductSlug(moyskladId, name);
-
-  // Варианты могут прийти:
-  // 1) в корне объекта товара
-  // 2) внутри attributes
-  const rawVariants = item.variants ?? source.variants ?? [];
-  const variants = mapVariants(rawVariants);
 
   return {
     id: String(item.id),
@@ -647,18 +656,41 @@ export function mapWeeklyProductBlock(response: StrapiWeeklyProductBlockResponse
     };
   }
 
+  const rawVariants = product.variants ?? source.variants ?? [];
+  const variants = mapVariants(rawVariants);
+  const firstVariantWithPrice = variants.find((variant) => variant.price > 0) ?? null;
+
   const rawPrice = source.price;
-  const price = typeof rawPrice === "number" && Number.isFinite(rawPrice) && rawPrice > 0 ? rawPrice : 0;
+  const productPrice = typeof rawPrice === "number" && Number.isFinite(rawPrice) && rawPrice > 0 ? rawPrice : 0;
+
+  const price = productPrice > 0 ? productPrice : (firstVariantWithPrice?.price ?? 0);
 
   const rawPriceOld = source.priceOld;
-  const priceOld = typeof rawPriceOld === "number" && Number.isFinite(rawPriceOld) && rawPriceOld > 0 ? rawPriceOld : 0;
+  const productPriceOld =
+    typeof rawPriceOld === "number" && Number.isFinite(rawPriceOld) && rawPriceOld > 0 ? rawPriceOld : 0;
+
+  const priceOld =
+    productPrice > 0
+      ? productPriceOld || productPrice
+      : firstVariantWithPrice?.priceOld || firstVariantWithPrice?.price || price;
 
   const description = typeof source.description === "string" ? source.description : null;
   const rawCode = source.code;
   const code = typeof rawCode === "string" && rawCode.trim() ? rawCode.trim() : null;
   const engravingEnabled = source.engravingEnabled === true;
 
-  const images = mapMediaArray(source.image, name);
+  const productImages = mapMediaArray(source.image, name);
+  const variantImages = variants.flatMap((variant) => variant.images);
+
+  const seenImageUrls = new Set<string>();
+  const images = [...productImages, ...variantImages].filter((image) => {
+    if (seenImageUrls.has(image.src)) {
+      return false;
+    }
+
+    seenImageUrls.add(image.src);
+    return true;
+  });
 
   return {
     isEnabled: data.isEnabled === true,
