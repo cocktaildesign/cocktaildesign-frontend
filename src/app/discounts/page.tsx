@@ -1,9 +1,8 @@
-// src/app/discounts/page.tsx
-
+import Link from "next/link";
 import { pageMetadata } from "@/lib/seo/metadata";
 import PageLayout from "@/components/layout/PageLayout";
 import VolumeTiers from "./VolumeTiers";
-import DiscountCard from "./discounts-card/DiscountsCard";
+import PromoAccordion from "./PromoAccordion";
 import { discounts } from "./data";
 
 import styles from "./Discounts.module.css";
@@ -19,22 +18,44 @@ export default function DiscountsPage() {
   return (
     <PageLayout>
       <div className={styles.page}>
-        <h1 className={styles.pageTitle}>Система скидок</h1>
-        <p className={styles.description}>
-          Мы заинтересованы в долгосрочной работе и предусмотрели систему скидок в зависимости от объёма заказов. Скидка
-          вступает в силу, когда стоимость товаров в корзине превышает 10&nbsp;000&nbsp;₽.
-        </p>
-        {/* Блок скидки от объёма */}
+        <div className={styles.hero}>
+          <h1 className={styles.pageTitle}>Система скидок</h1>
+          <p className={styles.description}>
+            Чем больше заказ — тем выгоднее условия. Введите сумму и увидите свою скидку мгновенно.
+          </p>
+        </div>
+
         <VolumeTiers />
 
-        {/* Сетка остальных акций */}
-        <ul className={styles.grid}>
-          {discounts.map((discount) => (
-            <li key={discount.id}>
-              <DiscountCard discount={discount} />
-            </li>
-          ))}
-        </ul>
+        <section className={styles.promosSection}>
+          <h2 className={styles.promosTitle}>Акции и промокоды</h2>
+          <div className={styles.promosList}>
+            {discounts.map((discount) => (
+              <PromoAccordion key={discount.id} discount={discount} />
+            ))}
+          </div>
+        </section>
+
+        <div className={styles.cta}>
+          <p className={styles.ctaText}>Знаете нужную сумму? Перейдите в каталог и соберите заказ.</p>
+          <Link href="/catalog" className={styles.ctaButton}>
+            <svg
+              width="18"
+              height="18"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.8"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              aria-hidden="true">
+              <circle cx="9" cy="21" r="1" />
+              <circle cx="20" cy="21" r="1" />
+              <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" />
+            </svg>
+            Перейти в каталог
+          </Link>
+        </div>
       </div>
     </PageLayout>
   );

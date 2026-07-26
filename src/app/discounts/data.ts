@@ -71,12 +71,10 @@ export const discounts: Discounts[] = [
       },
     ],
   },
-
   {
     id: "delivery-discount",
     title: "Бесплатная доставка по России при заказе от 5 000 ₽.",
     image: "/images/discounts/delivery-discount.png",
-    // endDate не указываем — акция постоянная
     blocks: [
       {
         id: "delivery-3",
@@ -113,7 +111,6 @@ export const discounts: Discounts[] = [
       },
     ],
   },
-
   {
     id: "birthday-discount",
     title: "Скидка 10% ко дню рождения",
@@ -121,14 +118,12 @@ export const discounts: Discounts[] = [
     startDate: null,
     endDate: null,
     blocks: [
-      // 1. Изображение внутри модалки
       {
         id: "birthday-1",
         type: "image",
         src: "/images/discounts/birthday-discount.png",
         alt: "Подарок на день рождения от Cocktail Design",
       },
-      // 2. Основной текст акции
       {
         id: "birthday-2",
         type: "heading",
@@ -140,7 +135,6 @@ export const discounts: Discounts[] = [
         type: "text",
         content: "Дарим скидку 10% на любую покупку в честь вашего дня рождения.",
       },
-      // 3. Срок действия
       {
         id: "birthday-4",
         type: "heading",
@@ -152,7 +146,6 @@ export const discounts: Discounts[] = [
         type: "text",
         content: "Скидка доступна в течение трёх дней до и трёх дней после вашей даты рождения.",
       },
-      // 4. Как воспользоваться
       {
         id: "birthday-6",
         type: "heading",
@@ -168,9 +161,8 @@ export const discounts: Discounts[] = [
           "Подтвердите дату рождения — отправьте менеджеру фото или скан документа (паспорт, водительские права и т. п.).",
           "После проверки скидка будет активирована, и вы сможете завершить заказ по сниженной цене.",
         ],
-        ordered: true, // Нумерованный список, так как это последовательность шагов
+        ordered: true,
       },
-      // 5. Примечание
       {
         id: "birthday-8",
         type: "heading",
