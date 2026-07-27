@@ -83,16 +83,16 @@ function buildUniqueImages(product: CatalogProductPreview): string[] {
     .slice(0, MAX_PREVIEW_IMAGES);
 }
 
-function getVariantImageIndex(variant: CatalogVariant | null, images: string[]): number {
+function getVariantImageIndex(variant: CatalogVariant | null, images: string[]): number | null {
   const variantImage = variant?.images[0]?.src;
 
   if (!variantImage) {
-    return 0;
+    return null;
   }
 
   const variantImageIndex = images.findIndex((image) => image === variantImage);
 
-  return variantImageIndex >= 0 ? variantImageIndex : 0;
+  return variantImageIndex >= 0 ? variantImageIndex : null;
 }
 
 function sumWidths(widths: number[], gap: number): number {
@@ -113,7 +113,7 @@ export default function ProductCard({ product, colorMap = {} }: ProductCardProps
   const [quantity, setQuantity] = useState<number>(1);
   const [engravingChecked, setEngravingChecked] = useState<boolean>(false);
   const [activeVariant, setActiveVariant] = useState<CatalogVariant | null>(initialVariant);
-  const [activeImageIndex, setActiveImageIndex] = useState<number>(() =>
+  const [activeImageIndex, setActiveImageIndex] = useState<number | null>(() =>
     getVariantImageIndex(initialVariant, uniqueImages),
   );
   const [expandedVariants, setExpandedVariants] = useState<boolean>(false);
@@ -160,9 +160,21 @@ export default function ProductCard({ product, colorMap = {} }: ProductCardProps
       ? activePriceOldCandidate
       : 0;
 
-  const currentImageIndex = activeImageIndex >= 0 && activeImageIndex < uniqueImages.length ? activeImageIndex : 0;
+  const currentImageIndex =
+    activeImageIndex !== null && activeImageIndex >= 0 && activeImageIndex < uniqueImages.length
+      ? activeImageIndex
+      : null;
 
-  const imageSrc = uniqueImages[currentImageIndex] ?? product.imageUrl ?? "/images/catalog/product-placeholder.webp";
+  const activeVariantImageSrc = activeVariant?.images[0]?.src ?? null;
+
+  const previewImageSrc = currentImageIndex !== null ? uniqueImages[currentImageIndex] : null;
+
+  const imageSrc =
+    previewImageSrc ??
+    activeVariantImageSrc ??
+    uniqueImages[0] ??
+    product.imageUrl ??
+    "/images/catalog/product-placeholder.webp";
 
   const hasDiscount = activePriceOld > activePrice;
   const discountPercent = getDiscountPercent(activePrice, activePriceOld);
