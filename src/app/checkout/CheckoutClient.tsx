@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useCartStore } from "@/lib/cart/cartStore";
@@ -26,6 +26,8 @@ export default function CheckoutClient() {
   const clearCart = useCartStore((s) => s.clearCart);
 
   const { tiers } = useDiscountTiers();
+
+  const orderCompletedRef = useRef(false);
 
   const [buyerType, setBuyerType] = useState<BuyerType>("legal");
   const [phone, setPhone] = useState("");
@@ -70,7 +72,7 @@ export default function CheckoutClient() {
   const finalPrice = totalPrice - activePromoDiscount - activeVolumeDiscount;
 
   useEffect(() => {
-    if (hasHydrated && items.length === 0) {
+    if (hasHydrated && items.length === 0 && !orderCompletedRef.current) {
       router.replace("/cart");
     }
   }, [hasHydrated, items.length, router]);
@@ -157,9 +159,18 @@ export default function CheckoutClient() {
         return;
       }
 
-      // Очищаем корзину и редиректим на страницу успеха
+      const orderName =
+        typeof data.orderName === "string" ? data.orderName : String(data.orderName ?? "");
+
+      const successUrl = orderName
+        ? `/checkout/success?order=${encodeURIComponent(orderName)}`
+        : "/checkout/success";
+
+      // Сначала ставим флаг, чтобы useEffect пустой корзины не увёл на /cart.
+      orderCompletedRef.current = true;
+      setSubmitStatus("success");
       clearCart();
-      router.push(`/checkout/success?order=${data.orderName}`);
+      router.replace(successUrl);
     } catch {
       setSubmitStatus("error");
     }
