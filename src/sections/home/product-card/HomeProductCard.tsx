@@ -39,7 +39,9 @@ function getDiscountPercent(price: number, priceOld: number): number | null {
 export default function ProductCard({ product }: ProductCardProps) {
   const [activeImageIndex, setActiveImageIndex] = useState(0);
 
-  const productHref = `/catalog/product/${product.slug}`;
+  const productHref = product.preferredVariantId
+    ? `/catalog/product/${product.slug}?variant=${encodeURIComponent(product.preferredVariantId)}`
+    : `/catalog/product/${product.slug}`;
   const imagesCount = product.images.length;
 
   const imageSrc = product.images[activeImageIndex] ?? product.imageUrl ?? "/images/catalog/product-placeholder.webp";

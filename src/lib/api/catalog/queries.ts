@@ -12,6 +12,7 @@ import type {
   CatalogCategoryPreview,
   CatalogCollection,
   CatalogProductDetail,
+  CatalogProductPreview,
   CatalogProductsResponse,
   CatalogVariant,
   StrapiCatalogCollectionsResponse,
@@ -252,6 +253,60 @@ export async function getProductsByCategorySlugFromStrapi(params: GetProductsPar
   };
 }
 
+function hasRealDiscount(item: { price: number; priceOld: number }): boolean {
+  return item.price > 0 && item.priceOld > item.price;
+}
+
+export function prepareDiscountProductPreview(product: CatalogProductPreview): CatalogProductPreview {
+  const variants = product.variants;
+
+  const discountedWithIndex = variants
+    .map((variant, index) => ({ variant, index }))
+    .filter(({ variant }) => hasRealDiscount(variant));
+
+  if (discountedWithIndex.length === 0) {
+    return product;
+  }
+
+  discountedWithIndex.sort((a, b) => {
+    const discountRateA =
+      (a.variant.priceOld - a.variant.price) / a.variant.priceOld;
+
+    const discountRateB =
+      (b.variant.priceOld - b.variant.price) / b.variant.priceOld;
+
+    if (discountRateB !== discountRateA) {
+      return discountRateB - discountRateA;
+    }
+
+    const savingsA = a.variant.priceOld - a.variant.price;
+    const savingsB = b.variant.priceOld - b.variant.price;
+
+    if (savingsB !== savingsA) {
+      return savingsB - savingsA;
+    }
+
+    return a.index - b.index;
+  });
+
+  const preferredVariant = discountedWithIndex[0].variant;
+  const discountedVariants = discountedWithIndex.map(({ variant }) => variant);
+
+  const preferredVariantImageSrcs = preferredVariant.images.map((image) => image.src);
+  const images = Array.from(new Set([...preferredVariantImageSrcs, ...product.images]));
+
+  return {
+    ...product,
+    price: preferredVariant.price,
+    priceOld: preferredVariant.priceOld,
+    code: preferredVariant.code ?? product.code,
+    imageUrl: preferredVariant.images[0]?.src ?? product.imageUrl,
+    images,
+    variants: discountedVariants,
+    preferredVariantId: preferredVariant.id,
+  };
+}
+
 export async function getDiscountedProductsFromStrapi(
   params: GetDiscountedProductsParams,
 ): Promise<CatalogProductsResponse> {
@@ -265,7 +320,10 @@ export async function getDiscountedProductsFromStrapi(
 
   const response: StrapiCatalogProductsResponse = await fetchStrapi("/api/catalog/products-discounted", query);
 
-  const items = response.items.map(mapProductPreview).filter((item): item is NonNullable<typeof item> => item !== null);
+  const items = response.items
+    .map(mapProductPreview)
+    .filter((item): item is NonNullable<typeof item> => item !== null)
+    .map(prepareDiscountProductPreview);
 
   return {
     items,
@@ -498,10 +556,13 @@ export type CollectionMeta = {
   title: string;
   slug: string;
   description: string | null;
+  selectionMode: StrapiCollectionSelectionMode;
 };
 
 type StrapiCollectionProductsResponse = {
-  collection: CollectionMeta;
+  collection: Omit<CollectionMeta, "selectionMode"> & {
+    selectionMode?: unknown;
+  };
   items: StrapiProductItem[];
   total: number;
   limit: number;
@@ -519,7 +580,13 @@ export async function getCollectionProductsFromStrapi(params: {
 
   if (!safeSlug) {
     return {
-      collection: { id: "", title: "", slug: "", description: null },
+      collection: {
+        id: "",
+        title: "",
+        slug: "",
+        description: null,
+        selectionMode: "manual",
+      },
       items: [],
       total: 0,
       limit: params.limit,
@@ -545,10 +612,22 @@ export async function getCollectionProductsFromStrapi(params: {
     query,
   );
 
-  const items = response.items.map(mapProductPreview).filter((item): item is NonNullable<typeof item> => item !== null);
+  const collection: CollectionMeta = {
+    ...response.collection,
+    selectionMode: normalizeSelectionMode(response.collection.selectionMode),
+  };
+
+  const mappedItems = response.items
+    .map(mapProductPreview)
+    .filter((item): item is NonNullable<typeof item> => item !== null);
+
+  const items =
+    collection.selectionMode === "discount"
+      ? mappedItems.map(prepareDiscountProductPreview)
+      : mappedItems;
 
   return {
-    collection: response.collection,
+    collection,
     items,
     total: response.total,
     limit: response.limit,

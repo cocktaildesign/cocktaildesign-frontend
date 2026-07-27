@@ -259,6 +259,7 @@ export type CatalogProductPreview = {
   discountExcluded: boolean;
   code: string | null;
   variants: CatalogVariant[];
+  preferredVariantId?: string | null;
 };
 
 export type CatalogProductsResponse = {

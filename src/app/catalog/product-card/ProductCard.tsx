@@ -105,7 +105,10 @@ function sumWidths(widths: number[], gap: number): number {
 
 export default function ProductCard({ product, colorMap = {} }: ProductCardProps) {
   const uniqueImages = useMemo(() => buildUniqueImages(product), [product]);
-  const initialVariant = product.variants[0] ?? null;
+  const initialVariant =
+    product.variants.find((variant) => variant.id === product.preferredVariantId) ??
+    product.variants[0] ??
+    null;
 
   const [quantity, setQuantity] = useState<number>(1);
   const [engravingChecked, setEngravingChecked] = useState<boolean>(false);
@@ -134,7 +137,9 @@ export default function ProductCard({ product, colorMap = {} }: ProductCardProps
   const displayQuantity = cartItem?.quantity ?? quantity;
   const displayEngraving = cartItem?.engraving ?? engravingChecked;
 
-  const productHref = `/catalog/product/${product.slug}`;
+  const productHref = activeVariant
+    ? `/catalog/product/${product.slug}?variant=${encodeURIComponent(activeVariant.id)}`
+    : `/catalog/product/${product.slug}`;
 
   const hasActiveVariantPrice =
     activeVariant !== null &&
