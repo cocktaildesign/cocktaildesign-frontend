@@ -17,8 +17,8 @@
 .slider {
   position: relative;
   width: 100%;
-  /* Пропорция десктопной картинки: 1360 / 400 */
-  aspect-ratio: 1360 / 400;
+  /* Пропорция десктопной картинки: 1360 / 280 */
+  aspect-ratio: 1360 / 280;
   overflow: hidden;
   background-color: #e0e7ef;
   border-radius: 12px;
