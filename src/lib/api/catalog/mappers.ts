@@ -489,7 +489,7 @@ export function mapBundleItems(raw: StrapiBundleItem[] | undefined): CatalogBund
             name: cp.name ?? "",
             slug: cp.slug ?? "",
             price: typeof cp.price === "number" && cp.price > 0 ? cp.price : 0,
-            imageUrl: cp.imageUrl ?? null,
+            imageUrl: getStrapiMediaUrl(cp.imageUrl) ?? null,
           }
         : null,
     });
