@@ -95,10 +95,24 @@ export default function VariantSelector({ product, variants, specifications, col
 
   const activeVariant = variants.find((variant) => variant.id === activeVariantId) ?? null;
 
-  const activePrice = activeVariant?.price && activeVariant.price > 0 ? activeVariant.price : product.price;
+  const hasActiveVariantPrice =
+    activeVariant !== null &&
+    Number.isFinite(activeVariant.price) &&
+    activeVariant.price > 0;
+
+  const activePrice = hasActiveVariantPrice
+    ? activeVariant.price
+    : product.price;
+
+  const activePriceOldCandidate = hasActiveVariantPrice
+    ? activeVariant.priceOld
+    : product.priceOld;
 
   const activePriceOld =
-    activeVariant?.priceOld && activeVariant.priceOld > 0 ? activeVariant.priceOld : product.priceOld;
+    Number.isFinite(activePriceOldCandidate) &&
+    activePriceOldCandidate > activePrice
+      ? activePriceOldCandidate
+      : 0;
 
   const activeCode = activeVariant?.code ?? product.code;
 
