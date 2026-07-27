@@ -1,77 +1,64 @@
 "use client";
 
 import { useState, type ChangeEvent } from "react";
+import { getCurrentTier, getNextTier, useDiscountTiers } from "@/lib/cart/discountTiers";
 import styles from "./VolumeTiers.module.css";
-
-const TIERS = [
-  { pct: 5, min: 10000 },
-  { pct: 8, min: 25000 },
-  { pct: 12, min: 50000 },
-  { pct: 16, min: 100000 },
-  { pct: 20, min: 200000 },
-];
 
 function formatPrice(value: number) {
   return `${value.toLocaleString("ru-RU")} ₽`;
 }
 
-function getActiveTier(sum: number) {
-  for (let index = TIERS.length - 1; index >= 0; index--) {
-    if (sum >= TIERS[index].min) {
-      return TIERS[index];
-    }
+function getTierPosition(index: number, tiersCount: number) {
+  if (tiersCount <= 1) {
+    return "0%";
   }
 
-  return null;
+  return `${(index / (tiersCount - 1)) * 100}%`;
 }
 
-function getNextTier(sum: number) {
-  return TIERS.find((tier) => sum < tier.min) ?? null;
-}
+function getSafeProgress(params: {
+  orderAmount: number;
+  currentTier: ReturnType<typeof getCurrentTier>;
+  nextTier: ReturnType<typeof getNextTier>;
+}): number {
+  const { orderAmount, currentTier, nextTier } = params;
 
-function getTierPosition(index: number) {
-  return `${(index / (TIERS.length - 1)) * 100}%`;
-}
-
-function getProgress(sum: number) {
-  const firstTier = TIERS[0];
-  const lastTier = TIERS[TIERS.length - 1];
-
-  if (sum < firstTier.min) {
-    return 0;
-  }
-
-  if (sum >= lastTier.min) {
+  if (!nextTier) {
     return 100;
   }
 
-  let activeIndex = 0;
+  const rangeStart = currentTier?.minAmount ?? 0;
+  const rangeEnd = nextTier.minAmount;
 
-  for (let index = 0; index < TIERS.length; index++) {
-    if (sum >= TIERS[index].min) {
-      activeIndex = index;
-    }
-  }
+  const progress =
+    rangeEnd > rangeStart ? ((orderAmount - rangeStart) / (rangeEnd - rangeStart)) * 100 : 0;
 
-  const currentTier = TIERS[activeIndex];
-  const nextTier = TIERS[activeIndex + 1];
-  const segmentSize = 100 / (TIERS.length - 1);
-  const segmentProgress = (sum - currentTier.min) / (nextTier.min - currentTier.min);
-
-  return activeIndex * segmentSize + segmentProgress * segmentSize;
+  return Math.min(Math.max(progress, 0), 100);
 }
 
 export default function VolumeTiers() {
+  const { tiers, isLoading } = useDiscountTiers();
   const [orderSum, setOrderSum] = useState("");
 
-  const sum = Number(orderSum) || 0;
-  const activeTier = getActiveTier(sum);
-  const nextTier = getNextTier(sum);
-  const discountPercent = activeTier?.pct ?? 0;
-  const saving = Math.round((sum * discountPercent) / 100);
-  const totalAfterDiscount = Math.max(sum - saving, 0);
-  const remaining = nextTier ? Math.max(nextTier.min - sum, 0) : 0;
-  const progress = getProgress(sum);
+  const orderAmount = Number(orderSum) || 0;
+  const currentTier = getCurrentTier(tiers, orderAmount);
+  const nextTier = getNextTier(tiers, orderAmount);
+  const currentPercent = currentTier?.percent ?? 0;
+  const saving = Math.round((orderAmount * currentPercent) / 100);
+  const totalAfterDiscount = Math.max(orderAmount - saving, 0);
+  const amountUntilNextTier = nextTier ? Math.max(nextTier.minAmount - orderAmount, 0) : 0;
+  const safeProgress = getSafeProgress({ orderAmount, currentTier, nextTier });
+
+  const maximumPercent = tiers.length > 0 ? Math.max(...tiers.map((tier) => tier.percent)) : 0;
+
+  const firstTier = tiers[0] ?? null;
+
+  let discountHint = "";
+  if (currentTier) {
+    discountHint = `Применяется к заказам от ${formatPrice(currentTier.minAmount)}`;
+  } else if (firstTier) {
+    discountHint = `Начинается от ${formatPrice(firstTier.minAmount)}`;
+  }
 
   function handleOrderSumChange(event: ChangeEvent<HTMLInputElement>) {
     const numbers = event.target.value.replace(/\D/g, "").slice(0, 9);
@@ -81,104 +68,116 @@ export default function VolumeTiers() {
   return (
     <section className={styles.section}>
       <div className={styles.calculator}>
-        <div className={styles.calcHeader}>
-          <div className={styles.calcField}>
-            <label className={styles.calcLabel} htmlFor="orderSum">
-              Сумма заказа
-            </label>
+        {isLoading && <p>Загружаем условия скидок…</p>}
 
-            <div className={styles.inputWrap}>
-              <input
-                id="orderSum"
-                className={styles.calcInput}
-                type="text"
-                inputMode="numeric"
-                autoComplete="off"
-                placeholder="0"
-                value={orderSum ? Number(orderSum).toLocaleString("ru-RU") : ""}
-                onChange={handleOrderSumChange}
-                aria-describedby="orderSumHint"
-              />
-              <span className={styles.currency} aria-hidden="true">
-                ₽
-              </span>
-            </div>
+        {!isLoading && tiers.length === 0 && <p>Условия накопительных скидок временно недоступны.</p>}
 
-            <span id="orderSumHint" className={styles.inputHint}>
-              Введите сумму, чтобы рассчитать скидку и экономию
-            </span>
-          </div>
+        {!isLoading && tiers.length > 0 && (
+          <>
+            <div className={styles.calcHeader}>
+              <div className={styles.calcField}>
+                <label className={styles.calcLabel} htmlFor="orderSum">
+                  Сумма заказа
+                </label>
 
-          <div className={styles.currentLevel}>
-            <span className={styles.currentLevelLabel}>Текущий уровень</span>
-            <span className={styles.currentLevelValue}>{activeTier ? `Скидка ${activeTier.pct}%` : "Без скидки"}</span>
-          </div>
-        </div>
-
-        <div className={styles.progressBlock}>
-          <div className={styles.progressTrack} aria-hidden="true">
-            <div className={styles.progressFill} style={{ width: `${progress}%` }} />
-
-            <div className={styles.progressMarks}>
-              {TIERS.map((tier, index) => {
-                const isPassed = sum >= tier.min;
-
-                return (
-                  <span
-                    key={tier.pct}
-                    className={`${styles.mark} ${isPassed ? styles.markPassed : ""}`}
-                    style={{ left: getTierPosition(index) }}
+                <div className={styles.inputWrap}>
+                  <input
+                    id="orderSum"
+                    className={styles.calcInput}
+                    type="text"
+                    inputMode="numeric"
+                    autoComplete="off"
+                    placeholder="0"
+                    value={orderSum ? Number(orderSum).toLocaleString("ru-RU") : ""}
+                    onChange={handleOrderSumChange}
+                    aria-describedby="orderSumHint"
                   />
-                );
-              })}
-            </div>
-          </div>
-
-          <div className={styles.progressLabels}>
-            {TIERS.map((tier, index) => {
-              const isCurrent = activeTier?.pct === tier.pct;
-              const isPassed = sum >= tier.min;
-
-              return (
-                <div
-                  key={tier.pct}
-                  className={`${styles.progressLabel} ${isPassed ? styles.progressLabelPassed : ""} ${
-                    isCurrent ? styles.progressLabelCurrent : ""
-                  }`}
-                  style={{ left: getTierPosition(index) }}>
-                  <span className={styles.progressPercent}>{tier.pct}%</span>
-                  <span className={styles.progressAmount}>от {formatPrice(tier.min)}</span>
+                  <span className={styles.currency} aria-hidden="true">
+                    ₽
+                  </span>
                 </div>
-              );
-            })}
-          </div>
-        </div>
 
-        <div className={styles.metrics} aria-live="polite">
-          <Metric
-            label="Ваша скидка"
-            value={`${discountPercent}%`}
-            hint={
-              activeTier
-                ? `Применяется к заказам от ${formatPrice(activeTier.min)}`
-                : `Начинается от ${formatPrice(TIERS[0].min)}`
-            }
-            primary
-          />
+                <span id="orderSumHint" className={styles.inputHint}>
+                  Введите сумму, чтобы рассчитать скидку и экономию
+                </span>
+              </div>
 
-          <Metric
-            label="Экономия"
-            value={formatPrice(saving)}
-            hint={sum > 0 ? `К оплате ${formatPrice(totalAfterDiscount)}` : "Рассчитается автоматически"}
-          />
+              <div className={styles.currentLevel}>
+                <span className={styles.currentLevelLabel}>Текущий уровень</span>
+                <span className={styles.currentLevelValue}>
+                  {currentTier ? `Скидка ${currentTier.percent}%` : "Без скидки"}
+                </span>
+              </div>
+            </div>
 
-          <Metric
-            label={nextTier ? "До следующего уровня" : "Максимальный уровень"}
-            value={nextTier ? formatPrice(remaining) : "Достигнут"}
-            hint={nextTier ? `Следующая скидка — ${nextTier.pct}%` : "Доступна максимальная скидка 20%"}
-            muted={!nextTier}
-          />
-        </div>
+            <div className={styles.progressBlock}>
+              <div className={styles.progressTrack} aria-hidden="true">
+                <div className={styles.progressFill} style={{ width: `${safeProgress}%` }} />
+
+                <div className={styles.progressMarks}>
+                  {tiers.map((tier, index) => {
+                    const isPassed = orderAmount >= tier.minAmount;
+
+                    return (
+                      <span
+                        key={tier.id}
+                        className={`${styles.mark} ${isPassed ? styles.markPassed : ""}`}
+                        style={{ left: getTierPosition(index, tiers.length) }}
+                      />
+                    );
+                  })}
+                </div>
+              </div>
+
+              <div className={styles.progressLabels}>
+                {tiers.map((tier, index) => {
+                  const isCurrent = currentTier?.id === tier.id;
+                  const isPassed = orderAmount >= tier.minAmount;
+
+                  return (
+                    <div
+                      key={tier.id}
+                      className={`${styles.progressLabel} ${isPassed ? styles.progressLabelPassed : ""} ${
+                        isCurrent ? styles.progressLabelCurrent : ""
+                      }`}
+                      style={{ left: getTierPosition(index, tiers.length) }}>
+                      <span className={styles.progressPercent}>{tier.percent}%</span>
+                      <span className={styles.progressAmount}>от {formatPrice(tier.minAmount)}</span>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+
+            <div className={styles.metrics} aria-live="polite">
+              <Metric
+                label="Ваша скидка"
+                value={`${currentPercent}%`}
+                hint={discountHint}
+                primary
+              />
+
+              <Metric
+                label="Экономия"
+                value={formatPrice(saving)}
+                hint={
+                  orderAmount > 0 ? `К оплате ${formatPrice(totalAfterDiscount)}` : "Рассчитается автоматически"
+                }
+              />
+
+              <Metric
+                label={nextTier ? "До следующего уровня" : "Максимальный уровень"}
+                value={nextTier ? formatPrice(amountUntilNextTier) : "Достигнут"}
+                hint={
+                  nextTier
+                    ? `Следующая скидка — ${nextTier.percent}%`
+                    : `Доступна максимальная скидка ${maximumPercent}%`
+                }
+                muted={!nextTier}
+              />
+            </div>
+          </>
+        )}
       </div>
 
       <div className={styles.notes}>
