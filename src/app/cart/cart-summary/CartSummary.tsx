@@ -103,7 +103,8 @@ export default function CartSummary() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           code: promoCode.trim(),
-          totalPrice: discountableTotal,
+          totalPrice,
+          discountableTotal,
         }),
       });
 
