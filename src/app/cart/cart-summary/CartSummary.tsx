@@ -80,7 +80,13 @@ export default function CartSummary() {
     }
   }
 
-  const finalPrice = totalPrice - activePromoDiscount - activeVolumeDiscount;
+  if (!promoReplacesVolumeDiscount && activePromoDiscount > 0) {
+    const remainingAfterVolume = Math.max(0, totalPrice - activeVolumeDiscount);
+
+    activePromoDiscount = Math.min(activePromoDiscount, remainingAfterVolume);
+  }
+
+  const finalPrice = Math.max(0, totalPrice - activePromoDiscount - activeVolumeDiscount);
 
   // Когда пользователь меняет текст в поле промокода — сбрасываем всё
   function handlePromoChange(e: React.ChangeEvent<HTMLInputElement>) {

@@ -71,7 +71,13 @@ export default function CheckoutClient() {
     }
   }
 
-  const finalPrice = totalPrice - activePromoDiscount - activeVolumeDiscount;
+  if (!promoReplacesVolumeDiscount && activePromoDiscount > 0) {
+    const remainingAfterVolume = Math.max(0, totalPrice - activeVolumeDiscount);
+
+    activePromoDiscount = Math.min(activePromoDiscount, remainingAfterVolume);
+  }
+
+  const finalPrice = Math.max(0, totalPrice - activePromoDiscount - activeVolumeDiscount);
 
   useEffect(() => {
     if (hasHydrated && items.length === 0 && !orderCompletedRef.current) {
