@@ -28,6 +28,8 @@ export default function CheckoutClient() {
   const { tiers } = useDiscountTiers();
 
   const orderCompletedRef = useRef(false);
+  const isSubmittingRef = useRef(false);
+  const idempotencyKeyRef = useRef<string | null>(null);
 
   const [buyerType, setBuyerType] = useState<BuyerType>("legal");
   const [phone, setPhone] = useState("");
@@ -113,6 +115,7 @@ export default function CheckoutClient() {
   }
 
   async function handleSubmit() {
+    if (isSubmittingRef.current) return;
     if (!hasHydrated) return;
     if (items.length === 0) {
       router.replace("/cart");
@@ -121,12 +124,20 @@ export default function CheckoutClient() {
 
     if (!validate()) return;
 
+    if (!idempotencyKeyRef.current) {
+      idempotencyKeyRef.current = crypto.randomUUID();
+    }
+
+    isSubmittingRef.current = true;
     setSubmitStatus("loading");
 
     try {
       const res = await fetch("https://api.cocktaildesign.ru/api/orders", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          "Idempotency-Key": idempotencyKeyRef.current,
+        },
         body: JSON.stringify({
           buyerType,
           fullName: buyerType === "individual" ? fullName : undefined,
@@ -155,16 +166,14 @@ export default function CheckoutClient() {
       const data = await res.json();
 
       if (!res.ok || !data.ok) {
+        isSubmittingRef.current = false;
         setSubmitStatus("error");
         return;
       }
 
-      const orderName =
-        typeof data.orderName === "string" ? data.orderName : String(data.orderName ?? "");
+      const orderName = typeof data.orderName === "string" ? data.orderName : String(data.orderName ?? "");
 
-      const successUrl = orderName
-        ? `/checkout/success?order=${encodeURIComponent(orderName)}`
-        : "/checkout/success";
+      const successUrl = orderName ? `/checkout/success?order=${encodeURIComponent(orderName)}` : "/checkout/success";
 
       // Сначала ставим флаг, чтобы useEffect пустой корзины не увёл на /cart.
       orderCompletedRef.current = true;
@@ -172,6 +181,7 @@ export default function CheckoutClient() {
       clearCart();
       router.replace(successUrl);
     } catch {
+      isSubmittingRef.current = false;
       setSubmitStatus("error");
     }
   }
