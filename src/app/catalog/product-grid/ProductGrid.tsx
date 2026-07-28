@@ -43,8 +43,16 @@ export default async function ProductGrid({ categorySlug, collectionSlug, filter
     hasMore = res.hasMore;
   }
 
+  // key меняется только при смене выдачи (подборка / категория),
+  // чтобы ProductGridClient перемонтировался и взял новые initialProducts.
+  // При load more key стабилен — подгруженные товары не сбрасываются.
+  const gridKey = collectionSlug
+    ? `collection:${collectionSlug}:category:${filterCategorySlug ?? "all"}`
+    : `category:${categorySlug ?? "all"}`;
+
   return (
     <ProductGridClient
+      key={gridKey}
       initialProducts={products}
       initialHasMore={hasMore}
       pageSize={PAGE_SIZE}
