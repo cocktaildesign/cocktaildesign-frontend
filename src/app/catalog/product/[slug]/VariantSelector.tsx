@@ -1,10 +1,10 @@
 // src/app/catalog/product/[slug]/VariantSelector.tsx
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 import ArrowRightIcon from "@/components/icons/ArrowRightIcon";
 import CopyButton from "@/components/ui/copy-button/CopyButton";
@@ -47,6 +47,7 @@ function ProductSpecificationValue({ spec }: { spec: CatalogProductSpecification
 }
 
 export default function VariantSelector({ product, variants, specifications, colorMap }: VariantSelectorProps) {
+  const router = useRouter();
   const searchParams = useSearchParams();
   const requestedVariantId = searchParams.get("variant");
 
@@ -93,7 +94,19 @@ export default function VariantSelector({ product, variants, specifications, col
 
   const [activeImageIndex, setActiveImageIndex] = useState<number>(initialActiveImageIndex);
 
+  const pendingLocalVariantIdRef = useRef<string | null>(null);
+
   useEffect(() => {
+    const isLocalUrlUpdate =
+      pendingLocalVariantIdRef.current !== null && pendingLocalVariantIdRef.current === initialVariantId;
+
+    if (isLocalUrlUpdate) {
+      pendingLocalVariantIdRef.current = null;
+      return;
+    }
+
+    pendingLocalVariantIdRef.current = null;
+
     setActiveVariantId(initialVariantId);
     setActiveImageIndex(initialActiveImageIndex);
   }, [initialVariantId, initialActiveImageIndex]);
@@ -173,6 +186,22 @@ export default function VariantSelector({ product, variants, specifications, col
 
   const characteristicEntries = Array.from(characteristicMap.entries());
 
+  function updateVariantInUrl(variantId: string) {
+    if (requestedVariantId === variantId) {
+      return;
+    }
+
+    pendingLocalVariantIdRef.current = variantId;
+
+    const params = new URLSearchParams(searchParams.toString());
+
+    params.set("variant", variantId);
+
+    router.replace(`?${params.toString()}`, {
+      scroll: false,
+    });
+  }
+
   function handleTagClick(variantIds: string[]) {
     const selectedVariantId = variantIds[0];
 
@@ -181,6 +210,7 @@ export default function VariantSelector({ product, variants, specifications, col
     }
 
     setActiveVariantId(selectedVariantId);
+    updateVariantInUrl(selectedVariantId);
 
     const variantImageIndex = galleryImages.findIndex((image) => image.variantId === selectedVariantId);
 
@@ -203,6 +233,7 @@ export default function VariantSelector({ product, variants, specifications, col
      */
     if (selectedVariantId) {
       setActiveVariantId(selectedVariantId);
+      updateVariantInUrl(selectedVariantId);
     }
   }
 
