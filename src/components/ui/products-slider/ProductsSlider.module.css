@@ -5,6 +5,8 @@
 
 .wrapper {
   position: relative;
+  width: 100%;
+  min-width: 0;
 }
 
 /* ==========================================================================
@@ -53,6 +55,9 @@
 
 .slider {
   display: flex;
+  justify-content: flex-start;
+  width: 100%;
+  min-width: 0;
   gap: 16px;
   overflow-x: auto;
   scroll-snap-type: x mandatory;
