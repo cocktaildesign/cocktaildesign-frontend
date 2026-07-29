@@ -1,7 +1,7 @@
 // src/app/catalog/product/[slug]/VariantSelector.tsx
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
@@ -87,11 +87,16 @@ export default function VariantSelector({ product, variants, specifications, col
     ? galleryImages.findIndex((image) => image.variantId === initialVariantId)
     : 0;
 
+  const initialActiveImageIndex = initialVariantImageIndex >= 0 ? initialVariantImageIndex : 0;
+
   const [activeVariantId, setActiveVariantId] = useState<string | null>(initialVariantId);
 
-  const [activeImageIndex, setActiveImageIndex] = useState<number>(
-    initialVariantImageIndex >= 0 ? initialVariantImageIndex : 0,
-  );
+  const [activeImageIndex, setActiveImageIndex] = useState<number>(initialActiveImageIndex);
+
+  useEffect(() => {
+    setActiveVariantId(initialVariantId);
+    setActiveImageIndex(initialActiveImageIndex);
+  }, [initialVariantId, initialActiveImageIndex]);
 
   const activeVariant = variants.find((variant) => variant.id === activeVariantId) ?? null;
 
