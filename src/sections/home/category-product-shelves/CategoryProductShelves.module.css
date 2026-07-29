@@ -4,10 +4,7 @@
    ========================================================================== */
 
 .section {
-  display: flex;
-  flex-direction: column;
   width: 100%;
-  gap: 80px;
   margin: 44px 0;
 }
 
