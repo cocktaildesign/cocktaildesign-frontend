@@ -15,9 +15,13 @@ import type {
   CatalogProductPreview,
   CatalogProductsResponse,
   CatalogVariant,
+  HomepageCollectionReference,
+  HomepageCollections,
+  HomepageSettings,
   StrapiCatalogCollectionsResponse,
   StrapiCatalogProductBySlugResponse,
   StrapiCollectionSelectionMode,
+  StrapiHomepageResponse,
   StrapiProductItem,
   StrapiWeeklyProductBlockResponse,
   WeeklyProductBlock,
@@ -338,10 +342,150 @@ export async function getDiscountedProductsFromStrapi(
 // ПОДБОРКИ ТОВАРОВ ДЛЯ ГЛАВНОЙ (catalog-collections)
 // ============================================================================
 
+const HOME_COLLECTION_PRODUCTS_LIMIT = 100;
+
 function normalizeSelectionMode(value: unknown): StrapiCollectionSelectionMode {
   if (value === "category") return "category";
   if (value === "discount") return "discount";
   return "manual";
+}
+
+function normalizeHomepageCollectionReference(value: unknown): HomepageCollectionReference | null {
+  if (!value || typeof value !== "object") {
+    return null;
+  }
+
+  const item = value as HomepageCollectionReference;
+  const slug = typeof item.slug === "string" ? item.slug.trim() : "";
+
+  if (!slug) {
+    return null;
+  }
+
+  return {
+    id: item.id,
+    documentId: item.documentId,
+    title: item.title,
+    slug,
+    description: item.description,
+    sortOrder: item.sortOrder,
+    selectionMode: item.selectionMode,
+  };
+}
+
+export async function getHomepageFromStrapi(): Promise<HomepageSettings> {
+  const empty: HomepageSettings = {
+    collectionAfterShortcuts: null,
+    saleCollectionAfterTelegram: null,
+    collectionAfterKnowledge: null,
+    collectionAfterBanners: null,
+  };
+
+  try {
+    const response: StrapiHomepageResponse = await fetchStrapi("/api/homepage", {
+      populate: "*",
+    });
+
+    const data = response.data;
+
+    if (!data) {
+      return empty;
+    }
+
+    return {
+      collectionAfterShortcuts: normalizeHomepageCollectionReference(data.collectionAfterShortcuts),
+      saleCollectionAfterTelegram: normalizeHomepageCollectionReference(data.saleCollectionAfterTelegram),
+      collectionAfterKnowledge: normalizeHomepageCollectionReference(data.collectionAfterKnowledge),
+      collectionAfterBanners: normalizeHomepageCollectionReference(data.collectionAfterBanners),
+    };
+  } catch (e) {
+    const message = e instanceof Error ? e.message : "";
+
+    if (
+      message.includes(" 404 ") ||
+      message.includes("Not Found") ||
+      message.includes(" 403 ") ||
+      message.includes("Forbidden")
+    ) {
+      return empty;
+    }
+
+    throw e;
+  }
+}
+
+async function loadHomepageSlotCollection(
+  reference: HomepageCollectionReference | null,
+  requireDiscount = false,
+): Promise<CatalogCollection | null> {
+  if (!reference?.slug) {
+    return null;
+  }
+
+  if (requireDiscount && normalizeSelectionMode(reference.selectionMode) !== "discount") {
+    return null;
+  }
+
+  try {
+    const data = await getCollectionProductsFromStrapi({
+      slug: reference.slug,
+      limit: HOME_COLLECTION_PRODUCTS_LIMIT,
+      offset: 0,
+    });
+
+    if (!data.collection.slug || !data.collection.title) {
+      return null;
+    }
+
+    if (requireDiscount && data.collection.selectionMode !== "discount") {
+      return null;
+    }
+
+    const sortOrder =
+      typeof reference.sortOrder === "number" && Number.isFinite(reference.sortOrder) ? reference.sortOrder : 0;
+
+    return {
+      id: data.collection.id,
+      title: data.collection.title,
+      slug: data.collection.slug,
+      description: data.collection.description,
+      sortOrder,
+      viewAllHref: `/catalog/collection/${data.collection.slug}`,
+      products: data.items,
+    };
+  } catch {
+    return null;
+  }
+}
+
+export async function getHomepageCollectionsFromStrapi(): Promise<HomepageCollections> {
+  const empty: HomepageCollections = {
+    collectionAfterShortcuts: null,
+    saleCollectionAfterTelegram: null,
+    collectionAfterKnowledge: null,
+    collectionAfterBanners: null,
+  };
+
+  try {
+    const homepage = await getHomepageFromStrapi();
+
+    const [collectionAfterShortcuts, saleCollectionAfterTelegram, collectionAfterKnowledge, collectionAfterBanners] =
+      await Promise.all([
+        loadHomepageSlotCollection(homepage.collectionAfterShortcuts),
+        loadHomepageSlotCollection(homepage.saleCollectionAfterTelegram, true),
+        loadHomepageSlotCollection(homepage.collectionAfterKnowledge),
+        loadHomepageSlotCollection(homepage.collectionAfterBanners),
+      ]);
+
+    return {
+      collectionAfterShortcuts,
+      saleCollectionAfterTelegram,
+      collectionAfterKnowledge,
+      collectionAfterBanners,
+    };
+  } catch {
+    return empty;
+  }
 }
 
 function buildCollectionViewAllHref(params: {

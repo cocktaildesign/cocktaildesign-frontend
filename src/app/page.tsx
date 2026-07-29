@@ -15,7 +15,7 @@ import AboutCompany from "@/sections/home/07-about-company/AboutCompany";
 import MobileCatalogShortcuts from "@/sections/home/mobile-catalog-shortcuts/MobileCatalogShortcuts";
 
 import { pageMetadata } from "@/lib/seo/metadata";
-import { getCatalogCollectionsWithProductsFromStrapi, getWeeklyProductBlock } from "@/lib/api/catalog";
+import { getHomepageCollectionsFromStrapi, getWeeklyProductBlock } from "@/lib/api/catalog";
 
 export const metadata: Metadata = pageMetadata({
   title: "Магазин барного инвентаря в СПб - CocktailDesign",
@@ -25,22 +25,22 @@ export const metadata: Metadata = pageMetadata({
 });
 
 export default async function HomePage() {
-  const collections = await getCatalogCollectionsWithProductsFromStrapi();
+  const homepageCollections = await getHomepageCollectionsFromStrapi();
   const weeklyProduct = await getWeeklyProductBlock();
 
   return (
     <main className={styles.homePage}>
       <HeroSection weeklyProduct={weeklyProduct} />
       <MobileCatalogShortcuts />
-      <CategoryProductShelves collections={collections} collectionSlug="nashe-proizvodstvo" />
+      <CategoryProductShelves collection={homepageCollections.collectionAfterShortcuts} />
       <PopularCategories />
       <Advantages />
       <Telegram />
-      <SaleProductsShelf collections={collections} collectionSlug="sale" />
+      <SaleProductsShelf collection={homepageCollections.saleCollectionAfterTelegram} />
       <KnowledgePreview />
-      <CategoryProductShelves collections={collections} collectionSlug="vse-dlya-raboty-so-ldom" />
+      <CategoryProductShelves collection={homepageCollections.collectionAfterKnowledge} />
       <Banners />
-      <CategoryProductShelves collections={collections} collectionSlug="vse-dlya-podachi" />
+      <CategoryProductShelves collection={homepageCollections.collectionAfterBanners} />
       <SocialLinks />
       <AboutCompany />
     </main>

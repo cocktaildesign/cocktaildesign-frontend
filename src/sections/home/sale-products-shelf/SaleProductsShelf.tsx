@@ -10,21 +10,10 @@ import type { CatalogCollection } from "@/lib/api/catalog/types";
 import styles from "./SaleProductsShelf.module.css";
 
 type SaleProductsShelfProps = {
-  collections: CatalogCollection[];
-  collectionSlug?: string;
+  collection: CatalogCollection | null;
 };
 
-export default function SaleProductsShelf({ collections, collectionSlug = "sale" }: SaleProductsShelfProps) {
-  // Убираем случайные пробелы в slug
-  const normalizedSlug = collectionSlug.trim();
-
-  if (!normalizedSlug) {
-    return null;
-  }
-
-  // Ищем нужную подборку
-  const collection = collections.find((item) => item.slug === normalizedSlug);
-
+export default function SaleProductsShelf({ collection }: SaleProductsShelfProps) {
   if (!collection) {
     return null;
   }

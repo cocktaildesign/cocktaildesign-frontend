@@ -287,6 +287,45 @@ export type CatalogCollection = {
 };
 
 // ============================================================
+//    3.2) Strapi types — настройки главной (homepage single type)
+// ============================================================
+
+export type HomepageCollectionReference = {
+  id: number;
+  documentId?: string;
+  title?: string | null;
+  slug?: string | null;
+  description?: string | null;
+  sortOrder?: number | null;
+  selectionMode?: StrapiCollectionSelectionMode | string | null;
+};
+
+export type HomepageSettings = {
+  collectionAfterShortcuts: HomepageCollectionReference | null;
+  saleCollectionAfterTelegram: HomepageCollectionReference | null;
+  collectionAfterKnowledge: HomepageCollectionReference | null;
+  collectionAfterBanners: HomepageCollectionReference | null;
+};
+
+export type HomepageCollections = {
+  collectionAfterShortcuts: CatalogCollection | null;
+  saleCollectionAfterTelegram: CatalogCollection | null;
+  collectionAfterKnowledge: CatalogCollection | null;
+  collectionAfterBanners: CatalogCollection | null;
+};
+
+export type StrapiHomepageResponse = {
+  data: {
+    id: number;
+    documentId?: string;
+    collectionAfterShortcuts?: HomepageCollectionReference | null;
+    saleCollectionAfterTelegram?: HomepageCollectionReference | null;
+    collectionAfterKnowledge?: HomepageCollectionReference | null;
+    collectionAfterBanners?: HomepageCollectionReference | null;
+  } | null;
+};
+
+// ============================================================
 //    4) Товар: детальная страница (/catalog/product/[slug])
 // ============================================================
 

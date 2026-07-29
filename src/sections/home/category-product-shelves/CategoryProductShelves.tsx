@@ -10,19 +10,10 @@ import type { CatalogCollection } from "@/lib/api/catalog/types";
 import styles from "./CategoryProductShelves.module.css";
 
 type CategoryProductShelvesProps = {
-  collections: CatalogCollection[];
-  collectionSlug: string;
+  collection: CatalogCollection | null;
 };
 
-export default function CategoryProductShelves({ collections, collectionSlug }: CategoryProductShelvesProps) {
-  const normalizedSlug = collectionSlug.trim();
-
-  if (!normalizedSlug) {
-    return null;
-  }
-
-  const collection = collections.find((item) => item.slug === normalizedSlug);
-
+export default function CategoryProductShelves({ collection }: CategoryProductShelvesProps) {
   if (!collection) {
     return null;
   }
@@ -39,7 +30,7 @@ export default function CategoryProductShelves({ collections, collectionSlug }: 
             <h2 className={styles.title}>{collection.title}</h2>
 
             {collection.viewAllHref && (
-              <Link href={`/catalog/collection/${collection.slug}`} className={styles.viewAllLink}>
+              <Link href={collection.viewAllHref} className={styles.viewAllLink}>
                 <span className={styles.viewAllText}>Все</span>
                 <ArrowRightIcon className={styles.viewAllIcon} title="Вперёд" />
               </Link>
