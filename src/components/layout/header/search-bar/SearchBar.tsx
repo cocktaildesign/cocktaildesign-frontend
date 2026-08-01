@@ -414,11 +414,16 @@ export default function SearchBar({
 
   function handleChange(event: ChangeEvent<HTMLInputElement>) {
     const nextQuery = event.target.value;
+    const normalizedQuery = nextQuery.trim();
+
+    const shouldFetch =
+      normalizedQuery.length >= SEARCH_MIN_LENGTH &&
+      normalizedQuery !== trimmedDebounced;
 
     latestQueryRef.current = nextQuery;
     setQuery(nextQuery);
     setActiveIndex(-1);
-    setIsFetching(nextQuery.trim().length >= SEARCH_MIN_LENGTH);
+    setIsFetching(shouldFetch);
 
     if (!isOpen) {
       openPanel();
