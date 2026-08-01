@@ -130,7 +130,7 @@ async function fetchRandomProducts(count: number): Promise<Product[]> {
 
 // Поиск товаров по запросу
 async function searchProducts(query: string): Promise<Product[]> {
-  const res = await fetch(`${API_BASE}/catalog/search?q=${encodeURIComponent(query)}`);
+  const res = await fetch(`${API_BASE}/catalog/search-v2?q=${encodeURIComponent(query)}`);
 
   if (!res.ok) {
     return [];
