@@ -1,0 +1,107 @@
+.root {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+}
+
+.overlay {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  z-index: 2;
+  max-width: calc(100% - 16px);
+  pointer-events: none;
+}
+
+.list {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+}
+
+.desktopOnly {
+  display: flex;
+}
+
+.mobileOnly {
+  display: none;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 0;
+  padding: 7px 9px;
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.badgeEllipsis {
+  max-width: 140px;
+}
+
+.badgeLabel {
+  display: block;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.more {
+  flex-shrink: 0;
+  background-color: #eef0f3;
+  color: #1f2937;
+  pointer-events: none;
+}
+
+.expandButton {
+  flex-shrink: 0;
+  padding: 7px 9px;
+  border: none;
+  border-radius: 12px;
+  background-color: #eef0f3;
+  color: #1f2937;
+  font-size: 11px;
+  font-weight: 700;
+  line-height: 1;
+  text-transform: uppercase;
+  white-space: nowrap;
+  cursor: pointer;
+  pointer-events: auto;
+}
+
+.expandButton:focus-visible {
+  outline: 2px solid var(--color-dark-blue);
+  outline-offset: 2px;
+}
+
+@media (max-width: 600px) {
+  .desktopOnly {
+    display: none;
+  }
+
+  .mobileOnly {
+    display: flex;
+  }
+
+  .badge {
+    font-size: 10px;
+  }
+
+  .badgeEllipsis {
+    max-width: 120px;
+  }
+
+  .expandButton {
+    font-size: 10px;
+  }
+}

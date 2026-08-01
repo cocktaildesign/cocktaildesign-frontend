@@ -8,6 +8,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 
 import ArrowRightIcon from "@/components/icons/ArrowRightIcon";
 import CopyButton from "@/components/ui/copy-button/CopyButton";
+import ProductBadges from "@/shared/ui/product-badges/ProductBadges";
 
 import type { CatalogProductDetail, CatalogProductSpecification, CatalogVariant } from "@/lib/api/catalog/types";
 
@@ -267,6 +268,15 @@ export default function VariantSelector({ product, variants, specifications, col
 
       <div className={styles.productInfo}>
         <h1 className={styles.productPageTitleMobile}>{product.name}</h1>
+
+        <ProductBadges
+          isNew={product.isNew}
+          noveltyBadgeColor={product.noveltyBadgeColor}
+          badges={product.badges}
+          desktopLimit={null}
+          mobileLimit={2}
+          mobileExpandable
+        />
 
         <div className={styles.productMetaSku}>
           <p className={styles.productMetaSkuTitle}>

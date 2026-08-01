@@ -5,7 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 import FavoriteButton from "@/components/ui/favorites/FavoriteButton";
-import ProductNoveltyBadge from "@/shared/ui/product-novelty-badge/ProductNoveltyBadge";
+import ProductBadges from "@/shared/ui/product-badges/ProductBadges";
 
 import type { CatalogProductPreview } from "@/lib/api/catalog/types";
 
@@ -81,7 +81,15 @@ export default function ProductCard({ product }: ProductCardProps) {
             sizes="(max-width: 768px) 50vw, 25vw"
           />
 
-          <ProductNoveltyBadge isNew={product.isNew} backgroundColor={product.noveltyBadgeColor} />
+          <ProductBadges
+            isNew={product.isNew}
+            noveltyBadgeColor={product.noveltyBadgeColor}
+            badges={product.badges}
+            desktopLimit={2}
+            mobileLimit={2}
+            overlay
+            className={styles.productBadgesOverlay}
+          />
 
           <FavoriteButton productId={product.id} className={styles.favoriteButtonOverlay} />
 

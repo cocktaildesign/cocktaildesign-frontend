@@ -345,7 +345,7 @@ function normalizeNoveltyBadgeColor(value: unknown): string {
   return trimmed;
 }
 
-function mapProductBadges(value: unknown): ProductBadge[] {
+export function mapProductBadges(value: unknown): ProductBadge[] {
   if (!Array.isArray(value) || value.length === 0) {
     return [];
   }

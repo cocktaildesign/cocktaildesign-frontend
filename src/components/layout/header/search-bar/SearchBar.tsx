@@ -6,10 +6,12 @@ import { useEffect, useId, useRef, useState, type ChangeEvent, type FormEvent, t
 import { useRouter } from "next/navigation";
 
 import { getStrapiMediaUrl } from "@/lib/api/strapi/media";
+import { mapProductBadges } from "@/lib/api/catalog/mappers";
 import ResetIcon from "@/components/icons/ResetIcon";
 import SearchIcon from "@/components/icons/header/SearchIcon";
+import ProductBadges from "@/shared/ui/product-badges/ProductBadges";
 
-import type { CatalogCategoryPreview } from "@/lib/api/catalog/types";
+import type { CatalogCategoryPreview, ProductBadge } from "@/lib/api/catalog/types";
 
 import styles from "./SearchBar.module.css";
 
@@ -34,6 +36,9 @@ type Product = {
   imageUrl?: string;
   slug?: string;
   variantId?: string;
+  isNew: boolean;
+  noveltyBadgeColor: string;
+  badges: ProductBadge[];
 };
 
 type ApiImage = {
@@ -58,6 +63,9 @@ type ApiProductItem = {
     slug?: string | null;
     image?: ApiImage[] | null;
     matchedVariant?: ApiMatchedVariant | null;
+    isNew?: boolean | null;
+    noveltyBadgeColor?: string | null;
+    badges?: unknown;
   };
 };
 
@@ -70,6 +78,22 @@ const RANDOM_PRODUCTS_COUNT = 2;
 
 const SEARCH_MIN_LENGTH = 2;
 const SEARCH_DEBOUNCE_MS = 250;
+
+const DEFAULT_NOVELTY_BADGE_COLOR = "#2eae4a";
+
+function normalizeNoveltyBadgeColor(value: unknown): string {
+  if (typeof value !== "string") {
+    return DEFAULT_NOVELTY_BADGE_COLOR;
+  }
+
+  const trimmed = value.trim();
+
+  if (!/^#[0-9a-fA-F]{6}$/.test(trimmed)) {
+    return DEFAULT_NOVELTY_BADGE_COLOR;
+  }
+
+  return trimmed;
+}
 
 // Преобразуем ответ API в формат компонента
 function mapApiProductToProduct(item: ApiProductItem): Product {
@@ -86,6 +110,9 @@ function mapApiProductToProduct(item: ApiProductItem): Product {
     slug: item.attributes.slug ?? undefined,
     variantId: matchedVariant ? String(matchedVariant.id) : undefined,
     imageUrl: getStrapiMediaUrl(raw),
+    isNew: item.attributes.isNew === true,
+    noveltyBadgeColor: normalizeNoveltyBadgeColor(item.attributes.noveltyBadgeColor),
+    badges: mapProductBadges(item.attributes.badges),
   };
 }
 
@@ -525,6 +552,15 @@ export default function SearchBar({
                               className={styles.image}
                               sizes="20vw"
                             />
+
+                            <ProductBadges
+                              isNew={product.isNew}
+                              noveltyBadgeColor={product.noveltyBadgeColor}
+                              badges={product.badges}
+                              desktopLimit={1}
+                              mobileLimit={1}
+                              overlay
+                            />
                           </div>
 
                           <span className={styles.randomProductPrice}>
@@ -597,6 +633,14 @@ export default function SearchBar({
 
                       <span className={styles.productInfo}>
                         <span className={styles.productTitle}>{product.title}</span>
+
+                        <ProductBadges
+                          isNew={product.isNew}
+                          noveltyBadgeColor={product.noveltyBadgeColor}
+                          badges={product.badges}
+                          desktopLimit={2}
+                          mobileLimit={1}
+                        />
 
                         {product.code && <span className={styles.productCategory}>Артикул: {product.code}</span>}
 

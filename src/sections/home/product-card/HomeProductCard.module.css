@@ -59,6 +59,12 @@
   position: absolute;
   top: 5px;
   right: 5px;
+  z-index: 3;
+}
+
+.productBadgesOverlay {
+  right: 56px;
+  max-width: none;
 }
 
 /* Точки переключения картинок */
@@ -108,20 +114,19 @@
   bottom: calc(100% + 6px);
   left: 0;
   z-index: 2;
-
   display: inline-flex;
   align-items: center;
   justify-content: center;
-
-  min-height: 32px;
-  padding: 0 10px;
+  min-width: 44px;
+  min-height: 28px;
+  padding: 8px 10px;
   border-radius: 12px;
-
   background: rgb(60, 170, 60);
   color: #ffffff;
-  font-size: 14px;
-  font-weight: 600;
+  font-size: 12px;
+  font-weight: 700;
   line-height: 1;
+  white-space: nowrap;
 }
 
 .priceBlock {
@@ -194,6 +199,10 @@
     transition:
       border var(--dur) var(--ease),
       box-shadow var(--dur) var(--ease);
+  }
+
+  .productBadgesOverlay {
+    right: 48px;
   }
 
   .price {
