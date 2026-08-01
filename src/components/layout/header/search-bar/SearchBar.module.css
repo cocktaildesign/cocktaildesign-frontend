@@ -458,8 +458,8 @@
 
 .productButton {
   display: grid;
-  grid-template-columns: 48px 1fr;
-  align-items: center;
+  grid-template-columns: 48px minmax(0, 1fr) minmax(220px, 320px);
+  align-items: start;
   gap: 12px;
 
   width: 100%;
@@ -502,12 +502,17 @@
 }
 
 .productInfo {
+  grid-column: 2 / 4;
   display: grid;
-  gap: 4px;
+  grid-template-columns: minmax(0, 1fr) minmax(220px, 320px);
+  column-gap: 12px;
+  row-gap: 4px;
   min-width: 0;
 }
 
 .productTitle {
+  grid-column: 1;
+  grid-row: 1;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -516,7 +521,20 @@
   font-weight: 450;
 }
 
+.searchProductBadges {
+  grid-column: 2;
+  grid-row: 1;
+  align-self: start;
+  justify-self: end;
+  display: flex;
+  justify-content: flex-end;
+  max-width: 320px;
+  min-width: 0;
+  width: 100%;
+}
+
 .productCategory {
+  grid-column: 1;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -525,6 +543,7 @@
 }
 
 .productPrice {
+  grid-column: 1;
   font-size: 14px;
   font-weight: 500;
 }
@@ -588,5 +607,28 @@
 
   .searchPanelContent {
     max-height: calc(100dvh - 64px);
+  }
+
+  .productButton {
+    grid-template-columns: 48px 1fr;
+    align-items: center;
+  }
+
+  .productInfo {
+    grid-column: 2;
+    grid-template-columns: 1fr;
+  }
+
+  .searchProductBadges {
+    grid-column: 1;
+    grid-row: 2;
+    justify-self: start;
+    justify-content: flex-start;
+    max-width: 100%;
+    width: auto;
+  }
+
+  .productTitle {
+    grid-row: 1;
   }
 }

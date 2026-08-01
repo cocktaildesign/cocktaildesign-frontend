@@ -640,6 +640,7 @@ export default function SearchBar({
                           badges={product.badges}
                           desktopLimit={2}
                           mobileLimit={1}
+                          className={styles.searchProductBadges}
                         />
 
                         {product.code && <span className={styles.productCategory}>Артикул: {product.code}</span>}
