@@ -394,6 +394,8 @@ export type CatalogProductDetail = {
   engravingEnabled: boolean;
   discountExcluded: boolean;
   code: string | null;
+  isNew: boolean;
+  noveltyBadgeColor: string;
   badges: ProductBadge[];
 
   // Состав комплекта — пустой массив для обычных товаров

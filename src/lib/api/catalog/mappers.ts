@@ -596,6 +596,8 @@ export function mapProductDetail(
   const images = mapMediaArray(source.image, name);
   const specifications = mapProductSpecifications(source.specifications);
   const bundleItems = mapBundleItems(rawBundleItems);
+  const isNew = source.isNew === true;
+  const noveltyBadgeColor = normalizeNoveltyBadgeColor(source.noveltyBadgeColor);
 
   return {
     id: String(item.id),
@@ -612,6 +614,8 @@ export function mapProductDetail(
     discountExcluded,
     code,
     bundleItems,
+    isNew,
+    noveltyBadgeColor,
     badges: mapProductBadges(source.badges),
   };
 }
