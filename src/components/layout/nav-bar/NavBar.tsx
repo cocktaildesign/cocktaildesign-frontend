@@ -15,6 +15,10 @@ export default async function NavBar() {
     <nav className={styles.navBar} aria-label="Категории товаров">
       <Container>
         <div className={styles.inner}>
+          <Link className={styles.newLink} href="/catalog/collection/novinki">
+            Новинки
+          </Link>
+
           <ul className={styles.categoryList}>
             {navigation.header.map((item) => (
               <li key={item.href} className={styles.categoryItem}>

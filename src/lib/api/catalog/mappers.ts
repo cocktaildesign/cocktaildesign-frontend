@@ -19,6 +19,7 @@ import type {
   CatalogProductSpecification,
   CatalogVariant,
   CatalogVariantCharacteristic,
+  ProductBadge,
   StrapiBundleItem,
   StrapiCatalogCollectionItem,
   StrapiCategoryItem,
@@ -328,6 +329,64 @@ function mapPreviewImageUrls(
   return images;
 }
 
+const DEFAULT_NOVELTY_BADGE_COLOR = "#2eae4a";
+
+function normalizeNoveltyBadgeColor(value: unknown): string {
+  if (typeof value !== "string") {
+    return DEFAULT_NOVELTY_BADGE_COLOR;
+  }
+
+  const trimmed = value.trim();
+
+  if (!/^#[0-9a-fA-F]{6}$/.test(trimmed)) {
+    return DEFAULT_NOVELTY_BADGE_COLOR;
+  }
+
+  return trimmed;
+}
+
+function mapProductBadges(value: unknown): ProductBadge[] {
+  if (!Array.isArray(value) || value.length === 0) {
+    return [];
+  }
+
+  const result: ProductBadge[] = [];
+
+  for (const item of value) {
+    if (!item || typeof item !== "object") {
+      continue;
+    }
+
+    const raw = item as {
+      id?: unknown;
+      label?: unknown;
+      backgroundColor?: unknown;
+      textColor?: unknown;
+    };
+
+    if (typeof raw.id !== "number" || !Number.isFinite(raw.id)) {
+      continue;
+    }
+
+    const label = typeof raw.label === "string" ? raw.label.trim() : "";
+    const backgroundColor = typeof raw.backgroundColor === "string" ? raw.backgroundColor.trim() : "";
+    const textColor = typeof raw.textColor === "string" ? raw.textColor.trim() : "";
+
+    if (!label || !backgroundColor || !textColor) {
+      continue;
+    }
+
+    result.push({
+      id: raw.id,
+      label,
+      backgroundColor,
+      textColor,
+    });
+  }
+
+  return result;
+}
+
 // ============================================================================
 // mapProductPreview
 // ============================================================================
@@ -374,6 +433,8 @@ export function mapProductPreview(item: StrapiProductItem): CatalogProductPrevie
 
   const engravingEnabled = source.engravingEnabled === true;
   const discountExcluded = source.discountExcluded === true;
+  const isNew = source.isNew === true;
+  const noveltyBadgeColor = normalizeNoveltyBadgeColor(source.noveltyBadgeColor);
 
   const slug = makeProductSlug(moyskladId, name);
 
@@ -390,6 +451,9 @@ export function mapProductPreview(item: StrapiProductItem): CatalogProductPrevie
     discountExcluded,
     code,
     variants,
+    isNew,
+    noveltyBadgeColor,
+    badges: mapProductBadges(source.badges),
   };
 }
 
@@ -548,6 +612,7 @@ export function mapProductDetail(
     discountExcluded,
     code,
     bundleItems,
+    badges: mapProductBadges(source.badges),
   };
 }
 

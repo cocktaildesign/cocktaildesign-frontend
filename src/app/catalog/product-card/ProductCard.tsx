@@ -8,6 +8,7 @@ import ArrowRightIcon from "@/components/icons/ArrowRightIcon";
 import QuantityControl from "@/components/ui/quantity/QuantityControl";
 import EngravingToggle from "@/components/ui/engraving/EngravingToggle";
 import FavoriteButton from "@/components/ui/favorites/FavoriteButton";
+import ProductNoveltyBadge from "@/shared/ui/product-novelty-badge/ProductNoveltyBadge";
 
 import { useCartStore } from "@/lib/cart/cartStore";
 import type { CartItem } from "@/lib/cart/cartStore";
@@ -373,6 +374,8 @@ export default function ProductCard({ product, colorMap = {} }: ProductCardProps
             className={styles.image}
             sizes="(max-width: 768px) 50vw, 25vw"
           />
+
+          <ProductNoveltyBadge isNew={product.isNew} backgroundColor={product.noveltyBadgeColor} />
 
           {discountPercent !== null && <span className={styles.discountBadge}>-{discountPercent}%</span>}
 

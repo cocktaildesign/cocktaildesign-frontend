@@ -92,6 +92,9 @@ export type StrapiProductAttributes = {
   specifications?: StrapiProductSpecification[] | null;
   code?: string | null;
   displayTitle?: string | null;
+  isNew?: boolean | null;
+  noveltyBadgeColor?: string | null;
+  badges?: unknown;
   image?:
     | StrapiMediaFile[]
     | {
@@ -122,6 +125,9 @@ export type StrapiProductItem = {
   specifications?: StrapiProductSpecification[] | null;
   code?: string | null;
   displayTitle?: string | null;
+  isNew?: boolean | null;
+  noveltyBadgeColor?: string | null;
+  badges?: unknown;
   image?: StrapiProductAttributes["image"];
 
   // Варианты могут прийти и в корне объекта
@@ -179,7 +185,7 @@ export type StrapiVariantItem = {
 //    1.3) Strapi types — подборки товаров (catalog-collections)
 // ============================================================
 
-export type StrapiCollectionSelectionMode = "manual" | "category" | "discount";
+export type StrapiCollectionSelectionMode = "manual" | "category" | "discount" | "new";
 
 export type StrapiCatalogCollectionSourceCategory = {
   id: number;
@@ -245,6 +251,13 @@ export type CatalogCategoryPreview = {
 //    3) Domain types — товары (то, что отдаём в UI)
 // ============================================================
 
+export type ProductBadge = {
+  id: number;
+  label: string;
+  backgroundColor: string;
+  textColor: string;
+};
+
 export type CatalogProductPreview = {
   id: string;
   moyskladId: string;
@@ -260,6 +273,9 @@ export type CatalogProductPreview = {
   code: string | null;
   variants: CatalogVariant[];
   preferredVariantId?: string | null;
+  isNew: boolean;
+  noveltyBadgeColor: string;
+  badges: ProductBadge[];
 };
 
 export type CatalogProductsResponse = {
@@ -378,6 +394,7 @@ export type CatalogProductDetail = {
   engravingEnabled: boolean;
   discountExcluded: boolean;
   code: string | null;
+  badges: ProductBadge[];
 
   // Состав комплекта — пустой массив для обычных товаров
   bundleItems: CatalogBundleItem[];
@@ -409,6 +426,14 @@ export type StrapiCatalogProductBySlugResponse = {
   breadcrumbsCategories?: BreadcrumbCategory[];
   // Состав комплекта — приходит из корня ответа (не из item.attributes)
   bundleItems?: StrapiBundleItem[];
+};
+
+export type StrapiCatalogSearchProductsResponse = {
+  items: StrapiProductItem[];
+};
+
+export type StrapiCatalogRandomProductsResponse = {
+  items: StrapiProductItem[];
 };
 
 // ============================================================

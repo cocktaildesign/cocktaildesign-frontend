@@ -347,6 +347,7 @@ const HOME_COLLECTION_PRODUCTS_LIMIT = 100;
 function normalizeSelectionMode(value: unknown): StrapiCollectionSelectionMode {
   if (value === "category") return "category";
   if (value === "discount") return "discount";
+  if (value === "new") return "new";
   return "manual";
 }
 
