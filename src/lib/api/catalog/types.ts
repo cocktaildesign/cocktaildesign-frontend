@@ -203,6 +203,7 @@ export type StrapiCatalogCollectionItem = {
   slug?: string | null;
   description?: string | null;
   sortOrder?: number | null;
+  isHiddenInMenu?: boolean | null;
 
   selectionMode?: StrapiCollectionSelectionMode | string | null;
   sourceCategory?: StrapiCatalogCollectionSourceCategory | null;

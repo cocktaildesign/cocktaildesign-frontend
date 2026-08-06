@@ -513,7 +513,7 @@ export async function getCatalogCollectionsWithProductsFromStrapi(): Promise<Cat
     const response: StrapiCatalogCollectionsResponse = await fetchStrapi("/api/catalog-collections", params);
 
     const result: CatalogCollection[] = [];
-    const rawCollections = response.data ?? [];
+    const rawCollections = (response.data ?? []).filter((item) => item.isHiddenInMenu !== true);
 
     for (const item of rawCollections) {
       const base = mapCatalogCollectionBase(item);
