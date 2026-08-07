@@ -299,6 +299,8 @@ export type CatalogCollection = {
   slug: string;
   description: string | null;
   sortOrder: number;
+  // Нужно, чтобы скрывать подборку только в большом меню «Каталог».
+  isHiddenInMenu?: boolean | null;
   viewAllHref: string | null;
   products: CatalogProductPreview[];
 };

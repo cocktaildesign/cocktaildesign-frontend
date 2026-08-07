@@ -45,6 +45,31 @@
 }
 
 /* ==========================================================================
+   UTSENKA LINK
+   Закреплённая ссылка «Уценка» сразу после «Новинки».
+   ========================================================================== */
+.utsenkaLink {
+  flex-shrink: 0;
+  text-decoration: none;
+  white-space: nowrap;
+  font-size: var(--text-sm);
+  font-weight: 600;
+  color: #f26a21;
+  background: none;
+  border: none;
+  transition: color var(--dur) var(--ease);
+}
+
+.utsenkaLink:hover {
+  color: #d85a16;
+}
+
+.utsenkaLink:focus-visible {
+  outline: 2px solid var(--color-accent-strong);
+  outline-offset: 2px;
+}
+
+/* ==========================================================================
    CATEGORY LIST
    Список ссылок на категории.
    ========================================================================== */

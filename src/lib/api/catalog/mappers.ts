@@ -482,6 +482,7 @@ export function mapCatalogCollectionBase(
     slug,
     description,
     sortOrder,
+    isHiddenInMenu: typeof item.isHiddenInMenu === "boolean" ? item.isHiddenInMenu : null,
   };
 }
 
