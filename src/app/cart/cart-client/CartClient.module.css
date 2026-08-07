@@ -301,6 +301,10 @@
     background-color: var(--color-white);
   }
 
+  .cartTitle {
+    font-size: var(--text-xl);
+  }
+
   .cartTitleRow {
     flex-direction: column;
     align-items: stretch;

@@ -175,11 +175,11 @@
 
 @media (max-width: 600px) {
   .favoritesPageHeader {
-    padding: 16px 0;
+    padding: 15px 0 20px;
   }
 
   .favoritesPageTitle {
-    font-size: var(--text-lg);
+    font-size: var(--text-xl);
   }
 
   .favoritesLoadingCard {

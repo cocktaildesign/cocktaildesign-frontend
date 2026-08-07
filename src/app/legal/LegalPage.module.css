@@ -119,6 +119,7 @@
   }
 
   .legalTitle {
+    margin-top: 15px;
     margin-bottom: 20px;
     font-size: var(--text-xl);
   }

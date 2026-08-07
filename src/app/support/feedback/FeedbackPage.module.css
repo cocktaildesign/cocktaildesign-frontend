@@ -43,6 +43,7 @@
 @media (max-width: 600px) {
   .section {
     min-height: auto;
+    padding-top: 15px;
   }
 
   .card {

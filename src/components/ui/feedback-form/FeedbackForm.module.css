@@ -106,3 +106,17 @@
   text-decoration: underline;
   text-underline-offset: 3px;
 }
+
+/* ==========================================================================
+   MOBILE
+   ========================================================================== */
+
+@media (max-width: 600px) {
+  .title {
+    font-size: var(--text-xl);
+  }
+
+  .note {
+    font-size: var(--text-sm);
+  }
+}
