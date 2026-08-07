@@ -5,12 +5,17 @@
   gap: 6px;
 }
 
+/* Базовый overlay-слой: привязка к верхнему левому углу media-области.
+   Конкретные отступы задаёт компонент-хозяин через переменные ниже,
+   значения в var(...) — дефолт для мест, где их не переопределяют.
+   right здесь намеренно не объявлен: резервирование места справа —
+   решение хозяина, а не базового слоя. */
 .overlay {
   position: absolute;
-  top: 8px;
-  left: 8px;
+  top: var(--product-badges-overlay-top, 8px);
+  left: var(--product-badges-overlay-left, 8px);
   z-index: 2;
-  max-width: calc(100% - 16px);
+  max-width: var(--product-badges-overlay-max-width, calc(100% - 16px));
   pointer-events: none;
 }
 
@@ -44,8 +49,10 @@
   white-space: nowrap;
 }
 
+/* Бейдж занимает доступную ширину контейнера. Ellipsis на .badgeLabel
+   срабатывает только когда ширина реально закончилась. */
 .badgeEllipsis {
-  max-width: 140px;
+  max-width: 100%;
 }
 
 .badgeLabel {

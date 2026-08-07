@@ -25,6 +25,36 @@
 }
 
 .thumb {
+  /* ================================================================
+     OVERLAY-ГЕОМЕТРИЯ MEDIA-ОБЛАСТИ
+     Все элементы поверх картинки (бейджи, избранное, скидка, точки)
+     считают отступы от этих переменных. Переменные локальные —
+     в variables.css их нет.
+     ================================================================ */
+
+  /* Единый отступ от края картинки */
+  --product-card-media-inset: 12px;
+
+  /* Зазор между соседними overlay-элементами */
+  --product-card-overlay-gap: 8px;
+
+  /* Размер кнопки избранного, см. FavoriteButton.module.css */
+  --product-card-favorite-size: 36px;
+
+  /* Иконка 21x19 центрирована в кнопке 36x36, поэтому внутри кнопки
+     остаётся 7.5-8.5px пустоты. Сдвигаем кнопку ближе к краю, чтобы
+     визуально иконка встала на --product-card-media-inset. */
+  --product-card-favorite-optical-offset: 8px;
+
+  --product-card-favorite-inset: calc(
+    var(--product-card-media-inset) - var(--product-card-favorite-optical-offset)
+  );
+
+  /* Ширина, которую бейджи обязаны оставить справа под избранное */
+  --product-card-overlay-safe-right: calc(
+    var(--product-card-favorite-inset) + var(--product-card-favorite-size) + var(--product-card-overlay-gap)
+  );
+
   position: relative;
   overflow: hidden;
   width: 100%;
@@ -39,8 +69,8 @@
 
 .discountBadge {
   position: absolute;
-  left: 0;
-  bottom: 0;
+  left: var(--product-card-media-inset);
+  bottom: var(--product-card-media-inset);
   z-index: 2;
   display: inline-flex;
   align-items: center;
@@ -57,21 +87,30 @@
   white-space: nowrap;
 }
 
+/* Кнопка стоит ближе к краю, чем бейджи, — на её оптическую компенсацию.
+   Размер кнопки 36x36 не меняется. */
 .favoriteButtonOverlay {
   position: absolute;
-  top: 12px;
-  right: 12px;
+  top: var(--product-card-favorite-inset);
+  right: var(--product-card-favorite-inset);
   z-index: 3;
 }
 
+/* ProductCard задаёт размещение бейджей внутри media-области.
+   top/left/max-width передаются в ProductBadges.module.css переменными,
+   right объявлен только здесь — одни и те же свойства в двух файлах
+   не конкурируют, порядок импортов роли не играет. */
 .productBadgesOverlay {
-  right: 56px;
-  max-width: none;
+  --product-badges-overlay-top: var(--product-card-media-inset);
+  --product-badges-overlay-left: var(--product-card-media-inset);
+  --product-badges-overlay-max-width: none;
+
+  right: var(--product-card-overlay-safe-right);
 }
 
 .dots {
   position: absolute;
-  bottom: 10px;
+  bottom: var(--product-card-media-inset);
   left: 50%;
   transform: translateX(-50%);
   display: flex;
@@ -374,6 +413,13 @@
   }
 
   .thumb {
+    /* Мобильная overlay-геометрия: те же переменные, другие значения.
+       Оптическую компенсацию здесь пока не применяем — кнопка
+       избранного остаётся на прежних 6px. */
+    --product-card-media-inset: 8px;
+    --product-card-overlay-gap: 6px;
+    --product-card-favorite-inset: 6px;
+
     aspect-ratio: 1 / 1;
     border-radius: 14px 14px 0px 0px;
   }
@@ -431,14 +477,6 @@
 
   .variantGroup {
     padding: 10px;
-  }
-  .favoriteButtonOverlay {
-    top: 6px;
-    right: 6px;
-  }
-
-  .productBadgesOverlay {
-    right: 48px;
   }
 
   .actionsRow {
