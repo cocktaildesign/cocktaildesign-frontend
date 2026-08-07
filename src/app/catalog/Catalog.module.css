@@ -131,8 +131,8 @@
 
   .title {
     font-family: var(--font-display);
-    font-size: 13px;
-    font-weight: 500;
+    font-size: 14px;
+    font-weight: 450;
     text-align: left;
     display: -webkit-box;
     -webkit-line-clamp: 2;
