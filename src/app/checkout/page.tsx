@@ -3,7 +3,6 @@ import type { Metadata } from "next";
 import { pageMetadata } from "@/lib/seo/metadata";
 import PageLayout from "@/components/layout/PageLayout";
 import CheckoutClient from "./CheckoutClient";
-import styles from './Checkout.module.css'
 
 export const metadata: Metadata = {
   ...pageMetadata({
@@ -18,7 +17,7 @@ export const metadata: Metadata = {
 
 export default function CheckoutPage() {
   return (
-    <PageLayout className={styles.CheckoutPage}>
+    <PageLayout>
       <CheckoutClient />
     </PageLayout>
   );
