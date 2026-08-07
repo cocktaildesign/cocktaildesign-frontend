@@ -913,6 +913,40 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-shrink: 0;
+}
+
+.mobileStickyFavoriteButton {
+  width: 48px;
+  height: 48px;
+}
+
+.mobileStickyQuantity {
+  height: 48px;
+  flex: 1 1 auto;
+  min-width: 88px;
+  max-width: 120px;
+  box-sizing: border-box;
+}
+
+.mobileStickyQuantity button {
+  width: 36px;
+  height: 100%;
+}
+
+.mobileStickyTopRow {
+  display: none;
+}
+
+.mobileStickyBottomRow {
+  display: none;
+}
+
+.mobileStickyEngraving {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  align-items: stretch;
 }
 
 .mobileStickyAddButton {
@@ -920,6 +954,7 @@
   align-items: center;
   justify-content: center;
   gap: 8px;
+  flex: 1 1 auto;
   min-width: 140px;
   height: 48px;
   padding: 10px 18px;
@@ -1021,6 +1056,10 @@
   .productPage {
     margin-bottom: 40px;
     padding-bottom: 80px;
+  }
+
+  .productPageWithEngravingSticky {
+    padding-bottom: 132px;
   }
 
   .productPageHeader {
@@ -1235,6 +1274,63 @@
     background-color: var(--color-light-soft);
     box-shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
     backdrop-filter: blur(10px);
+  }
+
+  .mobileStickyBarWithEngraving {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 12px 14px;
+    gap: 8px;
+  }
+
+  .mobileStickyTopRow {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    min-width: 0;
+  }
+
+  .mobileStickyTopRow .mobileStickyPriceBlock {
+    min-width: 0;
+  }
+
+  .mobileStickyBottomRow {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    min-width: 0;
+  }
+
+  .mobileStickyEngraving {
+    height: 48px;
+  }
+
+  /* Специфичность выше, чем EngravingToggle mobile height: 40px */
+  .mobileStickyEngraving .mobileStickyEngravingControl {
+    height: 48px;
+    min-height: 48px;
+    box-sizing: border-box;
+    flex: 1 1 auto;
+    min-width: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+  }
+
+  .mobileStickyBarWithEngraving .mobileStickyQuantity {
+    flex: 0 0 auto;
+    height: 48px;
+    min-height: 48px;
+    width: 96px;
+    min-width: 88px;
+    max-width: 96px;
+    box-sizing: border-box;
+  }
+
+  .mobileStickyBarWithEngraving .mobileStickyAddButton {
+    flex: 1 1 auto;
+    min-width: 0;
   }
 }
 

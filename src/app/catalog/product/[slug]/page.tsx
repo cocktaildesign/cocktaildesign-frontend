@@ -226,7 +226,8 @@ export default async function ProductPage({ params }: PageProps) {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(productJsonLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbsJsonLd) }} />
 
-      <section className={styles.productPage}>
+      <section
+        className={`${styles.productPage}${product.engravingEnabled ? ` ${styles.productPageWithEngravingSticky}` : ""}`}>
         <header className={styles.productPageHeader}>
           <h1 className={styles.productPageTitle}>{product.name}</h1>
         </header>

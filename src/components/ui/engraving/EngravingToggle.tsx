@@ -6,11 +6,12 @@ import styles from "./EngravingToggle.module.css";
 type EngravingToggleProps = {
   checked: boolean;
   onChange: (nextChecked: boolean) => void;
+  className?: string;
 };
 
-export default function EngravingToggle({ checked, onChange }: EngravingToggleProps) {
+export default function EngravingToggle({ checked, onChange, className }: EngravingToggleProps) {
   return (
-    <label className={styles.engravingControl}>
+    <label className={`${styles.engravingControl}${className ? ` ${className}` : ""}`}>
       <input
         type="checkbox"
         checked={checked}

@@ -74,6 +74,10 @@ export default function ProductPurchaseControls({
   const displayQuantity = cartItem?.quantity ?? quantity;
   const displayEngraving = cartItem?.engraving ?? engravingChecked;
 
+  // Итоговая цена для отображения: unit × quantity (в cart уходит unit price)
+  const displayTotalPrice = price * displayQuantity;
+  const displayTotalPriceOld = priceOld * displayQuantity;
+
   const hasDiscount = priceOld > price;
   const savingsAmount = getSavingsAmount(price, priceOld);
 
@@ -127,6 +131,39 @@ export default function ProductPurchaseControls({
     setEngravingChecked(checked);
   }
 
+  const stickyPriceBlock = (
+    <div className={styles.mobileStickyPriceBlock}>
+      {hasDiscount && <span className={styles.mobileStickyPriceOld}>{formatPrice(displayTotalPriceOld)} ₽</span>}
+      <span className={styles.mobileStickyPrice}>{formatPrice(displayTotalPrice)} ₽</span>
+    </div>
+  );
+
+  const stickyFavorite = (
+    <div className={styles.mobileStickyFavorite}>
+      <FavoriteButton productId={productId} className={styles.mobileStickyFavoriteButton} />
+    </div>
+  );
+
+  const stickyPurchaseControls = isInCart ? (
+    <>
+      <QuantityControl
+        min={0}
+        value={displayQuantity}
+        onChange={handleQuantityChange}
+        className={styles.mobileStickyQuantity}
+      />
+
+      <Link href="/cart" className={styles.mobileStickyArrowButton} aria-label="Перейти в корзину">
+        <ArrowRightIcon />
+      </Link>
+    </>
+  ) : (
+    <button type="button" className={styles.mobileStickyAddButton} onClick={handleAddToCart}>
+      <CartIcon />
+      <span>В корзину</span>
+    </button>
+  );
+
   return (
     <>
       {/* ==========================================================
@@ -137,7 +174,7 @@ export default function ProductPurchaseControls({
         <div className={styles.productPurchasePriceBlock}>
           {hasDiscount && (
             <div className={styles.productPurchasePriceTopRow}>
-              <span className={styles.productPurchasePriceOld}>{formatPrice(priceOld)} ₽</span>
+              <span className={styles.productPurchasePriceOld}>{formatPrice(displayTotalPriceOld)} ₽</span>
 
               {savingsAmount !== null && (
                 <span className={styles.productPurchaseBenefitBadge}>Выгода {formatPrice(savingsAmount)} ₽</span>
@@ -145,7 +182,7 @@ export default function ProductPurchaseControls({
             </div>
           )}
 
-          <div className={styles.productPurchasePrice}>{formatPrice(price)} ₽</div>
+          <div className={styles.productPurchasePrice}>{formatPrice(displayTotalPrice)} ₽</div>
         </div>
 
         {/* Количество и гравировка */}
@@ -197,34 +234,37 @@ export default function ProductPurchaseControls({
       {/* ==========================================================
           Sticky bar — только для мобилки
           ========================================================== */}
-      <div className={styles.mobileStickyBar}>
-        {/* Цена слева */}
-        <div className={styles.mobileStickyPriceBlock}>
-          {hasDiscount && <span className={styles.mobileStickyPriceOld}>{formatPrice(priceOld)} ₽</span>}
-          <span className={styles.mobileStickyPrice}>{formatPrice(price)} ₽</span>
-        </div>
+      <div
+        className={`${styles.mobileStickyBar}${engravingEnabled ? ` ${styles.mobileStickyBarWithEngraving}` : ""}`}>
+        {engravingEnabled ? (
+          <>
+            <div className={styles.mobileStickyTopRow}>
+              {stickyPriceBlock}
+              {stickyFavorite}
+            </div>
 
-        {/* Действия справа */}
-        <div className={styles.mobileStickyActions}>
-          <div className={styles.mobileStickyFavorite}>
-            <FavoriteButton productId={productId} />
-          </div>
+            <div className={styles.mobileStickyBottomRow}>
+              <div className={styles.mobileStickyEngraving}>
+                <EngravingToggle
+                  checked={displayEngraving}
+                  onChange={handleEngravingChange}
+                  className={styles.mobileStickyEngravingControl}
+                />
+              </div>
 
-          {isInCart ? (
-            <>
-              <QuantityControl min={0} value={displayQuantity} onChange={handleQuantityChange} />
+              {stickyPurchaseControls}
+            </div>
+          </>
+        ) : (
+          <>
+            {stickyPriceBlock}
 
-              <Link href="/cart" className={styles.mobileStickyArrowButton} aria-label="Перейти в корзину">
-                <ArrowRightIcon />
-              </Link>
-            </>
-          ) : (
-            <button type="button" className={styles.mobileStickyAddButton} onClick={handleAddToCart}>
-              <CartIcon />
-              <span>В корзину</span>
-            </button>
-          )}
-        </div>
+            <div className={styles.mobileStickyActions}>
+              {stickyFavorite}
+              {stickyPurchaseControls}
+            </div>
+          </>
+        )}
       </div>
     </>
   );
