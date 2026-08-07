@@ -1033,7 +1033,7 @@
   }
 
   .productLayout {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
     gap: 20px;
   }
 
@@ -1051,6 +1051,8 @@
   .productGallery {
     flex-direction: column-reverse;
     aspect-ratio: auto;
+    min-width: 0;
+    margin-top: -8px;
   }
 
   .productGalleryThumbs {
@@ -1067,9 +1069,21 @@
     height: 56px;
   }
 
+  /*
+   * Full-bleed относительно Container:
+   * на mobile у Container padding 15px слева и справа → +30px ширины и margin -15px.
+   * Высота — от собственной ширины через aspect-ratio: 1 / 1 (base), без 100vw.
+   */
   .productGalleryMain {
-    width: calc(100vw - 30px);
-    height: calc(100vw - 30px);
+    width: calc(100% + 30px);
+    margin-inline: -15px;
+    flex: none;
+    height: auto;
+    border-radius: 0;
+  }
+
+  .productGalleryMainImage {
+    padding: 16px;
   }
 
   .productInfo {
