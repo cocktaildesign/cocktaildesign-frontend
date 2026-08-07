@@ -95,8 +95,8 @@ export default function MobileBottomNav({ menuItems }: Props) {
             <button type="button" className={styles.backButton} onClick={handleCloseMenu} aria-label="Назад">
               <ArrowBackIcon />
             </button>
+            <h2 className={styles.menuTitle}>Меню</h2>
           </div>
-          <h2 className={styles.menuTitle}>Меню</h2>
 
           <div className={styles.menuGrid}>
             {menuItems.map((item) => {
