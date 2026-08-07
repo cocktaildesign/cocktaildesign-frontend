@@ -114,7 +114,7 @@
   }
 
   .card {
-    padding: 10px;
+    padding: 6px;
     overflow: hidden;
   }
 
@@ -125,10 +125,13 @@
     height: 100%;
   }
 
+  .cardText {
+    height: 65px;
+  }
+
   .title {
     font-family: var(--font-display);
-    font-size: 14px;
-    line-height: 18px;
+    font-size: 13px;
     font-weight: 500;
     text-align: left;
     display: -webkit-box;
@@ -142,15 +145,17 @@
     display: none;
   }
 
-  .cardText {
-    height: 40px;
-    flex: 0 0 40px;
+  .imageWrapper {
+    position: relative;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 1 / 1;
+    overflow: hidden;
+    margin-bottom: 10px;
   }
 
-  .imageWrapper {
-    height: auto;
-    flex: 1 1 auto;
-    min-height: 0;
-    margin-bottom: 6px;
+  .image {
+    object-fit: scale-down;
+    object-position: center;
   }
 }
