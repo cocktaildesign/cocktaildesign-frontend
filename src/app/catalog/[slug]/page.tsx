@@ -7,12 +7,13 @@
 import PageLayout from "@/components/layout/PageLayout";
 import styles from "./CategoryPage.module.css";
 import { pageMetadata } from "@/lib/seo/metadata";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import { Metadata } from "next";
 import CatalogSidebar from "./catalog-sidebar/CatalogSidebar";
 import ProductGrid from "../product-grid/ProductGrid";
 import MobileCategoryDrillDown from "./mobile-category-drill-down/MobileCategoryDrillDown";
 import { getCatalogTreeFromStrapi, getCategoryBySlugFromStrapi, getChildCategoriesFromTree } from "@/lib/api/catalog";
+import { SAMPLE_SALE_CATEGORY_SLUG, UTSENKA_COLLECTION_HREF } from "@/lib/catalog/sample-sale";
 
 type Params = {
   slug: string;
@@ -25,6 +26,12 @@ type PageProps = {
 
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { slug } = await params;
+
+  // Техническая Sample Sale не должна быть самостоятельной SEO-страницей.
+  if (slug === SAMPLE_SALE_CATEGORY_SLUG) {
+    return {};
+  }
+
   const category = await getCategoryBySlugFromStrapi(slug);
 
   if (!category) return {};
@@ -39,6 +46,11 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 export default async function CatalogCategoryPage({ params, searchParams }: PageProps) {
   const { slug } = await params;
   const { showAll } = await searchParams;
+
+  // Только точный технический slug Sample Sale → подборка «Уценка».
+  if (slug === SAMPLE_SALE_CATEGORY_SLUG) {
+    redirect(UTSENKA_COLLECTION_HREF);
+  }
 
   const category = await getCategoryBySlugFromStrapi(slug);
 

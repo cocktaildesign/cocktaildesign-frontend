@@ -94,6 +94,7 @@ export type StrapiProductAttributes = {
   displayTitle?: string | null;
   isNew?: boolean | null;
   noveltyBadgeColor?: string | null;
+  isSampleSale?: boolean | null;
   badges?: unknown;
   image?:
     | StrapiMediaFile[]
@@ -127,6 +128,7 @@ export type StrapiProductItem = {
   displayTitle?: string | null;
   isNew?: boolean | null;
   noveltyBadgeColor?: string | null;
+  isSampleSale?: boolean | null;
   badges?: unknown;
   image?: StrapiProductAttributes["image"];
 
@@ -276,6 +278,7 @@ export type CatalogProductPreview = {
   preferredVariantId?: string | null;
   isNew: boolean;
   noveltyBadgeColor: string;
+  isSampleSale: boolean;
   badges: ProductBadge[];
 };
 
@@ -399,6 +402,7 @@ export type CatalogProductDetail = {
   code: string | null;
   isNew: boolean;
   noveltyBadgeColor: string;
+  isSampleSale: boolean;
   badges: ProductBadge[];
 
   // Состав комплекта — пустой массив для обычных товаров

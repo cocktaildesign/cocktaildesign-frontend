@@ -15,8 +15,14 @@ import ProductDetailsNavigation from "./ProductDetailsNavigation";
 
 import { pageMetadata } from "@/lib/seo/metadata";
 import { siteUrl } from "@/lib/seo/site";
-import { getColorMap, getProductBySlugFromStrapi, getProductsByCategorySlugFromStrapi } from "@/lib/api/catalog";
-import type { CatalogProductSpecification } from "@/lib/api/catalog/types";
+import {
+  getColorMap,
+  getCollectionProductsFromStrapi,
+  getProductBySlugFromStrapi,
+  getProductsByCategorySlugFromStrapi,
+} from "@/lib/api/catalog";
+import type { CatalogProductPreview, CatalogProductSpecification } from "@/lib/api/catalog/types";
+import { UTSENKA_COLLECTION_HREF, UTSENKA_COLLECTION_SLUG, UTSENKA_LABEL } from "@/lib/catalog/sample-sale";
 
 import styles from "./ProductPage.module.css";
 
@@ -155,18 +161,28 @@ export default async function ProductPage({ params }: PageProps) {
     },
   };
 
-  const breadcrumbsItems = [
-    { href: "/", label: "Главная" },
-    { href: "/catalog", label: "Каталог" },
-    ...breadcrumbsCategories.map((category) => ({
-      href: `/catalog/${category.slug}`,
-      label: category.name,
-    })),
-    {
-      href: `/catalog/product/${product.slug}`,
-      label: product.name,
-    },
-  ];
+  const breadcrumbsItems = product.isSampleSale
+    ? [
+        { href: "/", label: "Главная" },
+        { href: "/catalog", label: "Каталог" },
+        { href: UTSENKA_COLLECTION_HREF, label: UTSENKA_LABEL },
+        {
+          href: `/catalog/product/${product.slug}`,
+          label: product.name,
+        },
+      ]
+    : [
+        { href: "/", label: "Главная" },
+        { href: "/catalog", label: "Каталог" },
+        ...breadcrumbsCategories.map((category) => ({
+          href: `/catalog/${category.slug}`,
+          label: category.name,
+        })),
+        {
+          href: `/catalog/product/${product.slug}`,
+          label: product.name,
+        },
+      ];
 
   const breadcrumbsJsonLd = {
     "@context": "https://schema.org",
@@ -179,17 +195,29 @@ export default async function ProductPage({ params }: PageProps) {
     })),
   };
 
-  const relatedCategorySlug = breadcrumbsCategories[0]?.slug ?? "";
+  let relatedItems: CatalogProductPreview[] = [];
 
-  const relatedResponse = relatedCategorySlug
-    ? await getProductsByCategorySlugFromStrapi({
-        categorySlug: relatedCategorySlug,
-        limit: 100,
-        offset: 0,
-      })
-    : null;
+  if (product.isSampleSale) {
+    const relatedResponse = await getCollectionProductsFromStrapi({
+      slug: UTSENKA_COLLECTION_SLUG,
+      limit: 100,
+      offset: 0,
+    });
 
-  const relatedItems = (relatedResponse?.items ?? []).filter((item) => item.id !== product.id);
+    relatedItems = relatedResponse.items.filter((item) => item.id !== product.id);
+  } else {
+    const relatedCategorySlug = breadcrumbsCategories[0]?.slug ?? "";
+
+    const relatedResponse = relatedCategorySlug
+      ? await getProductsByCategorySlugFromStrapi({
+          categorySlug: relatedCategorySlug,
+          limit: 100,
+          offset: 0,
+        })
+      : null;
+
+    relatedItems = (relatedResponse?.items ?? []).filter((item) => item.id !== product.id);
+  }
 
   const hasRelatedProducts = relatedItems.length > 0;
 

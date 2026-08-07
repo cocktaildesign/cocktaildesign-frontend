@@ -272,6 +272,7 @@ export default function VariantSelector({ product, variants, specifications, col
         <ProductBadges
           isNew={product.isNew}
           noveltyBadgeColor={product.noveltyBadgeColor}
+          isSampleSale={product.isSampleSale}
           badges={product.badges}
           desktopLimit={null}
           mobileLimit={2}

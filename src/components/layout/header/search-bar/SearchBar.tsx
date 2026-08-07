@@ -38,6 +38,7 @@ type Product = {
   variantId?: string;
   isNew: boolean;
   noveltyBadgeColor: string;
+  isSampleSale: boolean;
   badges: ProductBadge[];
 };
 
@@ -65,6 +66,7 @@ type ApiProductItem = {
     matchedVariant?: ApiMatchedVariant | null;
     isNew?: boolean | null;
     noveltyBadgeColor?: string | null;
+    isSampleSale?: boolean | null;
     badges?: unknown;
   };
 };
@@ -112,6 +114,7 @@ function mapApiProductToProduct(item: ApiProductItem): Product {
     imageUrl: getStrapiMediaUrl(raw),
     isNew: item.attributes.isNew === true,
     noveltyBadgeColor: normalizeNoveltyBadgeColor(item.attributes.noveltyBadgeColor),
+    isSampleSale: item.attributes.isSampleSale === true,
     badges: mapProductBadges(item.attributes.badges),
   };
 }
@@ -561,6 +564,7 @@ export default function SearchBar({
                             <ProductBadges
                               isNew={product.isNew}
                               noveltyBadgeColor={product.noveltyBadgeColor}
+                              isSampleSale={product.isSampleSale}
                               badges={product.badges}
                               desktopLimit={1}
                               mobileLimit={1}
@@ -642,6 +646,7 @@ export default function SearchBar({
                         <ProductBadges
                           isNew={product.isNew}
                           noveltyBadgeColor={product.noveltyBadgeColor}
+                          isSampleSale={product.isSampleSale}
                           badges={product.badges}
                           desktopLimit={2}
                           mobileLimit={1}

@@ -84,6 +84,7 @@ export default function ProductCard({ product }: ProductCardProps) {
           <ProductBadges
             isNew={product.isNew}
             noveltyBadgeColor={product.noveltyBadgeColor}
+            isSampleSale={product.isSampleSale}
             badges={product.badges}
             desktopLimit={2}
             mobileLimit={2}

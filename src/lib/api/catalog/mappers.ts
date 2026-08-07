@@ -434,6 +434,7 @@ export function mapProductPreview(item: StrapiProductItem): CatalogProductPrevie
   const engravingEnabled = source.engravingEnabled === true;
   const discountExcluded = source.discountExcluded === true;
   const isNew = source.isNew === true;
+  const isSampleSale = source.isSampleSale === true;
   const noveltyBadgeColor = normalizeNoveltyBadgeColor(source.noveltyBadgeColor);
 
   const slug = makeProductSlug(moyskladId, name);
@@ -453,6 +454,7 @@ export function mapProductPreview(item: StrapiProductItem): CatalogProductPrevie
     variants,
     isNew,
     noveltyBadgeColor,
+    isSampleSale,
     badges: mapProductBadges(source.badges),
   };
 }
@@ -598,6 +600,7 @@ export function mapProductDetail(
   const specifications = mapProductSpecifications(source.specifications);
   const bundleItems = mapBundleItems(rawBundleItems);
   const isNew = source.isNew === true;
+  const isSampleSale = source.isSampleSale === true;
   const noveltyBadgeColor = normalizeNoveltyBadgeColor(source.noveltyBadgeColor);
 
   return {
@@ -617,6 +620,7 @@ export function mapProductDetail(
     bundleItems,
     isNew,
     noveltyBadgeColor,
+    isSampleSale,
     badges: mapProductBadges(source.badges),
   };
 }

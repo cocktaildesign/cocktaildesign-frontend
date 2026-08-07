@@ -7,11 +7,15 @@ import type { ProductBadge } from "@/lib/api/catalog/types";
 import styles from "./ProductBadges.module.css";
 
 const NOVELTY_LABEL = "НОВИНКА";
+const SAMPLE_SALE_LABEL = "УЦЕНКА";
+const SAMPLE_SALE_BADGE_BG = "#F26A21";
+const SAMPLE_SALE_BADGE_TEXT = "#FFFFFF";
 const MAX_MANUAL_BADGES = 5;
 
 export type ProductBadgesProps = {
   isNew: boolean;
   noveltyBadgeColor: string;
+  isSampleSale?: boolean;
   badges: ProductBadge[];
   desktopLimit?: number | null;
   mobileLimit?: number | null;
@@ -21,6 +25,7 @@ export type ProductBadgesProps = {
 };
 
 type BadgeListItem =
+  | { kind: "sample-sale" }
   | { kind: "novelty" }
   | { kind: "manual"; badge: ProductBadge };
 
@@ -34,8 +39,17 @@ type BadgeListProps = {
   onExpand: () => void;
 };
 
-function buildBadgeListItems(isNew: boolean, badges: ProductBadge[]): BadgeListItem[] {
+function buildBadgeListItems(
+  isSampleSale: boolean,
+  isNew: boolean,
+  badges: ProductBadge[],
+): BadgeListItem[] {
   const items: BadgeListItem[] = [];
+
+  // Порядок: УЦЕНКА → НОВИНКА → ручные
+  if (isSampleSale) {
+    items.push({ kind: "sample-sale" });
+  }
 
   if (isNew) {
     items.push({ kind: "novelty" });
@@ -67,6 +81,17 @@ function BadgeList({
   return (
     <>
       {visibleItems.map((item) => {
+        if (item.kind === "sample-sale") {
+          return (
+            <span
+              key="sample-sale"
+              className={`${styles.badge} ${overlay ? styles.badgeEllipsis : ""}`}
+              style={{ backgroundColor: SAMPLE_SALE_BADGE_BG, color: SAMPLE_SALE_BADGE_TEXT }}>
+              <span className={styles.badgeLabel}>{SAMPLE_SALE_LABEL}</span>
+            </span>
+          );
+        }
+
         if (item.kind === "novelty") {
           return (
             <span
@@ -111,6 +136,7 @@ function BadgeList({
 export default function ProductBadges({
   isNew,
   noveltyBadgeColor,
+  isSampleSale = false,
   badges,
   desktopLimit = null,
   mobileLimit = null,
@@ -120,7 +146,7 @@ export default function ProductBadges({
 }: ProductBadgesProps) {
   const [mobileExpanded, setMobileExpanded] = useState(false);
 
-  const items = buildBadgeListItems(isNew, badges);
+  const items = buildBadgeListItems(isSampleSale, isNew, badges);
 
   if (items.length === 0) {
     return null;
