@@ -9,10 +9,22 @@ import MobileBottomNav from "@/components/layout/mobile-bottom-nav/MobileBottomN
 
 export { rootMetadata as metadata, viewport } from "@/lib/seo/metadata";
 import { hikasamiSans, montserrat } from "@/lib/fonts";
+import {
+  filterMenuMobileNavigation,
+  getMobileNavigation,
+  resolveMenuImageUrl,
+} from "@/lib/api/mobile-navigation";
 
 import "./globals.css";
 
-export default function RootLayout({ children }: { children: ReactNode }) {
+export default async function RootLayout({ children }: { children: ReactNode }) {
+  const mobileNavigation = await getMobileNavigation();
+  const menuItems = filterMenuMobileNavigation(mobileNavigation).map((item) => ({
+    title: item.title,
+    href: item.href,
+    imageUrl: resolveMenuImageUrl(item.href, item.menuImageUrl),
+  }));
+
   return (
     <html lang="ru" className={`${montserrat.variable} ${hikasamiSans.variable}`}>
       <body>
@@ -20,7 +32,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         <Header />
         <NavBar />
         {children}
-        <MobileBottomNav />
+        <MobileBottomNav menuItems={menuItems} />
         <Footer />
         {/* <GridOverlay /> */}
         <ScrollToTopButton />

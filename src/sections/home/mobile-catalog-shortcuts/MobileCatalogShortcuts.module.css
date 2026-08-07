@@ -23,15 +23,15 @@
 }
 
 .card {
-  flex: 0 0 80px;
+  flex: 0 0 92px;
   text-decoration: none;
   color: var(--color-black);
 }
 
 .media {
   position: relative;
-  width: 80px;
-  height: 80px;
+  width: 92px;
+  height: 92px;
   overflow: hidden;
   border-radius: 12px;
   background-color: transparent;

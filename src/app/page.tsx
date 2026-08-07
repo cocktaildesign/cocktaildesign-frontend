@@ -16,6 +16,7 @@ import MobileCatalogShortcuts from "@/sections/home/mobile-catalog-shortcuts/Mob
 
 import { pageMetadata } from "@/lib/seo/metadata";
 import { getHomepageCollectionsFromStrapi, getWeeklyProductBlock } from "@/lib/api/catalog";
+import { filterHomeMobileNavigation, getMobileNavigation } from "@/lib/api/mobile-navigation";
 
 export const metadata: Metadata = pageMetadata({
   title: "Магазин барного инвентаря в СПб - CocktailDesign",
@@ -27,11 +28,13 @@ export const metadata: Metadata = pageMetadata({
 export default async function HomePage() {
   const homepageCollections = await getHomepageCollectionsFromStrapi();
   const weeklyProduct = await getWeeklyProductBlock();
+  const mobileNavigation = await getMobileNavigation();
+  const homeShortcuts = filterHomeMobileNavigation(mobileNavigation);
 
   return (
     <main className={styles.homePage}>
       <HeroSection weeklyProduct={weeklyProduct} />
-      <MobileCatalogShortcuts />
+      <MobileCatalogShortcuts items={homeShortcuts} />
       <CategoryProductShelves collection={homepageCollections.collectionAfterShortcuts} />
       <PopularCategories />
       <Advantages />

@@ -1,4 +1,4 @@
-// frontend/src/components/ui/mobile-bottom-nav/MobileBottomNav.tsx
+// frontend/src/components/layout/mobile-bottom-nav/MobileBottomNav.tsx
 "use client";
 
 import Link from "next/link";
@@ -18,21 +18,17 @@ import { useFavoritesStore } from "@/lib/favorites/favoritesStore";
 import { useCartStore } from "@/lib/cart/cartStore";
 import { Modal } from "@/components/ui/modal/Modal";
 
-const MENU_ITEMS = [
-  { href: "/catalog", label: "Каталог", imageSrc: "/images/mobilBottomMenuImage/catalog.webp" },
+export type MobileBottomNavMenuItem = {
+  title: string;
+  href: string;
+  imageUrl: string;
+};
 
-  { href: "/contacts", label: "Контакты", imageSrc: "/images/mobilBottomMenuImage/contacts.webp" },
-  { href: "/shipping", label: "Доставка", imageSrc: "/images/mobilBottomMenuImage/delivery.webp" },
+type Props = {
+  menuItems: MobileBottomNavMenuItem[];
+};
 
-  { href: "/payment-methods", label: "Оплата", imageSrc: "/images/mobilBottomMenuImage/pay.webp" },
-  { href: "/legal/requisites", label: "Реквизиты", imageSrc: "/images/mobilBottomMenuImage/requisites.webp" },
-  { href: "/branding", label: "Брендинг", imageSrc: "/images/mobilBottomMenuImage/branding.webp" },
-
-  { href: "/knowledge", label: "Знания", imageSrc: "/images/mobilBottomMenuImage/knowledge.webp" },
-  { href: "/catalog/collection/sale", label: "Скидки", imageSrc: "/images/mobilBottomMenuImage/sale.webp" },
-];
-
-export default function MobileBottomNav() {
+export default function MobileBottomNav({ menuItems }: Props) {
   const pathname = usePathname();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
@@ -103,7 +99,7 @@ export default function MobileBottomNav() {
           <h2 className={styles.menuTitle}>Меню</h2>
 
           <div className={styles.menuGrid}>
-            {MENU_ITEMS.map((item) => {
+            {menuItems.map((item) => {
               const isActive = pathname === item.href;
 
               let cardClassName = styles.menuCard;
@@ -113,10 +109,10 @@ export default function MobileBottomNav() {
 
               return (
                 <Link key={item.href} href={item.href} className={cardClassName} onClick={handleCloseMenu}>
-                  <span className={styles.menuCardLabel}>{item.label}</span>
+                  <span className={styles.menuCardLabel}>{item.title}</span>
 
                   <div className={styles.menuCardImage}>
-                    <Image src={item.imageSrc} alt={item.label} fill sizes="40vw" className={styles.menuCardImg} />
+                    <Image src={item.imageUrl} alt={item.title} fill sizes="40vw" className={styles.menuCardImg} />
                   </div>
                 </Link>
               );

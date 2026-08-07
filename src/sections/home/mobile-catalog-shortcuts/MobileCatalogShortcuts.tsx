@@ -1,52 +1,20 @@
 import Link from "next/link";
 import Image from "next/image";
+
+import type { MobileNavigationItem } from "@/lib/api/mobile-navigation";
+import { resolveHomeImageUrl } from "@/lib/api/mobile-navigation";
+
 import styles from "./MobileCatalogShortcuts.module.css";
 
-type Item = {
-  href: string;
-  title: string;
-  image?: string;
+type Props = {
+  items: MobileNavigationItem[];
 };
 
-const items: Item[] = [
-  {
-    href: "/catalog",
-    title: "Каталог",
-    image: "/images/home/1.webp",
-  },
-  {
-    href: "/knowledge",
-    title: "Знания",
-    image: "/images/home/2.webp",
-  },
-  {
-    href: "/legal/requisites",
-    title: "Реквизиты",
-    image: "/images/home/3.webp",
-  },
-  {
-    href: "/branding",
-    title: "Брендинг",
-    image: "/images/home/5.webp",
-  },
-  {
-    href: "/contacts",
-    title: "Контакты",
-    image: "/images/home/4.webp",
-  },
-  {
-    href: "/shipping",
-    title: "Доставка",
-    image: "/images/home/6.webp",
-  },
-  {
-    href: "/payment-methods",
-    title: "Оплата",
-    image: "/images/home/7.webp",
-  },
-];
+export default function MobileCatalogShortcuts({ items }: Props) {
+  if (items.length === 0) {
+    return null;
+  }
 
-export default function MobileCatalogShortcuts() {
   return (
     <section className={styles.section}>
       <div className={styles.list}>
@@ -54,10 +22,10 @@ export default function MobileCatalogShortcuts() {
           <Link key={item.href} href={item.href} className={styles.card}>
             <div className={styles.media}>
               <Image
-                src={item.image || "/images/catalog/product-placeholder.webp"}
+                src={resolveHomeImageUrl(item.href, item.homeImageUrl)}
                 alt={item.title}
                 fill
-                sizes="80px"
+                sizes="92px"
                 className={styles.image}
               />
             </div>
