@@ -176,7 +176,7 @@
 .mobileOpenButton {
   position: fixed;
   right: 15px;
-  bottom: 78px;
+  bottom: 86px;
   z-index: 40;
   display: none;
   align-items: center;

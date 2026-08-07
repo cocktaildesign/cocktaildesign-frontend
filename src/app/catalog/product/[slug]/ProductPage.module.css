@@ -1208,7 +1208,7 @@
   .mobileStickyBar {
     position: fixed;
     right: 0;
-    bottom: 63px;
+    bottom: 71px;
     left: 0;
     z-index: var(--z-modal);
     display: flex;

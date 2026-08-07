@@ -331,7 +331,7 @@
   .mobileCheckoutBar {
     position: fixed;
     right: 0px;
-    bottom: 63px;
+    bottom: 71px;
     left: 0px;
     z-index: var(--z-modal);
     display: flex;
