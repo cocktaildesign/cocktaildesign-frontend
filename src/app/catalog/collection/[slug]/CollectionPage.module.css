@@ -63,6 +63,24 @@
   grid-column: 4 / 13;
 }
 
+/* Mobile drill-down: по умолчанию скрыт (desktop/tablet) */
+.mobileDrillDown {
+  display: none;
+}
+
+.mobileCategoriesTitle,
+.mobileProductsCategoryTitle {
+  margin: 0 0 16px;
+  font-size: var(--text-lg);
+  font-weight: 450;
+  color: var(--color-dark-blue);
+}
+
+/* Имя category над ProductGrid — только mobile */
+.mobileProductsCategoryTitle {
+  display: none;
+}
+
 @media (max-width: 1200px) {
   .layout {
     grid-template-columns: 1fr;
@@ -99,5 +117,35 @@
   .collectionNoticeText {
     font-size: var(--text-sm);
     gap: 6px;
+  }
+}
+
+/* ==========================================================================
+   MOBILE ≤600
+   Drill-down как в обычном catalog; sidebar скрыт; ProductGrid только без drill-down.
+   ========================================================================== */
+
+@media (max-width: 600px) {
+  .sidebar {
+    display: none;
+  }
+
+  .mobileDrillDown {
+    display: block;
+  }
+
+  .mobileCategoriesTitle,
+  .mobileProductsCategoryTitle {
+    margin: 0 0 12px;
+    font-size: var(--text-base);
+    font-weight: 500;
+  }
+
+  .mobileProductsCategoryTitle {
+    display: block;
+  }
+
+  .layoutHideProductsOnMobile .content {
+    display: none;
   }
 }

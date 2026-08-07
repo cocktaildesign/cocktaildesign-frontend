@@ -80,8 +80,7 @@ type FlatCategory = {
   name: string;
   productsCount: number;
   parentId: string | null;
-  // Новые поля из бэка — могут быть undefined для других эндпоинтов
-  // (например /catalog/collection/:slug/categories-tree пока их не отдаёт)
+  // imageUrl/alt: categories-flat и collection/:slug/categories-tree
   imageUrl?: string | null;
   alt?: string | null;
 };
