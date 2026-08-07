@@ -44,7 +44,7 @@ export const footerCompanyLinks: FooterLink[] = [
 
 export const footerPromosLinks: FooterLink[] = [
   { label: "Система скидок", href: "/discounts" },
-  { label: "Товары со скидкой", href: "/discounts-product" },
+  { label: "Товары со скидкой", href: "/catalog/collection/sale" },
 ];
 
 export const footerSupportLinks: FooterLink[] = [

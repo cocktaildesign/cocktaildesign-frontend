@@ -24,7 +24,6 @@ const LABELS: Record<string, string> = {
   "/discounts": "Система скидок",
   "/shipping": "Доставка",
   "/payment-methods": "Способы оплаты",
-  "/discounts-product": "Товары со скидкой",
   "/favorites": "Избранное",
 };
 
