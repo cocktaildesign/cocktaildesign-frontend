@@ -144,5 +144,13 @@
 
   .cardText {
     height: 40px;
+    flex: 0 0 40px;
+  }
+
+  .imageWrapper {
+    height: auto;
+    flex: 1 1 auto;
+    min-height: 0;
+    margin-bottom: 6px;
   }
 }

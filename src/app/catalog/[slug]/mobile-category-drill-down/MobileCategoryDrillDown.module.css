@@ -92,6 +92,7 @@
 @media (max-width: 600px) {
   .cardText {
     height: 40px;
+    flex: 0 0 40px;
   }
 
   .title {
@@ -99,5 +100,13 @@
     font-size: 14px;
     line-height: 18px;
     font-weight: 500;
+  }
+
+  .imageWrapper,
+  .imageWrapperAll {
+    height: auto;
+    flex: 1 1 auto;
+    min-height: 0;
+    margin-bottom: 6px;
   }
 }
