@@ -18,6 +18,10 @@
    ========================================================================== */
 
 @media (max-width: 600px) {
+  .section {
+    margin-bottom: 12px;
+  }
+
   .sliderWrapper {
     border-radius: 0;
   }

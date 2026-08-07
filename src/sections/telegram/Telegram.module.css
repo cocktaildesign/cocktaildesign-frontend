@@ -133,11 +133,12 @@
 @media (max-width: 600px) {
   .section {
     margin-top: 0;
-    margin-bottom: 20px;
+    margin-bottom: 12px;
   }
 
   .banner {
     min-height: auto;
+    margin: 0;
     padding: 24px 20px;
   }
 

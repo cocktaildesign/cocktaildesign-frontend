@@ -142,7 +142,7 @@
 
 @media (max-width: 600px) {
   .header {
-    margin-bottom: 16px;
+    margin-bottom: 20px;
     padding: 0 15px;
   }
 
@@ -154,10 +154,6 @@
 
   .tabs::-webkit-scrollbar {
     display: none;
-  }
-
-  .cardItem:first-child {
-    padding-left: 15px;
   }
 
   .tab {
@@ -173,6 +169,8 @@
     overflow-y: hidden;
     scrollbar-width: none;
     scroll-snap-type: x mandatory;
+    padding-left: 15px;
+    padding-right: 15px;
   }
 
   .grid::-webkit-scrollbar {
@@ -193,6 +191,6 @@
   .footer {
     display: flex;
     justify-content: flex-end;
-    margin: 10px 10px 0 10px;
+    margin: 10px 15px 0 15px;
   }
 }
