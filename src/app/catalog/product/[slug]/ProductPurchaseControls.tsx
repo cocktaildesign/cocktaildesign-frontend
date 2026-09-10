@@ -8,7 +8,8 @@ import EngravingToggle from "@/components/ui/engraving/EngravingToggle";
 import CartIcon from "@/components/icons/CartIcon";
 import ArrowRightIcon from "@/components/icons/ArrowRightIcon";
 import FavoriteButton from "@/components/ui/favorites/FavoriteButton";
-import DeliveryIcon from "@/components/icons/product-page/DeliveryIcon";
+import CdekIcon from "@/components/icons/product-page/CdekIcon";
+import FreeDeliveryIcon from "@/components/icons/product-page/FreeDeliveryIcon";
 import { useCartStore } from "@/lib/cart/cartStore";
 import type { CartItem } from "@/lib/cart/cartStore";
 
@@ -218,17 +219,32 @@ export default function ProductPurchaseControls({
           Блок доставки — видно всегда (и на десктопе, и на мобилке)
           ========================================================== */}
       <div className={styles.deliveryBlock}>
-        <h3 className={styles.deliveryTitle}>Доставка</h3>
+        <div className={styles.deliveryHeader}>
+          <h3 className={styles.deliveryTitle}>Доставка</h3>
 
-        <div className={styles.deliveryItem}>
-          <div className={styles.deliveryIcon}>
-            <DeliveryIcon color="black" width="32" height="32" />
-          </div>
-
-          <p className={styles.deliveryText}>
-            Доставим <span className={styles.deliveryHighlight}>завтра</span> в пункт выдачи курьером
-          </p>
+          <Link href="/shipping" className={styles.deliveryMoreLink}>
+            Подробнее
+            <ArrowRightIcon className={styles.deliveryMoreIcon} title="" aria-hidden="true" />
+          </Link>
         </div>
+
+        <ul className={styles.deliveryList}>
+          <li className={styles.deliveryItem}>
+            <FreeDeliveryIcon className={styles.deliveryIcon} />
+
+            <p className={styles.deliveryText}>
+              СДЭК по России — в среднем <span className={styles.deliveryNowrap}>3–5 дней</span>
+            </p>
+          </li>
+
+          <li className={styles.deliveryItem}>
+            <CdekIcon className={styles.deliveryIcon} />
+
+            <p className={styles.deliveryText}>
+              Бесплатная доставка от <span className={styles.deliveryNowrap}>5 000 ₽</span>
+            </p>
+          </li>
+        </ul>
       </div>
 
       {/* ==========================================================
