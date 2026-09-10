@@ -86,21 +86,7 @@ export default function PaymentTabs() {
                     <p className={styles.stepDescription}>Отгрузка товара / Запуск производства</p>
                   </div>
                 </li>
-
-                <li className={styles.stepItem}>
-                  <span className={styles.stepNumber}>4</span>
-
-                  <div className={styles.stepContent}>
-                    <h4 className={styles.stepTitle}>Отгрузка товара</h4>
-                    <p className={styles.stepDescription}>После поступления средств</p>
-                  </div>
-                </li>
               </ol>
-
-              <div className={styles.noteBox}>
-                <p className={styles.noteTitle}>Срок резерва товара — 14 рабочих дней</p>
-                <p className={styles.noteText}>Мы резервируем товар на 14 рабочих дней с момента выставления счёта.</p>
-              </div>
 
               <Link href="/legal/requisites" className={styles.paymentLink}>
                 Смотреть реквизиты

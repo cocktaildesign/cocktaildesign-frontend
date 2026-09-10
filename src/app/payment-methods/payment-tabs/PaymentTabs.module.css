@@ -193,28 +193,6 @@
   line-height: 1.55;
 }
 
-.noteBox {
-  margin-top: 24px;
-  padding: 20px;
-  border-radius: 12px;
-  background: var(--color-light-soft);
-}
-
-.noteTitle {
-  margin: 0;
-  color: var(--color-black);
-  font-size: 18px;
-  font-weight: 500;
-  line-height: 1.35;
-}
-
-.noteText {
-  margin: 4px 0 0;
-  color: var(--color-gray);
-  font-size: var(--text-base);
-  line-height: 1.55;
-}
-
 .paymentLink {
   display: inline-block;
   margin-top: 24px;
@@ -373,20 +351,6 @@
 
   .stepDescription {
     font-size: 13px;
-    line-height: 1.5;
-  }
-
-  .noteBox {
-    margin-top: 18px;
-    padding: 16px;
-  }
-
-  .noteTitle {
-    font-size: 15px;
-  }
-
-  .noteText {
-    font-size: 14px;
     line-height: 1.5;
   }
 
