@@ -74,7 +74,7 @@ export default function PaymentTabs() {
 
                   <div className={styles.stepContent}>
                     <h4 className={styles.stepTitle}>Мы выставляем счёт</h4>
-                    <p className={styles.stepDescription}>Отправляем на email</p>
+                    <p className={styles.stepDescription}>Товар резервируется</p>
                   </div>
                 </li>
 
@@ -83,7 +83,7 @@ export default function PaymentTabs() {
 
                   <div className={styles.stepContent}>
                     <h4 className={styles.stepTitle}>Вы производите оплату</h4>
-                    <p className={styles.stepDescription}>Товар резервируется</p>
+                    <p className={styles.stepDescription}>Отгрузка товара / Запуск производства</p>
                   </div>
                 </li>
 
