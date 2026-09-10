@@ -1,6 +1,5 @@
 // src/app/catalog/product-grid/ProductGrid.tsx
 
-import styles from "./ProductGrid.module.css";
 import { getProductsByCategorySlugFromStrapi, getCollectionProductsFromStrapi } from "@/lib/api/catalog";
 import type { CatalogProductPreview } from "@/lib/api/catalog/types";
 import { getColorMap } from "@/lib/api/catalog/index";

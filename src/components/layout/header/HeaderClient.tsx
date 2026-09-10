@@ -103,8 +103,8 @@ export default function HeaderClient({ categories, collections }: HeaderClientPr
             <a
               className={`${styles.linkBase} ${styles.phoneLink}`}
               href="tel:+79956226202"
-              aria-label="Позвонить 8 (995) 622-62-02">
-              <span className={styles.phoneText}>8 (995) 622-62-02</span>
+              aria-label="Позвонить +7 (995) 622-62-02">
+              <span className={styles.phoneText}>+7 (995) 622-62-02</span>
 
               <span className={styles.phoneIcon}>
                 <PhoneIcon />
