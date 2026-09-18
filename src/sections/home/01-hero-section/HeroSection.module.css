@@ -184,6 +184,11 @@
    ========================================================================== */
 
 @media (max-width: 600px) {
+  .hero {
+    background-color: var(--color-white);
+    display: flow-root;
+  }
+
   .desktopSlider {
     display: none;
   }
