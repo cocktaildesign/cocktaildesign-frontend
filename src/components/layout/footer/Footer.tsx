@@ -35,6 +35,25 @@ type MobileFooterSection = {
   ariaLabel: string;
 };
 
+const footerMarketplaceLinks = [
+  {
+    label: "Ozon",
+    href: "https://www.ozon.ru/seller/cocktail-design-1254183/",
+    image: "/images/marketplaces/ozon-card.png",
+    imageClassName: styles.footerMarketplaceLogoPadded,
+  },
+  {
+    label: "Wildberries",
+    href: "https://www.wildberries.ru/seller/58713",
+    image: "/images/marketplaces/wildberries-card.png",
+  },
+  {
+    label: "Яндекс Маркет",
+    href: "https://market.yandex.ru/business--cocktail-design/736760?clid=703&ysclid=mtham0w16r20898382&generalContext=t%3DshopInShop%3Bi%3D1%3Bbi%3D736760%3B&searchContext=sins_ctx",
+    image: "/images/marketplaces/yandex-market-card.png",
+  },
+];
+
 export const footerCompanyLinks: FooterLink[] = [
   { label: "О нас", href: "/about" },
   { label: "Отзывы", href: "/reviews" },
@@ -188,35 +207,41 @@ export default async function Footer() {
                 <p className={styles.footerMarketplacesTitle}>Мы на маркетплейсах</p>
 
                 <div className={styles.footerMarketplacesList}>
-                  <a
-                    className={styles.footerMarketplacesItem}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    href="https://www.ozon.ru/seller/cocktail-design-1254183/">
-                    <Image
-                      src="/images/marketplaces/ozon.png"
-                      alt="Ozon"
-                      width={92}
-                      height={29}
-                      loading="lazy"
-                      sizes="(max-width: 768px) 72px, 92px"
-                    />
-                  </a>
-
-                  <a
-                    className={styles.footerMarketplacesItem}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    href="https://www.wildberries.ru/seller/58713">
-                    <Image
-                      src="/images/marketplaces/wb.png"
-                      alt="Wildberries"
-                      width={92}
-                      height={29}
-                      loading="lazy"
-                      sizes="(max-width: 768px) 72px, 92px"
-                    />
-                  </a>
+                  {footerMarketplaceLinks.map((marketplace) => (
+                    <a
+                      key={marketplace.label}
+                      className={styles.footerMarketplacesItem}
+                      href={marketplace.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label={`${marketplace.label}: открыть наш магазин в новой вкладке`}>
+                      <span className={styles.footerMarketplaceIcon}>
+                        <Image
+                          className={marketplace.imageClassName}
+                          src={marketplace.image}
+                          alt=""
+                          width={40}
+                          height={40}
+                          loading="lazy"
+                        />
+                      </span>
+                      <span className={styles.footerMarketplaceLabel}>{marketplace.label}</span>
+                      <svg
+                        className={styles.footerMarketplaceArrow}
+                        width="16"
+                        height="16"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="1.75"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        aria-hidden="true"
+                        focusable="false">
+                        <path d="M6 18 18 6M6 6h12v12" />
+                      </svg>
+                    </a>
+                  ))}
                 </div>
               </div>
 

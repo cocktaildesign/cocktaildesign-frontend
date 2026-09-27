@@ -151,7 +151,7 @@
 .footerMarketplaces {
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 12px;
 }
 
 .footerMarketplacesTitle {
@@ -162,17 +162,71 @@
 
 .footerMarketplacesList {
   display: flex;
+  flex-direction: column;
   gap: 8px;
-  flex-wrap: wrap;
 }
 
 .footerMarketplacesItem {
-  opacity: 1;
-  transition: opacity 160ms ease;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 58px;
+  padding: 10px;
+  border: 1px solid #303844;
+  border-radius: 12px;
+  background: #141922;
+  color: #fff;
+  text-decoration: none;
+  transition: background 160ms ease, border-color 160ms ease;
 }
 
 .footerMarketplacesItem:hover {
-  opacity: 0.7;
+  background: #1b2330;
+  border-color: #657185;
+}
+
+.footerMarketplacesItem:focus-visible {
+  outline: 2px solid #e0e7ef;
+  outline-offset: -3px;
+}
+
+.footerMarketplaceIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 32px;
+  width: 32px;
+  height: 32px;
+  overflow: hidden;
+  border-radius: 8px;
+}
+
+.footerMarketplaceIcon img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+/* The supplied Ozon PNG has transparent padding around the square logo. */
+.footerMarketplaceIcon .footerMarketplaceLogoPadded {
+  flex-shrink: 0;
+  width: 133.333%;
+  height: 133.333%;
+  max-width: none;
+}
+
+.footerMarketplaceLabel {
+  flex: 1;
+  min-width: 0;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.35;
+}
+
+.footerMarketplaceArrow {
+  flex: 0 0 16px;
+  color: #a6b1c2;
 }
 
 .footerPhoneLink {
@@ -445,6 +499,29 @@
    Планшетная версия
    ========================================================================== */
 
+@media (min-width: 1025px) and (max-width: 1200px) {
+  .footerMarketplacesItem {
+    padding: 8px;
+    gap: 6px;
+  }
+
+  .footerMarketplaceIcon {
+    flex-basis: 28px;
+    width: 28px;
+    height: 28px;
+    border-radius: 7px;
+  }
+
+  .footerMarketplaceLabel {
+    font-size: 13px;
+  }
+
+  .footerMarketplaceArrow {
+    flex-basis: 12px;
+    width: 12px;
+  }
+}
+
 @media (max-width: 1024px) {
   .footerSection {
     padding: 32px 0;
@@ -520,8 +597,21 @@
     font-size: 15px;
   }
 
-  .footerMarketplacesList {
-    flex-wrap: wrap;
+  .footerMarketplacesItem {
+    min-height: 64px;
+    padding: 12px 14px;
+    gap: 12px;
+  }
+
+  .footerMarketplaceIcon {
+    flex-basis: 36px;
+    width: 36px;
+    height: 36px;
+    border-radius: 9px;
+  }
+
+  .footerMarketplaceLabel {
+    font-size: 16px;
   }
 
   .footerMobileSocial {
