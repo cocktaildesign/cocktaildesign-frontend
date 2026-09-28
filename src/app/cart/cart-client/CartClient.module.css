@@ -224,6 +224,7 @@
   font-weight: 600;
   color: var(--color-black);
   white-space: nowrap;
+  font-variant-numeric: tabular-nums;
 }
 
 .mobileCheckoutButton {
@@ -240,6 +241,13 @@
   font-size: 15px;
   font-weight: 500;
   white-space: nowrap;
+  border: 0;
+  cursor: pointer;
+}
+
+.mobileCheckoutButton:disabled {
+  opacity: 0.55;
+  cursor: wait;
 }
 
 /* ==========================================================================

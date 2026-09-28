@@ -3,10 +3,10 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useCartStore } from "@/lib/cart/cartStore";
-import { useDiscountTiers, getCurrentTier, getNextTier } from "@/lib/cart/discountTiers";
+import type { CartTotals } from "@/lib/cart/cartTotals";
 import CartProgress from "./cart-progress/CartProgress";
 import styles from "./CartSummary.module.css";
-import { useCartDiscountPolicy } from "@/lib/cart/useCartDiscountPolicy";
+import type { useCartDiscountPolicy } from "@/lib/cart/useCartDiscountPolicy";
 import { CART_API_BASE } from "@/lib/cart/discountPolicy";
 import DiscountPolicyNotice from "./DiscountPolicyNotice";
 
@@ -24,73 +24,21 @@ function formatProductsCount(count: number): string {
   return `${count} товаров`;
 }
 
-export default function CartSummary() {
-  const items = useCartStore((s) => s.items);
+export default function CartSummary({ totals, discountPolicy }: {
+  totals: CartTotals;
+  discountPolicy: ReturnType<typeof useCartDiscountPolicy>;
+}) {
   const promoCode = useCartStore((s) => s.promoCode);
-  const promoDiscount = useCartStore((s) => s.promoDiscount);
   const promoType = useCartStore((s) => s.promoType);
   const promoBonusMessage = useCartStore((s) => s.promoBonusMessage);
-  const promoReplacesVolumeDiscount = useCartStore((s) => s.promoReplacesVolumeDiscount);
   const setPromo = useCartStore((s) => s.setPromo);
   const clearPromo = useCartStore((s) => s.clearPromo);
 
   const [promoStatus, setPromoStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
   const [promoError, setPromoError] = useState("");
 
-  const { tiers } = useDiscountTiers();
-  const discountPolicy = useCartDiscountPolicy();
-
-  // Считаем суммы
-  let totalQuantity = 0;
-  let totalPrice = 0;
-  let totalSavings = 0;
-  let discountableTotal = 0;
-
-  for (const item of items) {
-    totalQuantity += item.quantity;
-    totalPrice += item.price * item.quantity;
-
-    if (item.priceOld > item.price) {
-      totalSavings += (item.priceOld - item.price) * item.quantity;
-    }
-
-    if (!item.discountExcluded) {
-      discountableTotal += item.price * item.quantity;
-    }
-  }
-
-  // Порог скидки определяется по ОБЩЕЙ сумме корзины (totalPrice),
-  // а сама скидка применяется только к товарам без discountExcluded (discountableTotal).
-  // Так "лимитированные" товары помогают добраться до лучшего tier'а, но сами скидку не получают.
-  const currentTier = getCurrentTier(tiers, totalPrice);
-  const nextTier = getNextTier(tiers, totalPrice);
-  const volumeDiscount = currentTier ? Math.round((discountableTotal * currentTier.percent) / 100) : 0;
-
-  // Промокод применён если есть скидка или тип (берётся из store — сохраняется после перезагрузки)
-  const promoApplied = promoDiscount > 0 || promoType === "inventory" || promoType === "startup";
-
-  // Если промокод заменяет объёмную скидку — берём ту что выгоднее для клиента
-  // Если не заменяет (fixed) — суммируем обе
-  let activeVolumeDiscount = volumeDiscount;
-  let activePromoDiscount = promoDiscount;
-
-  if (promoReplacesVolumeDiscount && promoApplied) {
-    if (volumeDiscount > promoDiscount) {
-      // Объёмная скидка выгоднее — промокод не применяется
-      activePromoDiscount = 0;
-    } else {
-      // Промокод выгоднее — объёмная скидка не применяется
-      activeVolumeDiscount = 0;
-    }
-  }
-
-  if (!promoReplacesVolumeDiscount && activePromoDiscount > 0) {
-    const remainingAfterVolume = Math.max(0, totalPrice - activeVolumeDiscount);
-
-    activePromoDiscount = Math.min(activePromoDiscount, remainingAfterVolume);
-  }
-
-  const finalPrice = Math.max(0, totalPrice - activePromoDiscount - activeVolumeDiscount);
+  const { totalPrice, totalQuantity, totalSavings, discountableTotal, currentTier, nextTier,
+    promoApplied, activeVolumeDiscount, activePromoDiscount, finalPrice } = totals;
 
   // Когда пользователь меняет текст в поле промокода — сбрасываем всё
   function handlePromoChange(e: React.ChangeEvent<HTMLInputElement>) {
