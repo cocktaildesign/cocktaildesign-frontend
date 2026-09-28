@@ -1,17 +1,17 @@
 // src/lib/cart/exportToXlsx.ts
 import type { CartItem } from "@/lib/cart/cartStore";
+import type { QuotePricing } from "./cartQuote";
 
-export async function exportCartToXlsx(items: CartItem[]): Promise<void> {
+export async function exportCartToXlsx(items: CartItem[], pricing: QuotePricing): Promise<void> {
   // Отправляем данные корзины на сервер
   const response = await fetch("/api/cart-export", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ items }),
+    body: JSON.stringify({ items, pricing }),
   });
 
   if (!response.ok) {
-    console.error("Ошибка при генерации файла");
-    return;
+    throw new Error("quote_export_failed");
   }
 
   // Получаем файл и скачиваем

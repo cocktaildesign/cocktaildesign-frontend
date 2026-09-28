@@ -46,9 +46,11 @@ export function getNextTier(tiers: DiscountTier[], discountableTotal: number): D
 export function useDiscountTiers(): {
   tiers: DiscountTier[];
   isLoading: boolean;
+  error: boolean;
 } {
   const [tiers, setTiers] = useState<DiscountTier[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(false);
 
   useEffect(() => {
     async function loadTiers() {
@@ -56,6 +58,7 @@ export function useDiscountTiers(): {
         const response = await fetch(`${API_BASE}/discount-tiers?sort=minAmount:asc&pagination[pageSize]=100`);
 
         if (!response.ok) {
+          setError(true);
           setTiers([]);
           return;
         }
@@ -80,6 +83,7 @@ export function useDiscountTiers(): {
 
         setTiers(mappedTiers);
       } catch {
+        setError(true);
         // Если запрос упал — работаем без тиров, корзина не ломается
         setTiers([]);
       } finally {
@@ -90,5 +94,5 @@ export function useDiscountTiers(): {
     loadTiers();
   }, []);
 
-  return { tiers, isLoading };
+  return { tiers, isLoading, error };
 }

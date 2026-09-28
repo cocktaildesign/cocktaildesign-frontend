@@ -369,3 +369,14 @@
     display: none;
   }
 }
+
+.cartActionButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.quoteNotice {
+  color: var(--color-gray);
+  font-size: 14px;
+  margin: 0 0 16px;
+}

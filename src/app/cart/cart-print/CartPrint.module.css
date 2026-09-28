@@ -1,101 +1,31 @@
-/* Скрыт в обычном режиме */
-.printOnly {
-  display: none;
-}
+.printOnly { display: none; }
 
 @media print {
-  /* Основной контейнер */
-  .printOnly {
-    display: block;
-    padding: 20px;
-    font-family: Arial, sans-serif;
-    font-size: 12px;
-    color: #000;
-  }
-
-  /* Шапка — логотип + контакты */
-  .header {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    margin-bottom: 24px;
-    padding-bottom: 16px;
-    border-bottom: 2px solid #000;
-  }
-
-  .logo {
-    font-size: 20px;
-    font-weight: 700;
-  }
-
-	.code{
-		color: var(--color-gray);
-	}
-
-  .contacts {
-    font-size: 20px;
-    text-align: right;
-  }
-
-  .contacts p {
-    margin: 0;
-  }
-
-  /* Заголовок */
-  .title {
-    margin: 0 0 16px;
-    font-size: 18px;
-    font-weight: 700;
-  }
-
-  /* Таблица товаров */
-  .table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-bottom: 24px;
-  }
-
-  .table th {
-    padding: 8px;
-    border-bottom: 1px solid #000;
-    font-size: 11px;
-    font-weight: 700;
-    text-align: left;
-  }
-
-  .table td {
-    padding: 8px;
-    border-bottom: 1px solid #eee;
-    font-size: 11px;
-  }
-
-  .engraving {
-    color: #666;
-  }
-
-  /* Итог */
-  .totals {
-    margin-bottom: 24px;
-    text-align: right;
-  }
-
-  .totals p {
-    margin: 4px 0;
-  }
-
-  /* Футер */
-  .footer {
-    margin-top: 32px;
-    padding-top: 16px;
-    border-top: 1px solid #eee;
-    font-size: 10px;
-    color: #666;
-  }
-
-  /* Скрываем шапку/подвал сайта при печати */
-  :global(header),
-  :global(footer),
-  :global(nav) {
-    display: none !important;
-  }
+  @page cart-quote { size: A4 landscape; margin: 12mm; }
+  .printOnly { display: block; page: cart-quote; font-family: Arial, sans-serif; font-size: 10pt; color: #20252e; }
+  .header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #1a2c5b; padding-bottom: 12px; margin-bottom: 14px; }
+  .logo { width: 180px; }
+  .contacts { text-align: right; font-size: 10pt; }
+  .contacts p { margin: 3px 0; }
+  .titleRow { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; }
+  .titleRow h1 { font-size: 19pt; color: #1a2c5b; margin: 0 0 10px; }
+  .titleRow p { white-space: nowrap; }
+  .table { width: 100%; table-layout: fixed; border-collapse: collapse; margin: 12px 0; }
+  .table thead { display: table-header-group; }
+  .table tr { break-inside: avoid; }
+  .table th { background: #1a2c5b; color: white; font-size: 9pt; text-align: center; print-color-adjust: exact; -webkit-print-color-adjust: exact; }
+  .table th, .table td { padding: 8px 6px; border-bottom: 1px solid #d9dfe8; overflow-wrap: anywhere; }
+  .table td { font-size: 9pt; text-align: right; vertical-align: middle; font-variant-numeric: tabular-nums; }
+  .table td:nth-child(-n+2) { text-align: left; }
+  .table td:nth-child(6) { text-align: center; }
+  .table tbody tr:nth-child(even) { background: #f3f5f8; print-color-adjust: exact; -webkit-print-color-adjust: exact; }
+  .totals { text-align: right; break-inside: avoid; margin: 16px 0; }
+  .totals p { margin: 6px 0; }
+  .totals span { display: inline-block; min-width: 130px; }
+  .final { border-top: 1px solid #1a2c5b; padding-top: 10px; font-size: 14pt; color: #1a2c5b; }
+  .final strong { margin-left: 16px; }
+  .note, .footer, .bonus { font-size: 9pt; line-height: 1.45; color: #555; }
+  .bonus { white-space: pre-line; break-inside: avoid; }
+  .footer { border-top: 1px solid #d9dfe8; padding-top: 10px; margin-top: 20px; }
+  :global(header), :global(footer), :global(nav) { display: none !important; }
 }
