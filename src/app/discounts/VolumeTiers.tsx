@@ -16,24 +16,27 @@ function getTierPosition(index: number, tiersCount: number) {
   return `${(index / (tiersCount - 1)) * 100}%`;
 }
 
-function getSafeProgress(params: {
-  orderAmount: number;
-  currentTier: ReturnType<typeof getCurrentTier>;
-  nextTier: ReturnType<typeof getNextTier>;
-}): number {
-  const { orderAmount, currentTier, nextTier } = params;
+function getSafeProgress(orderAmount: number, scale: ReadonlyArray<{ minAmount: number }>): number {
+  if (scale.length < 2) {
+    return 0;
+  }
 
-  if (!nextTier) {
+  const nextIndex = scale.findIndex((point) => point.minAmount > orderAmount);
+
+  if (nextIndex === -1) {
     return 100;
   }
 
-  const rangeStart = currentTier?.minAmount ?? 0;
-  const rangeEnd = nextTier.minAmount;
+  if (nextIndex === 0) {
+    return 0;
+  }
 
-  const progress =
-    rangeEnd > rangeStart ? ((orderAmount - rangeStart) / (rangeEnd - rangeStart)) * 100 : 0;
+  const rangeStart = scale[nextIndex - 1].minAmount;
+  const rangeEnd = scale[nextIndex].minAmount;
+  const intervalProgress = (orderAmount - rangeStart) / (rangeEnd - rangeStart);
 
-  return Math.min(Math.max(progress, 0), 100);
+  // Each interval occupies only the space between its two visible marks.
+  return ((nextIndex - 1 + intervalProgress) / (scale.length - 1)) * 100;
 }
 
 export default function VolumeTiers() {
@@ -47,7 +50,8 @@ export default function VolumeTiers() {
   const saving = Math.round((orderAmount * currentPercent) / 100);
   const totalAfterDiscount = Math.max(orderAmount - saving, 0);
   const amountUntilNextTier = nextTier ? Math.max(nextTier.minAmount - orderAmount, 0) : 0;
-  const safeProgress = getSafeProgress({ orderAmount, currentTier, nextTier });
+  const scaleTiers = [{ id: "no-discount", minAmount: 0, percent: 0 }, ...tiers];
+  const safeProgress = getSafeProgress(orderAmount, scaleTiers);
 
   const maximumPercent = tiers.length > 0 ? Math.max(...tiers.map((tier) => tier.percent)) : 0;
 
@@ -115,14 +119,14 @@ export default function VolumeTiers() {
                 <div className={styles.progressFill} style={{ width: `${safeProgress}%` }} />
 
                 <div className={styles.progressMarks}>
-                  {tiers.map((tier, index) => {
+                  {scaleTiers.map((tier, index) => {
                     const isPassed = orderAmount >= tier.minAmount;
 
                     return (
                       <span
                         key={tier.id}
                         className={`${styles.mark} ${isPassed ? styles.markPassed : ""}`}
-                        style={{ left: getTierPosition(index, tiers.length) }}
+                        style={{ left: getTierPosition(index, scaleTiers.length) }}
                       />
                     );
                   })}
@@ -130,8 +134,8 @@ export default function VolumeTiers() {
               </div>
 
               <div className={styles.progressLabels}>
-                {tiers.map((tier, index) => {
-                  const isCurrent = currentTier?.id === tier.id;
+                {scaleTiers.map((tier, index) => {
+                  const isCurrent = currentTier ? currentTier.id === tier.id : index === 0;
                   const isPassed = orderAmount >= tier.minAmount;
 
                   return (
@@ -140,7 +144,7 @@ export default function VolumeTiers() {
                       className={`${styles.progressLabel} ${isPassed ? styles.progressLabelPassed : ""} ${
                         isCurrent ? styles.progressLabelCurrent : ""
                       }`}
-                      style={{ left: getTierPosition(index, tiers.length) }}>
+                      style={{ left: getTierPosition(index, scaleTiers.length) }}>
                       <span className={styles.progressPercent}>{tier.percent}%</span>
                       <span className={styles.progressAmount}>от {formatPrice(tier.minAmount)}</span>
                     </div>
