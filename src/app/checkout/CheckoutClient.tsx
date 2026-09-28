@@ -8,6 +8,9 @@ import { useDiscountTiers, getCurrentTier } from "@/lib/cart/discountTiers";
 import PersonIcon from "@/components/icons/payment-tabs/PersonIcon";
 import OrganizationIcon from "@/components/icons/payment-tabs/OrganizationIcon";
 import styles from "./Checkout.module.css";
+import { useCartDiscountPolicy } from "@/lib/cart/useCartDiscountPolicy";
+import { CART_API_BASE } from "@/lib/cart/discountPolicy";
+import DiscountPolicyNotice from "../cart/cart-summary/DiscountPolicyNotice";
 
 type BuyerType = "individual" | "legal";
 
@@ -26,6 +29,7 @@ export default function CheckoutClient() {
   const clearCart = useCartStore((s) => s.clearCart);
 
   const { tiers } = useDiscountTiers();
+  const discountPolicy = useCartDiscountPolicy();
 
   const orderCompletedRef = useRef(false);
   const isSubmittingRef = useRef(false);
@@ -123,6 +127,7 @@ export default function CheckoutClient() {
   async function handleSubmit() {
     if (isSubmittingRef.current) return;
     if (!hasHydrated) return;
+    if (!discountPolicy.ready) return;
     if (items.length === 0) {
       router.replace("/cart");
       return;
@@ -138,7 +143,7 @@ export default function CheckoutClient() {
     setSubmitStatus("loading");
 
     try {
-      const res = await fetch("https://api.cocktaildesign.ru/api/orders", {
+      const res = await fetch(`${CART_API_BASE}/orders`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -190,6 +195,14 @@ export default function CheckoutClient() {
       isSubmittingRef.current = false;
       setSubmitStatus("error");
     }
+  }
+
+  if (!discountPolicy.ready) {
+    return <div className={styles.page}>
+      <Link href="/cart" className={styles.backLink}>← Вернуться в корзину</Link>
+      <h1 className={styles.title}>Оформление заказа</h1>
+      <DiscountPolicyNotice {...discountPolicy} />
+    </div>;
   }
 
   return (
