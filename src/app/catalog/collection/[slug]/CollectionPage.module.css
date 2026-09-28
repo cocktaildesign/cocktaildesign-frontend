@@ -34,14 +34,6 @@
   max-width: 88ch;
 }
 
-.collectionNoticeLabel {
-  margin: 0 0 6px;
-  font-size: var(--text-sm);
-  font-weight: 600;
-  line-height: 1.5;
-  color: var(--color-dark-blue);
-}
-
 .collectionNoticeText {
   margin: 0;
   font-size: var(--text-base);

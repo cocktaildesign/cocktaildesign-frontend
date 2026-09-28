@@ -115,7 +115,6 @@ export default async function CollectionPage({ params, searchParams }: PageProps
 
           <div className={styles.collectionNotice} aria-label="Информация о подборке">
             <div className={styles.collectionNoticeContent}>
-              <p className={styles.collectionNoticeLabel}>Подборка товаров</p>
               <p className={styles.collectionNoticeText}>
                 {collectionDescription || `Вы просматриваете подборку «${collectionTitle}». Весь ассортимент доступен в каталоге.`}
               </p>
