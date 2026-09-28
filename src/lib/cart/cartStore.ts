@@ -14,7 +14,7 @@ export type CartItem = {
   slug: string;
   quantity: number;
   engraving: boolean;
-  // Флаг — товар не участвует в скидках и промокодах
+  // Запрет скидки за объём и процентных промокодов; денежные промокоды разрешены.
   discountExcluded: boolean;
   code: string;
 };
@@ -44,6 +44,7 @@ type CartState = {
   addItem: (item: CartItem) => void;
   removeItem: (id: string) => void;
   updateQuantity: (id: string, quantity: number) => void;
+  applyDiscountPolicy: (policy: Record<string, boolean>) => void;
 
   // Установить промокод
   setPromo: (params: {
@@ -82,6 +83,22 @@ export const useCartStore = create<CartState>()(
       promoReplacesVolumeDiscount: false,
 
       setHasHydrated: (value) => set({ hasHydrated: value }),
+
+      applyDiscountPolicy: (policy) => {
+        const state = get();
+        let changed = false;
+        const items = state.items.map(item => {
+          const excluded = policy[item.code.trim()];
+          if (typeof excluded !== "boolean" || excluded === item.discountExcluded) return item;
+          changed = true;
+          return { ...item, discountExcluded: excluded };
+        });
+        if (!changed) return;
+        // A saved percentage promo preview is stale if its eligible subtotal changed.
+        // Fixed money promos and gifts keep their existing treatment.
+        const resetPercentPromo = state.promoType === "percent" || state.promoType === "startup";
+        set({ items, ...(resetPercentPromo ? promoResetState : {}) });
+      },
 
       addItem: (item) => {
         const existingItem = get().items.find((i) => i.id === item.id);

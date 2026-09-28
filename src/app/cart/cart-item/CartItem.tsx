@@ -57,7 +57,7 @@ export default function CartItem({ item }: CartItemProps) {
           {item.name}
         </Link>
         {item.discountExcluded && (
-          <span className={styles.discountExcludedBadge}>Скидка на товар не распространяется</span>
+          <span className={styles.discountExcludedBadge}>Без скидки за объём и процентных промокодов</span>
         )}
         <span className={styles.sku}>Артикул: {item.code}</span>
         {item.engraving && <p className={styles.engravingNote}>Вы выбрали гравировку</p>}

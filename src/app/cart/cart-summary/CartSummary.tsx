@@ -6,6 +6,9 @@ import { useCartStore } from "@/lib/cart/cartStore";
 import { useDiscountTiers, getCurrentTier, getNextTier } from "@/lib/cart/discountTiers";
 import CartProgress from "./cart-progress/CartProgress";
 import styles from "./CartSummary.module.css";
+import { useCartDiscountPolicy } from "@/lib/cart/useCartDiscountPolicy";
+import { CART_API_BASE } from "@/lib/cart/discountPolicy";
+import DiscountPolicyNotice from "./DiscountPolicyNotice";
 
 function formatPrice(price: number): string {
   return new Intl.NumberFormat("ru-RU").format(price);
@@ -35,6 +38,7 @@ export default function CartSummary() {
   const [promoError, setPromoError] = useState("");
 
   const { tiers } = useDiscountTiers();
+  const discountPolicy = useCartDiscountPolicy();
 
   // Считаем суммы
   let totalQuantity = 0;
@@ -98,13 +102,16 @@ export default function CartSummary() {
   }
 
   async function handleApplyPromo() {
+    if (!discountPolicy.ready) return;
     if (!promoCode.trim()) return;
+
+    const basketAtRequest = JSON.stringify(useCartStore.getState().items);
 
     setPromoStatus("loading");
     setPromoError("");
 
     try {
-      const response = await fetch("https://api.cocktaildesign.ru/api/promo-code/apply", {
+      const response = await fetch(`${CART_API_BASE}/promo-code/apply`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -115,6 +122,11 @@ export default function CartSummary() {
       });
 
       const data = await response.json();
+
+      if (JSON.stringify(useCartStore.getState().items) !== basketAtRequest) {
+        setPromoStatus("idle");
+        return;
+      }
 
       if (data.ok) {
         setPromo({
@@ -142,6 +154,10 @@ export default function CartSummary() {
       setPromoStatus("error");
       setPromoError("Ошибка соединения");
     }
+  }
+
+  if (!discountPolicy.ready) {
+    return <section className={styles.summaryWrapper}><DiscountPolicyNotice {...discountPolicy} /></section>;
   }
 
   return (
