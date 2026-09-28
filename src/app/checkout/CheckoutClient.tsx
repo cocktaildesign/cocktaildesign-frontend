@@ -4,7 +4,8 @@ import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useCartStore } from "@/lib/cart/cartStore";
-import { useDiscountTiers, getCurrentTier } from "@/lib/cart/discountTiers";
+import { useDiscountTiers } from "@/lib/cart/discountTiers";
+import { calculateCartTotals } from "@/lib/cart/cartTotals";
 import PersonIcon from "@/components/icons/payment-tabs/PersonIcon";
 import OrganizationIcon from "@/components/icons/payment-tabs/OrganizationIcon";
 import styles from "./Checkout.module.css";
@@ -28,7 +29,7 @@ export default function CheckoutClient() {
   const promoReplacesVolumeDiscount = useCartStore((s) => s.promoReplacesVolumeDiscount);
   const clearCart = useCartStore((s) => s.clearCart);
 
-  const { tiers } = useDiscountTiers();
+  const { tiers, isLoading: tiersLoading } = useDiscountTiers();
   const discountPolicy = useCartDiscountPolicy();
 
   const orderCompletedRef = useRef(false);
@@ -46,42 +47,9 @@ export default function CheckoutClient() {
   const [submitStatus, setSubmitStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
   const [errors, setErrors] = useState<Record<string, string>>({});
 
-  // Считаем суммы
-  let totalPrice = 0;
-  let discountableTotal = 0;
-
-  for (const item of items) {
-    totalPrice += item.price * item.quantity;
-
-    if (!item.discountExcluded) {
-      discountableTotal += item.price * item.quantity;
-    }
-  }
-
-  // Порог скидки определяется по ОБЩЕЙ сумме корзины (totalPrice),
-  // а сама скидка применяется только к товарам без discountExcluded (discountableTotal)
-  const currentTier = getCurrentTier(tiers, totalPrice);
-  const volumeDiscount = currentTier ? Math.round((discountableTotal * currentTier.percent) / 100) : 0;
-  const promoApplied = promoDiscount > 0 || promoType === "inventory" || promoType === "startup";
-
-  let activeVolumeDiscount = volumeDiscount;
-  let activePromoDiscount = promoDiscount;
-
-  if (promoReplacesVolumeDiscount && promoApplied) {
-    if (volumeDiscount > promoDiscount) {
-      activePromoDiscount = 0;
-    } else {
-      activeVolumeDiscount = 0;
-    }
-  }
-
-  if (!promoReplacesVolumeDiscount && activePromoDiscount > 0) {
-    const remainingAfterVolume = Math.max(0, totalPrice - activeVolumeDiscount);
-
-    activePromoDiscount = Math.min(activePromoDiscount, remainingAfterVolume);
-  }
-
-  const finalPrice = Math.max(0, totalPrice - activePromoDiscount - activeVolumeDiscount);
+  const { currentTier, activeVolumeDiscount, activePromoDiscount, finalPrice } = calculateCartTotals(
+    items, tiers, { promoDiscount, promoType, promoReplacesVolumeDiscount },
+  );
 
   useEffect(() => {
     if (hasHydrated && items.length === 0 && !orderCompletedRef.current) {
@@ -127,7 +95,7 @@ export default function CheckoutClient() {
   async function handleSubmit() {
     if (isSubmittingRef.current) return;
     if (!hasHydrated) return;
-    if (!discountPolicy.ready) return;
+    if (!discountPolicy.ready || tiersLoading) return;
     if (items.length === 0) {
       router.replace("/cart");
       return;
@@ -197,7 +165,7 @@ export default function CheckoutClient() {
     }
   }
 
-  if (!discountPolicy.ready) {
+  if (!discountPolicy.ready || tiersLoading) {
     return <div className={styles.page}>
       <Link href="/cart" className={styles.backLink}>← Вернуться в корзину</Link>
       <h1 className={styles.title}>Оформление заказа</h1>

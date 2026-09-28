@@ -11,6 +11,9 @@ import DownloadIcon from "@/components/icons/cart/DownloadIcon";
 
 import { useCartStore } from "@/lib/cart/cartStore";
 import { exportCartToXlsx } from "@/lib/cart/exportToXlsx";
+import { calculateCartTotals } from "@/lib/cart/cartTotals";
+import { useDiscountTiers } from "@/lib/cart/discountTiers";
+import { useCartDiscountPolicy } from "@/lib/cart/useCartDiscountPolicy";
 
 import styles from "./CartClient.module.css";
 
@@ -26,6 +29,13 @@ export default function CartClient() {
   const selectAll = useCartStore((s) => s.selectAll);
   const clearSelected = useCartStore((s) => s.clearSelected);
   const removeSelected = useCartStore((s) => s.removeSelected);
+  const promoDiscount = useCartStore((s) => s.promoDiscount);
+  const promoType = useCartStore((s) => s.promoType);
+  const promoReplacesVolumeDiscount = useCartStore((s) => s.promoReplacesVolumeDiscount);
+  const { tiers, isLoading } = useDiscountTiers();
+  const policy = useCartDiscountPolicy();
+  const discountPolicy = { ...policy, ready: policy.ready && !isLoading };
+  const totals = calculateCartTotals(items, tiers, { promoDiscount, promoType, promoReplacesVolumeDiscount });
 
   // Все ли товары выбраны
   const allSelected = items.length > 0 && selectedIds.length === items.length;
@@ -60,14 +70,8 @@ export default function CartClient() {
     );
   }
 
-  // Считаем итоги для блока печати и mobile sticky bar
-  let totalQuantity = 0;
-  let totalPrice = 0;
-
-  for (const item of items) {
-    totalQuantity += item.quantity;
-    totalPrice += item.price * item.quantity;
-  }
+  // Export/print keep their existing subtotal; screen totals include the discounts.
+  const { totalPrice, totalQuantity, finalPrice } = totals;
 
   return (
     <div className={styles.cartPage}>
@@ -122,20 +126,28 @@ export default function CartClient() {
 
         {/* Правая колонка — итог */}
         <div className={styles.cartSummary}>
-          <CartSummary />
+          <CartSummary totals={totals} discountPolicy={discountPolicy} />
         </div>
       </section>
 
       {/* Sticky bar только для мобилки */}
-      <div className={styles.mobileCheckoutBar}>
+      <div className={styles.mobileCheckoutBar} role="region" aria-label="Итог заказа">
         <div className={styles.mobileCheckoutInfo}>
-          <span className={styles.mobileCheckoutLabel}>Итого</span>
-          <span className={styles.mobileCheckoutPrice}>{formatPrice(totalPrice)} ₽</span>
+          <span className={styles.mobileCheckoutLabel}>
+            {discountPolicy.ready ? "Итого" : discountPolicy.error ? "Нужна проверка скидок" : "Проверяем скидки…"}
+          </span>
+          <span className={styles.mobileCheckoutPrice} aria-live="polite" aria-atomic="true">
+            {discountPolicy.ready ? `${formatPrice(finalPrice)} ₽` : "—"}
+          </span>
         </div>
 
-        <Link href="/checkout" className={styles.mobileCheckoutButton}>
-          Оформить заказ
-        </Link>
+        {discountPolicy.ready ? (
+          <Link href="/checkout" className={styles.mobileCheckoutButton}>Оформить заказ</Link>
+        ) : discountPolicy.error ? (
+          <button type="button" className={styles.mobileCheckoutButton} onClick={discountPolicy.retry}>Повторить</button>
+        ) : (
+          <button type="button" className={styles.mobileCheckoutButton} disabled>Оформить заказ</button>
+        )}
       </div>
 
       {/* Блок только для печати */}
