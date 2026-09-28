@@ -4,6 +4,7 @@ import { pageMetadata } from "@/lib/seo/metadata";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import Link from "next/link";
+import ArrowRightIcon from "@/components/icons/ArrowRightIcon";
 import CatalogSidebar from "@/app/catalog/[slug]/catalog-sidebar/CatalogSidebar";
 import ProductGrid from "@/app/catalog/product-grid/ProductGrid";
 import CollectionMobileCategoryDrillDown from "./mobile-collection-category-drill-down/CollectionMobileCategoryDrillDown";
@@ -63,11 +64,13 @@ export default async function CollectionPage({ params, searchParams }: PageProps
 
   let collectionTitle = "";
   let collectionSlug = slug;
+  let collectionDescription = "";
 
   try {
     const data = await getCollectionProductsFromStrapi({ slug, limit: 1, offset: 0 });
     collectionTitle = data.collection.title;
     collectionSlug = data.collection.slug;
+    collectionDescription = data.collection.description?.trim() ?? "";
   } catch {
     notFound();
   }
@@ -111,13 +114,16 @@ export default async function CollectionPage({ params, searchParams }: PageProps
           <h1 className={styles.headerTitle}>{collectionTitle}</h1>
 
           <div className={styles.collectionNotice} aria-label="Информация о подборке">
-            <p className={styles.collectionNoticeText}>
-              Вы просматриваете подборку товаров — {collectionTitle}
-              <span className={styles.collectionNoticeDivider}>·</span>
-              <Link href="/catalog" className={styles.collectionNoticeLink}>
-                Перейти в основной каталог
-              </Link>
-            </p>
+            <div className={styles.collectionNoticeContent}>
+              <p className={styles.collectionNoticeLabel}>Подборка товаров</p>
+              <p className={styles.collectionNoticeText}>
+                {collectionDescription || `Вы просматриваете подборку «${collectionTitle}». Весь ассортимент доступен в каталоге.`}
+              </p>
+            </div>
+            <Link href="/catalog" className={styles.collectionNoticeLink}>
+              Смотреть весь каталог
+              <ArrowRightIcon className={styles.collectionNoticeArrow} title="" />
+            </Link>
           </div>
         </header>
 
