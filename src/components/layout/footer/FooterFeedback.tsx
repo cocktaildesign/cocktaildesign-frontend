@@ -36,7 +36,7 @@ export default function FooterFeedback() {
       <Modal isOpen={isOpen} onClose={closeModal} title="Обратная связь">
         {status === "success" ? (
           <div className={styles.success} role="status" aria-live="polite">
-            Спасибо! Сообщение отправлено.
+            Спасибо! Ваше сообщение принято.
           </div>
         ) : (
           <FeedbackForm
