@@ -16,37 +16,74 @@
   font-weight: 450;
 }
 
-/* Мини-плашка с контекстом коллекции */
+/* Пояснение относится только к страницам подборок. */
 .collectionNotice {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
   max-width: 100%;
-  padding: 14px 18px;
+  padding: 22px 24px;
+  border: 1px solid #e8ecf1;
   border-radius: 16px;
   background-color: #f5f7fa;
 }
 
-.collectionNoticeText {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 8px;
-  margin: 0;
-  font-size: var(--text-base);
-  line-height: 1.5;
-  color: rgba(28, 34, 48, 0.84);
+.collectionNoticeContent {
+  min-width: 0;
+  max-width: 88ch;
 }
 
-.collectionNoticeDivider {
-  color: rgba(28, 34, 48, 0.28);
+.collectionNoticeLabel {
+  margin: 0 0 6px;
+  font-size: var(--text-sm);
+  font-weight: 600;
+  line-height: 1.5;
+  color: var(--color-dark-blue);
+}
+
+.collectionNoticeText {
+  margin: 0;
+  font-size: var(--text-base);
+  line-height: 1.6;
+  color: rgba(28, 34, 48, 0.84);
+  white-space: pre-line;
+  overflow-wrap: anywhere;
 }
 
 .collectionNoticeLink {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: 44px;
+  padding: 10px 14px;
+  border: 1px solid #cbd2dc;
+  border-radius: 10px;
+  background-color: #fff;
+  font-size: var(--text-sm);
+  font-weight: 500;
+  line-height: 1.5;
   color: var(--color-dark-blue);
   text-decoration: none;
-  transition: opacity 0.2s ease;
+  transition: border-color 0.2s ease, background-color 0.2s ease;
 }
 
 .collectionNoticeLink:hover {
-  opacity: 0.75;
+  border-color: var(--color-dark-blue);
+  background-color: #edf1f6;
+}
+
+.collectionNoticeLink:focus-visible {
+  outline: 2px solid var(--color-dark-blue);
+  outline-offset: 3px;
+}
+
+.collectionNoticeArrow {
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
 }
 
 .layout {
@@ -110,13 +147,19 @@
   }
 
   .collectionNotice {
-    padding: 12px 14px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+    padding: 16px;
     border-radius: 14px;
   }
 
   .collectionNoticeText {
     font-size: var(--text-sm);
-    gap: 6px;
+  }
+
+  .collectionNoticeLink {
+    width: 100%;
   }
 }
 
