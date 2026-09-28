@@ -24,9 +24,10 @@ function formatProductsCount(count: number): string {
   return `${count} товаров`;
 }
 
-export default function CartSummary({ totals, discountPolicy }: {
+export default function CartSummary({ totals, discountPolicy, onPromoLoadingChange }: {
   totals: CartTotals;
   discountPolicy: ReturnType<typeof useCartDiscountPolicy>;
+  onPromoLoadingChange: (loading: boolean) => void;
 }) {
   const promoCode = useCartStore((s) => s.promoCode);
   const promoType = useCartStore((s) => s.promoType);
@@ -56,6 +57,7 @@ export default function CartSummary({ totals, discountPolicy }: {
     const basketAtRequest = JSON.stringify(useCartStore.getState().items);
 
     setPromoStatus("loading");
+    onPromoLoadingChange(true);
     setPromoError("");
 
     try {
@@ -101,6 +103,8 @@ export default function CartSummary({ totals, discountPolicy }: {
     } catch {
       setPromoStatus("error");
       setPromoError("Ошибка соединения");
+    } finally {
+      onPromoLoadingChange(false);
     }
   }
 

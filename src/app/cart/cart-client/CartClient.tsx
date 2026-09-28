@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useState } from "react";
 
 import CartPrint from "../cart-print/CartPrint";
 import CartItem from "../cart-item/CartItem";
@@ -14,6 +15,7 @@ import { exportCartToXlsx } from "@/lib/cart/exportToXlsx";
 import { calculateCartTotals } from "@/lib/cart/cartTotals";
 import { useDiscountTiers } from "@/lib/cart/discountTiers";
 import { useCartDiscountPolicy } from "@/lib/cart/useCartDiscountPolicy";
+import { buildCartQuote, moneyCents, type CartQuote, type QuotePricing } from "@/lib/cart/cartQuote";
 
 import styles from "./CartClient.module.css";
 
@@ -32,10 +34,44 @@ export default function CartClient() {
   const promoDiscount = useCartStore((s) => s.promoDiscount);
   const promoType = useCartStore((s) => s.promoType);
   const promoReplacesVolumeDiscount = useCartStore((s) => s.promoReplacesVolumeDiscount);
-  const { tiers, isLoading } = useDiscountTiers();
+  const promoCode = useCartStore((s) => s.promoCode);
+  const promoBonusMessage = useCartStore((s) => s.promoBonusMessage);
+  const [promoLoading, setPromoLoading] = useState(false);
+  const [exporting, setExporting] = useState(false);
+  const [exportError, setExportError] = useState("");
+  const { tiers, isLoading, error: tiersError } = useDiscountTiers();
   const policy = useCartDiscountPolicy();
   const discountPolicy = { ...policy, ready: policy.ready && !isLoading };
   const totals = calculateCartTotals(items, tiers, { promoDiscount, promoType, promoReplacesVolumeDiscount });
+  const quotePricing: QuotePricing = { volumeDiscount: totals.activeVolumeDiscount,
+    promoDiscount: totals.activePromoDiscount, promoType, promoCode, bonusMessage: promoBonusMessage };
+  let quote: CartQuote | null = null;
+  let quoteError = "";
+  if (discountPolicy.ready && !tiersError && !promoLoading) {
+    try {
+      quote = buildCartQuote(items, quotePricing);
+      if (quote.finalCents !== moneyCents(totals.finalPrice)) throw new Error("quote_total_mismatch");
+    } catch {
+      quote = null;
+      quoteError = "Не удалось подготовить КП. Проверьте цены и количество товаров.";
+    }
+  }
+  const quoteNotice = quoteError || (tiersError ? "Не удалось проверить скидки для КП. Обновите страницу и повторите." :
+    discountPolicy.error ? "КП будет доступно после проверки скидок. Нажмите «Повторить» в блоке итога." :
+    !quote ? "Проверяем скидки перед подготовкой КП…" : "");
+
+  async function downloadQuote() {
+    if (!quote || exporting) return;
+    setExporting(true);
+    setExportError("");
+    try {
+      await exportCartToXlsx(items, quotePricing);
+    } catch {
+      setExportError("Не удалось скачать КП. Повторите попытку.");
+    } finally {
+      setExporting(false);
+    }
+  }
 
   // Все ли товары выбраны
   const allSelected = items.length > 0 && selectedIds.length === items.length;
@@ -70,8 +106,7 @@ export default function CartClient() {
     );
   }
 
-  // Export/print keep their existing subtotal; screen totals include the discounts.
-  const { totalPrice, totalQuantity, finalPrice } = totals;
+  const { finalPrice } = totals;
 
   return (
     <div className={styles.cartPage}>
@@ -83,21 +118,23 @@ export default function CartClient() {
             <h1 className={styles.cartTitle}>Корзина</h1>
 
             <div className={styles.cartActions}>
-              <button type="button" className={styles.cartActionButton} onClick={() => exportCartToXlsx(items)}>
+              <button type="button" className={styles.cartActionButton} onClick={downloadQuote} disabled={!quote || exporting}>
                 <DownloadIcon className={styles.cartIcon} color="#A1A1A1" width="15" height="15" />
-                <span>Скачать</span>
+                <span>{exporting ? "Готовим КП…" : "Скачать"}</span>
               </button>
 
               <button
                 type="button"
                 className={styles.cartActionButton}
                 onClick={() => window.print()}
+                disabled={!quote || exporting}
                 aria-label="Распечатать страницу">
                 <PrinterIcon className={styles.cartIcon} color="#A1A1A1" width="20" height="20" aria-hidden="true" />
                 <span>Распечатать</span>
               </button>
             </div>
           </div>
+          {(quoteNotice || exportError) && <p className={styles.quoteNotice} role="status">{quoteNotice || exportError}</p>}
 
           {/* Выбор товаров */}
           <div className={styles.cartHeader}>
@@ -126,7 +163,7 @@ export default function CartClient() {
 
         {/* Правая колонка — итог */}
         <div className={styles.cartSummary}>
-          <CartSummary totals={totals} discountPolicy={discountPolicy} />
+          <CartSummary totals={totals} discountPolicy={discountPolicy} onPromoLoadingChange={setPromoLoading} />
         </div>
       </section>
 
@@ -151,7 +188,7 @@ export default function CartClient() {
       </div>
 
       {/* Блок только для печати */}
-      <CartPrint items={items} totalPrice={totalPrice} totalQuantity={totalQuantity} />
+      <CartPrint quote={quote} notice={quoteNotice} />
     </div>
   );
 }
