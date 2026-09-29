@@ -14,6 +14,7 @@ import ProductBadges from "@/shared/ui/product-badges/ProductBadges";
 import type { CatalogCategoryPreview, ProductBadge } from "@/lib/api/catalog/types";
 
 import styles from "./SearchBar.module.css";
+import { usePagedSearch, type SearchPage } from "./usePagedSearch";
 
 const PLACEHOLDER_IMG = "/images/catalog/product-placeholder.webp";
 
@@ -79,7 +80,7 @@ const CATEGORIES_LIMIT = 8;
 const RANDOM_PRODUCTS_COUNT = 2;
 
 const SEARCH_MIN_LENGTH = 2;
-const SEARCH_DEBOUNCE_MS = 250;
+const SEARCH_PAGE_SIZE = 10;
 
 const DEFAULT_NOVELTY_BADGE_COLOR = "#2eae4a";
 
@@ -132,15 +133,18 @@ async function fetchRandomProducts(count: number): Promise<Product[]> {
 }
 
 // Поиск товаров по запросу
-async function searchProducts(query: string): Promise<Product[]> {
-  const res = await fetch(`${API_BASE}/catalog/search-v2?q=${encodeURIComponent(query)}`);
-
-  if (!res.ok) {
-    return [];
-  }
-
-  const data = (await res.json()) as { items?: ApiProductItem[] };
-  return (data.items ?? []).map(mapApiProductToProduct);
+async function searchProducts(query: string, offset: number, revision: string, signal: AbortSignal): Promise<SearchPage<Product>> {
+  const params = new URLSearchParams({ q: query, limit: String(SEARCH_PAGE_SIZE), offset: String(offset) });
+  if (revision) params.set("revision", revision);
+  const res = await fetch(`${API_BASE}/catalog/search-v2?${params}`, {
+    signal: AbortSignal.any([signal, AbortSignal.timeout(15000)]), cache: "no-store",
+  });
+  if (!res.ok) throw new Error(res.status === 409 ? "search_results_changed" : "search_unavailable");
+  const data = await res.json() as { items?: ApiProductItem[]; total?: number; nextOffset?: number; hasMore?: boolean; revision?: string };
+  const items = (data.items ?? []).map(mapApiProductToProduct);
+  // Older API remains usable during rollout/rollback, without offering unsupported pagination.
+  return { items, total: data.total ?? items.length, nextOffset: data.nextOffset ?? items.length,
+    hasMore: data.hasMore === true, revision: data.revision ?? "" };
 }
 
 // Строим чипы для продолжения поисковой фразы
@@ -201,46 +205,32 @@ export default function SearchBar({
   const router = useRouter();
   const panelId = useId();
   const inputRef = useRef<HTMLInputElement>(null);
-  const latestQueryRef = useRef("");
+  const panelContentRef = useRef<HTMLDivElement>(null);
 
   // Состояние панели и строки поиска
   const [isOpen, setIsOpen] = useState(false);
   const [query, setQuery] = useState("");
-  const [debouncedQuery, setDebouncedQuery] = useState("");
+  const results = usePagedSearch(query, isOpen, searchProducts);
 
   // Данные поиска
-  const [products, setProducts] = useState<Product[]>([]);
+
   const [randomProducts, setRandomProducts] = useState<Product[]>([]);
 
   // Служебное состояние интерфейса
   const [activeIndex, setActiveIndex] = useState(-1);
-  const [isFetching, setIsFetching] = useState(false);
+
   const [showAllCategories, setShowAllCategories] = useState(false);
 
   // Производные значения
   const trimmed = query.trim();
-  const trimmedDebounced = debouncedQuery.trim();
+
 
   const visibleCategories = showAllCategories ? categories : categories.slice(0, CATEGORIES_LIMIT);
 
-  const canUseResults = isOpen && trimmedDebounced.length >= SEARCH_MIN_LENGTH && trimmed === trimmedDebounced;
-  const visibleProducts = canUseResults ? products : [];
-
-  let viewStatus: "idle" | "loading" | "success" | "empty" = "idle";
-
-  if (isOpen && trimmed.length > 0) {
-    if (trimmed.length < SEARCH_MIN_LENGTH) {
-      viewStatus = "empty";
-    } else if (isFetching || trimmed !== trimmedDebounced) {
-      viewStatus = "loading";
-    } else if (visibleProducts.length > 0) {
-      viewStatus = "success";
-    } else {
-      viewStatus = "empty";
-    }
-  }
-
-  const chips = viewStatus === "success" ? buildChips(query, visibleProducts) : [];
+  const visibleProducts = results.ready ? results.items : [];
+  const viewStatus = !isOpen || !trimmed ? "idle" : results.isFetching ? "loading" :
+    results.ready && results.error && !visibleProducts.length ? "error" : visibleProducts.length ? "success" : "empty";
+  const chips = viewStatus === "success" ? buildChips(query, visibleProducts.slice(0, SEARCH_PAGE_SIZE)) : [];
 
   // Загружаем случайные товары, когда панель открыта и строка поиска пустая
   useEffect(() => {
@@ -258,57 +248,12 @@ export default function SearchBar({
       }
     }
 
-    loadRandomProducts();
+    void loadRandomProducts().catch(() => { if (!isCancelled) setRandomProducts([]); });
 
     return () => {
       isCancelled = true;
     };
   }, [isOpen, trimmed]);
-
-  // Debounce только для поискового запроса
-  useEffect(() => {
-    if (!isOpen) {
-      return;
-    }
-
-    const timer = setTimeout(() => {
-      setDebouncedQuery(query);
-    }, SEARCH_DEBOUNCE_MS);
-
-    return () => {
-      clearTimeout(timer);
-    };
-  }, [query, isOpen]);
-
-  // Поиск товаров по debounce-запросу
-  useEffect(() => {
-    if (!isOpen || trimmedDebounced.length < SEARCH_MIN_LENGTH) {
-      return;
-    }
-
-    let isCancelled = false;
-    const requestedQuery = trimmedDebounced;
-
-    searchProducts(requestedQuery)
-      .then((result) => {
-        const currentQuery = latestQueryRef.current.trim();
-
-        if (!isCancelled && currentQuery === requestedQuery) {
-          setProducts(result);
-        }
-      })
-      .finally(() => {
-        const currentQuery = latestQueryRef.current.trim();
-
-        if (!isCancelled && currentQuery === requestedQuery) {
-          setIsFetching(false);
-        }
-      });
-
-    return () => {
-      isCancelled = true;
-    };
-  }, [isOpen, trimmedDebounced]);
 
   // Внешний сигнал закрытия — когда closeSignal меняется, закрываем панель.
   // Пропускаем первый рендер (когда значение приходит впервые).
@@ -344,8 +289,8 @@ export default function SearchBar({
     setActiveIndex(-1);
     setRandomProducts([]);
     setShowAllCategories(false);
-    setIsFetching(false);
-    setDebouncedQuery("");
+
+
   }
 
   function focusInput() {
@@ -355,12 +300,9 @@ export default function SearchBar({
   }
 
   function clearQuery() {
-    latestQueryRef.current = "";
+    resetScroll();
     setQuery("");
-    setDebouncedQuery("");
-    setProducts([]);
     setActiveIndex(-1);
-    setIsFetching(false);
     focusInput();
   }
 
@@ -379,10 +321,10 @@ export default function SearchBar({
   }
 
   function applyPopularQuery(popularQuery: string) {
-    latestQueryRef.current = popularQuery;
+    resetScroll();
     setQuery(popularQuery);
     setActiveIndex(-1);
-    setIsFetching(popularQuery.trim().length >= SEARCH_MIN_LENGTH);
+
     openPanel();
     focusInput();
   }
@@ -400,41 +342,32 @@ export default function SearchBar({
       nextQuery = `${parts.join(" ")} `;
     }
 
-    latestQueryRef.current = nextQuery;
+    resetScroll();
     setQuery(nextQuery);
     setActiveIndex(-1);
-    setIsFetching(nextQuery.trim().length >= SEARCH_MIN_LENGTH);
+
     focusInput();
   }
 
+  function resetScroll() { if (panelContentRef.current) panelContentRef.current.scrollTop = 0; }
+
   function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-
-    if (activeIndex >= 0 && visibleProducts[activeIndex]) {
-      goToProduct(visibleProducts[activeIndex]);
-    }
+    openPanel();
+    if (results.error) results.retry();
+    focusInput();
   }
 
   function handleChange(event: ChangeEvent<HTMLInputElement>) {
-    const nextQuery = event.target.value;
-    const normalizedQuery = nextQuery.trim();
-
-    const shouldFetch =
-      normalizedQuery.length >= SEARCH_MIN_LENGTH &&
-      normalizedQuery !== trimmedDebounced;
-
-    latestQueryRef.current = nextQuery;
-    setQuery(nextQuery);
+    setQuery(event.target.value);
     setActiveIndex(-1);
-    setIsFetching(shouldFetch);
-
-    if (!isOpen) {
-      openPanel();
-    }
+    resetScroll();
+    if (!isOpen) openPanel();
   }
 
   function handleKeyDown(event: KeyboardEvent<HTMLInputElement>) {
     if (event.key === "Escape") {
+      event.preventDefault();
       closePanel();
       return;
     }
@@ -445,12 +378,16 @@ export default function SearchBar({
 
     if (event.key === "ArrowDown") {
       event.preventDefault();
-      setActiveIndex((currentIndex) => Math.min(currentIndex < 0 ? 0 : currentIndex + 1, visibleProducts.length - 1));
+      const index = Math.min(activeIndex < 0 ? 0 : activeIndex + 1, visibleProducts.length - 1);
+      setActiveIndex(index);
+      document.getElementById(`${panelId}-item-${index}`)?.scrollIntoView({ block: "nearest" });
     }
 
     if (event.key === "ArrowUp") {
       event.preventDefault();
-      setActiveIndex((currentIndex) => Math.max(currentIndex - 1, 0));
+      const index = Math.max(activeIndex - 1, 0);
+      setActiveIndex(index);
+      document.getElementById(`${panelId}-item-${index}`)?.scrollIntoView({ block: "nearest" });
     }
 
     if (event.key === "Enter" && activeIndex >= 0) {
@@ -480,16 +417,18 @@ export default function SearchBar({
             role="combobox"
             className={styles.input}
             type="search"
+            maxLength={160}
             name="query"
             placeholder={placeholder}
             autoComplete="off"
             value={query}
             onFocus={openPanel}
+            onClick={openPanel}
             onChange={handleChange}
             onKeyDown={handleKeyDown}
             aria-expanded={isOpen}
             aria-controls={panelId}
-            aria-haspopup="listbox"
+            aria-haspopup="dialog"
             enterKeyHint="search"
           />
 
@@ -499,7 +438,7 @@ export default function SearchBar({
             </button>
           )}
 
-          <button className={styles.button} type="submit">
+          <button className={styles.button} type="submit" aria-label="Найти товары">
             <SearchIcon />
           </button>
         </div>
@@ -508,10 +447,10 @@ export default function SearchBar({
       {/* Выпадающая панель */}
       <div
         id={panelId}
-        role="region"
+        role="dialog"
         aria-label="Панель поиска"
         className={isOpen ? styles.searchPanelOpen : styles.searchPanel}>
-        <div className={styles.searchPanelContent}>
+        <div ref={panelContentRef} className={styles.searchPanelContent}>
           {/* Быстрые подсказки */}
           {chips.length > 0 && (
             <div className={styles.chipsRow} aria-label="Быстрые подсказки">
@@ -628,6 +567,7 @@ export default function SearchBar({
                   <li key={product.id}>
                     <button
                       type="button"
+                      id={`${panelId}-item-${index}`}
                       className={`${styles.productButton} ${index === activeIndex ? styles.productButtonActive : ""}`}
                       onMouseEnter={() => setActiveIndex(index)}
                       onClick={() => goToProduct(product)}>
@@ -669,8 +609,19 @@ export default function SearchBar({
           )}
 
           {/* Ничего не найдено */}
-          {viewStatus === "empty" && <div className={styles.empty}>Ничего не найдено</div>}
+          {viewStatus === "empty" && <div className={styles.empty}>{trimmed.length < SEARCH_MIN_LENGTH ? "Введите хотя бы 2 символа" : "Ничего не найдено"}</div>}
+          {viewStatus === "error" && <div className={styles.empty} role="status">
+            <p>{results.error}</p><button type="button" className={styles.moreButton} onClick={results.retry}>Повторить поиск</button>
+          </div>}
         </div>
+        {viewStatus === "success" && <div className={styles.resultsFooter}>
+          <span className={styles.resultCount} role="status" aria-live="polite">Показано {visibleProducts.length} из {results.total} товаров</span>
+          {results.error && <p className={styles.resultError} role="status">{results.error}</p>}
+          {results.changed ? <button type="button" className={styles.moreButton} onClick={() => { setActiveIndex(-1); resetScroll(); results.retry(); }}>Обновить поиск</button> :
+            results.hasMore && <button type="button" className={styles.moreButton} disabled={results.more} onClick={() => void results.loadMore()}>
+              {results.more ? "Загружаем…" : results.error ? "Повторить загрузку" : `Показать ещё ${Math.min(SEARCH_PAGE_SIZE, results.total - visibleProducts.length)}`}
+            </button>}
+        </div>}
       </div>
     </div>
   );
