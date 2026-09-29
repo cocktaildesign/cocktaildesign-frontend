@@ -29,6 +29,7 @@ type Props = {
 };
 
 type Product = {
+  moyskladId?: string;
   id: string;
   title: string;
   priceRub: number;
@@ -48,6 +49,7 @@ type ApiImage = {
 };
 
 type ApiMatchedVariant = {
+  moyskladId?: string | null;
   id: number;
   name?: string | null;
   price?: number | null;
@@ -58,6 +60,7 @@ type ApiMatchedVariant = {
 type ApiProductItem = {
   id: number;
   attributes: {
+    moyskladId?: string | null;
     name?: string | null;
     price?: number | null;
     code?: string | null;
@@ -106,6 +109,7 @@ function mapApiProductToProduct(item: ApiProductItem): Product {
 
   return {
     id: String(item.id),
+    moyskladId: matchedVariant?.moyskladId ?? item.attributes.moyskladId ?? undefined,
     title: matchedVariant?.name ?? item.attributes.name ?? "",
     priceRub: matchedVariant?.price ?? item.attributes.price ?? 0,
     categoryTitle: item.attributes.categoryName ?? undefined,
@@ -501,6 +505,7 @@ export default function SearchBar({
                             />
 
                             <ProductBadges
+                              moyskladId={product.moyskladId}
                               isNew={product.isNew}
                               noveltyBadgeColor={product.noveltyBadgeColor}
                               isSampleSale={product.isSampleSale}
@@ -584,6 +589,7 @@ export default function SearchBar({
                         <span className={styles.productTitle}>{product.title}</span>
 
                         <ProductBadges
+                          moyskladId={product.moyskladId}
                           isNew={product.isNew}
                           noveltyBadgeColor={product.noveltyBadgeColor}
                           isSampleSale={product.isSampleSale}

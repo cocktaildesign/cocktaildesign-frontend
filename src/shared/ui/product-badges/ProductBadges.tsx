@@ -5,6 +5,8 @@ import { useState } from "react";
 import type { ProductBadge } from "@/lib/api/catalog/types";
 
 import styles from "./ProductBadges.module.css";
+import { AUTOMATIC_AVAILABILITY_BADGE, reconcileAvailabilityBadges } from "./availability";
+import { useAvailability } from "./useAvailability";
 
 const NOVELTY_LABEL = "НОВИНКА";
 const SAMPLE_SALE_LABEL = "УЦЕНКА";
@@ -13,6 +15,7 @@ const SAMPLE_SALE_BADGE_TEXT = "#FFFFFF";
 const MAX_MANUAL_BADGES = 5;
 
 export type ProductBadgesProps = {
+  moyskladId?: string;
   isNew: boolean;
   noveltyBadgeColor: string;
   isSampleSale?: boolean;
@@ -134,6 +137,7 @@ function BadgeList({
 }
 
 export default function ProductBadges({
+  moyskladId,
   isNew,
   noveltyBadgeColor,
   isSampleSale = false,
@@ -146,7 +150,9 @@ export default function ProductBadges({
 }: ProductBadgesProps) {
   const [mobileExpanded, setMobileExpanded] = useState(false);
 
-  const items = buildBadgeListItems(isSampleSale, isNew, badges);
+  const unavailable = useAvailability(moyskladId);
+  const items = buildBadgeListItems(isSampleSale, isNew, reconcileAvailabilityBadges(badges, unavailable));
+  if (unavailable === true) items.unshift({ kind: "manual", badge: AUTOMATIC_AVAILABILITY_BADGE });
 
   if (items.length === 0) {
     return null;

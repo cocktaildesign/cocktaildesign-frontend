@@ -82,6 +82,7 @@ export default function ProductCard({ product }: ProductCardProps) {
           />
 
           <ProductBadges
+            moyskladId={product.variants.find((variant) => variant.id === product.preferredVariantId)?.moyskladId ?? product.moyskladId}
             isNew={product.isNew}
             noveltyBadgeColor={product.noveltyBadgeColor}
             isSampleSale={product.isSampleSale}
