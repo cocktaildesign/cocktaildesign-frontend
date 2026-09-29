@@ -423,6 +423,7 @@ export default function SearchBar({
             autoComplete="off"
             value={query}
             onFocus={openPanel}
+            onClick={openPanel}
             onChange={handleChange}
             onKeyDown={handleKeyDown}
             aria-expanded={isOpen}
