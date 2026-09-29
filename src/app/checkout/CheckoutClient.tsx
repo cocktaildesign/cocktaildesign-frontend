@@ -12,6 +12,7 @@ import styles from "./Checkout.module.css";
 import { useCartDiscountPolicy } from "@/lib/cart/useCartDiscountPolicy";
 import { CART_API_BASE } from "@/lib/cart/discountPolicy";
 import DiscountPolicyNotice from "../cart/cart-summary/DiscountPolicyNotice";
+import { ENGRAVING_PRICE_NOTE } from "@/lib/cart/engraving";
 
 type BuyerType = "individual" | "legal";
 
@@ -239,7 +240,7 @@ export default function CheckoutClient() {
                       </span>
                     )}
 
-                    {item.engraving && <span className={styles.orderItemEngraving}>Гравировка</span>}
+                    {item.engraving && <span className={styles.orderItemEngraving}>Гравировка — стоимость отдельно</span>}
                   </div>
 
                   <span className={styles.orderItemQty}>{item.quantity} шт.</span>
@@ -266,6 +267,7 @@ export default function CheckoutClient() {
               <span className={styles.orderTotalLabel}>Итого</span>
               <span className={styles.orderTotalPrice}>{formatPrice(finalPrice)} ₽</span>
             </div>
+            {items.some(item => item.engraving) && <p className={styles.engravingNote}>{ENGRAVING_PRICE_NOTE}</p>}
           </section>
         </div>
 

@@ -44,6 +44,7 @@ type CartState = {
   addItem: (item: CartItem) => void;
   removeItem: (id: string) => void;
   updateQuantity: (id: string, quantity: number) => void;
+  setEngraving: (id: string, engraving: boolean) => void;
   applyDiscountPolicy: (policy: Record<string, boolean>) => void;
 
   // Установить промокод
@@ -83,6 +84,13 @@ export const useCartStore = create<CartState>()(
       promoReplacesVolumeDiscount: false,
 
       setHasHydrated: (value) => set({ hasHydrated: value }),
+
+      // A manager-priced request only: do not change quantities, prices, promos or selected rows.
+      setEngraving: (id, engraving) => {
+        const items = get().items;
+        if (!items.some(item => item.id === id && item.engraving !== engraving)) return;
+        set({ items: items.map(item => item.id === id ? { ...item, engraving } : item) });
+      },
 
       applyDiscountPolicy: (policy) => {
         const state = get();

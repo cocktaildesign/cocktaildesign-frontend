@@ -452,3 +452,9 @@
     padding-bottom: 20px;
   }
 }
+.engravingNote {
+  margin: 12px 0 0;
+  color: #656565;
+  font-size: 14px;
+  line-height: 1.5;
+}

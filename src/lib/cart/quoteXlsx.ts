@@ -1,4 +1,5 @@
 import ExcelJS from "exceljs";
+import { ENGRAVING_PRICE_NOTE } from "./engraving";
 import { type CartQuote, quoteSummaryRows, QUOTE_PRICE_NOTE, QUOTE_ROUNDING_NOTE } from "./cartQuote";
 
 const BLUE = "FF1A2C5B";
@@ -50,7 +51,7 @@ export async function createQuoteWorkbook(quote: CartQuote): Promise<ExcelJS.Wor
   });
   quote.rows.forEach((item, index) => {
     const row = ws.getRow(7 + index);
-    const name = safeText(item.name + (item.engraving ? " (+ Гравировка)" : ""));
+    const name = safeText(item.name + (item.engraving ? " (Гравировка — стоимость отдельно)" : ""));
     row.values = [{ text: name, hyperlink: `https://new.cocktaildesign.ru/catalog/product/${encodeURIComponent(item.slug)}` },
       safeText(item.code ?? "—"), item.unitCents / 100, item.unitDiscountCents / 100,
       item.unitFinalCents / 100, item.quantity, item.finalCents / 100];
@@ -88,6 +89,7 @@ export async function createQuoteWorkbook(quote: CartQuote): Promise<ExcelJS.Wor
     cell.border = { top: { style: "thin", color: { argb: BLUE } } };
   });
   const notes = [
+    ...(quote.rows.some(item => item.engraving) ? [ENGRAVING_PRICE_NOTE] : []),
     ...(quote.hasRoundedUnits ? [QUOTE_ROUNDING_NOTE] : []),
     ...(quote.fixedCents > 0 ? ["Денежный промокод вычтен из общей суммы заказа после скидок по товарам, включая уценку."] : []),
     ...(["inventory", "startup"].includes(quote.pricing.promoType) && quote.pricing.bonusMessage ? [quote.pricing.bonusMessage] : []),

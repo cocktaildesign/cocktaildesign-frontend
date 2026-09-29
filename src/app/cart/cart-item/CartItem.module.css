@@ -88,8 +88,12 @@
 .engravingNote {
   margin: 4px 0 0;
   font-size: var(--text-xs);
-  color: var(--color-gray);
+  color: #656565;
+  line-height: 1.45;
 }
+
+.engravingBlock { margin-top: 8px; max-width: 360px; }
+.engravingToggle { width: fit-content; max-width: 100%; min-height: 44px; }
 
 /* ==========================================================================
    PRICE
