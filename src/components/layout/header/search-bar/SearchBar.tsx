@@ -367,6 +367,7 @@ export default function SearchBar({
 
   function handleKeyDown(event: KeyboardEvent<HTMLInputElement>) {
     if (event.key === "Escape") {
+      event.preventDefault();
       closePanel();
       return;
     }
