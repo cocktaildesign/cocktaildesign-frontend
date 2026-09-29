@@ -8,6 +8,8 @@ import QuantityControl from "@/components/ui/quantity/QuantityControl";
 import CloseIcon from "@/components/icons/CloseIcon";
 import FavoriteButton from "@/components/ui/favorites/FavoriteButton";
 import styles from "./CartItem.module.css";
+import { useId } from "react";
+import EngravingToggle from "@/components/ui/engraving/EngravingToggle";
 
 // Импортируем тип CartItem из store и переименовываем,
 // чтобы не конфликтовал с названием компонента
@@ -15,6 +17,7 @@ import type { CartItem as CartItemType } from "@/lib/cart/cartStore";
 
 type CartItemProps = {
   item: CartItemType;
+  engravingEnabled: boolean;
 };
 
 // 1200 -> "1 200"
@@ -22,10 +25,12 @@ function formatPrice(price: number): string {
   return new Intl.NumberFormat("ru-RU").format(price);
 }
 
-export default function CartItem({ item }: CartItemProps) {
+export default function CartItem({ item, engravingEnabled }: CartItemProps) {
   const updateQuantity = useCartStore((s) => s.updateQuantity);
   const removeItem = useCartStore((s) => s.removeItem);
   const toggleSelected = useCartStore((s) => s.toggleSelected);
+  const setEngraving = useCartStore((s) => s.setEngraving);
+  const engravingNoteId = useId();
 
   // Проверяем есть ли id товара в списке выбранных
   const isSelected = useCartStore((s) => s.selectedIds.includes(item.id));
@@ -60,7 +65,17 @@ export default function CartItem({ item }: CartItemProps) {
           <span className={styles.discountExcludedBadge}>Без скидки за объём и процентных промокодов</span>
         )}
         <span className={styles.sku}>Артикул: {item.code}</span>
-        {item.engraving && <p className={styles.engravingNote}>Вы выбрали гравировку</p>}
+        {(engravingEnabled || item.engraving) && <div className={styles.engravingBlock}>
+          <EngravingToggle checked={item.engraving} className={styles.engravingToggle}
+            ariaLabel={`Гравировка: ${item.name}`} describedBy={engravingNoteId}
+            onChange={checked => {
+              // Removing a saved request is always possible, including while the API is unavailable.
+              if (!checked || engravingEnabled) setEngraving(item.id, checked);
+            }} />
+          <p id={engravingNoteId} className={styles.engravingNote}>Стоимость согласует менеджер. Не включена в итог.
+            {item.engraving && item.quantity > 1 ? ` Выбрана для всех ${item.quantity} шт. этого товара.` : ""}
+          </p>
+        </div>}
       </div>
 
       {/* Цена × количество */}

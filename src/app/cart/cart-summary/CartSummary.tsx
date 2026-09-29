@@ -9,6 +9,7 @@ import styles from "./CartSummary.module.css";
 import type { useCartDiscountPolicy } from "@/lib/cart/useCartDiscountPolicy";
 import { CART_API_BASE } from "@/lib/cart/discountPolicy";
 import DiscountPolicyNotice from "./DiscountPolicyNotice";
+import { ENGRAVING_PRICE_NOTE } from "@/lib/cart/engraving";
 
 function formatPrice(price: number): string {
   return new Intl.NumberFormat("ru-RU").format(price);
@@ -30,6 +31,7 @@ export default function CartSummary({ totals, discountPolicy, onPromoLoadingChan
   onPromoLoadingChange: (loading: boolean) => void;
 }) {
   const promoCode = useCartStore((s) => s.promoCode);
+  const hasEngraving = useCartStore((s) => s.items.some(item => item.engraving));
   const promoType = useCartStore((s) => s.promoType);
   const promoBonusMessage = useCartStore((s) => s.promoBonusMessage);
   const setPromo = useCartStore((s) => s.setPromo);
@@ -202,6 +204,7 @@ export default function CartSummary({ totals, discountPolicy, onPromoLoadingChan
           <span className={styles.totalFinalLabel}>Итого:</span>
           <span className={styles.totalFinalPrice}>{formatPrice(finalPrice)} ₽</span>
         </div>
+        {hasEngraving && <p className={styles.engravingNote}>{ENGRAVING_PRICE_NOTE}</p>}
       </div>
     </section>
   );

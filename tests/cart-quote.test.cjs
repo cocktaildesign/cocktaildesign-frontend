@@ -67,6 +67,12 @@ test('old product savings are not subtracted twice; engraving and codes survive'
   const {pricing}=snapshot(cart);const sheet=await exported({items:cart,pricing});
   assert.equal(total(sheet),9500);assert.equal(sheet.getCell('C7').value,10000);
   assert.equal(sheet.getCell('B7').value,'VARIANT');assert.match(sheet.getCell('A7').value.text,/Гравировка/);
+  assert.match(sheet.getCell('A7').value.text,/стоимость отдельно/);
+  const note=load('src/lib/cart/engraving').ENGRAVING_PRICE_NOTE;
+  assert.ok(JSON.stringify(sheet.model).includes(note));
+  const quote=snapshot(cart).quote;
+  const html=renderToStaticMarkup(React.createElement(load('src/app/cart/cart-print/CartPrint').default,{quote,notice:''}));
+  assert.ok(html.includes(note));
 });
 test('older open tabs can still export the existing items-only contract',async()=>{
   const sheet=await exported({items:items.map(({discountExcluded,...rest})=>rest)});assert.equal(total(sheet),10850);

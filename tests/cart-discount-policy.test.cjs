@@ -59,3 +59,40 @@ test('missing products, malformed flags and network failures cannot silently kee
   const {fetchCartDiscountPolicy}=load('src/lib/cart/discountPolicy.ts',{fetch:async()=>{throw Error('offline');}});
   await assert.rejects(fetchCartDiscountPolicy(['SALE'],new AbortController().signal));
 });
+
+test('engraving toggles one saved row without changing quantities, discounts, promos or selection',()=>{
+  for(const type of ['', 'fixed','percent','inventory','startup']) {
+    const store=oldCart(type);store.getState().toggleSelected('REG');
+    const before=JSON.parse(JSON.stringify(store.getState()));
+    store.getState().setEngraving('SALE',false);
+    const after=JSON.parse(JSON.stringify(store.getState()));
+    assert.deepEqual(after,{...before,items:before.items.map(p=>p.id==='SALE'?{...p,engraving:false}:p)});
+    store.getState().setEngraving('SALE',true);
+    assert.deepEqual(JSON.parse(JSON.stringify(store.getState())),before);
+    const identity=store.getState();
+    store.getState().setEngraving('MISSING',true);store.getState().setEngraving('SALE',true);
+    assert.equal(store.getState(),identity);
+  }
+});
+
+test('engraving state survives reloading an old saved cart',()=>{
+  const memory=new Map([['cocktaildesign:cart',JSON.stringify({state:{items:[item('OLD',100)]},version:0})]]);
+  const localStorage={getItem:k=>memory.get(k)??null,setItem:(k,v)=>memory.set(k,v),removeItem:k=>memory.delete(k)};
+  const store=load('src/lib/cart/cartStore.ts',{localStorage}).useCartStore;
+  store.getState().setEngraving('OLD',false);
+  const restored=load('src/lib/cart/cartStore.ts',{localStorage}).useCartStore;
+  assert.equal(restored.getState().items[0].engraving,false);
+  assert.equal(restored.getState().items[0].quantity,2);
+});
+
+test('optional engraving flags share the same requests and never block older API discount responses',async()=>{
+  for(const value of [true,false,undefined,'invalid']) {
+    let calls=0,flags;
+    const {fetchCartDiscountPolicy}=load('src/lib/cart/discountPolicy.ts',{fetch:async()=>{
+      calls++;return {ok:true,json:async()=>({items:[{code:'REG',discountExcluded:false,engravingEnabled:value}]})};
+    }});
+    const discounts=await fetchCartDiscountPolicy(['REG'],new AbortController().signal,v=>{flags=v;});
+    assert.equal(discounts.REG,false);assert.equal(calls,1);
+    assert.deepEqual(JSON.parse(JSON.stringify(flags)),typeof value==='boolean'?{REG:value}:{});
+  }
+});

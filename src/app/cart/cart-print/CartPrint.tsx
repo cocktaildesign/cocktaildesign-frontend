@@ -1,4 +1,5 @@
 import Logo from "@/components/ui/logo/Logo";
+import { ENGRAVING_PRICE_NOTE } from "@/lib/cart/engraving";
 import { type CartQuote, quoteSummaryRows, QUOTE_PRICE_NOTE, QUOTE_ROUNDING_NOTE } from "@/lib/cart/cartQuote";
 import styles from "./CartPrint.module.css";
 
@@ -22,7 +23,7 @@ export default function CartPrint({ quote, notice }: { quote: CartQuote | null; 
       <thead><tr><th>Наименование товара</th><th>Артикул</th><th>Цена на сайте за 1 шт., ₽</th>
         <th>Скидка за 1 шт., ₽</th><th>Цена за 1 шт. со скидкой, ₽</th><th>Кол-во, шт.</th><th>Стоимость со скидкой, ₽</th></tr></thead>
       <tbody>{quote.rows.map((row, index) => <tr key={index}>
-        <td>{row.name}{row.engraving ? " (+ Гравировка)" : ""}</td><td>{row.code || "—"}</td>
+        <td>{row.name}{row.engraving ? " (Гравировка — стоимость отдельно)" : ""}</td><td>{row.code || "—"}</td>
         <td>{money(row.unitCents)}</td><td>{row.roundedUnit ? "≈ " : ""}{money(row.unitDiscountCents)}</td>
         <td>{row.roundedUnit ? "≈ " : ""}{money(row.unitFinalCents)}</td><td>{row.quantity}</td><td>{money(row.finalCents)}</td>
       </tr>)}</tbody>
@@ -32,6 +33,7 @@ export default function CartPrint({ quote, notice }: { quote: CartQuote | null; 
       {quoteSummaryRows(quote).map(row => <p key={row.label}>{row.label}: <span>{money(row.cents)} ₽</span></p>)}
       <p className={styles.final}>Итого к оплате: <strong>{money(quote.finalCents)} ₽</strong></p>
     </div>
+    {quote.rows.some(item => item.engraving) && <p className={styles.note}>{ENGRAVING_PRICE_NOTE}</p>}
     {quote.hasRoundedUnits && <p className={styles.note}>{QUOTE_ROUNDING_NOTE}</p>}
     {quote.fixedCents > 0 && <p className={styles.note}>Денежный промокод вычтен из общей суммы заказа после скидок по товарам, включая уценку.</p>}
     {["inventory", "startup"].includes(quote.pricing.promoType) && quote.pricing.bonusMessage &&

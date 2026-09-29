@@ -63,6 +63,11 @@
   background-color: rgba(0, 102, 255, 0.03);
 }
 
+.engravingControl:focus-within {
+  outline: 2px solid var(--color-dark-blue);
+  outline-offset: 3px;
+}
+
 .label {
   white-space: nowrap;
   font-size: var(--text-base);

@@ -157,7 +157,7 @@ export default function CartClient() {
 
           {/* Список товаров */}
           {items.map((item) => (
-            <CartItem key={item.id} item={item} />
+            <CartItem key={item.id} item={item} engravingEnabled={policy.engravingByCode[item.code.trim()] === true} />
           ))}
         </div>
 
@@ -171,7 +171,7 @@ export default function CartClient() {
       <div className={styles.mobileCheckoutBar} role="region" aria-label="Итог заказа">
         <div className={styles.mobileCheckoutInfo}>
           <span className={styles.mobileCheckoutLabel}>
-            {discountPolicy.ready ? "Итого" : discountPolicy.error ? "Нужна проверка скидок" : "Проверяем скидки…"}
+            {discountPolicy.ready ? (items.some(item => item.engraving) ? "Без стоимости гравировки" : "Итого") : discountPolicy.error ? "Нужна проверка скидок" : "Проверяем скидки…"}
           </span>
           <span className={styles.mobileCheckoutPrice} aria-live="polite" aria-atomic="true">
             {discountPolicy.ready ? `${formatPrice(finalPrice)} ₽` : "—"}
