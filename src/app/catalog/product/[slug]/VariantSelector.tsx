@@ -270,6 +270,7 @@ export default function VariantSelector({ product, variants, specifications, col
         <h1 className={styles.productPageTitleMobile}>{product.name}</h1>
 
         <ProductBadges
+          moyskladId={activeVariant?.moyskladId ?? product.moyskladId}
           isNew={product.isNew}
           noveltyBadgeColor={product.noveltyBadgeColor}
           isSampleSale={product.isSampleSale}
