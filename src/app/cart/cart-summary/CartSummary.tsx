@@ -40,7 +40,7 @@ export default function CartSummary({ totals, discountPolicy, onPromoLoadingChan
   const [promoStatus, setPromoStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
   const [promoError, setPromoError] = useState("");
 
-  const { totalPrice, totalQuantity, totalSavings, discountableTotal, currentTier, nextTier,
+  const { totalPrice, totalQuantity, discountableTotal, currentTier, nextTier,
     promoApplied, activeVolumeDiscount, activePromoDiscount, finalPrice } = totals;
 
   // Когда пользователь меняет текст в поле промокода — сбрасываем всё
@@ -176,13 +176,6 @@ export default function CartSummary({ totals, discountPolicy, onPromoLoadingChan
             <span>{formatProductsCount(totalQuantity)}</span>
             <span>{formatPrice(totalPrice)} ₽</span>
           </div>
-
-          {totalSavings > 0 && (
-            <div className={styles.totalRow}>
-              <span>Ваша выгода</span>
-              <span className={styles.savings}>−{formatPrice(totalSavings)} ₽</span>
-            </div>
-          )}
 
           {activeVolumeDiscount > 0 && (
             <div className={styles.totalRow}>
