@@ -87,6 +87,22 @@ export default async function KnowledgeVideoPage({ params }: PageProps) {
 
           {/* Описание */}
           {item.description ? <ReadMoreText text={item.description} /> : null}
+
+          {(item.externalUrl || item.links.length > 0) && (
+            <nav className={styles.resources} aria-label="Видео и дополнительные материалы">
+              {item.externalUrl && (
+                <a href={item.externalUrl} target="_blank" rel="noopener noreferrer">
+                  Открыть видео на площадке ↗
+                </a>
+              )}
+              {item.links.map((link) => (
+                <div key={link.id}>
+                  <a href={link.url} target="_blank" rel="noopener noreferrer">{link.title} ↗</a>
+                  {link.description && <p>{link.description}</p>}
+                </div>
+              ))}
+            </nav>
+          )}
         </div>
       </article>
     </PageLayout>

@@ -77,6 +77,24 @@
   align-items: flex-start;
 }
 
+.resources {
+  display: grid;
+  gap: 12px;
+  margin: 20px 24px 8px;
+  font-size: 14px;
+  overflow-wrap: anywhere;
+}
+
+.resources a {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.resources p {
+  margin: 4px 0 0;
+}
+
 /* ==========================================================================
    TABLET
    ========================================================================== */
@@ -105,6 +123,9 @@
    ========================================================================== */
 
 @media (max-width: 600px) {
+  .resources {
+    margin-inline: 14px;
+  }
   .content {
     padding-bottom: 12px;
   }

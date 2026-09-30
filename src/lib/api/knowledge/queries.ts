@@ -41,15 +41,18 @@ function resolveCoverSrc(url?: string | null): string {
  */
 const LIST_PARAMS: Record<string, string> = {
   "populate[cover]": "true",
-  sort: "date:desc",
+  "sort[0]": "date:desc",
+  "sort[1]": "id:asc",
+  "pagination[pageSize]": "100",
 };
 
 /**
  * Базовые параметры для видео.
- * Видео не используют blocks.
+ * У видео используются ссылки на дополнительные материалы из blocks.
  */
 const VIDEO_PARAMS_BASE: Record<string, string> = {
   "populate[cover]": "true",
+  "populate[blocks][on][blocks.link-block]": "true",
 };
 
 /**
@@ -88,9 +91,19 @@ export async function getKnowledgeItemsFromStrapi(
     params["filters[format][$eq]"] = format;
   }
 
-  const response: StrapiKnowledgeListResponse = await fetchStrapi("/api/knowledge-items", params);
-
-  return response.data.map(mapKnowledgePreview);
+  const items: KnowledgeItemPreview[] = [];
+  let page = 1;
+  let pageCount = 1;
+  do {
+    const response: StrapiKnowledgeListResponse = await fetchStrapi("/api/knowledge-items", {
+      ...params,
+      "pagination[page]": String(page),
+    });
+    items.push(...response.data.map(mapKnowledgePreview));
+    pageCount = response.meta?.pagination?.pageCount ?? 1;
+    page += 1;
+  } while (page <= pageCount);
+  return items;
 }
 
 /* ============================================================
