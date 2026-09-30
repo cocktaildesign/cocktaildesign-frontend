@@ -36,6 +36,7 @@ const TOP_NAV_ITEMS: TopNavItem[] = [
       { label: "О компании", href: "/about" },
       { label: "Реквизиты", href: "/legal/requisites" },
       { label: "Контакты", href: "/contacts" },
+      { label: "Обратная связь", href: "/support/feedback" },
     ],
   },
 ];

@@ -13,6 +13,7 @@ import CartIcon from "@/components/icons/CartIcon";
 import CatalogIcon from "@/components/icons/CatalogIcon";
 import HomeIcon from "@/components/icons/HomeIcon";
 import ArrowBackIcon from "@/components/icons/ArrowBackIcon";
+import DialogueIcon from "@/components/icons/DialogueIcon";
 
 import { useFavoritesStore } from "@/lib/favorites/favoritesStore";
 import { useCartStore } from "@/lib/cart/cartStore";
@@ -96,6 +97,14 @@ export default function MobileBottomNav({ menuItems }: Props) {
               <ArrowBackIcon />
             </button>
             <h2 className={styles.menuTitle}>Меню</h2>
+          </div>
+
+          <div className={styles.menuLinks}>
+            <Link href="/support/feedback" className={styles.feedbackLink} onClick={handleCloseMenu}>
+              <span className={styles.feedbackIcon} aria-hidden="true"><DialogueIcon /></span>
+              Обратная связь
+              <span className={styles.feedbackArrow} aria-hidden="true">→</span>
+            </Link>
           </div>
 
           <div className={styles.menuGrid}>
