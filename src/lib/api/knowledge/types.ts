@@ -130,6 +130,7 @@ export type StrapiKnowledgeItem = {
 // Ответ списка (collection-type)
 export type StrapiKnowledgeListResponse = {
   data: StrapiKnowledgeItem[];
+  meta?: { pagination?: { page: number; pageCount: number; total: number } };
 };
 
 // ---------------------------------------------------------------------------

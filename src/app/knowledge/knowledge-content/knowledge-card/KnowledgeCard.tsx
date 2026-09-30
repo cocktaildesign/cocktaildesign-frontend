@@ -60,7 +60,7 @@ export default function KnowledgeCard({ item }: KnowledgeCardProps) {
             sizes="(max-width: 768px) 100vw, 33vw"
           />
           <span className={styles.badge}>{getBadgeLabel(item.format)}</span>
-          <span className={styles.meta}>{metaText}</span>
+          {metaText && <span className={styles.meta}>{metaText}</span>}
         </div>
 
         <div className={styles.content}>

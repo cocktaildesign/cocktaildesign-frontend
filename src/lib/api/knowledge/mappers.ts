@@ -127,6 +127,14 @@ export function mapKnowledgeVideoDetail(item: StrapiKnowledgeItem): KnowledgeVid
     embedUrl: item.embedUrl,
 
     externalUrl: item.externalUrl ?? undefined,
+    links: (item.blocks ?? [])
+      .filter((block): block is StrapiLinkBlock => block.__component === "blocks.link-block")
+      .map((block) => ({
+        id: String(block.id),
+        title: block.title,
+        url: block.url,
+        description: block.description ?? undefined,
+      })),
   };
 }
 
