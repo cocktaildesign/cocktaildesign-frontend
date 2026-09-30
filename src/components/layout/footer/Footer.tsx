@@ -15,12 +15,14 @@ import MaxIcon from "@/components/icons/social-network/MaxIcon";
 import YouTubeIcon from "@/components/icons/social-network/YouTubeIcon";
 
 import { getNavigation } from "@/lib/api/navigation";
+import { YANDEX_REVIEWS_URL } from "@/lib/reviews";
 
 import styles from "./Footer.module.css";
 
 type FooterLink = {
   label: string;
   href: string;
+  external?: boolean;
 };
 
 type FooterSocialLink = {
@@ -56,7 +58,7 @@ const footerMarketplaceLinks = [
 
 export const footerCompanyLinks: FooterLink[] = [
   { label: "О нас", href: "/about" },
-  { label: "Отзывы", href: "/reviews" },
+  { label: "Отзывы на Яндексе", href: YANDEX_REVIEWS_URL, external: true },
   { label: "Реквизиты", href: "/legal/requisites" },
   { label: "Каталог", href: "/catalog" },
 ];
@@ -116,9 +118,16 @@ function FooterLinksList({ links }: { links: FooterLink[] }) {
     <ul className={styles.footerList}>
       {links.map((link) => (
         <li key={link.href} className={styles.footerItem}>
-          <Link href={link.href} className={styles.footerLink}>
-            {link.label}
-          </Link>
+          {link.external ? (
+            <a href={link.href} className={styles.footerLink} target="_blank" rel="noopener noreferrer"
+              aria-label={`${link.label}: открыть в новой вкладке`}>
+              {link.label}
+            </a>
+          ) : (
+            <Link href={link.href} className={styles.footerLink}>
+              {link.label}
+            </Link>
+          )}
         </li>
       ))}
     </ul>
@@ -184,14 +193,14 @@ export default async function Footer() {
 
               <a
                 className={styles.footerRating}
-                href="https://reviews.yandex.ru/shop/cocktaildesign.ru?utm_source=ya_bro&scroll_to=reviews"
+                href={YANDEX_REVIEWS_URL}
                 target="_blank"
                 rel="noopener noreferrer"
-                aria-label="Отзывы на Яндекс: открыть в новой вкладке">
+                aria-label="Отзывы на Яндексе: открыть в новой вкладке">
                 <YandexIcon className={styles.footerYandexIcon} />
 
                 <div className={styles.footerRatingContent}>
-                  <span className={styles.footerRatingContentText}>Отзывы на Яндекс</span>
+                  <span className={styles.footerRatingContentText}>Отзывы на Яндексе</span>
 
                   <span className={styles.starRow} aria-hidden="true">
                     <StarIcon className={styles.footerRatingIcon} />
