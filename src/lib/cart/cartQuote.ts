@@ -81,6 +81,7 @@ export function buildCartQuote(items: QuoteItem[], pricing: QuotePricing) {
 export type CartQuote = ReturnType<typeof buildCartQuote>;
 export const QUOTE_ROUNDING_NOTE = "≈ — цена и скидка за единицу округлены до копеек. Стоимость строки и итог рассчитаны с точной суммой скидки.";
 export const QUOTE_PRICE_NOTE = "Цена на сайте уже учитывает снижение цены товара. Дополнительная скидка по заказу показана отдельно.";
+export const QUOTE_DELIVERY_NOTE = "Доставка по России при заказе от 5 000 ₽ — бесплатно, кроме крупногабаритных отправлений и отдалённых регионов. Условия и точную стоимость доставки уточняйте у менеджера.";
 
 export function quoteSummaryRows(quote: CartQuote): Array<{ label: string; cents: number }> {
   const rows = [{ label: "Сумма до скидок по заказу", cents: quote.subtotalCents }];
