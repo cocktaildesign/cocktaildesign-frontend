@@ -7,6 +7,7 @@ import { getNavigation } from "@/lib/api/navigation";
 
 const NOVINKI_SLUG = "novinki";
 const UTSENKA_SLUG = "utsenka";
+const WINE_CATEGORY_HREF = "/catalog/ms-8f966568";
 
 function collectionHref(slug: string) {
   return `/catalog/collection/${slug}`;
@@ -25,7 +26,15 @@ export default async function NavBar() {
 
   // novinki и utsenka закреплены слева — из списка Strapi убираем, чтобы не было дублей.
   const pinnedSlugs = new Set([NOVINKI_SLUG, UTSENKA_SLUG]);
-  const headerItems = navigation.header.filter((item) => !pinnedSlugs.has(hrefCollectionSlug(item.href)));
+  const headerItems = navigation.header
+    .filter((item) => !pinnedSlugs.has(hrefCollectionSlug(item.href)))
+    // В этой строке вместо винной категории показываем подборку собственного производства.
+    // Остальная навигация (каталог и подвал) продолжает использовать настройки Strapi.
+    .map((item) =>
+      item.href === WINE_CATEGORY_HREF
+        ? { label: "Наше производство", href: collectionHref("nashe-proizvodstvo") }
+        : item,
+    );
 
   return (
     <nav className={styles.navBar} aria-label="Категории товаров">
