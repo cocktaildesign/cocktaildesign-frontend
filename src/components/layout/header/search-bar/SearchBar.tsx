@@ -77,7 +77,7 @@ type ApiProductItem = {
 
 // Константы
 const API_BASE = process.env.NEXT_PUBLIC_API_URL ?? "https://api.cocktaildesign.ru/api";
-const POPULAR_QUERIES = ["Шейкер", "Джиггер", "Барная ложка", "Стрейнер", "Сироп"];
+const POPULAR_QUERIES = ["Шейкер", "Джиггер", "Барная ложка", "Стрейнер", "Мадлер"];
 
 const CATEGORIES_LIMIT = 8;
 const RANDOM_PRODUCTS_COUNT = 2;
