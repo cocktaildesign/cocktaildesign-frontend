@@ -214,8 +214,45 @@
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 10px;
-  padding: 74px 10px 10px;
+  padding: 10px;
   z-index: 1;
+}
+
+.menuLinks {
+  padding: 74px 10px 0;
+}
+
+.feedbackLink {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 48px;
+  padding: 12px 14px;
+  border: 1px solid var(--color-light);
+  border-radius: 8px;
+  color: var(--color-dark-blue);
+  background: var(--color-white);
+  font-size: 16px;
+  text-decoration: none;
+}
+
+.feedbackIcon {
+  display: flex;
+  flex: 0 0 22px;
+}
+
+.feedbackIcon svg {
+  width: 22px;
+  height: 22px;
+}
+
+.feedbackArrow {
+  margin-left: auto;
+}
+
+.feedbackLink:focus-visible {
+  outline: 2px solid var(--color-dark-blue);
+  outline-offset: 3px;
 }
 
 /* ==========================================================================

@@ -52,6 +52,7 @@ export default function FeedbackForm(props: FeedbackFormProps) {
     <form className={styles.form} onSubmit={handleSubmit} aria-busy={status === "sending"}>
       <header className={styles.header}>
         <h2 className={styles.title}>Помогите нам стать лучше</h2>
+        <p className={styles.subtitle}>Расскажите, что можно улучшить на сайте или в работе нашей компании.</p>
       </header>
 
       <label className={styles.field}>
