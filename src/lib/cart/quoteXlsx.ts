@@ -1,6 +1,6 @@
 import ExcelJS from "exceljs";
 import { ENGRAVING_PRICE_NOTE } from "./engraving";
-import { type CartQuote, quoteSummaryRows, QUOTE_PRICE_NOTE, QUOTE_ROUNDING_NOTE } from "./cartQuote";
+import { type CartQuote, quoteSummaryRows, QUOTE_DELIVERY_NOTE, QUOTE_PRICE_NOTE, QUOTE_ROUNDING_NOTE } from "./cartQuote";
 
 const BLUE = "FF1A2C5B";
 const GRAY = "FFF3F5F8";
@@ -89,6 +89,7 @@ export async function createQuoteWorkbook(quote: CartQuote): Promise<ExcelJS.Wor
     cell.border = { top: { style: "thin", color: { argb: BLUE } } };
   });
   const notes = [
+    QUOTE_DELIVERY_NOTE,
     ...(quote.rows.some(item => item.engraving) ? [ENGRAVING_PRICE_NOTE] : []),
     ...(quote.hasRoundedUnits ? [QUOTE_ROUNDING_NOTE] : []),
     ...(quote.fixedCents > 0 ? ["Денежный промокод вычтен из общей суммы заказа после скидок по товарам, включая уценку."] : []),
