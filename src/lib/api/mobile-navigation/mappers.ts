@@ -1,6 +1,7 @@
 // frontend/src/lib/api/mobile-navigation/mappers.ts
 
 import { getStrapiMediaUrl } from "@/lib/api/strapi";
+import { mediaSrcSet } from "@/lib/api/strapi/responsive-image";
 
 import type { MobileNavigationItem, StrapiMobileNavigationItem, StrapiMobileNavigationMedia } from "./types";
 
@@ -40,6 +41,7 @@ export function mapMobileNavigationItem(raw: StrapiMobileNavigationItem): Mobile
     title,
     href,
     homeImageUrl: mapMediaUrl(raw.homeImage),
+    homeImageSrcSet: raw.homeImage?.url ? mediaSrcSet({ ...raw.homeImage, url: raw.homeImage.url }, getStrapiMediaUrl) : undefined,
     menuImageUrl: mapMediaUrl(raw.menuImage),
     showInHome: normalizeBoolean(raw.showInHome, true),
     showInMenu: normalizeBoolean(raw.showInMenu, true),

@@ -100,7 +100,7 @@ export default function KnowledgePreviewTabs({ items }: KnowledgePreviewTabsProp
       <div className={styles.grid}>
         {visibleItems.map((item) => (
           <div key={item.id} className={styles.cardItem}>
-            <KnowledgeCard item={item} />
+            <KnowledgeCard item={item} sizes="(max-width: 600px) 82vw, (max-width: 768px) 46vw, (max-width: 1024px) 30vw, (max-width: 1600px) 23vw, 340px" />
           </div>
         ))}
       </div>

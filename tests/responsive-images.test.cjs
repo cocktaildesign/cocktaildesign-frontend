@@ -20,6 +20,19 @@ const media = {
   url:'/original.webp',width:1200,
   formats:{large:{url:'/large.webp',width:1000},small:{url:'/small.webp',width:500}},
 };
+test('mobile shortcuts keep menu settings, links and fallback images when adding responsive home images',()=>{
+  const {mapMobileNavigationItem}=load('lib/api/mobile-navigation/mappers.ts',{
+    '@/lib/api/strapi':{getStrapiMediaUrl:resolve},
+    '@/lib/api/strapi/responsive-image':responsive,
+  });
+  const item=mapMobileNavigationItem({title:'Каталог',href:'/catalog',homeImage:media,menuImage:{url:'/menu.webp'},showInHome:true,showInMenu:false,isActive:true});
+  assert.equal(item.homeImageUrl,resolve('/original.webp'));
+  assert.equal(item.homeImageSrcSet,responsive.mediaSrcSet(media,resolve));
+  assert.equal(item.menuImageUrl,resolve('/menu.webp'));
+  assert.equal(item.showInMenu,false);assert.equal(item.isActive,true);assert.equal(item.href,'/catalog');
+  const missing=mapMobileNavigationItem({title:'Каталог',href:'/catalog',homeImage:null});
+  assert.equal(missing.homeImageUrl,null);assert.equal(missing.homeImageSrcSet,undefined);
+});
 test('home boundary preserves displayed prices, selected variant and stock identity while dropping unused galleries',()=>{
   const {homeProductCard}=load('lib/catalog/home-product-card.ts');
   const product={id:'p',slug:'slug',name:'Product',price:450,priceOld:760,moyskladId:'parent',images:['/selected.webp'],imageUrl:'/selected.webp',preferredVariantId:'v',isSampleSale:true,badges:[{label:'Sale'}],variants:[{id:'v',moyskladId:'variant',images:[{src:'/extra.webp'}]}],imageSrcSets:{'/selected.webp':'selected 500w, selected-large 1000w','/extra.webp':'extra 500w, extra-large 1000w'}};

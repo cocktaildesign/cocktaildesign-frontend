@@ -2,6 +2,8 @@ export type HomepageBanner = {
   id: number;
   desktopUrl: string;
   mobileUrl: string;
+  desktopSrcSet?: string;
+  mobileSrcSet?: string;
   alt: string;
   href?: string;
 };
@@ -57,6 +59,22 @@ function mediaUrl(value: unknown, base: string): string | undefined {
   return new URL(url, base).toString();
 }
 
+function mediaSrcSet(value: unknown, base: string): string | undefined {
+  const media = object(value);
+  const widths = new Map<number, string>();
+  for (const candidate of [...Object.values(object(media.formats)), media]) {
+    const file = object(candidate);
+    const url = mediaUrl(file, base);
+    const width = file.width;
+    if (url && !url.includes(",") && typeof width === "number" && Number.isInteger(width) && width > 0) {
+      widths.set(width, url);
+    }
+  }
+  return widths.size > 1
+    ? [...widths].sort(([a], [b]) => a - b).map(([width, url]) => `${url} ${width}w`).join(", ")
+    : undefined;
+}
+
 export function safeBannerHref(value: unknown): string | undefined {
   if (typeof value !== "string") return undefined;
   const href = value.trim();
@@ -73,6 +91,8 @@ export function normalizeBanners(value: unknown, fallback: HomepageBanner[], bas
     const mobileUrl = mediaUrl(slide.mobileImage, base);
     if (!desktopUrl || !mobileUrl) return [];
     return [{id: typeof slide.id === "number" ? slide.id : index, desktopUrl, mobileUrl,
+      desktopSrcSet: mediaSrcSet(slide.desktopImage, base),
+      mobileSrcSet: mediaSrcSet(slide.mobileImage, base),
       alt: typeof slide.title === "string" ? slide.title : "Баннер Cocktail Design",
       href: safeBannerHref(slide.href)}];
   });

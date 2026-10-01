@@ -21,6 +21,8 @@ export default function MobileCatalogShortcuts({ items }: Props) {
         {items.map((item) => (
           <Link key={item.href} href={item.href} className={styles.card}>
             <div className={styles.media}>
+              <picture>
+              {item.homeImageSrcSet && <source srcSet={item.homeImageSrcSet} sizes="92px" />}
               <Image
                 src={resolveHomeImageUrl(item.href, item.homeImageUrl)}
                 alt={item.title}
@@ -28,6 +30,7 @@ export default function MobileCatalogShortcuts({ items }: Props) {
                 sizes="92px"
                 className={styles.image}
               />
+              </picture>
             </div>
 
             <div className={styles.caption}>
