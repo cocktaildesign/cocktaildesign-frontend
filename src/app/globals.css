@@ -1,6 +1,17 @@
 @import "../styles/variables.css";
 @import "../styles/reset.css";
 
+/* Keep native route/hash scrolling clear of the sticky header. */
+html {
+  scroll-padding-top: 120px;
+}
+
+@media (max-width: 600px) {
+  html {
+    scroll-padding-top: 80px;
+  }
+}
+
 .icon {
   width: 22px;
   height: 22px;
