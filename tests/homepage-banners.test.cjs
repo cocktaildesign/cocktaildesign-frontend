@@ -7,7 +7,7 @@ const ts = require('typescript');
 function load(file, imports = {}) {
   const mod = {exports:{}};
   const source = fs.readFileSync(path.resolve(__dirname, '../src/lib/api/homepage-banners', file), 'utf8');
-  const code = ts.transpileModule(source, {compilerOptions:{module:ts.ModuleKind.CommonJS}}).outputText;
+  const code = ts.transpileModule(source, {compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2020}}).outputText;
   vm.runInNewContext(code, {module:mod, exports:mod.exports, URL, console:{warn(){}}, require:id=>imports[id]});
   return mod.exports;
 }
@@ -49,4 +49,19 @@ test('CMS outage preserves both existing sliders; homepage query requests both m
     return {data:{heroBanners:[slide(2)],promoBanners:[]}};
   }).getHomepageBanners();
   assert.equal(result.hero[0].id,2);assert.equal(result.promo.length,0);
+});
+test('responsive banner sizes use only real CMS media while keeping original artwork and destinations', () => {
+  const source = {...slide(7), mobileImage:{url:'/uploads/mobile.webp',width:640,formats:{
+    small:{url:'/uploads/mobile-small.webp',width:400},
+    thumbnail:{url:'/uploads/mobile-thumbnail.webp',width:125},
+    foreign:{url:'https://foreign.test/other.webp',width:500},
+    invalid:{url:'/uploads/no-width.webp',width:0},
+  }}};
+  const snapshot=JSON.stringify(source);
+  const result=model.normalizeBanners([source],[],base)[0];
+  assert.equal(result.mobileSrcSet,`${base}/uploads/mobile-thumbnail.webp 125w, ${base}/uploads/mobile-small.webp 400w, ${base}/uploads/mobile.webp 640w`);
+  assert.equal(result.mobileUrl,base+'/uploads/mobile.webp');
+  assert.equal(result.desktopSrcSet,undefined);
+  assert.equal(result.href,'/catalog');
+  assert.equal(JSON.stringify(source),snapshot);
 });

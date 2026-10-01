@@ -9,6 +9,7 @@ import type { KnowledgeItemPreview, KnowledgeFormat } from "../../types";
 type KnowledgeCardProps = {
   // Один материал для отображения в карточке
   item: KnowledgeItemPreview;
+  sizes?: string;
 };
 
 // Единая точка правды: какой URL-сегмент соответствует формату.
@@ -43,7 +44,7 @@ function getMetaText(item: KnowledgeItemPreview): string {
   return "Подборка";
 }
 
-export default function KnowledgeCard({ item }: KnowledgeCardProps) {
+export default function KnowledgeCard({ item, sizes = "(max-width: 768px) 100vw, (max-width: 1600px) 33vw, 520px" }: KnowledgeCardProps) {
   const href = getItemHref(item);
   const metaText = getMetaText(item);
 
@@ -53,13 +54,13 @@ export default function KnowledgeCard({ item }: KnowledgeCardProps) {
         <div className={styles.imageWrapper}>
           {/* Обложка из данных*/}
           <picture>
-            {item.coverSrcSet && <source srcSet={item.coverSrcSet} sizes="(max-width: 768px) 100vw, (max-width: 1600px) 33vw, 520px" />}
+            {item.coverSrcSet && <source srcSet={item.coverSrcSet} sizes={sizes} />}
             <Image
               src={item.coverSrc}
               alt={item.title}
               fill
               className={styles.image}
-              sizes="(max-width: 768px) 100vw, 33vw"
+              sizes={sizes}
             />
           </picture>
           <span className={styles.badge}>{getBadgeLabel(item.format)}</span>

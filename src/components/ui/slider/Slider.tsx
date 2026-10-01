@@ -10,6 +10,7 @@ import styles from "./Slider.module.css";
 type SlideImage = {
   id: number;
   desktopUrl: string;
+  desktopSrcSet?: string;
   mobileUrl: string;
   alt: string;
   href?: string;
@@ -131,7 +132,7 @@ export default function Slider({ images, autoPlayInterval = 7000 }: SliderProps)
             return (
               <Link key={image.id} href={image.href} aria-label={image.alt} aria-hidden={!isActive} tabIndex={isActive ? 0 : -1} className={slideClassName}>
                 <picture>
-                  <source media="not all and (max-width: 600px)" srcSet={image.desktopUrl} />
+                  <source media="not all and (max-width: 600px)" srcSet={image.desktopSrcSet ?? image.desktopUrl} sizes="100vw" />
                 <Image
                   src={EMPTY_IMAGE}
                   alt={image.alt}
@@ -150,7 +151,7 @@ export default function Slider({ images, autoPlayInterval = 7000 }: SliderProps)
           return (
             <div key={image.id} className={slideClassName} aria-hidden={!isActive}>
               <picture>
-                <source media="not all and (max-width: 600px)" srcSet={image.desktopUrl} />
+                <source media="not all and (max-width: 600px)" srcSet={image.desktopSrcSet ?? image.desktopUrl} sizes="100vw" />
               <Image
                 src={EMPTY_IMAGE}
                 alt={image.alt}

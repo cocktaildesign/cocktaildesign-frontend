@@ -1,5 +1,3 @@
-"use client";
-
 import Image from "next/image";
 import Link from "next/link";
 import { EMPTY_IMAGE } from "@/lib/images/empty-image";
@@ -13,6 +11,7 @@ import type { WeeklyProductBlock } from "@/lib/api/catalog/types";
 import type { HomepageBanner } from "@/lib/api/homepage-banners/model";
 
 import styles from "./HeroSection.module.css";
+import BannerPreloads from "./BannerPreloads";
 
 type HeroSectionProps = {
   weeklyProduct: WeeklyProductBlock | null;
@@ -51,6 +50,7 @@ export default function HeroSection({ weeklyProduct, banners }: HeroSectionProps
   if (!weeklyProduct || !weeklyProduct.product) {
     return (
       <section className={styles.hero} data-homepage-banners="hero">
+        <BannerPreloads banners={banners} />
         <ContainerNoPaddingMobil>
           <div className={styles.desktopSlider}>
           <Slider key={banners.map(b => b.id).join(",")} images={banners} autoPlayInterval={7000} />
@@ -67,6 +67,7 @@ export default function HeroSection({ weeklyProduct, banners }: HeroSectionProps
 
   return (
     <section className={styles.hero} data-homepage-banners="hero">
+      <BannerPreloads banners={banners} />
       <ContainerNoPaddingMobil>
         {/* Слайдер баннеров */}
         <div className={styles.desktopSlider}>

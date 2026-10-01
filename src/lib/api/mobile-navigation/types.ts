@@ -4,6 +4,7 @@ export type MobileNavigationItem = {
   title: string;
   href: string;
   homeImageUrl: string | null;
+  homeImageSrcSet?: string;
   menuImageUrl: string | null;
   showInHome: boolean;
   showInMenu: boolean;
@@ -12,6 +13,8 @@ export type MobileNavigationItem = {
 
 export type StrapiMobileNavigationMedia = {
   url?: string | null;
+  width?: number | null;
+  formats?: Record<string, { url?: string; width?: number | null }> | null;
 } | null;
 
 export type StrapiMobileNavigationItem = {

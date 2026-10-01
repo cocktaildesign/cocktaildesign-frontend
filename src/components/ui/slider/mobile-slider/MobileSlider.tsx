@@ -9,6 +9,7 @@ type SlideImage = {
   id: number;
   desktopUrl: string;
   mobileUrl: string;
+  mobileSrcSet?: string;
   alt: string;
   href?: string;
 };
@@ -30,7 +31,7 @@ export default function MobileSlider({ images }: MobileSliderProps) {
           const isLcpSlide = index < 2;
           const content = (
             <picture>
-              <source media="(max-width: 600px)" srcSet={image.mobileUrl} />
+              <source media="(max-width: 600px)" srcSet={image.mobileSrcSet ?? image.mobileUrl} sizes="42vw" />
             <Image
               src={EMPTY_IMAGE}
               alt={image.alt}
