@@ -2,8 +2,12 @@
 import type { MetadataRoute } from "next";
 
 import { siteUrl } from "@/lib/seo/site";
-import { getCatalogTreeFromStrapi, getProductsByCategorySlugFromStrapi } from "@/lib/api/catalog";
+import { getCatalogTreeFromStrapi, getProductsByCategorySlugFromStrapi, getCollectionProductsFromStrapi } from "@/lib/api/catalog";
 import { getKnowledgeItemsFromStrapi } from "@/lib/api/knowledge";
+import { getSitemapCollectionSlugs } from "@/lib/seo/collections";
+import { SAMPLE_SALE_CATEGORY_SLUG } from "@/lib/catalog/sample-sale";
+
+export const revalidate = 3600;
 
 type SitemapItem = MetadataRoute.Sitemap[number];
 
@@ -36,19 +40,20 @@ function flattenCategories(items: CatalogTreeNode[]): string[] {
 }
 
 // собираем все товары через категории (без дублей)
-async function getAllProductSlugs(categorySlugs: string[]): Promise<string[]> {
+async function getAllProductSlugs(categorySlugs: string[], collectionSlugs: string[]): Promise<string[]> {
   const productSlugsSet = new Set<string>();
 
-  for (const categorySlug of categorySlugs) {
+  for (const source of [
+    ...categorySlugs.map(slug => ({ slug, collection: false })),
+    ...collectionSlugs.map(slug => ({ slug, collection: true })),
+  ]) {
     let offset = 0;
     const limit = 100;
 
     while (true) {
-      const response = await getProductsByCategorySlugFromStrapi({
-        categorySlug,
-        limit,
-        offset,
-      });
+      const response = source.collection
+        ? await getCollectionProductsFromStrapi({ slug: source.slug, limit, offset })
+        : await getProductsByCategorySlugFromStrapi({ categorySlug: source.slug, limit, offset });
 
       for (const product of response.items) {
         if (product.slug) {
@@ -57,6 +62,7 @@ async function getAllProductSlugs(categorySlugs: string[]): Promise<string[]> {
       }
 
       if (!response.hasMore) break;
+      if (!response.items.length) throw new Error("Incomplete catalogue response while building sitemap");
 
       offset += limit;
     }
@@ -83,8 +89,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
     { url: `${siteUrl}/discounts`, changeFrequency: "weekly", priority: 0.7 },
 
-    { url: `${siteUrl}/help`, changeFrequency: "monthly", priority: 0.6 },
-
     { url: `${siteUrl}/knowledge`, changeFrequency: "weekly", priority: 0.8 },
 
     { url: `${siteUrl}/payment-methods`, changeFrequency: "monthly", priority: 0.6 },
@@ -102,13 +106,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   ];
 
   // --- данные ---
-  const [catalogTree, knowledgeItems] = await Promise.all([
+  const [catalogTree, knowledgeItems, collectionSlugs] = await Promise.all([
     getCatalogTreeFromStrapi(),
     getKnowledgeItemsFromStrapi(null, null),
+    getSitemapCollectionSlugs(),
   ]);
 
   // --- категории ---
-  const categorySlugs = flattenCategories(catalogTree);
+  const categorySlugs = flattenCategories(catalogTree).filter(slug => slug !== SAMPLE_SALE_CATEGORY_SLUG);
 
   const categoryPages: SitemapItem[] = categorySlugs.map((slug) => ({
     url: `${siteUrl}/catalog/${slug}`,
@@ -117,7 +122,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   }));
 
   // --- товары ---
-  const productSlugs = await getAllProductSlugs(categorySlugs);
+  const productSlugs = await getAllProductSlugs(catalogTree.map(category => category.slug), collectionSlugs);
+
+  const collectionPages: SitemapItem[] = collectionSlugs.map(slug => ({
+    url: `${siteUrl}/catalog/collection/${slug}`, changeFrequency: "daily", priority: 0.8,
+  }));
 
   const productPages: SitemapItem[] = productSlugs.map((slug) => ({
     url: `${siteUrl}/catalog/product/${slug}`,
@@ -136,5 +145,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     };
   });
 
-  return [...staticPages, ...categoryPages, ...productPages, ...knowledgePages];
+  return [...new Map([...staticPages, ...categoryPages, ...collectionPages, ...productPages, ...knowledgePages]
+    .map(item => [item.url, item])).values()];
 }

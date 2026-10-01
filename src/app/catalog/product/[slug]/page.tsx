@@ -3,7 +3,7 @@
 // Server Component — данные грузятся на сервере.
 // Интерактивные части страницы вынесены в клиентские компоненты.
 
-import { notFound } from "next/navigation";
+import { notFound, permanentRedirect } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 
@@ -15,6 +15,9 @@ import ProductDetailsNavigation from "./ProductDetailsNavigation";
 
 import { pageMetadata } from "@/lib/seo/metadata";
 import { siteUrl } from "@/lib/seo/site";
+import { productJsonLd } from "@/lib/seo/product";
+import { getSeoAvailability } from "@/lib/seo/availability";
+import { serializeJsonLd, withQuery, type PageQuery } from "@/lib/seo/policy";
 import {
   getColorMap,
   getCollectionProductsFromStrapi,
@@ -34,7 +37,7 @@ const PLACEHOLDER_IMG = "/images/catalog/product-placeholder.webp";
 const FEATURES_SPECIFICATION_LABEL = "Особенности";
 
 type Params = { slug: string };
-type PageProps = { params: Promise<Params> };
+type PageProps = { params: Promise<Params>; searchParams: Promise<PageQuery> };
 
 function getFeatureItems(value: string): string[] {
   return value
@@ -121,7 +124,7 @@ export async function generateMetadata({ params }: PageProps) {
   });
 }
 
-export default async function ProductPage({ params }: PageProps) {
+export default async function ProductPage({ params, searchParams }: PageProps) {
   const { slug } = await params;
 
   const [data, colorMap] = await Promise.all([getProductBySlugFromStrapi(slug), getColorMap()]);
@@ -131,35 +134,16 @@ export default async function ProductPage({ params }: PageProps) {
   }
 
   const { product, breadcrumbsCategories } = data;
+  if (slug !== product.slug) {
+    permanentRedirect(withQuery(`/catalog/product/${product.slug}`, await searchParams));
+  }
   const variants = data.variants ?? [];
   const specifications = product.specifications ?? [];
 
   const hasDescription = Boolean(product.description?.trim());
   const hasSpecifications = specifications.length > 0;
 
-  const productUrl = `${siteUrl}/catalog/product/${product.slug}`;
-
-  const productJsonLd = {
-    "@context": "https://schema.org",
-    "@type": "Product",
-    name: product.name,
-    description: product.description ?? undefined,
-    sku: product.code ?? undefined,
-    image: product.images.map((image) => image.src),
-    url: productUrl,
-    brand: {
-      "@type": "Brand",
-      name: "CocktailDesign",
-    },
-    offers: {
-      "@type": "Offer",
-      url: productUrl,
-      priceCurrency: "RUB",
-      price: String(product.price),
-      availability: "https://schema.org/InStock",
-      itemCondition: "https://schema.org/NewCondition",
-    },
-  };
+  const structuredProduct = productJsonLd(product, variants, await getSeoAvailability(), siteUrl);
 
   const breadcrumbsItems = product.isSampleSale
     ? [
@@ -223,8 +207,8 @@ export default async function ProductPage({ params }: PageProps) {
 
   return (
     <PageLayout breadcrumbsItems={breadcrumbsItems}>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(productJsonLd) }} />
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbsJsonLd) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: serializeJsonLd(structuredProduct) }} />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: serializeJsonLd(breadcrumbsJsonLd) }} />
 
       <section
         className={`${styles.productPage}${product.engravingEnabled ? ` ${styles.productPageWithEngravingSticky}` : ""}`}>

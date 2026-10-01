@@ -1,6 +1,7 @@
 import PageLayout from "@/components/layout/PageLayout";
 import styles from "./CollectionPage.module.css";
 import { pageMetadata } from "@/lib/seo/metadata";
+import { listingHref, pageNumber } from "@/lib/seo/policy";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import Link from "next/link";
@@ -18,6 +19,7 @@ type Params = {
 type SearchParams = {
   category?: string;
   showAll?: string;
+  page?: string;
 };
 
 type PageProps = {
@@ -38,16 +40,19 @@ function findCategoryInTree(items: CatalogCategoryPreview[], slug: string): Cata
   return null;
 }
 
-export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+export async function generateMetadata({ params, searchParams }: PageProps): Promise<Metadata> {
   const { slug } = await params;
+  const query = await searchParams;
+  const page = pageNumber(query.page) ?? 1;
 
   try {
     const data = await getCollectionProductsFromStrapi({ slug, limit: 1, offset: 0 });
 
     return pageMetadata({
-      title: data.collection.title,
+      title: `${data.collection.title}${page > 1 ? ` — страница ${page}` : ""}`,
       description: data.collection.description ?? `Подборка товаров «${data.collection.title}» — CocktailDesign.`,
-      canonical: `/catalog/collection/${slug}`,
+      canonical: listingHref(`/catalog/collection/${slug}`, page, query.category),
+      noindex: Boolean(query.category),
     });
   } catch {
     return {};
@@ -56,7 +61,9 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
 export default async function CollectionPage({ params, searchParams }: PageProps) {
   const { slug } = await params;
-  const { category, showAll } = await searchParams;
+  const { category, showAll, page: rawPage } = await searchParams;
+  const page = pageNumber(rawPage);
+  if (page === null) notFound();
 
   // Категория-фильтр из query param ?category=ms-xxxx
   const filterCategorySlug = category?.trim() || null;
@@ -93,7 +100,7 @@ export default async function CollectionPage({ params, searchParams }: PageProps
   const hasChildren = currentCategories.length > 0;
 
   // Mobile drill-down: есть children и не нажали «Все товары»
-  const showMobileDrillDown = hasChildren && !wantsShowAll;
+  const showMobileDrillDown = hasChildren && !wantsShowAll && page === 1;
 
   // Заголовок секции на mobile: «Категории» на корне / invalid; иначе имя найденной category
   const mobileSectionTitle = selectedCategory ? selectedCategory.name : "Категории";
@@ -152,7 +159,7 @@ export default async function CollectionPage({ params, searchParams }: PageProps
           </aside>
 
           <section className={styles.content} aria-label="Список товаров">
-            <ProductGrid collectionSlug={collectionSlug} filterCategorySlug={filterCategorySlug ?? undefined} />
+            <ProductGrid collectionSlug={collectionSlug} filterCategorySlug={filterCategorySlug ?? undefined} page={page} />
           </section>
         </div>
       </section>

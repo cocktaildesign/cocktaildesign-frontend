@@ -4,18 +4,21 @@ import { getProductsByCategorySlugFromStrapi, getCollectionProductsFromStrapi } 
 import type { CatalogProductPreview } from "@/lib/api/catalog/types";
 import { getColorMap } from "@/lib/api/catalog/index";
 import ProductGridClient from "./ProductGridClient";
+import { notFound } from "next/navigation";
 
 type ProductGridProps = {
   categorySlug?: string;
   collectionSlug?: string;
   filterCategorySlug?: string; // фильтр по категории внутри коллекции
+  page?: number;
 };
 
 const PAGE_SIZE = 50;
 
-export default async function ProductGrid({ categorySlug, collectionSlug, filterCategorySlug }: ProductGridProps) {
+export default async function ProductGrid({ categorySlug, collectionSlug, filterCategorySlug, page = 1 }: ProductGridProps) {
   let products: CatalogProductPreview[] = [];
   let hasMore = false;
+  const offset = (page - 1) * PAGE_SIZE;
 
   const colorMap = await getColorMap();
 
@@ -24,7 +27,7 @@ export default async function ProductGrid({ categorySlug, collectionSlug, filter
     const res = await getCollectionProductsFromStrapi({
       slug: collectionSlug,
       limit: PAGE_SIZE,
-      offset: 0,
+      offset,
       categorySlug: filterCategorySlug,
     });
 
@@ -35,14 +38,16 @@ export default async function ProductGrid({ categorySlug, collectionSlug, filter
     const res = await getProductsByCategorySlugFromStrapi({
       categorySlug,
       limit: PAGE_SIZE,
-      offset: 0,
+      offset,
     });
 
     products = res.items;
     hasMore = res.hasMore;
   }
 
-  // key меняется только при смене выдачи (подборка / категория),
+  if (page > 1 && products.length === 0) notFound();
+
+  // key меняется только при смене выдачи (подборка / категория / страница),
   // чтобы ProductGridClient перемонтировался и взял новые initialProducts.
   // При load more key стабилен — подгруженные товары не сбрасываются.
   const gridKey = collectionSlug
@@ -51,10 +56,11 @@ export default async function ProductGrid({ categorySlug, collectionSlug, filter
 
   return (
     <ProductGridClient
-      key={gridKey}
+      key={`${gridKey}:page:${page}`}
       initialProducts={products}
       initialHasMore={hasMore}
       pageSize={PAGE_SIZE}
+      initialPage={page}
       categorySlug={categorySlug}
       collectionSlug={collectionSlug}
       filterCategorySlug={filterCategorySlug}

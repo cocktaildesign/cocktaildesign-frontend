@@ -1,5 +1,8 @@
 import type { Metadata, Viewport } from "next";
 import { SITE_DESCRIPTION, SITE_NAME, siteUrl } from "./site";
+import { canIndex, cleanPageTitle, descriptionText, robotsPolicy } from "./policy";
+
+export const indexingEnabled = canIndex(siteUrl, process.env.SEO_INDEXING_ENABLED);
 
 export const viewport: Viewport = {
   themeColor: "#e0e7ef",
@@ -19,17 +22,7 @@ export const rootMetadata: Metadata = {
     canonical: "/",
   },
 
-  robots: {
-    index: false,
-    follow: false,
-    googleBot: {
-      index: false,
-      follow: false,
-      "max-image-preview": "large",
-      "max-snippet": -1,
-      "max-video-preview": -1,
-    },
-  },
+  robots: robotsPolicy(indexingEnabled),
 
   openGraph: {
     type: "website",
@@ -56,27 +49,30 @@ export function pageMetadata(input: {
   description?: string;
   canonical: string;
   image?: string;
+  noindex?: boolean;
 }): Metadata {
-  const description = input.description ?? SITE_DESCRIPTION;
+  const description = descriptionText(input.description?.trim() || SITE_DESCRIPTION);
+  const title = cleanPageTitle(input.title);
 
   return {
-    title: input.title,
+    title: { absolute: `${title} — ${SITE_NAME}` },
     description,
     alternates: { canonical: input.canonical },
+    robots: robotsPolicy(indexingEnabled && !input.noindex),
 
     openGraph: {
       type: "website",
       locale: "ru_RU",
       siteName: SITE_NAME,
       url: input.canonical,
-      title: input.title,
+      title,
       description,
       images: input.image ? [{ url: input.image, alt: input.title }] : undefined,
     },
 
     twitter: {
       card: "summary_large_image",
-      title: input.title,
+      title,
       description,
       images: input.image ? [input.image] : undefined,
     },
