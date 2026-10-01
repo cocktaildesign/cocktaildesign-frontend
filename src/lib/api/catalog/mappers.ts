@@ -254,6 +254,7 @@ function pickBestImagePath(file: StrapiMediaFile | null): string | null {
 function mapMediaArray(
   raw: StrapiMediaFile[] | { data?: Array<{ id: number; attributes?: StrapiMediaFile }> } | null | undefined,
   fallbackAlt: string,
+  responsive = false,
 ): CatalogProductImage[] {
   const images: CatalogProductImage[] = [];
 
@@ -266,7 +267,7 @@ function mapMediaArray(
       images.push({
         src: imageUrl,
         alt: file?.alternativeText?.trim() || fallbackAlt,
-        srcSet: mediaSrcSet(file, getStrapiMediaUrl),
+        ...(responsive ? { srcSet: mediaSrcSet(file, getStrapiMediaUrl) } : {}),
       });
     }
 
@@ -283,7 +284,7 @@ function mapMediaArray(
       images.push({
         src: imageUrl,
         alt: file?.alternativeText?.trim() || fallbackAlt,
-        srcSet: mediaSrcSet(file, getStrapiMediaUrl),
+        ...(responsive ? { srcSet: mediaSrcSet(file, getStrapiMediaUrl) } : {}),
       });
     }
 
@@ -434,7 +435,8 @@ export function mapProductPreview(item: StrapiProductItem): CatalogProductPrevie
   const images = Array.from(new Set([...productImages, ...variantImages])).slice(0, 4);
   const imageUrl = images[0] ?? null;
   const imageSrcSets = Object.fromEntries(
-    [...mapMediaArray(source.image, name), ...variants.flatMap((variant) => variant.images)]
+    [...mapMediaArray(source.image, name, true).slice(0, 4),
+      ...rawVariants.flatMap((variant) => mapMediaArray((variant.attributes ?? variant).image, name, true).slice(0, 4))]
       .filter((image) => image.srcSet)
       .map((image) => [image.src, image.srcSet!]),
   );
