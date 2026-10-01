@@ -19,6 +19,23 @@ function load(file, mocks = {}) {
 }
 const policy = load('lib/seo/policy.ts');
 const { productJsonLd, offerAvailability } = load('lib/seo/product.ts');
+const { articleJsonLd, knowledgeImage } = load('lib/seo/knowledge.ts', { './policy': policy });
+
+test('article data uses the canonical domain and actual editorial content without inventing dates or authors', () => {
+  const item = {title:'Статья',slug:'article',description:'Две\nстроки',coverSrc:'/uploads/cover.webp',date:'2026-09-30'};
+  const data = articleJsonLd(item, 'https://cocktaildesign.ru');
+  assert.equal(data['@type'], 'Article');
+  assert.equal(data.mainEntityOfPage, 'https://cocktaildesign.ru/knowledge/articles/article');
+  assert.equal(data.image[0], 'https://cocktaildesign.ru/uploads/cover.webp');
+  assert.equal(data.description, 'Две строки');
+  assert.equal(data.author, undefined);
+  assert.equal(data.datePublished, undefined);
+  assert.equal(data.dateModified, undefined);
+  for (const cover of ['', '/test-cover.png', 'https://cocktaildesign.ru/test-cover.png', 'javascript:alert(1)', 'data:image/png;base64,test']) {
+    assert.equal(knowledgeImage(cover, 'https://cocktaildesign.ru'), undefined);
+    assert.equal(articleJsonLd({...item,coverSrc:cover},'https://cocktaildesign.ru').image,undefined);
+  }
+});
 
 test('legacy redirects have no chains, loops or pattern characters', () => {
   const routes = JSON.parse(fs.readFileSync(path.resolve(__dirname, '../src/lib/seo/legacy-redirects.json'), 'utf8'));

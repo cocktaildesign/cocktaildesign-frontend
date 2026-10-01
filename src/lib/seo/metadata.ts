@@ -49,6 +49,7 @@ export function pageMetadata(input: {
   description?: string;
   canonical: string;
   image?: string;
+  type?: "website" | "article";
   noindex?: boolean;
 }): Metadata {
   const description = descriptionText(input.description?.trim() || SITE_DESCRIPTION);
@@ -61,7 +62,7 @@ export function pageMetadata(input: {
     robots: robotsPolicy(indexingEnabled && !input.noindex),
 
     openGraph: {
-      type: "website",
+      type: input.type ?? "website",
       locale: "ru_RU",
       siteName: SITE_NAME,
       url: input.canonical,

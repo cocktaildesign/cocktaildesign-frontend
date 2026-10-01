@@ -29,10 +29,12 @@ export const metadata: Metadata = pageMetadata({
 });
 
 export default async function HomePage() {
-  const banners = await getHomepageBanners();
-  const homepageCollections = await getHomepageCollectionsFromStrapi();
-  const weeklyProduct = await getWeeklyProductBlock();
-  const mobileNavigation = await getMobileNavigation();
+  const [banners, homepageCollections, weeklyProduct, mobileNavigation] = await Promise.all([
+    getHomepageBanners(),
+    getHomepageCollectionsFromStrapi(),
+    getWeeklyProductBlock(),
+    getMobileNavigation(),
+  ]);
   const homeShortcuts = filterHomeMobileNavigation(mobileNavigation);
 
   return (

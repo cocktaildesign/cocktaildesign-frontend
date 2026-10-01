@@ -2,6 +2,8 @@
 
 import { notFound } from "next/navigation";
 import { pageMetadata } from "@/lib/seo/metadata";
+import { knowledgeImage } from "@/lib/seo/knowledge";
+import { siteUrl } from "@/lib/seo/site";
 import BackButton from "@/components/ui/back-button/BackButton";
 
 import PageLayout from "@/components/layout/PageLayout";
@@ -32,6 +34,7 @@ export async function generateMetadata({ params }: PageProps) {
     title: item.title,
     description: item.description,
     canonical: `/knowledge/videos/${item.slug}`,
+    image: knowledgeImage(item.coverSrc, siteUrl),
   });
 }
 
@@ -41,8 +44,6 @@ export default async function KnowledgeVideoPage({ params }: PageProps) {
   const item = await getKnowledgeVideoBySlugFromStrapi(slug);
 
   if (!item) notFound();
-
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "";
 
   return (
     <PageLayout
