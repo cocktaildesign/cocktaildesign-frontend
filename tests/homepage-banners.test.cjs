@@ -44,8 +44,8 @@ test('CMS outage preserves both existing sliders; homepage query requests both m
   assert.equal(unavailable.hero.length,3);assert.equal(unavailable.promo.length,2);
   const result=await loader(async(route,params)=>{
     assert.equal(route,'/api/homepage');
-    assert.equal(params['populate[heroBanners][populate]'],'desktopImage,mobileImage');
-    assert.equal(params['populate[promoBanners][populate]'],'desktopImage,mobileImage');
+    assert.equal(params['populate[heroBanners][populate]'],'*');
+    assert.equal(params['populate[promoBanners][populate]'],'*');
     return {data:{heroBanners:[slide(2)],promoBanners:[]}};
   }).getHomepageBanners();
   assert.equal(result.hero[0].id,2);assert.equal(result.promo.length,0);

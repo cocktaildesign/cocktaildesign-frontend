@@ -4,8 +4,8 @@ import { DEFAULT_HERO_BANNERS, DEFAULT_PROMO_BANNERS, normalizeBanners } from ".
 export async function getHomepageBanners() {
   try {
     const result = await fetchStrapi<{ data: { heroBanners?: unknown; promoBanners?: unknown } | null }>("/api/homepage", {
-      "populate[heroBanners][populate]": "desktopImage,mobileImage",
-      "populate[promoBanners][populate]": "desktopImage,mobileImage",
+      "populate[heroBanners][populate]": "*",
+      "populate[promoBanners][populate]": "*",
     });
     return {
       hero: normalizeBanners(result.data?.heroBanners, DEFAULT_HERO_BANNERS, getStrapiUrl()),
