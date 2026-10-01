@@ -21,6 +21,34 @@ const policy = load('lib/seo/policy.ts');
 const { productJsonLd, offerAvailability } = load('lib/seo/product.ts');
 const { articleJsonLd, knowledgeImage } = load('lib/seo/knowledge.ts', { './policy': policy });
 
+test('header retains collection order, destinations and visibility without shipping unused products', async () => {
+  const categories=[{id:'c',slug:'category',children:[]}];
+  const products=[{id:'p',price:450,variants:[{id:'v',price:760}]}];
+  const collections=[{id:'1',slug:'sale',title:'Sale',isHiddenInMenu:false,products},{id:'2',slug:'hidden',title:'Hidden',isHiddenInMenu:true,products}];
+  const Header=load('components/layout/header/Header.tsx',{
+    './HeaderClient':{default:'HeaderClient'},
+    '@/lib/api/catalog':{getCatalogTreeFromStrapi:async()=>categories,getCatalogCollectionsWithProductsFromStrapi:async()=>collections},
+  }).default;
+  const view=await Header();
+  assert.equal(view.props.categories,categories);
+  assert.equal(view.props.collections.length,2);
+  for(let i=0;i<collections.length;i++) {
+    for(const key of ['id','slug','title','isHiddenInMenu']) assert.equal(view.props.collections[i][key],collections[i][key]);
+    assert.equal(view.props.collections[i].products.length,0);
+    assert.equal(collections[i].products,products);
+  }
+});
+
+test('existing ownership verification follows only the final domain, independently of indexing', () => {
+  const existing = JSON.parse(fs.readFileSync(path.resolve(__dirname,'../src/lib/seo/verification.json'),'utf8'));
+  assert.ok(existing.google && existing.yandex);
+  const {siteVerification} = load('lib/seo/verification.ts', {'./verification.json':{default:existing}});
+  assert.equal(siteVerification('https://cocktaildesign.ru/'),existing);
+  for(const site of ['https://new.cocktaildesign.ru','http://localhost:3000','https://cocktaildesign.ru.evil.test']) {
+    assert.equal(siteVerification(site),undefined);
+  }
+});
+
 test('article data uses the canonical domain and actual editorial content without inventing dates or authors', () => {
   const item = {title:'Статья',slug:'article',description:'Две\nстроки',coverSrc:'/uploads/cover.webp',date:'2026-09-30'};
   const data = articleJsonLd(item, 'https://cocktaildesign.ru');
@@ -135,4 +163,6 @@ test('sitemap excludes broken and redirected paths, includes collections and ded
   assert.equal(urls.filter(url=>url.endsWith('/ms-p1')).length, 1);
   assert.ok(urls.includes('https://test/catalog/collection/new'));
   assert.ok(urls.includes('https://test/catalog/product/ms-p2'));
+  assert.ok(urls.includes('https://test/prof-oborudovanie-dlya-restoranov-i-kafe'));
+  assert.ok(urls.includes('https://test/posuda-dlya-barov-i-restoranov'));
 });

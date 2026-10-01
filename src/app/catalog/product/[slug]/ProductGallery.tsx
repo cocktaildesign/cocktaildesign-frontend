@@ -50,6 +50,7 @@ export default function ProductGallery({ images, activeIndex, onImageChange }: P
           alt={activeImage.alt}
           fill
           priority
+          fetchPriority="high"
           className={styles.productGalleryMainImage}
           sizes="(max-width: 768px) 100vw, 50vw"
         />

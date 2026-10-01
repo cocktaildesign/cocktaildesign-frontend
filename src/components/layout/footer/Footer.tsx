@@ -61,6 +61,7 @@ export const footerCompanyLinks: FooterLink[] = [
   { label: "Отзывы на Яндексе", href: YANDEX_REVIEWS_URL, external: true },
   { label: "Реквизиты", href: "/legal/requisites" },
   { label: "Каталог", href: "/catalog" },
+  { label: "Для баров и ресторанов", href: "/prof-oborudovanie-dlya-restoranov-i-kafe" },
 ];
 
 export const footerPromosLinks: FooterLink[] = [

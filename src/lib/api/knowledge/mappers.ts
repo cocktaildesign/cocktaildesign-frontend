@@ -3,6 +3,7 @@
 // Этот файл — единственное место, где Strapi-типы превращаются в UI-типы.
 
 import { getStrapiMediaUrl } from "@/lib/api/strapi";
+import { mediaSrcSet } from "@/lib/api/strapi/responsive-image";
 
 import type { KnowledgeItemPreview, KnowledgeVideoDetail, KnowledgeContentBlock } from "@/app/knowledge/types";
 
@@ -73,6 +74,7 @@ export function mapKnowledgePreview(item: StrapiKnowledgeItem): KnowledgeItemPre
     date: item.date,
 
     coverSrc: resolveCoverSrc(item.cover?.url),
+    coverSrcSet: mediaSrcSet(item.cover, getStrapiMediaUrl),
 
     description: item.description ?? undefined,
   };

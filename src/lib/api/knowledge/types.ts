@@ -22,6 +22,7 @@ export type StrapiMediaFile = {
   // Размеры могут не приходить или быть null — поэтому optional + null
   width?: number | null;
   height?: number | null;
+  formats?: Record<string, { url?: string; width?: number | null }> | null;
 };
 
 // Заголовок: blocks.heading-block

@@ -12,11 +12,13 @@
 
 export type StrapiMediaFormat = {
   url?: string; // "/uploads/medium_xxx.png"
+  width?: number;
 };
 
 // Медиа в Strapi (нам нужен только URL)
 export type StrapiMediaFile = {
   url?: string; // "/uploads/xxx.png"
+  width?: number;
   alternativeText?: string | null;
 
   // formats может быть, а может и не быть (зависит от файла/настроек)
@@ -271,6 +273,7 @@ export type CatalogProductPreview = {
   priceOld: number;
   imageUrl: string | null;
   images: string[];
+  imageSrcSets?: Record<string, string>;
   engravingEnabled: boolean;
   discountExcluded: boolean;
   code: string | null;
@@ -360,6 +363,7 @@ export type BreadcrumbCategory = {
 export type CatalogProductImage = {
   src: string;
   alt: string;
+  srcSet?: string;
 };
 
 export type CatalogProductSpecification = {

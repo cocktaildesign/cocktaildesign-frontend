@@ -24,6 +24,7 @@ type KnowledgePreviewBase = {
 
   date: string;
   coverSrc: string;
+  coverSrcSet?: string;
 
   description?: string;
 };

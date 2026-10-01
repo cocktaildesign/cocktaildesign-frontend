@@ -52,13 +52,16 @@ export default function KnowledgeCard({ item }: KnowledgeCardProps) {
       <Link className={styles.cardLink} href={href}>
         <div className={styles.imageWrapper}>
           {/* Обложка из данных*/}
-          <Image
-            src={item.coverSrc}
-            alt={item.title}
-            fill
-            className={styles.image}
-            sizes="(max-width: 768px) 100vw, 33vw"
-          />
+          <picture>
+            {item.coverSrcSet && <source srcSet={item.coverSrcSet} sizes="(max-width: 768px) 100vw, (max-width: 1600px) 33vw, 520px" />}
+            <Image
+              src={item.coverSrc}
+              alt={item.title}
+              fill
+              className={styles.image}
+              sizes="(max-width: 768px) 100vw, 33vw"
+            />
+          </picture>
           <span className={styles.badge}>{getBadgeLabel(item.format)}</span>
           {metaText && <span className={styles.meta}>{metaText}</span>}
         </div>

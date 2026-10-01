@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { SITE_DESCRIPTION, SITE_NAME, siteUrl } from "./site";
 import { canIndex, cleanPageTitle, descriptionText, robotsPolicy } from "./policy";
+import { siteVerification } from "./verification";
 
 export const indexingEnabled = canIndex(siteUrl, process.env.SEO_INDEXING_ENABLED);
 
@@ -10,6 +11,7 @@ export const viewport: Viewport = {
 
 export const rootMetadata: Metadata = {
   metadataBase: new URL(siteUrl),
+  verification: siteVerification(siteUrl),
 
   title: {
     default: `${SITE_NAME} — барное оборудование`,

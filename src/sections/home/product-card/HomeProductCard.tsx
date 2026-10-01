@@ -7,12 +7,12 @@ import Link from "next/link";
 import FavoriteButton from "@/components/ui/favorites/FavoriteButton";
 import ProductBadges from "@/shared/ui/product-badges/ProductBadges";
 
-import type { CatalogProductPreview } from "@/lib/api/catalog/types";
+import type { HomeProductCardData } from "@/lib/catalog/home-product-card";
 
 import styles from "./HomeProductCard.module.css";
 
 type ProductCardProps = {
-  product: CatalogProductPreview;
+  product: HomeProductCardData;
 };
 
 function formatPrice(price: number): string {
@@ -73,16 +73,19 @@ export default function ProductCard({ product }: ProductCardProps) {
       <Link href={productHref} className={styles.previewLink}>
         {/* Картинка товара */}
         <div className={styles.thumb} onMouseMove={handleMouseMove} onMouseLeave={handleMouseLeave}>
-          <Image
-            src={imageSrc}
-            alt={product.name}
-            fill
-            className={styles.image}
-            sizes="(max-width: 768px) 50vw, 25vw"
-          />
+          <picture>
+            {product.imageSrcSets?.[imageSrc] && <source srcSet={product.imageSrcSets[imageSrc]} sizes="(max-width: 600px) 46vw, (max-width: 1440px) 20vw, 240px" />}
+            <Image
+              src={imageSrc}
+              alt={product.name}
+              fill
+              className={styles.image}
+              sizes="(max-width: 768px) 50vw, 25vw"
+            />
+          </picture>
 
           <ProductBadges
-            moyskladId={product.variants.find((variant) => variant.id === product.preferredVariantId)?.moyskladId ?? product.moyskladId}
+            moyskladId={product.badgeMoyskladId}
             isNew={product.isNew}
             noveltyBadgeColor={product.noveltyBadgeColor}
             isSampleSale={product.isSampleSale}

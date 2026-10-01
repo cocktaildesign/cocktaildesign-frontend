@@ -7,5 +7,8 @@ export default async function Header() {
   const categories = await getCatalogTreeFromStrapi();
   const collections = await getCatalogCollectionsWithProductsFromStrapi();
 
-  return <HeaderClient categories={categories} collections={collections} />;
+  // The menu renders collection names/links only, never their product galleries.
+  // Keep those server-side so every page does not download unused catalogue data.
+  const menuCollections = collections.map(collection => ({ ...collection, products: [] }));
+  return <HeaderClient categories={categories} collections={menuCollections} />;
 }
