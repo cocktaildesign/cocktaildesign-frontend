@@ -9,36 +9,15 @@ import MobileSlider from "@/components/ui/slider/mobile-slider/MobileSlider";
 
 import type { WeeklyProductBlock } from "@/lib/api/catalog/types";
 
+import type { HomepageBanner } from "@/lib/api/homepage-banners/model";
+
 import styles from "./HeroSection.module.css";
 
 type HeroSectionProps = {
   weeklyProduct: WeeklyProductBlock | null;
+  banners: HomepageBanner[];
 };
 
-// Баннеры для слайдера
-const BANNER_IMAGES = [
-  {
-    id: 1,
-    desktopUrl: "/images/hero-baner/banner1.webp",
-    mobileUrl: "/images/hero-baner/banner1-mobile.webp",
-    alt: "Картинка для перехода в каталог",
-    href: "/catalog",
-  },
-  {
-    id: 2,
-    desktopUrl: "/images/hero-baner/banner2.webp",
-    mobileUrl: "/images/hero-baner/banner2-mobile.webp",
-    alt: "Товары со скидкой",
-    href: "/catalog/collection/sale",
-  },
-  {
-    id: 3,
-    desktopUrl: "/images/hero-baner/banner3.webp",
-    mobileUrl: "/images/hero-baner/banner3-mobile.webp",
-    alt: "Новинки",
-    href: "/catalog/collection/novinki",
-  },
-];
 
 // Форматирование цены
 function formatPrice(value: number): string {
@@ -65,13 +44,17 @@ function calculateDiscount(price: number, priceOld: number): string | null {
   return `-${percent}%`;
 }
 
-export default function HeroSection({ weeklyProduct }: HeroSectionProps) {
+export default function HeroSection({ weeklyProduct, banners }: HeroSectionProps) {
+  if (!banners.length) return null;
   // Если блок выключен — показываем только слайдер
   if (!weeklyProduct || !weeklyProduct.product) {
     return (
-      <section className={styles.hero}>
+      <section className={styles.hero} data-homepage-banners="hero">
         <ContainerNoPaddingMobil>
-          <Slider images={BANNER_IMAGES} autoPlayInterval={7000} />
+          <div className={styles.desktopSlider}>
+          <Slider key={banners.map(b => b.id).join(",")} images={banners} autoPlayInterval={7000} />
+          </div>
+          <div className={styles.mobileSlider}><MobileSlider images={banners} /></div>
         </ContainerNoPaddingMobil>
       </section>
     );
@@ -82,15 +65,15 @@ export default function HeroSection({ weeklyProduct }: HeroSectionProps) {
   const discount = product.priceOld ? calculateDiscount(product.price, product.priceOld) : null;
 
   return (
-    <section className={styles.hero}>
+    <section className={styles.hero} data-homepage-banners="hero">
       <ContainerNoPaddingMobil>
         {/* Слайдер баннеров */}
         <div className={styles.desktopSlider}>
-          <Slider images={BANNER_IMAGES} autoPlayInterval={7000} />
+          <Slider key={banners.map(b => b.id).join(",")} images={banners} autoPlayInterval={7000} />
         </div>
 
         <div className={styles.mobileSlider}>
-          <MobileSlider images={BANNER_IMAGES} />
+          <MobileSlider images={banners} />
         </div>
 
         {/* Карточка товара недели */}

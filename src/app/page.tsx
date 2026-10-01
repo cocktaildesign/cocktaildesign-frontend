@@ -19,6 +19,8 @@ import { pageMetadata } from "@/lib/seo/metadata";
 import { getHomepageCollectionsFromStrapi, getWeeklyProductBlock } from "@/lib/api/catalog";
 import { filterHomeMobileNavigation, getMobileNavigation } from "@/lib/api/mobile-navigation";
 
+import { getHomepageBanners } from "@/lib/api/homepage-banners";
+
 export const metadata: Metadata = pageMetadata({
   title: "Магазин барного инвентаря в СПб - CocktailDesign",
   description:
@@ -27,6 +29,7 @@ export const metadata: Metadata = pageMetadata({
 });
 
 export default async function HomePage() {
+  const banners = await getHomepageBanners();
   const homepageCollections = await getHomepageCollectionsFromStrapi();
   const weeklyProduct = await getWeeklyProductBlock();
   const mobileNavigation = await getMobileNavigation();
@@ -34,7 +37,7 @@ export default async function HomePage() {
 
   return (
     <main className={styles.homePage}>
-      <HeroSection weeklyProduct={weeklyProduct} />
+      <HeroSection weeklyProduct={weeklyProduct} banners={banners.hero} />
       <FeedbackNotice />
       <MobileCatalogShortcuts items={homeShortcuts} />
       <CategoryProductShelves collection={homepageCollections.collectionAfterShortcuts} />
@@ -44,7 +47,7 @@ export default async function HomePage() {
       <SaleProductsShelf collection={homepageCollections.saleCollectionAfterTelegram} />
       <KnowledgePreview />
       <CategoryProductShelves collection={homepageCollections.collectionAfterKnowledge} />
-      <Banners />
+      <Banners banners={banners.promo} />
       <CategoryProductShelves collection={homepageCollections.collectionAfterBanners} />
       <SocialLinks />
       <AboutCompany />

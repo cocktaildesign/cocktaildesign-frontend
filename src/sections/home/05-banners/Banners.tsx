@@ -2,32 +2,18 @@
 import Container from "@/components/layout/Container";
 
 import BannerSlider from "@/components/ui/slider/banner-slider/BannerSlider";
+import type { HomepageBanner } from "@/lib/api/homepage-banners/model";
 import styles from "./Banners.module.css";
 
-const BANNER_IMAGES = [
-  {
-    id: 1,
-    desktopUrl: "/images/Hero/baner-slider/1-desktop.webp",
-    mobileUrl: "/images/Hero/baner-slider/1-mobile.webp",
-    alt: "Картинка для перехода в категорию «Все для бариста»",
-    href: "/catalog/ms-c374b866",
-  },
-  {
-    id: 2,
-    desktopUrl: "/images/Hero/baner-slider/2-desktop.webp",
-    mobileUrl: "/images/Hero/baner-slider/2-mobile.webp",
-    alt: "Картинка для перехода в категорию «Джигеры и мерники»",
-    href: "/catalog/ms-57a775a4",
-  },
-];
 
-export default function Banners() {
+export default function Banners({ banners }: { banners: HomepageBanner[] }) {
+  if (!banners.length) return null;
   return (
-    <section className={styles.section}>
+    <section className={styles.section} data-homepage-banners="promo">
       <Container>
         {/* Баннер внутри контейнера */}
         <div className={styles.sliderWrapper}>
-          <BannerSlider images={BANNER_IMAGES} />
+          <BannerSlider key={banners.map(b => b.id).join(",")} images={banners} />
         </div>
       </Container>
     </section>
