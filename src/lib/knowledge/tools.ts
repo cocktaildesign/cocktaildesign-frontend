@@ -9,6 +9,14 @@ const pipette = { href: "/catalog/product/ms-9184e410", title: "Бутылочк
 // Reviewed against the actual material and public catalogue, 02.10.2026.
 // No automatic keyword matching or stock/price claims. Absent slug = no sales block.
 export const knowledgeTools: Record<string, KnowledgeTool[]> = {
+  "dzhem-iz-lisichek-i-kokteyl-nordic-fusion": [
+    { ...measures, description: "Для отмеривания ингредиентов джема и повторения пропорций заготовки." },
+    { href: "/catalog/ms-57a775a4", title: "Джиггеры и мерники", description: "Для дозировки жидких ингредиентов коктейля Nordic Fusion из рецепта." },
+  ],
+  "aromatika-kokteyley": [
+    { href: "/catalog/product/ms-d84bc35b", title: "Атомайзер стеклянный Cube 30 мл", description: "Для распыления пищевых ароматических настоев, ликёров и биттеров — техники из статьи." },
+    { href: "/catalog/ms-843f6a9b", title: "Пиллеры и ножи", description: "Для снятия цитрусовой цедры и работы с её ароматическими маслами." },
+  ],
   "osnovnoe-napravlenie-v-dekorirovanii": [forms, mat, spatulas],
   "tresh-tiki-i-unikalnye-garnishi-na-agare": [mat, spatulas, measures],
   "kulinariya-v-kokteylyakh-sekrety-shef-povarov": [mat, measures],
