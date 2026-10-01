@@ -8,6 +8,7 @@ import PageLayout from "@/components/layout/PageLayout";
 import styles from "./CategoryPage.module.css";
 import { pageMetadata } from "@/lib/seo/metadata";
 import { listingHref, pageNumber } from "@/lib/seo/policy";
+import { categoryContent } from "@/lib/seo/category-content";
 import { notFound, redirect } from "next/navigation";
 import { Metadata } from "next";
 import CatalogSidebar from "./catalog-sidebar/CatalogSidebar";
@@ -37,10 +38,11 @@ export async function generateMetadata({ params, searchParams }: PageProps): Pro
   const category = await getCategoryBySlugFromStrapi(slug);
 
   if (!category) return {};
+  const content = categoryContent[category.slug];
 
   return pageMetadata({
-    title: `${category.name}${page > 1 ? ` — страница ${page}` : ""}`,
-    description: `Товары категории «${category.name}» — ассортимент CocktailDesign.`,
+    title: `${content?.title ?? category.name}${page > 1 ? ` — страница ${page}` : ""}`,
+    description: content?.description ?? `Товары категории «${category.name}» — ассортимент CocktailDesign.`,
     canonical: listingHref(`/catalog/${category.slug}`, page),
   });
 }
@@ -63,6 +65,7 @@ export default async function CatalogCategoryPage({ params, searchParams }: Page
   }
 
   const categories = await getCatalogTreeFromStrapi();
+  const content = page === 1 ? categoryContent[category.slug] : undefined;
 
   // Есть ли дочерние категории у текущей?
   const hasChildren = Boolean(category.children && category.children.length > 0);
@@ -114,6 +117,12 @@ export default async function CatalogCategoryPage({ params, searchParams }: Page
           <div className={styles.mobileLayout}>
             <MobileCategoryDrillDown categories={childCategories} currentSlug={category.slug} />
           </div>
+        )}
+        {content && (
+          <section className={styles.guide} aria-label={content.heading}>
+            <h2>{content.heading}</h2>
+            {content.paragraphs.map(paragraph => <p key={paragraph}>{paragraph}</p>)}
+          </section>
         )}
       </section>
     </PageLayout>

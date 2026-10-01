@@ -20,6 +20,16 @@ function load(file, mocks = {}) {
 const policy = load('lib/seo/policy.ts');
 const { productJsonLd, offerAvailability } = load('lib/seo/product.ts');
 
+test('legacy redirects have no chains, loops or pattern characters', () => {
+  const routes = JSON.parse(fs.readFileSync(path.resolve(__dirname, '../src/lib/seo/legacy-redirects.json'), 'utf8'));
+  for (const [source, destination] of Object.entries(routes)) {
+    assert.ok(source.startsWith('/') && !source.startsWith('//'));
+    assert.ok(destination.startsWith('/') && !destination.startsWith('//'));
+    assert.equal(/[():*?+]/.test(source), false, source);
+    assert.equal(routes[destination], undefined, source);
+  }
+});
+
 test('indexing requires explicit approval AND the final HTTPS origin', () => {
   for (const site of ['https://new.cocktaildesign.ru', 'http://cocktaildesign.ru', 'http://localhost:3000', 'https://cocktaildesign.ru.evil.test']) {
     assert.equal(policy.canIndex(site, 'true'), false);

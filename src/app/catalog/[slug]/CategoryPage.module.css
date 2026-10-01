@@ -2,6 +2,25 @@
   min-height: 70vh;
 }
 
+.guide {
+  margin-top: 40px;
+  padding: 24px 0;
+  border-top: 1px solid var(--color-light);
+  max-width: 900px;
+  line-height: 1.65;
+  color: var(--color-gray);
+}
+
+.guide h2 {
+  margin-bottom: 16px;
+  font-size: var(--text-xl);
+  color: var(--color-black);
+}
+
+.guide p + p {
+  margin-top: 12px;
+}
+
 /* Заголовок страницы категории */
 .headerTitle {
   margin: 0 0 24px;
