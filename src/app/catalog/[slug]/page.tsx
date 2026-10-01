@@ -10,6 +10,8 @@ import { pageMetadata } from "@/lib/seo/metadata";
 import { listingHref, pageNumber } from "@/lib/seo/policy";
 import { categoryContent } from "@/lib/seo/category-content";
 import { notFound, redirect } from "next/navigation";
+import RelatedLinks from "@/components/seo/RelatedLinks";
+import { categoryReading } from "@/lib/seo/related-content";
 import { Metadata } from "next";
 import CatalogSidebar from "./catalog-sidebar/CatalogSidebar";
 import ProductGrid from "../product-grid/ProductGrid";
@@ -124,6 +126,7 @@ export default async function CatalogCategoryPage({ params, searchParams }: Page
             {content.paragraphs.map(paragraph => <p key={paragraph}>{paragraph}</p>)}
           </section>
         )}
+        {page === 1 && <RelatedLinks title="Полезно почитать" links={categoryReading[category.slug]} />}
       </section>
     </PageLayout>
   );

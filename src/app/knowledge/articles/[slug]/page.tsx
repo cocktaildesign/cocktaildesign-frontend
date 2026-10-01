@@ -1,6 +1,8 @@
 // frontend/src/app/knowledge/articles/[slug]/page.tsx
 import { notFound } from "next/navigation";
-import Image from "next/image";
+import ContentImage from "@/components/knowledge/ContentImage";
+import RelatedLinks from "@/components/seo/RelatedLinks";
+import { knowledgeCatalog } from "@/lib/seo/related-content";
 
 import { pageMetadata } from "@/lib/seo/metadata";
 import { articleJsonLd, knowledgeImage } from "@/lib/seo/knowledge";
@@ -132,7 +134,7 @@ export default async function KnowledgeArticlePage({ params }: PageProps) {
               case "image": {
                 return (
                   <figure key={blockKey} className={styles.figure}>
-                    <Image src={block.src} alt={block.alt ?? ""} width={870} height={490} className={styles.image} />
+                    <ContentImage block={block} className={styles.image} priority={index < 2} />
                     {block.caption ? <figcaption className={styles.caption}>{block.caption}</figcaption> : null}
                   </figure>
                 );
@@ -156,6 +158,7 @@ export default async function KnowledgeArticlePage({ params }: PageProps) {
             }
           })}
         </div>
+        <RelatedLinks title="По теме в каталоге" links={knowledgeCatalog[item.slug]} />
       </article>
 
       <TelegramBanner />

@@ -68,6 +68,9 @@ export type KnowledgeContentBlock =
       id: string;
       type: "image";
       src: string;
+      srcSet?: string;
+      width?: number;
+      height?: number;
       alt?: string;
       caption?: string;
     }

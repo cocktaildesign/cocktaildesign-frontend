@@ -18,6 +18,19 @@ const mappers = load('mappers.ts', {
   '@/lib/api/strapi': { getStrapiMediaUrl: url => url },
   '@/lib/api/strapi/responsive-image': load('../strapi/responsive-image.ts', {}),
 });
+
+test('content images retain real aspect ratios and only existing resized sources, with a legacy fallback', () => {
+  const block={__component:'blocks.image-block',id:7,alt:'Strainer',image:{url:'/original.jpg',width:1200,height:1600,formats:{small:{url:'/small.jpg',width:500}}}};
+  const [image]=mappers.mapKnowledgeBlocks([block]);
+  assert.equal(image.src,'/original.jpg');assert.equal(image.width,1200);assert.equal(image.height,1600);
+  assert.equal(image.srcSet,'/small.jpg 500w, /original.jpg 1200w');
+  for(const data of [{url:'/legacy.jpg'},{url:'/legacy.jpg',width:400},{url:'/legacy.jpg',width:Infinity,height:1}]) {
+    const [legacy]=mappers.mapKnowledgeBlocks([{...block,image:data}]);
+    assert.equal(legacy.src,'/legacy.jpg');assert.equal(legacy.width,undefined);assert.equal(legacy.height,undefined);
+    assert.equal(legacy.srcSet,undefined);
+  }
+  assert.equal(mappers.mapKnowledgeBlocks([{...block,image:null}]).length,0);
+});
 test('knowledge follows API pagination and retains topic/format filters on every page', async () => {
   const calls = [];
   const rows = Array.from({length: 136}, (_,id) => ({id, title: `Item ${id}`, format:'article', tab:'education'}));

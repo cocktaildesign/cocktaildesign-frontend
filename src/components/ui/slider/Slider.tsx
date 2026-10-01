@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { EMPTY_IMAGE } from "@/lib/images/empty-image";
 
 import styles from "./Slider.module.css";
 
@@ -129,8 +130,10 @@ export default function Slider({ images, autoPlayInterval = 7000 }: SliderProps)
           if (image.href) {
             return (
               <Link key={image.id} href={image.href} aria-label={image.alt} aria-hidden={!isActive} tabIndex={isActive ? 0 : -1} className={slideClassName}>
+                <picture>
+                  <source media="not all and (max-width: 600px)" srcSet={image.desktopUrl} />
                 <Image
-                  src={image.desktopUrl}
+                  src={EMPTY_IMAGE}
                   alt={image.alt}
                   className={styles.image}
                   width={1200}
@@ -139,14 +142,17 @@ export default function Slider({ images, autoPlayInterval = 7000 }: SliderProps)
                   fetchPriority={isLcpSlide ? "high" : "auto"}
                   loading={isLcpSlide ? "eager" : "lazy"}
                 />
+                </picture>
               </Link>
             );
           }
 
           return (
             <div key={image.id} className={slideClassName} aria-hidden={!isActive}>
+              <picture>
+                <source media="not all and (max-width: 600px)" srcSet={image.desktopUrl} />
               <Image
-                src={image.desktopUrl}
+                src={EMPTY_IMAGE}
                 alt={image.alt}
                 className={styles.image}
                 width={1200}
@@ -155,6 +161,7 @@ export default function Slider({ images, autoPlayInterval = 7000 }: SliderProps)
                 fetchPriority={isLcpSlide ? "high" : "auto"}
                 loading={isLcpSlide ? "eager" : "lazy"}
               />
+              </picture>
             </div>
           );
         })}

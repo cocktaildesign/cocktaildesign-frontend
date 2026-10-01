@@ -10,7 +10,7 @@ export const montserrat = Montserrat({
 export const hikasamiSans = localFont({
   src: [
     {
-      path: "../assets/fonts/hikasami/Hikasami-VF.ttf",
+      path: "../assets/fonts/hikasami/Hikasami-VF.woff2",
       style: "normal",
     },
   ],

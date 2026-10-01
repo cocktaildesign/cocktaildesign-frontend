@@ -13,6 +13,7 @@ import { useCartDiscountPolicy } from "@/lib/cart/useCartDiscountPolicy";
 import { CART_API_BASE } from "@/lib/cart/discountPolicy";
 import DiscountPolicyNotice from "../cart/cart-summary/DiscountPolicyNotice";
 import { ENGRAVING_PRICE_NOTE } from "@/lib/cart/engraving";
+import { trackAcceptedOrder } from "@/lib/analytics/metrika";
 
 type BuyerType = "individual" | "legal";
 
@@ -158,6 +159,7 @@ export default function CheckoutClient() {
       // Сначала ставим флаг, чтобы useEffect пустой корзины не увёл на /cart.
       orderCompletedRef.current = true;
       setSubmitStatus("success");
+      trackAcceptedOrder(data.orderId);
       clearCart();
       router.replace(successUrl);
     } catch {

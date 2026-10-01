@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import { EMPTY_IMAGE } from "@/lib/images/empty-image";
 
 
 import styles from "./MobileSlider.module.css";
@@ -28,8 +29,10 @@ export default function MobileSlider({ images }: MobileSliderProps) {
           // Two 42%-wide banners are visible on the initial mobile screen.
           const isLcpSlide = index < 2;
           const content = (
+            <picture>
+              <source media="(max-width: 600px)" srcSet={image.mobileUrl} />
             <Image
-              src={image.mobileUrl}
+              src={EMPTY_IMAGE}
               alt={image.alt}
               className={styles.image}
               width={480}
@@ -38,6 +41,7 @@ export default function MobileSlider({ images }: MobileSliderProps) {
               fetchPriority={isLcpSlide ? "high" : "auto"}
               loading={isLcpSlide ? "eager" : "lazy"}
             />
+            </picture>
           );
 
           return image.href ? (

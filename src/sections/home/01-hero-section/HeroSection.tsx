@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { EMPTY_IMAGE } from "@/lib/images/empty-image";
 
 import ContainerNoPaddingMobil from "@/components/layout/ContainerNoPaddingMobil";
 import Slider from "@/components/ui/slider/Slider";
@@ -105,14 +106,18 @@ export default function HeroSection({ weeklyProduct, banners }: HeroSectionProps
 
               {image && (
                 <div className={styles.weeklyProductImageWrapper}>
+                  <picture>
+                    <source media="not all and (max-width: 768px)" srcSet={image.src} />
                   <Image
-                    src={image.src}
+                    src={EMPTY_IMAGE}
                     alt={image.alt}
                     className={styles.weeklyProductImage}
                     width={160}
                     height={160}
-                    priority
+                    loading="eager"
+                    fetchPriority="high"
                   />
+                  </picture>
                 </div>
               )}
             </div>

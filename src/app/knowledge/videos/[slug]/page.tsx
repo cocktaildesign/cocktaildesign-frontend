@@ -1,6 +1,8 @@
 // frontend/src/app/knowledge/videos/[slug]/page.tsx
 
 import { notFound } from "next/navigation";
+import RelatedLinks from "@/components/seo/RelatedLinks";
+import { knowledgeCatalog } from "@/lib/seo/related-content";
 import { pageMetadata } from "@/lib/seo/metadata";
 import { knowledgeImage } from "@/lib/seo/knowledge";
 import { siteUrl } from "@/lib/seo/site";
@@ -105,6 +107,7 @@ export default async function KnowledgeVideoPage({ params }: PageProps) {
             </nav>
           )}
         </div>
+        <RelatedLinks title="По теме в каталоге" links={knowledgeCatalog[item.slug]} />
       </article>
     </PageLayout>
   );
