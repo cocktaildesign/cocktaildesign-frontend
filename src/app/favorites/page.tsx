@@ -8,6 +8,7 @@ export const metadata = pageMetadata({
   title: "Избранное — Магазин барного инвентаря Cocktail Design",
   description: "Ваш список избранных товаров в магазине барного инвентаря Cocktail Design.",
   canonical: "/favorites",
+  noindex: true,
 });
 
 export default function FavoritesPage() {

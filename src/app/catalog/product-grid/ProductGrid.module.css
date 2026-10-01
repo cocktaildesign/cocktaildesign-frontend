@@ -17,6 +17,21 @@
   gap: 16px;
 }
 
+.pagination {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px 24px;
+  font-size: var(--text-sm);
+  color: var(--color-gray);
+}
+
+.pagination a {
+  padding: 12px 4px;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
 .loadMoreSentinel {
   width: 100%;
   height: 1px;

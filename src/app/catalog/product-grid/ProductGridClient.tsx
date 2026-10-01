@@ -4,11 +4,13 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import ProductList from "./ProductList";
 import styles from "./ProductGrid.module.css";
 import type { CatalogProductPreview } from "@/lib/api/catalog/types";
+import { listingHref } from "@/lib/seo/policy";
 
 type ProductGridClientProps = {
   initialProducts: CatalogProductPreview[];
   initialHasMore: boolean;
   pageSize: number;
+  initialPage: number;
   categorySlug?: string;
   collectionSlug?: string;
   filterCategorySlug?: string;
@@ -61,6 +63,7 @@ export default function ProductGridClient({
   initialProducts,
   initialHasMore,
   pageSize,
+  initialPage,
   categorySlug,
   collectionSlug,
   filterCategorySlug,
@@ -70,6 +73,9 @@ export default function ProductGridClient({
   const [hasMore, setHasMore] = useState(initialHasMore);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [nextOffset, setNextOffset] = useState((initialPage - 1) * pageSize + initialProducts.length);
+  const listingPath = collectionSlug ? `/catalog/collection/${collectionSlug}` : `/catalog/${categorySlug}`;
+  const nextPage = Math.floor(nextOffset / pageSize) + 1;
 
   const lockRef = useRef(false);
   const sentinelRef = useRef<HTMLDivElement | null>(null);
@@ -83,10 +89,9 @@ export default function ProductGridClient({
     setError(null);
 
     try {
-      const offset = products.length;
       const response = await fetchProductsBatch({
         limit: pageSize,
-        offset,
+        offset: nextOffset,
         categorySlug,
         collectionSlug,
         filterCategorySlug,
@@ -97,14 +102,15 @@ export default function ProductGridClient({
         const appended = response.items.filter((item) => !existingIds.has(item.id));
         return appended.length > 0 ? [...current, ...appended] : current;
       });
-      setHasMore(response.hasMore);
+      setNextOffset(current => current + response.items.length);
+      setHasMore(response.hasMore && response.items.length > 0);
     } catch {
       setError("Не удалось загрузить товары");
     } finally {
       lockRef.current = false;
       setIsLoading(false);
     }
-  }, [categorySlug, collectionSlug, filterCategorySlug, hasMore, isLoading, pageSize, products.length]);
+  }, [categorySlug, collectionSlug, filterCategorySlug, hasMore, isLoading, pageSize, nextOffset]);
 
   useEffect(() => {
     if (!hasMore) return;
@@ -156,6 +162,20 @@ export default function ProductGridClient({
             </button>
           )}
         </div>
+      )}
+      {(initialPage > 1 || hasMore) && (
+        <nav className={styles.pagination} aria-label="Страницы товаров">
+          {initialPage > 1 && (
+            <a href={listingHref(listingPath, initialPage - 1, filterCategorySlug, true)} rel="prev">
+              ← Предыдущие товары
+            </a>
+          )}
+          {hasMore && (
+            <a href={listingHref(listingPath, nextPage, filterCategorySlug, true)} rel="next">
+              Следующие товары →
+            </a>
+          )}
+        </nav>
       )}
     </div>
   );

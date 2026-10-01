@@ -7,6 +7,8 @@
 import PageLayout from "@/components/layout/PageLayout";
 import styles from "./CategoryPage.module.css";
 import { pageMetadata } from "@/lib/seo/metadata";
+import { listingHref, pageNumber } from "@/lib/seo/policy";
+import { categoryContent } from "@/lib/seo/category-content";
 import { notFound, redirect } from "next/navigation";
 import { Metadata } from "next";
 import CatalogSidebar from "./catalog-sidebar/CatalogSidebar";
@@ -21,11 +23,12 @@ type Params = {
 
 type PageProps = {
   params: Promise<Params>;
-  searchParams: Promise<{ showAll?: string }>;
+  searchParams: Promise<{ showAll?: string; page?: string }>;
 };
 
-export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+export async function generateMetadata({ params, searchParams }: PageProps): Promise<Metadata> {
   const { slug } = await params;
+  const page = pageNumber((await searchParams).page) ?? 1;
 
   // Техническая Sample Sale не должна быть самостоятельной SEO-страницей.
   if (slug === SAMPLE_SALE_CATEGORY_SLUG) {
@@ -35,17 +38,20 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const category = await getCategoryBySlugFromStrapi(slug);
 
   if (!category) return {};
+  const content = categoryContent[category.slug];
 
   return pageMetadata({
-    title: category.name,
-    description: `Товары категории «${category.name}» — ассортимент CocktailDesign.`,
-    canonical: `/catalog/${category.slug}`,
+    title: `${content?.title ?? category.name}${page > 1 ? ` — страница ${page}` : ""}`,
+    description: content?.description ?? `Товары категории «${category.name}» — ассортимент CocktailDesign.`,
+    canonical: listingHref(`/catalog/${category.slug}`, page),
   });
 }
 
 export default async function CatalogCategoryPage({ params, searchParams }: PageProps) {
   const { slug } = await params;
-  const { showAll } = await searchParams;
+  const { showAll, page: rawPage } = await searchParams;
+  const page = pageNumber(rawPage);
+  if (page === null) notFound();
 
   // Только точный технический slug Sample Sale → подборка «Уценка».
   if (slug === SAMPLE_SALE_CATEGORY_SLUG) {
@@ -59,12 +65,13 @@ export default async function CatalogCategoryPage({ params, searchParams }: Page
   }
 
   const categories = await getCatalogTreeFromStrapi();
+  const content = page === 1 ? categoryContent[category.slug] : undefined;
 
   // Есть ли дочерние категории у текущей?
   const hasChildren = Boolean(category.children && category.children.length > 0);
 
   // Показываем drill-down только если есть дети И не нажали "Все товары"
-  const showDrillDown = hasChildren && showAll !== "true";
+  const showDrillDown = hasChildren && showAll !== "true" && page === 1;
 
   // Берём детей категории из общего дерева /catalog/categories-flat
   // (раньше был отдельный запрос getChildCategoriesFromStrapi)
@@ -94,11 +101,11 @@ export default async function CatalogCategoryPage({ params, searchParams }: Page
 
           {showDrillDown ? (
             <section aria-label="Список товаров">
-              <ProductGrid categorySlug={category.slug} />
+              <ProductGrid categorySlug={category.slug} page={page} />
             </section>
           ) : (
             <section className={styles.productsSingleLayout} aria-label="Список товаров">
-              <ProductGrid categorySlug={category.slug} />
+              <ProductGrid categorySlug={category.slug} page={page} />
             </section>
           )}
         </div>
@@ -110,6 +117,12 @@ export default async function CatalogCategoryPage({ params, searchParams }: Page
           <div className={styles.mobileLayout}>
             <MobileCategoryDrillDown categories={childCategories} currentSlug={category.slug} />
           </div>
+        )}
+        {content && (
+          <section className={styles.guide} aria-label={content.heading}>
+            <h2>{content.heading}</h2>
+            {content.paragraphs.map(paragraph => <p key={paragraph}>{paragraph}</p>)}
+          </section>
         )}
       </section>
     </PageLayout>

@@ -1,6 +1,12 @@
 import type { NextConfig } from "next";
+import legacyRedirects from "./src/lib/seo/legacy-redirects.json";
 
 const nextConfig: NextConfig = {
+  async redirects() {
+    return Object.entries(legacyRedirects).map(([source, destination]) => ({
+      source, destination, permanent: true,
+    }));
+  },
   images: {
     remotePatterns: [
       // dev: локальный Strapi

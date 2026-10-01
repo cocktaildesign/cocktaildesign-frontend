@@ -437,7 +437,8 @@ export function mapProductPreview(item: StrapiProductItem): CatalogProductPrevie
   const isSampleSale = source.isSampleSale === true;
   const noveltyBadgeColor = normalizeNoveltyBadgeColor(source.noveltyBadgeColor);
 
-  const slug = makeProductSlug(moyskladId, name);
+  // Match the detail page canonical. CRM renames must not generate new URLs.
+  const slug = source.slug?.trim() || makeProductSlug(moyskladId);
 
   return {
     id: String(item.id),
