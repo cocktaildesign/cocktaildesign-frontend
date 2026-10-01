@@ -7,12 +7,12 @@ import Link from "next/link";
 import FavoriteButton from "@/components/ui/favorites/FavoriteButton";
 import ProductBadges from "@/shared/ui/product-badges/ProductBadges";
 
-import type { CatalogProductPreview } from "@/lib/api/catalog/types";
+import type { HomeProductCardData } from "@/lib/catalog/home-product-card";
 
 import styles from "./HomeProductCard.module.css";
 
 type ProductCardProps = {
-  product: CatalogProductPreview;
+  product: HomeProductCardData;
 };
 
 function formatPrice(price: number): string {
@@ -85,7 +85,7 @@ export default function ProductCard({ product }: ProductCardProps) {
           </picture>
 
           <ProductBadges
-            moyskladId={product.variants.find((variant) => variant.id === product.preferredVariantId)?.moyskladId ?? product.moyskladId}
+            moyskladId={product.badgeMoyskladId}
             isNew={product.isNew}
             noveltyBadgeColor={product.noveltyBadgeColor}
             isSampleSale={product.isSampleSale}

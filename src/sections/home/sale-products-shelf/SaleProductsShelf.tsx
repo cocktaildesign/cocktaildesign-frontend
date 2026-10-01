@@ -3,6 +3,7 @@ import Link from "next/link";
 import ContainerNoPaddingMobil from "@/components/layout/ContainerNoPaddingMobil";
 import ProductsSlider from "../../../components/ui/products-slider/ProductsSlider";
 import ProductCard from "../product-card/HomeProductCard";
+import { homeProductCard } from "@/lib/catalog/home-product-card";
 import ArrowRightIcon from "@/components/icons/ArrowRightIcon";
 
 import type { CatalogCollection } from "@/lib/api/catalog/types";
@@ -44,7 +45,7 @@ export default function SaleProductsShelf({ collection }: SaleProductsShelfProps
           <ProductsSlider>
             {collection.products.map((product) => (
               <div key={product.id} className={styles.slide}>
-                <ProductCard product={product} />
+                <ProductCard product={homeProductCard(product)} />
               </div>
             ))}
           </ProductsSlider>

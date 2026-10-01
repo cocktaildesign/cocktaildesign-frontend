@@ -20,6 +20,18 @@ const media = {
   url:'/original.webp',width:1200,
   formats:{large:{url:'/large.webp',width:1000},small:{url:'/small.webp',width:500}},
 };
+test('home boundary preserves displayed prices, selected variant and stock identity while dropping unused galleries',()=>{
+  const {homeProductCard}=load('lib/catalog/home-product-card.ts');
+  const product={id:'p',slug:'slug',name:'Product',price:450,priceOld:760,moyskladId:'parent',images:['/selected.webp'],imageUrl:'/selected.webp',preferredVariantId:'v',isSampleSale:true,badges:[{label:'Sale'}],variants:[{id:'v',moyskladId:'variant',images:[{src:'/extra.webp'}]}],imageSrcSets:{'/selected.webp':'selected 500w, selected-large 1000w','/extra.webp':'extra 500w, extra-large 1000w'}};
+  const home=homeProductCard(product);
+  for(const key of ['id','slug','name','price','priceOld','images','imageUrl','preferredVariantId','isSampleSale','badges']) assert.equal(home[key],product[key]);
+  assert.equal(home.badgeMoyskladId,'variant');
+  assert.equal(home.imageSrcSets['/selected.webp'],product.imageSrcSets['/selected.webp']);
+  assert.equal(home.imageSrcSets['/extra.webp'],undefined);
+  assert.equal(home.variants,undefined);
+  assert.equal(homeProductCard({...product,preferredVariantId:undefined}).badgeMoyskladId,'parent');
+  assert.equal(product.variants[0].images[0].src,'/extra.webp');
+});
 test('responsive candidates use actual CMS widths and URLs, in ascending order',()=>{
   assert.equal(responsive.mediaSrcSet(media,resolve),
     'https://media.example.test/small.webp 500w, https://media.example.test/large.webp 1000w, https://media.example.test/original.webp 1200w');
