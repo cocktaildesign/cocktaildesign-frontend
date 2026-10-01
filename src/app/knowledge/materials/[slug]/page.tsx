@@ -4,6 +4,8 @@ import { notFound } from "next/navigation";
 import Image from "next/image";
 
 import { pageMetadata } from "@/lib/seo/metadata";
+import { knowledgeImage } from "@/lib/seo/knowledge";
+import { siteUrl } from "@/lib/seo/site";
 import { formatRelativeFromIsoDate } from "@/lib/date/relativeDate";
 
 import PageLayout from "@/components/layout/PageLayout";
@@ -38,6 +40,7 @@ export async function generateMetadata({ params }: PageProps) {
     title: item.title,
     description: item.description,
     canonical: `/knowledge/materials/${item.slug}`,
+    image: knowledgeImage(item.coverSrc, siteUrl),
   });
 }
 
@@ -78,7 +81,7 @@ export default async function KnowledgeMaterialPage({ params }: PageProps) {
               {item.label ? <p className={styles.detailMeta}>{item.label}</p> : null}
 
               <ShareButton
-                url={`${process.env.NEXT_PUBLIC_SITE_URL}/knowledge/materials/${item.slug}`}
+                url={`${siteUrl}/knowledge/materials/${item.slug}`}
                 title={item.title}
               />
             </div>

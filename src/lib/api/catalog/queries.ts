@@ -341,7 +341,8 @@ export async function getDiscountedProductsFromStrapi(
 // ПОДБОРКИ ТОВАРОВ ДЛЯ ГЛАВНОЙ (catalog-collections)
 // ============================================================================
 
-const HOME_COLLECTION_PRODUCTS_LIMIT = 100;
+// Homepage shelves are previews; the existing "Все" links open complete collections.
+const HOME_COLLECTION_PRODUCTS_LIMIT = 12;
 
 function normalizeSelectionMode(value: unknown): StrapiCollectionSelectionMode {
   if (value === "category") return "category";

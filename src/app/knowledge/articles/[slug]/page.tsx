@@ -3,6 +3,9 @@ import { notFound } from "next/navigation";
 import Image from "next/image";
 
 import { pageMetadata } from "@/lib/seo/metadata";
+import { articleJsonLd, knowledgeImage } from "@/lib/seo/knowledge";
+import { serializeJsonLd } from "@/lib/seo/policy";
+import { siteUrl } from "@/lib/seo/site";
 import { formatRelativeFromIsoDate } from "@/lib/date/relativeDate";
 
 import PageLayout from "@/components/layout/PageLayout";
@@ -37,6 +40,8 @@ export async function generateMetadata({ params }: PageProps) {
     title: item.title,
     description: item.description,
     canonical: `/knowledge/articles/${item.slug}`,
+    image: knowledgeImage(item.coverSrc, siteUrl),
+    type: "article",
   });
 }
 
@@ -57,6 +62,7 @@ export default async function KnowledgeArticlePage({ params }: PageProps) {
         { href: `/knowledge/articles/${item.slug}`, label: item.title },
       ]}>
       <article className={styles.detailPage}>
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: serializeJsonLd(articleJsonLd(item, siteUrl)) }} />
         {/* Верхняя строка */}
         <div className={styles.up}>
           <BackButton />
@@ -78,7 +84,7 @@ export default async function KnowledgeArticlePage({ params }: PageProps) {
               <p className={styles.detailMeta}>{item.readTime}</p>
 
               <ShareButton
-                url={`${process.env.NEXT_PUBLIC_SITE_URL}/knowledge/articles/${item.slug}`}
+                url={`${siteUrl}/knowledge/articles/${item.slug}`}
                 title={item.title}
               />
             </div>
