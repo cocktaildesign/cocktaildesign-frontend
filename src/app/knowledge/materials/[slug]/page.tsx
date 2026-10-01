@@ -1,7 +1,7 @@
 // frontend/src/app/knowledge/materials/[slug]/page.tsx
 
 import { notFound } from "next/navigation";
-import Image from "next/image";
+import ContentImage from "@/components/knowledge/ContentImage";
 
 import { pageMetadata } from "@/lib/seo/metadata";
 import { knowledgeImage } from "@/lib/seo/knowledge";
@@ -127,7 +127,7 @@ export default async function KnowledgeMaterialPage({ params }: PageProps) {
               case "image": {
                 return (
                   <figure key={block.id} className={styles.figure}>
-                    <Image src={block.src} alt={block.alt ?? ""} width={870} height={490} className={styles.image} />
+                    <ContentImage block={block} className={styles.image} />
                     {block.caption ? <figcaption className={styles.caption}>{block.caption}</figcaption> : null}
                   </figure>
                 );

@@ -6,6 +6,7 @@ import ScrollToTopInstant from "@/components/layout/ScrollToTopInstant";
 import NavBar from "@/components/layout/nav-bar/NavBar";
 import ScrollToTopButton from "@/components/ui/scroll-to-top-button/ScrollToTopButton";
 import MobileBottomNav from "@/components/layout/mobile-bottom-nav/MobileBottomNav";
+import Metrika from "@/components/analytics/Metrika";
 
 export { rootMetadata as metadata, viewport } from "@/lib/seo/metadata";
 import { hikasamiSans, montserrat } from "@/lib/fonts";
@@ -28,6 +29,7 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
   return (
     <html lang="ru" className={`${montserrat.variable} ${hikasamiSans.variable}`}>
       <body>
+        <Metrika />
         <ScrollToTopInstant />
         <Header />
         <NavBar />

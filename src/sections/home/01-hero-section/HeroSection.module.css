@@ -156,6 +156,11 @@
   background: rgba(255, 255, 255, 0.06);
 }
 
+.weeklyProductImageWrapper > picture {
+  width: 100%;
+  height: 100%;
+}
+
 .weeklyProductImage {
   display: block;
   width: 100%;

@@ -164,11 +164,17 @@ function mapTextBlock(block: StrapiTextBlock): KnowledgeContentBlock {
 function mapImageBlock(block: StrapiImageBlock): KnowledgeContentBlock | null {
   const src = resolveMediaSrc(block.image?.url);
   if (!src) return null;
+  const width = block.image?.width;
+  const height = block.image?.height;
+  const hasDimensions = Number.isInteger(width) && Number.isInteger(height) && (width ?? 0) > 0 && (height ?? 0) > 0;
 
   return {
     id: String(block.id),
     type: "image",
     src,
+    srcSet: mediaSrcSet(block.image, getStrapiMediaUrl),
+    width: hasDimensions ? width! : undefined,
+    height: hasDimensions ? height! : undefined,
     alt: block.alt ?? undefined,
     caption: block.caption ?? undefined,
   };
