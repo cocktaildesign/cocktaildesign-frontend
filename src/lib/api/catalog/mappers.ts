@@ -9,6 +9,7 @@
 // ============================================================================
 
 import { getStrapiMediaUrl } from "@/lib/api/strapi/media";
+import { mediaSrcSet } from "@/lib/api/strapi/responsive-image";
 import type {
   CatalogBundleItem,
   CatalogCategoryPreview,
@@ -265,6 +266,7 @@ function mapMediaArray(
       images.push({
         src: imageUrl,
         alt: file?.alternativeText?.trim() || fallbackAlt,
+        srcSet: mediaSrcSet(file, getStrapiMediaUrl),
       });
     }
 
@@ -281,6 +283,7 @@ function mapMediaArray(
       images.push({
         src: imageUrl,
         alt: file?.alternativeText?.trim() || fallbackAlt,
+        srcSet: mediaSrcSet(file, getStrapiMediaUrl),
       });
     }
 
@@ -430,6 +433,11 @@ export function mapProductPreview(item: StrapiProductItem): CatalogProductPrevie
 
   const images = Array.from(new Set([...productImages, ...variantImages])).slice(0, 4);
   const imageUrl = images[0] ?? null;
+  const imageSrcSets = Object.fromEntries(
+    [...mapMediaArray(source.image, name), ...variants.flatMap((variant) => variant.images)]
+      .filter((image) => image.srcSet)
+      .map((image) => [image.src, image.srcSet!]),
+  );
 
   const engravingEnabled = source.engravingEnabled === true;
   const discountExcluded = source.discountExcluded === true;
@@ -449,6 +457,7 @@ export function mapProductPreview(item: StrapiProductItem): CatalogProductPrevie
     priceOld,
     imageUrl,
     images,
+    imageSrcSets,
     engravingEnabled,
     discountExcluded,
     code,

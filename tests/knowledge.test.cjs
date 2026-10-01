@@ -14,7 +14,10 @@ function load(name, imports) {
   }});
   return mod.exports;
 }
-const mappers = load('mappers.ts', { '@/lib/api/strapi': { getStrapiMediaUrl: url => url } });
+const mappers = load('mappers.ts', {
+  '@/lib/api/strapi': { getStrapiMediaUrl: url => url },
+  '@/lib/api/strapi/responsive-image': load('../strapi/responsive-image.ts', {}),
+});
 test('knowledge follows API pagination and retains topic/format filters on every page', async () => {
   const calls = [];
   const rows = Array.from({length: 136}, (_,id) => ({id, title: `Item ${id}`, format:'article', tab:'education'}));

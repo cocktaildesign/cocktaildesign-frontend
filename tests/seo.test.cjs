@@ -21,6 +21,16 @@ const policy = load('lib/seo/policy.ts');
 const { productJsonLd, offerAvailability } = load('lib/seo/product.ts');
 const { articleJsonLd, knowledgeImage } = load('lib/seo/knowledge.ts', { './policy': policy });
 
+test('existing ownership verification follows only the final domain, independently of indexing', () => {
+  const existing = JSON.parse(fs.readFileSync(path.resolve(__dirname,'../src/lib/seo/verification.json'),'utf8'));
+  assert.ok(existing.google && existing.yandex);
+  const {siteVerification} = load('lib/seo/verification.ts', {'./verification.json':{default:existing}});
+  assert.equal(siteVerification('https://cocktaildesign.ru/'),existing);
+  for(const site of ['https://new.cocktaildesign.ru','http://localhost:3000','https://cocktaildesign.ru.evil.test']) {
+    assert.equal(siteVerification(site),undefined);
+  }
+});
+
 test('article data uses the canonical domain and actual editorial content without inventing dates or authors', () => {
   const item = {title:'Статья',slug:'article',description:'Две\nстроки',coverSrc:'/uploads/cover.webp',date:'2026-09-30'};
   const data = articleJsonLd(item, 'https://cocktaildesign.ru');
@@ -135,4 +145,6 @@ test('sitemap excludes broken and redirected paths, includes collections and ded
   assert.equal(urls.filter(url=>url.endsWith('/ms-p1')).length, 1);
   assert.ok(urls.includes('https://test/catalog/collection/new'));
   assert.ok(urls.includes('https://test/catalog/product/ms-p2'));
+  assert.ok(urls.includes('https://test/prof-oborudovanie-dlya-restoranov-i-kafe'));
+  assert.ok(urls.includes('https://test/posuda-dlya-barov-i-restoranov'));
 });

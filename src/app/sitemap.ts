@@ -84,6 +84,8 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${siteUrl}/branding`, changeFrequency: "monthly", priority: 0.8 },
 
     { url: `${siteUrl}/catalog`, changeFrequency: "daily", priority: 0.9 },
+    { url: `${siteUrl}/prof-oborudovanie-dlya-restoranov-i-kafe`, changeFrequency: "monthly", priority: 0.7 },
+    { url: `${siteUrl}/posuda-dlya-barov-i-restoranov`, changeFrequency: "monthly", priority: 0.7 },
 
     { url: `${siteUrl}/contacts`, changeFrequency: "monthly", priority: 0.7 },
 

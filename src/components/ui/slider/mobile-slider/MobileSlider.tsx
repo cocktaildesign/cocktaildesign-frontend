@@ -24,8 +24,9 @@ export default function MobileSlider({ images }: MobileSliderProps) {
   return (
     <div className={styles.slider} aria-label="Мобильные баннеры">
       <div className={styles.track}>
-        {images.map((image) => {
-          const isLcpSlide = image.id === images[0]?.id;
+        {images.map((image, index) => {
+          // Two 42%-wide banners are visible on the initial mobile screen.
+          const isLcpSlide = index < 2;
           const content = (
             <Image
               src={image.mobileUrl}

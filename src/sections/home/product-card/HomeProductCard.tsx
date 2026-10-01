@@ -73,13 +73,16 @@ export default function ProductCard({ product }: ProductCardProps) {
       <Link href={productHref} className={styles.previewLink}>
         {/* Картинка товара */}
         <div className={styles.thumb} onMouseMove={handleMouseMove} onMouseLeave={handleMouseLeave}>
-          <Image
-            src={imageSrc}
-            alt={product.name}
-            fill
-            className={styles.image}
-            sizes="(max-width: 768px) 50vw, 25vw"
-          />
+          <picture>
+            {product.imageSrcSets?.[imageSrc] && <source srcSet={product.imageSrcSets[imageSrc]} sizes="(max-width: 768px) 72vw, (max-width: 1440px) 25vw, 340px" />}
+            <Image
+              src={imageSrc}
+              alt={product.name}
+              fill
+              className={styles.image}
+              sizes="(max-width: 768px) 50vw, 25vw"
+            />
+          </picture>
 
           <ProductBadges
             moyskladId={product.variants.find((variant) => variant.id === product.preferredVariantId)?.moyskladId ?? product.moyskladId}
