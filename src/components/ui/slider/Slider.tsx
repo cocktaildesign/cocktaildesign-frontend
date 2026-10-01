@@ -109,7 +109,7 @@ export default function Slider({ images, autoPlayInterval = 7000 }: SliderProps)
     timerIdRef.current = timerId;
 
     return () => {
-      window.clearInterval(timerId);
+      if (timerIdRef.current !== null) window.clearInterval(timerIdRef.current);
       timerIdRef.current = null;
     };
   }, [hasControls, totalSlides, autoPlayInterval]);
@@ -128,7 +128,7 @@ export default function Slider({ images, autoPlayInterval = 7000 }: SliderProps)
 
           if (image.href) {
             return (
-              <Link key={image.id} href={image.href} aria-label={image.alt} className={slideClassName}>
+              <Link key={image.id} href={image.href} aria-label={image.alt} aria-hidden={!isActive} tabIndex={isActive ? 0 : -1} className={slideClassName}>
                 <Image
                   src={image.desktopUrl}
                   alt={image.alt}
