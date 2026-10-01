@@ -1,7 +1,8 @@
 // frontend/src/app/knowledge/materials/[slug]/page.tsx
 
 import { notFound } from "next/navigation";
-import ContentImage from "@/components/knowledge/ContentImage";
+import ReadingBody from "@/components/knowledge/ReadingBody";
+import KnowledgeTools from "@/components/knowledge/KnowledgeTools";
 
 import { pageMetadata } from "@/lib/seo/metadata";
 import { knowledgeImage } from "@/lib/seo/knowledge";
@@ -15,7 +16,7 @@ import TelegramBanner from "@/sections/telegram-cta/TelegramCta";
 
 import { getKnowledgeMaterialBySlugFromStrapi } from "@/lib/api/knowledge";
 
-import styles from "./MaterialPage.module.css";
+import styles from "@/components/knowledge/Reading.module.css";
 
 type Params = {
   slug: string;
@@ -24,10 +25,6 @@ type Params = {
 type PageProps = {
   params: Promise<Params>;
 };
-
-function assertNever(value: never): never {
-  throw new Error(`Unhandled block variant: ${JSON.stringify(value)}`);
-}
 
 export async function generateMetadata({ params }: PageProps) {
   const { slug } = await params;
@@ -58,12 +55,12 @@ export default async function KnowledgeMaterialPage({ params }: PageProps) {
         { href: "/knowledge", label: "Знания" },
         { href: `/knowledge/materials/${item.slug}`, label: item.title },
       ]}>
-      <article className={styles.detailPage}>
+      <article className={styles.page}>
         {/* Верхняя строка */}
         <div className={styles.up}>
           <BackButton />
 
-          <p className={styles.detailMeta}>
+          <p className={styles.meta}>
             Опубликовано:{" "}
             <time dateTime={item.date} title={item.date}>
               {formatRelativeFromIsoDate(item.date)}
@@ -72,85 +69,22 @@ export default async function KnowledgeMaterialPage({ params }: PageProps) {
         </div>
 
         {/* Заголовок материала */}
-        <header className={styles.detailHeader}>
-          <h1 className={styles.detailTitle}>{item.title}</h1>
+        <header className={styles.header}>
+          <h1 className={styles.title}>{item.title}</h1>
 
-          <div className={styles.metaRow}>
-            <div className={styles.actions}>
+          <div className={styles.actions}>
               {/* label у материала опциональный */}
-              {item.label ? <p className={styles.detailMeta}>{item.label}</p> : null}
+              {item.label ? <p className={styles.meta}>{item.label}</p> : null}
 
               <ShareButton
                 url={`${siteUrl}/knowledge/materials/${item.slug}`}
                 title={item.title}
               />
-            </div>
           </div>
         </header>
 
-        {/* Контент материала */}
-        <div className={styles.detailBody}>
-          {item.blocks.map((block) => {
-            switch (block.type) {
-              case "heading": {
-                const Tag = block.level === 2 ? "h2" : "h3";
-
-                return (
-                  <Tag key={block.id} className={styles[`heading${block.level}`]}>
-                    {block.content}
-                  </Tag>
-                );
-              }
-
-              case "text": {
-                return (
-                  <p key={block.id} className={styles.paragraph}>
-                    {block.content}
-                  </p>
-                );
-              }
-
-              case "list": {
-                const ListTag = block.ordered ? "ol" : "ul";
-
-                return (
-                  <ListTag key={block.id} className={styles.list}>
-                    {block.items.map((itemText, idx) => (
-                      <li key={`${block.id}-${idx}`} className={styles.listItem}>
-                        {itemText}
-                      </li>
-                    ))}
-                  </ListTag>
-                );
-              }
-
-              case "image": {
-                return (
-                  <figure key={block.id} className={styles.figure}>
-                    <ContentImage block={block} className={styles.image} />
-                    {block.caption ? <figcaption className={styles.caption}>{block.caption}</figcaption> : null}
-                  </figure>
-                );
-              }
-
-              case "link": {
-                return (
-                  <div key={block.id} className={styles.linkBlock}>
-                    <a className={styles.link} href={block.url} target="_blank" rel="noopener noreferrer">
-                      {block.title}
-                    </a>
-
-                    {block.description ? <p className={styles.linkDescription}>{block.description}</p> : null}
-                  </div>
-                );
-              }
-
-              default: {
-                return assertNever(block);
-              }
-            }
-          })}
-        </div>
+        <ReadingBody blocks={item.blocks} slug={item.slug} />
+        <KnowledgeTools slug={item.slug} />
       </article>
 
       <TelegramBanner />

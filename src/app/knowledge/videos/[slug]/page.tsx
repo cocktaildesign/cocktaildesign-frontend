@@ -1,8 +1,8 @@
 // frontend/src/app/knowledge/videos/[slug]/page.tsx
 
 import { notFound } from "next/navigation";
-import RelatedLinks from "@/components/seo/RelatedLinks";
-import { knowledgeCatalog } from "@/lib/seo/related-content";
+import ReadingBody from "@/components/knowledge/ReadingBody";
+import KnowledgeTools from "@/components/knowledge/KnowledgeTools";
 import { pageMetadata } from "@/lib/seo/metadata";
 import { knowledgeImage } from "@/lib/seo/knowledge";
 import { siteUrl } from "@/lib/seo/site";
@@ -10,10 +10,9 @@ import BackButton from "@/components/ui/back-button/BackButton";
 
 import PageLayout from "@/components/layout/PageLayout";
 import { getKnowledgeVideoBySlugFromStrapi } from "@/lib/api/knowledge";
-import styles from "./VideoPage.module.css";
+import styles from "@/components/knowledge/Reading.module.css";
 import { formatRelativeFromIsoDate } from "@/lib/date/relativeDate";
 import ShareButton from "@/components/ui/share-button/ShareButton";
-import ReadMoreText from "../read-more-text/ReadMoreText";
 
 type Params = {
   slug: string;
@@ -54,28 +53,16 @@ export default async function KnowledgeVideoPage({ params }: PageProps) {
         { href: "/knowledge", label: "Знания" },
         { href: `/knowledge/videos/${item.slug}`, label: item.title },
       ]}>
-      <article className={styles.videoPage}>
+      <article className={styles.page}>
         {/* Верхняя часть страницы */}
         <BackButton />
 
-        <div className={styles.content}>
-          {/* Плеер */}
-          <div className={styles.player} role="group" aria-label="Видео">
-            <iframe
-              src={item.embedUrl}
-              title={item.title}
-              loading="lazy"
-              allow="autoplay; encrypted-media; fullscreen; picture-in-picture"
-              allowFullScreen
-              className={styles.iframe}
-            />
-          </div>
 
           {/* Заголовок и действия */}
           <header className={styles.header}>
             <h1 className={styles.title}>{item.title}</h1>
 
-            <div className={styles.metaRow}>
+            <div className={styles.actions}>
               <p className={styles.meta}>
                 <time dateTime={item.date} title={item.date}>
                   {formatRelativeFromIsoDate(item.date)}
@@ -88,8 +75,20 @@ export default async function KnowledgeVideoPage({ params }: PageProps) {
             </div>
           </header>
 
+          {/* Плеер */}
+          <div className={styles.player} role="group" aria-label="Видео">
+            <iframe
+              src={item.embedUrl}
+              title={item.title}
+              loading="lazy"
+              allow="autoplay; encrypted-media; fullscreen; picture-in-picture"
+              allowFullScreen
+              className={styles.iframe}
+            />
+          </div>
+
           {/* Описание */}
-          {item.description ? <ReadMoreText text={item.description} /> : null}
+          {item.description ? <ReadingBody slug={item.slug} blocks={[{ type: "text", id: "description", content: item.description }]} /> : null}
 
           {(item.externalUrl || item.links.length > 0) && (
             <nav className={styles.resources} aria-label="Видео и дополнительные материалы">
@@ -106,8 +105,7 @@ export default async function KnowledgeVideoPage({ params }: PageProps) {
               ))}
             </nav>
           )}
-        </div>
-        <RelatedLinks title="По теме в каталоге" links={knowledgeCatalog[item.slug]} />
+        <KnowledgeTools slug={item.slug} />
       </article>
     </PageLayout>
   );
