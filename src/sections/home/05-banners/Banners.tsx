@@ -9,7 +9,7 @@ import styles from "./Banners.module.css";
 export default function Banners({ banners }: { banners: HomepageBanner[] }) {
   if (!banners.length) return null;
   return (
-    <section className={styles.section}>
+    <section className={styles.section} data-homepage-banners="promo">
       <Container>
         {/* Баннер внутри контейнера */}
         <div className={styles.sliderWrapper}>

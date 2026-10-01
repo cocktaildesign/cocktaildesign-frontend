@@ -49,7 +49,7 @@ export default function HeroSection({ weeklyProduct, banners }: HeroSectionProps
   // Если блок выключен — показываем только слайдер
   if (!weeklyProduct || !weeklyProduct.product) {
     return (
-      <section className={styles.hero}>
+      <section className={styles.hero} data-homepage-banners="hero">
         <ContainerNoPaddingMobil>
           <div className={styles.desktopSlider}>
           <Slider key={banners.map(b => b.id).join(",")} images={banners} autoPlayInterval={7000} />
@@ -65,7 +65,7 @@ export default function HeroSection({ weeklyProduct, banners }: HeroSectionProps
   const discount = product.priceOld ? calculateDiscount(product.price, product.priceOld) : null;
 
   return (
-    <section className={styles.hero}>
+    <section className={styles.hero} data-homepage-banners="hero">
       <ContainerNoPaddingMobil>
         {/* Слайдер баннеров */}
         <div className={styles.desktopSlider}>
