@@ -777,6 +777,7 @@
   color: var(--color-black);
   font-size: var(--text-base);
   line-height: 1.45;
+  white-space: pre-wrap;
 }
 
 /* ==========================================================================
