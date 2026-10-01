@@ -1,0 +1,68 @@
+.page { max-width: 870px; margin: 0 auto 72px; color: #192234; }
+.up { display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; }
+.meta { color: #596577; font-size: 14px; line-height: 1.5; margin: 0; }
+.header { margin: 28px 0 36px; }
+.title { margin: 0 0 24px; font-size: clamp(30px, 4vw, 48px); font-weight: 500; line-height: 1.16; text-wrap: balance; overflow-wrap: anywhere; }
+.actions { display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap; }
+.reading { max-width: 740px; margin: 32px auto; font-size: 18px; line-height: 1.8; overflow-wrap: anywhere; }
+.reading > * { margin: 0 0 22px; }
+.reading h2, .reading h3 { scroll-margin-top: 180px; line-height: 1.35; font-weight: 600; text-wrap: pretty; }
+.reading h2 { margin: 52px 0 20px; font-size: 28px; }
+.reading h3 { margin: 36px 0 16px; font-size: 22px; }
+.reading strong { font-weight: 650; }
+.reading .label { margin: 26px 0 10px; }
+.reading ul, .reading ol { padding-left: 26px; list-style-position: outside; }
+.reading ul { list-style-type: disc; }
+.reading ol { list-style-type: decimal; }
+.reading li { padding-left: 4px; margin: 7px 0; }
+.reading li::marker { color: #526279; font-weight: 500; }
+.reading a { text-decoration: underline; text-underline-offset: 4px; }
+.reading a:hover { color: #536785; }
+.reading a:focus-visible, .contents summary:focus-visible { outline: 2px solid #526279; outline-offset: 5px; border-radius: 4px; }
+.reading blockquote { padding: 12px 22px; border-left: 3px solid #a9b6c9; background: #f5f7fa; }
+.reading hr { border: 0; border-top: 1px solid #dce2ea; margin: 32px 0; }
+.contents { border: 1px solid #dce2ea; background: #f5f7fa; border-radius: 14px; padding: 18px 22px; margin-bottom: 32px; font-size: 16px; }
+.contents summary { cursor: pointer; font-weight: 600; }
+.contents summary span { display: inline-block; margin-left: 10px; font-size: 13px; font-weight: 400; color: #596577; }
+.contents nav { margin-top: 16px; max-height: 360px; overflow-y: auto; }
+.contents nav ul { margin: 0; padding-left: 22px; }
+.contents nav li { margin: 9px 0; }
+.singleImage, .gallery { margin: 32px 0; }
+.gallery { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; align-items: start; }
+.reading figure { margin: 0; min-width: 0; text-align: center; }
+.reading figure a { display: block; border-radius: 12px; background: #f5f7fa; overflow: hidden; }
+.image { display: block; width: auto; max-width: 100%; height: auto; max-height: 480px; margin: 0 auto; object-fit: contain; }
+.gallery figure a { display: flex; align-items: center; justify-content: center; height: 280px; }
+.gallery .image { max-height: 280px; }
+.reading figcaption { font-size: 14px; line-height: 1.55; color: #596577; margin-top: 10px; }
+.resource { padding: 18px 22px; border: 1px solid #dce2ea; border-radius: 12px; }
+.resource p { margin: 8px 0 0; font-size: 16px; color: #596577; }
+.player { position: relative; aspect-ratio: 16 / 9; background: #101729; border-radius: 16px; overflow: hidden; }
+.iframe { position: absolute; width: 100%; height: 100%; border: 0; }
+.resources { max-width: 740px; margin: 24px auto; display: grid; gap: 16px; font-size: 16px; line-height: 1.65; }
+.resources a { text-decoration: underline; text-underline-offset: 4px; }
+.resources p { margin: 8px 0 0; }
+.tools { max-width: 740px; margin: 48px auto 0; padding: 26px; border: 1px solid #dce2ea; border-radius: 16px; background: #f5f7fa; }
+.tools h2 { font-size: 22px; font-weight: 500; margin: 0 0 20px; }
+.tools ul { list-style: none; padding: 0; margin: 0; }
+.tools li + li { border-top: 1px solid #dce2ea; margin-top: 18px; padding-top: 18px; }
+.tools a { font-size: 17px; font-weight: 600; text-decoration: underline; text-underline-offset: 4px; }
+.tools p { font-size: 15px; line-height: 1.65; color: #596577; margin: 6px 0 0; }
+@media (max-width: 600px) {
+  .page { margin-bottom: 40px; }
+  .up { align-items: flex-start; flex-direction: column; gap: 10px; }
+  .header { margin: 24px 0; }
+  .title { font-size: 30px; line-height: 1.2; }
+  .reading { font-size: 16px; line-height: 1.8; margin-top: 24px; }
+  .reading h2 { font-size: 24px; margin-top: 36px; scroll-margin-top: 140px; }
+  .reading h3 { font-size: 20px; margin-top: 28px; scroll-margin-top: 140px; }
+  .reading > * { margin-bottom: 18px; }
+  .contents { padding: 16px; font-size: 15px; }
+  .contents summary span { font-size: 12px; }
+  .gallery { gap: 12px; }
+  .gallery figure a { height: 180px; }
+  .gallery .image { max-height: 180px; }
+  .image { max-height: 360px; }
+  .reading figcaption { font-size: 13px; }
+  .tools { padding: 20px; margin-top: 32px; }
+}
