@@ -74,7 +74,7 @@ export default function ProductCard({ product }: ProductCardProps) {
         {/* Картинка товара */}
         <div className={styles.thumb} onMouseMove={handleMouseMove} onMouseLeave={handleMouseLeave}>
           <picture>
-            {product.imageSrcSets?.[imageSrc] && <source srcSet={product.imageSrcSets[imageSrc]} sizes="(max-width: 768px) 72vw, (max-width: 1440px) 25vw, 340px" />}
+            {product.imageSrcSets?.[imageSrc] && <source srcSet={product.imageSrcSets[imageSrc]} sizes="(max-width: 600px) 46vw, (max-width: 1440px) 20vw, 240px" />}
             <Image
               src={imageSrc}
               alt={product.name}
