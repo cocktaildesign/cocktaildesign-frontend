@@ -5,6 +5,8 @@ import ReadingBody from "@/components/knowledge/ReadingBody";
 import KnowledgeTools from "@/components/knowledge/KnowledgeTools";
 import { pageMetadata } from "@/lib/seo/metadata";
 import { knowledgeImage } from "@/lib/seo/knowledge";
+import { videoJsonLd } from "@/lib/seo/video";
+import { serializeJsonLd } from "@/lib/seo/policy";
 import { siteUrl } from "@/lib/seo/site";
 import BackButton from "@/components/ui/back-button/BackButton";
 
@@ -46,6 +48,8 @@ export default async function KnowledgeVideoPage({ params }: PageProps) {
 
   if (!item) notFound();
 
+  const structuredData = videoJsonLd(item, siteUrl);
+
   return (
     <PageLayout
       breadcrumbsItems={[
@@ -54,6 +58,9 @@ export default async function KnowledgeVideoPage({ params }: PageProps) {
         { href: `/knowledge/videos/${item.slug}`, label: item.title },
       ]}>
       <article className={styles.page}>
+        {structuredData && (
+          <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: serializeJsonLd(structuredData) }} />
+        )}
         {/* Верхняя часть страницы */}
         <BackButton />
 
