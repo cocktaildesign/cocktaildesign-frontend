@@ -4,7 +4,7 @@ import localFont from "next/font/local";
 export const montserrat = Montserrat({
   subsets: ["latin", "cyrillic"],
   display: "swap",
-  variable: "--font-sans",
+  variable: "--font-montserrat",
 });
 
 export const hikasamiSans = localFont({

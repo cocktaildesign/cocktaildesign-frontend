@@ -1,3 +1,14 @@
+/* The ruble sign otherwise downloads Montserrat's full Latin Extended subset.
+   This is the same variable glyph, with its original outlines and metrics. */
+@font-face {
+  font-family: "CD Montserrat Currency";
+  src: url("../assets/fonts/montserrat/Montserrat-Ruble.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  unicode-range: U+20BD;
+}
+
 :root {
   /* =========================
      Layout
@@ -7,7 +18,7 @@
   /* =========================
      Typography
   ========================= */
-  --font-sans: Montserrat, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Noto Sans", sans-serif;
+  --font-sans: "CD Montserrat Currency", var(--font-montserrat, Montserrat), system-ui, -apple-system, Segoe UI, Roboto, Arial, "Noto Sans", sans-serif;
   --font-display: "Hikasami Sans", var(--font-sans);
 
   --text-xs: 12px;
