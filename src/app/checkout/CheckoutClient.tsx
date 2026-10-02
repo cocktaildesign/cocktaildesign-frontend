@@ -14,6 +14,8 @@ import { CART_API_BASE } from "@/lib/cart/discountPolicy";
 import DiscountPolicyNotice from "../cart/cart-summary/DiscountPolicyNotice";
 import { ENGRAVING_PRICE_NOTE } from "@/lib/cart/engraving";
 import { trackAcceptedOrder } from "@/lib/analytics/metrika";
+import EngravingFiles from "@/components/engraving-files/EngravingFiles";
+import { useEngravingFiles, reconcileEngravingFiles } from "@/lib/cart/engravingFiles";
 
 type BuyerType = "individual" | "legal";
 
@@ -30,6 +32,9 @@ export default function CheckoutClient() {
   const promoType = useCartStore((s) => s.promoType);
   const promoReplacesVolumeDiscount = useCartStore((s) => s.promoReplacesVolumeDiscount);
   const clearCart = useCartStore((s) => s.clearCart);
+  const engravingFiles = useEngravingFiles(s => s.files);
+  const hasEngraving = items.some(item => item.engraving);
+  const [attachmentError, setAttachmentError] = useState("");
 
   const { tiers, isLoading: tiersLoading } = useDiscountTiers();
   const discountPolicy = useCartDiscountPolicy();
@@ -104,6 +109,11 @@ export default function CheckoutClient() {
     }
 
     if (!validate()) return;
+    setAttachmentError("");
+    if (hasEngraving && engravingFiles.some(file => file.status !== "ready")) {
+      setAttachmentError("Дождитесь загрузки макетов. Если файл не загрузился, выберите его снова или нажмите «Продолжить без файла».");
+      return;
+    }
 
     if (!idempotencyKeyRef.current) {
       idempotencyKeyRef.current = crypto.randomUUID();
@@ -113,6 +123,17 @@ export default function CheckoutClient() {
     setSubmitStatus("loading");
 
     try {
+      const attachments = useEngravingFiles.getState();
+      if (attachments.orderKey) idempotencyKeyRef.current = attachments.orderKey;
+      if (hasEngraving && attachments.files.length) {
+        if (!await reconcileEngravingFiles()) {
+          setAttachmentError("Не удалось подтвердить загрузку макетов. Попробуйте ещё раз или удалите файлы, чтобы передать их менеджеру позже.");
+          setSubmitStatus("idle"); isSubmittingRef.current = false; return;
+        }
+        // Preserve the request key across browser reloads when files are bound to an order.
+        idempotencyKeyRef.current = attachments.orderKey || idempotencyKeyRef.current;
+        useEngravingFiles.setState({ orderKey: idempotencyKeyRef.current! });
+      }
       const res = await fetch(`${CART_API_BASE}/orders`, {
         method: "POST",
         headers: {
@@ -128,6 +149,7 @@ export default function CheckoutClient() {
           inn: buyerType === "legal" && inn ? inn : undefined,
           address,
           comment: comment || undefined,
+          ...(hasEngraving && attachments.files.length ? { engravingFiles: { token: attachments.token, ids: attachments.files.map(file => file.id), note: attachments.note } } : {}),
           // Скидки — передаём если есть
           promoCode: promoCode || undefined,
           promoDiscount: activePromoDiscount || undefined,
@@ -147,6 +169,7 @@ export default function CheckoutClient() {
       const data = await res.json();
 
       if (!res.ok || !data.ok) {
+        if (data.error === "engraving_files_unavailable" || data.error === "invalid_engraving_files") setAttachmentError("Макеты не удалось прикрепить. Проверьте файлы или удалите их, чтобы передать менеджеру после заказа.");
         isSubmittingRef.current = false;
         setSubmitStatus("error");
         return;
@@ -411,6 +434,8 @@ export default function CheckoutClient() {
             </div>
           </div>
 
+          {hasEngraving && <EngravingFiles disabled={submitStatus === "loading"} />}
+          {attachmentError && <p className={styles.errorText} role="alert">{attachmentError}</p>}
           <button
             type="button"
             className={styles.submitButton}

@@ -5,6 +5,7 @@ import { useState } from "react";
 
 import CartPrint from "../cart-print/CartPrint";
 import CartItem from "../cart-item/CartItem";
+import EngravingFiles from "@/components/engraving-files/EngravingFiles";
 import CartSummary from "../cart-summary/CartSummary";
 
 import PrinterIcon from "@/components/icons/cart/PrinterIcon";
@@ -159,6 +160,7 @@ export default function CartClient() {
           {items.map((item) => (
             <CartItem key={item.id} item={item} engravingEnabled={policy.engravingByCode[item.code.trim()] === true} />
           ))}
+          {items.some(item => item.engraving) && <EngravingFiles />}
         </div>
 
         {/* Правая колонка — итог */}
