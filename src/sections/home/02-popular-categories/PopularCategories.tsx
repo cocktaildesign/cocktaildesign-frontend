@@ -9,6 +9,7 @@ import ArrowRightIcon from "@/components/icons/ArrowRightIcon";
 
 // Используем единый источник дерева категорий — учитывает menuOrder и isHiddenInMenu
 import { getTopCategoriesFromTree } from "@/lib/api/catalog";
+import { getCategoryImageSrcSets } from "@/lib/api/catalog/category-image-srcsets";
 
 import styles from "./PopularCategories.module.css";
 
@@ -20,6 +21,9 @@ export default async function PopularCategories() {
   const visibleCategories = categories.slice(0, 12);
 
   if (!visibleCategories.length) return null;
+
+  const imageSrcSets = await getCategoryImageSrcSets(visibleCategories);
+  const imageSizes = "(max-width: 600px) calc((100vw - 84px) / 3), (max-width: 1024px) calc((100vw - 182px) / 3), (max-width: 1360px) calc((100vw - 332px) / 6), 171px";
 
   return (
     <section className={styles.section}>
@@ -42,13 +46,16 @@ export default async function PopularCategories() {
                 </div>
 
                 <div className={styles.imageWrapper}>
-                  <Image
-                    src={category.imageSrc || "/images/catalog/product-placeholder.webp"}
-                    sizes="(max-width: 600px) 50vw, (max-width: 1024px) 33vw, 16vw"
-                    fill
-                    alt={category.name ? `Категория: ${category.name}` : "Категория"}
-                    className={styles.image}
-                  />
+                  <picture>
+                    {imageSrcSets[category.slug] && <source srcSet={imageSrcSets[category.slug]} sizes={imageSizes} />}
+                    <Image
+                      src={category.imageSrc || "/images/catalog/product-placeholder.webp"}
+                      sizes={imageSizes}
+                      fill
+                      alt={category.name ? `Категория: ${category.name}` : "Категория"}
+                      className={styles.image}
+                    />
+                  </picture>
                 </div>
               </Link>
             </li>
