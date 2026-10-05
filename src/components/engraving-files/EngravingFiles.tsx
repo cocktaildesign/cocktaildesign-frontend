@@ -13,6 +13,9 @@ export default function EngravingFiles({ disabled = false }: { disabled?: boolea
   return <section className={styles.block} aria-label="Макет для гравировки">
     <div className={styles.heading}><h2>Макет для гравировки</h2><span>Необязательно</span></div>
     <p className={styles.hint}>Прикрепите логотип или рисунок. Если макета пока нет, его можно передать менеджеру после заказа.</p>
+    <p className={styles.privacy}>Используем файл для согласования и выполнения гравировки. Загружайте материалы, на использование которых у вас есть права.{" "}
+      <a href="/legal/privacy-policy" target="_blank" rel="noopener noreferrer">Об обработке данных</a>.
+    </p>
     {files.length > 0 && <ul className={styles.files}>{files.map(file => <li key={file.id}>
       <div className={styles.file}><span className={styles.name}>{file.name}</span>
         <span className={file.status === "error" ? styles.error : styles.status} role="status">{file.status === "uploading" ? "Загружаем…" : file.status === "ready" ? "Загружен" : file.error}</span></div>

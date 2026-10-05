@@ -2,10 +2,11 @@
 
 import { useEffect } from "react";
 import { usePathname } from "next/navigation";
-import { startMetrika, trackPage } from "@/lib/analytics/metrika";
+import { syncMetrika, subscribeAnalytics } from "@/lib/analytics/metrika";
 
 export default function Metrika() {
   const pathname = usePathname();
-  useEffect(() => { startMetrika(); trackPage(); }, [pathname]);
+  useEffect(() => subscribeAnalytics(() => {}), []);
+  useEffect(() => { syncMetrika(); }, [pathname]);
   return null;
 }

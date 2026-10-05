@@ -104,6 +104,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${siteUrl}/legal`, changeFrequency: "yearly", priority: 0.4 },
     { url: `${siteUrl}/legal/offer`, changeFrequency: "yearly", priority: 0.3 },
     { url: `${siteUrl}/legal/privacy-policy`, changeFrequency: "yearly", priority: 0.3 },
+    { url: `${siteUrl}/legal/consent`, changeFrequency: "yearly", priority: 0.3 },
     { url: `${siteUrl}/legal/requisites`, changeFrequency: "yearly", priority: 0.3 },
     { url: `${siteUrl}/legal/returns`, changeFrequency: "yearly", priority: 0.3 },
     { url: `${siteUrl}/legal/terms`, changeFrequency: "yearly", priority: 0.3 },

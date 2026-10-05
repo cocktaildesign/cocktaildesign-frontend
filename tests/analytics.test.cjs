@@ -16,17 +16,21 @@ function load(file, globals = {}, mocks = {}) {
   return module.exports;
 }
 const ID='11111111-1111-4111-a111-111111111111';
-function environment({origin='https://cocktaildesign.ru',enabled='true',storageError=false,trackerError=false}={}) {
-  const calls=[],scripts=[],storage=new Map();
+function environment({origin='https://cocktaildesign.ru',enabled='true',storageError=false,trackerError=false,legacyCookie=false,legacyStorage=false,cookieError=false}={}) {
+  const calls=[],scripts=[],storage=new Map(),cookies=new Map(),listeners=new Map();
+  if(legacyCookie)cookies.set('cd_ym_optout','1');if(legacyStorage)storage.set('cd_ym_optout','1');
   const window={location:{origin,href:origin+'/catalog?secret=hidden#private'},localStorage:{
     getItem:k=>{if(storageError)throw Error('denied');return storage.get(k)??null;},
     setItem:(k,v)=>{if(storageError)throw Error('quota');storage.set(k,v);},
-  }};
-  const globals={window,document:{createElement:()=>({}),head:{appendChild:s=>scripts.push(s)},title:'Каталог',referrer:'https://example.org/path?email=private'},process:{env:{NEXT_PUBLIC_SITE_URL:origin,NEXT_PUBLIC_ANALYTICS_ENABLED:enabled}}};
+    removeItem:k=>{if(storageError)throw Error('denied');storage.delete(k);},
+  },addEventListener:(name,cb)=>{if(!listeners.has(name))listeners.set(name,new Set());listeners.get(name).add(cb);},removeEventListener:(name,cb)=>listeners.get(name)?.delete(cb),dispatchEvent:event=>{for(const cb of listeners.get(event.type)||[])cb(event);}};
+  const document={createElement:()=>({remove(){const i=scripts.indexOf(this);if(i>=0)scripts.splice(i,1);}}),head:{appendChild:s=>scripts.push(s)},getElementById:id=>scripts.find(s=>s.id===id),title:'Каталог',referrer:'https://example.org/path?email=private',visibilityState:'visible',addEventListener:window.addEventListener,removeEventListener:window.removeEventListener,
+    get cookie(){if(cookieError)throw Error('denied');return [...cookies].map(([k,v])=>k+'='+v).join('; ');},set cookie(value){if(cookieError)throw Error('denied');const [pair]=value.split(';');const [k,v]=pair.split('=');if(value.includes('Max-Age=0'))cookies.delete(k);else cookies.set(k,v);}};
+  const globals={window,document,Event,process:{env:{NEXT_PUBLIC_SITE_URL:origin,NEXT_PUBLIC_ANALYTICS_ENABLED:enabled}}};
   const api=load('lib/analytics/metrika.ts',globals);
   api.startMetrika();
   if(window.ym) window.ym=(...args)=>{if(trackerError)throw Error('blocked');calls.push(args);};
-  return {api,calls,scripts,storage,window,globals};
+  return {api,calls,scripts,storage,cookies,window,globals,listeners};
 }
 test('analytics is off without both explicit flag and exact final HTTPS domain',()=>{
   for(const config of [{enabled:undefined},{enabled:'false'},{origin:'https://new.cocktaildesign.ru'},{origin:'http://cocktaildesign.ru'},{origin:'https://cocktaildesign.ru.evil.test'}]) {
@@ -53,6 +57,49 @@ test('campaign attribution keeps only standard UTM labels on the store origin',(
     'https://cocktaildesign.ru/?utm_source=sape&utm_campaign=launch');
   assert.equal(analyticsUrl('https://example.org/?utm_source=private',true),'https://example.org/');
   assert.equal(analyticsUrl('https://cocktaildesign.ru/?utm_source='+ 'a'.repeat(201),true),'https://cocktaildesign.ru/');
+});
+
+test('legacy opt-out in either store prevents initial script, page hit and order goal',()=>{
+  for(const config of [{legacyCookie:true},{legacyStorage:true},{cookieError:true},{storageError:true}]) {
+    const x=environment(config);x.api.trackPage();x.api.trackAcceptedOrder(ID);
+    assert.equal(x.scripts.length,0);assert.equal(x.calls.length,0);assert.equal(x.window.disableYaCounter49125430,true);
+  }
+});
+
+test('live opt-out destroys counter, blocks later navigation/orders and preserves cart storage',()=>{
+  const x=environment();x.storage.set('cart','keep');x.cookies.set('_ym_uid','old');x.cookies.set('session','keep');
+  assert.equal(x.api.setAnalyticsEnabled(false).saved,true);
+  assert.equal(x.api.analyticsStatus(),'disabled');assert.equal(x.window.disableYaCounter49125430,true);
+  const count=x.calls.length;x.api.trackPage();x.api.trackAcceptedOrder(ID);assert.equal(x.calls.length,count);
+  assert.equal(x.calls.filter(c=>c[1]==='destruct').length,1);
+  assert.equal(x.storage.get('cart'),'keep');assert.equal(x.cookies.get('session'),'keep');assert.equal(x.cookies.has('_ym_uid'),false);
+  assert.equal(x.storage.get('cd_ym_optout'),'1');assert.equal(x.cookies.get('cd_ym_optout'),'1');
+  const reloaded=load('lib/analytics/metrika.ts',x.globals);reloaded.syncMetrika();assert.equal(x.calls.length,count);
+  assert.equal(x.api.setAnalyticsEnabled(true).saved,true);assert.equal(x.api.analyticsStatus(),'enabled');
+  assert.equal(x.scripts.length,1);assert.equal(x.calls.filter(c=>c[1]==='init').length,1);
+  assert.equal(x.storage.has('cd_ym_optout'),false);assert.equal(x.cookies.has('cd_ym_optout'),false);
+});
+
+test('opt-out while script is loading cancels queued init/hit/goal and checks again on load',()=>{
+  const x=environment();delete x.window.ym; x.window.cdMetrikaStarted=false;x.api.startMetrika();
+  x.api.trackPage();x.api.trackAcceptedOrder(ID);assert.ok(x.window.ym.a.length>=2);
+  x.api.setAnalyticsEnabled(false);assert.equal(x.window.ym.a.length,0);x.scripts[0].onload();assert.equal(x.window.ym.a.length,0);
+  assert.equal(x.window.disableYaCounter49125430,true);
+});
+
+test('unsaved tab choice survives focus; persisted refusal from another tab stops counter',()=>{
+  const x=environment({storageError:true,cookieError:true});const dispose=x.api.subscribeAnalytics(()=>{});
+  assert.equal(x.api.setAnalyticsEnabled(false).saved,false);x.window.dispatchEvent(new Event('focus'));
+  assert.equal(x.api.analyticsStatus(),'disabled');assert.equal(x.scripts.length,0);dispose();
+  const y=environment();let changes=0;const remove=y.api.subscribeAnalytics(()=>changes++);
+  y.storage.set('cd_ym_optout','1');y.window.dispatchEvent(Object.assign(new Event('storage'),{key:'cd_ym_optout'}));
+  assert.equal(y.api.analyticsStatus(),'disabled');assert.equal(changes,1);assert.equal(y.window.cdMetrikaStarted,false);remove();
+  for(const listeners of y.listeners.values())assert.equal(listeners.size,0);
+});
+
+test('footer setting cannot activate analytics on preliminary domain',()=>{
+  const x=environment({origin:'https://new.cocktaildesign.ru'});assert.equal(x.api.setAnalyticsEnabled(true).saved,false);
+  assert.equal(x.api.analyticsStatus(),'unavailable');assert.equal(x.scripts.length,0);assert.equal(x.calls.length,0);
 });
 
 test('accepted-order goal deduplicates API replays and contains no order/customer/revenue data',()=>{

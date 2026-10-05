@@ -1,0 +1,10 @@
+.block { padding: 18px 0; color: #e0e7ef; font-size: 13px; line-height: 1.6; }
+.block p { margin: 0 0 8px; }
+.block a { color: inherit; text-decoration: underline; text-underline-offset: 3px; }
+.details summary { display: list-item; cursor: pointer; width: fit-content; padding: 4px 0; }
+.panel { margin-top: 10px; max-width: 700px; padding: 16px; border: 1px solid #667083; border-radius: 10px; }
+.panel button { display: block; border: 1px solid #b9c4d4; background: transparent; color: inherit; font: inherit; padding: 9px 14px; border-radius: 8px; cursor: pointer; }
+.panel button:hover { background: #ffffff12; }
+.block :is(button, summary, a):focus-visible { outline: 2px solid #fff; outline-offset: 4px; }
+.panel .notice { margin: 8px 0 0; }
+.notice:empty { display: none; }

@@ -5,6 +5,7 @@ import Image from "next/image";
 import styles from "./Requisites.module.css";
 import CopyButton from "@/components/ui/copy-button/CopyButton";
 import BackButton from "@/components/ui/back-button/BackButton";
+import { company } from "@/lib/legal/company";
 
 export const metadata = pageMetadata({
   title: "Реквизиты",
@@ -33,43 +34,43 @@ export default function RequisitesPage() {
           </div>
 
           <div className={styles.content}>
-            <h2 className={styles.title}>Индивидуальный предприниматель Кравец Дмитрий Михайлович</h2>
+            <h2 className={styles.title}>{company.name}</h2>
 
             <dl className={styles.list}>
               <dt className={styles.term}>ИНН</dt>
               <dd className={styles.desc}>
-                <span>510999203433</span>
-                <CopyButton value="510999203433" label="ИНН" />
+                <span>{company.inn}</span>
+                <CopyButton value={company.inn} label="ИНН" />
               </dd>
 
               <dt className={styles.term}>ОГРНИП</dt>
               <dd className={styles.desc}>
-                <span>318784700202833</span>
-                <CopyButton value="318784700202833" label="ОГРНИП" />
+                <span>{company.ogrnip}</span>
+                <CopyButton value={company.ogrnip} label="ОГРНИП" />
               </dd>
 
               <dt className={styles.term}>Юридический адрес</dt>
-              <dd className={styles.desc}>191040, Россия, г. Санкт-Петербург, 9-я Советская 10–12 лит. А, кв. 29</dd>
+              <dd className={styles.desc}>{company.registrationAddress}</dd>
 
               <dt className={styles.term}>Расчётный счёт</dt>
               <dd className={styles.desc}>
-                <span>40802810601500251152</span>
-                <CopyButton value="40802810601500251152" label="Расчётный счёт" />
+                <span>{company.account}</span>
+                <CopyButton value={company.account} label="Расчётный счёт" />
               </dd>
 
               <dt className={styles.term}>Название банка</dt>
-              <dd className={styles.desc}>ООО «Банк Точка»</dd>
+              <dd className={styles.desc}>{company.bank}</dd>
 
               <dt className={styles.term}>БИК</dt>
               <dd className={styles.desc}>
-                <span>044525104</span>
-                <CopyButton value="044525104" label="БИК" />
+                <span>{company.bik}</span>
+                <CopyButton value={company.bik} label="БИК" />
               </dd>
 
               <dt className={styles.term}>Корреспондентский счёт</dt>
               <dd className={styles.desc}>
-                <span>30101810745374525104</span>
-                <CopyButton value="30101810745374525104" label="Корреспондентский счёт" />
+                <span>{company.correspondentAccount}</span>
+                <CopyButton value={company.correspondentAccount} label="Корреспондентский счёт" />
               </dd>
             </dl>
           </div>

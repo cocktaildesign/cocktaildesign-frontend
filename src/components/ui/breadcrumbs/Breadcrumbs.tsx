@@ -11,7 +11,8 @@ const LABELS: Record<string, string> = {
 
   "/legal": "Правовая информация",
   "/legal/requisites": "Реквизиты",
-  "/legal/privacy-policy": "Политика конфиденциальности",
+  "/legal/privacy-policy": "Политика обработки персональных данных",
+  "/legal/consent": "Согласие на обработку данных",
   "/legal/terms": "Пользовательское соглашение",
   "/legal/offer": "Публичная оферта",
   "/legal/returns": "Условия возврата товара",

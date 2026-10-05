@@ -5,7 +5,7 @@ const path = require('node:path');
 const vm = require('node:vm');
 const ts = require('typescript');
 const requestId = '3a2ac9f5-c259-420c-bf85-88d6ed9780a1';
-const payload = { requestId, message: 'Проверка', email: '', page: '/support/feedback' };
+const payload = { requestId, message: 'Проверка', email: '', page: '/support/feedback', consent: {accepted:true, version:'2026-10-05'} };
 function load(fetch) {
   const code = ts.transpileModule(fs.readFileSync(path.resolve(__dirname, '../src/lib/feedback.ts'), 'utf8'), {
     compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2020 },
