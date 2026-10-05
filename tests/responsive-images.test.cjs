@@ -34,8 +34,8 @@ test('mobile shortcuts keep menu settings, links and fallback images when adding
   assert.equal(missing.homeImageUrl,null);assert.equal(missing.homeImageSrcSet,undefined);
 });
 test('home boundary preserves displayed prices, selected variant and stock identity while dropping unused galleries',()=>{
-  const {homeProductCard}=load('lib/catalog/home-product-card.ts');
-  const product={id:'p',slug:'slug',name:'Product',price:450,priceOld:760,moyskladId:'parent',images:['/selected.webp'],imageUrl:'/selected.webp',preferredVariantId:'v',isSampleSale:true,badges:[{label:'Sale'}],variants:[{id:'v',moyskladId:'variant',images:[{src:'/extra.webp'}]}],imageSrcSets:{'/selected.webp':'selected 500w, selected-large 1000w','/extra.webp':'extra 500w, extra-large 1000w'}};
+  const {homeProductCard}=load('lib/catalog/home-product-card.ts',{'./color-order':load('lib/catalog/color-order.ts')});
+  const product={id:'p',slug:'slug',name:'Product',price:450,priceOld:760,moyskladId:'parent',images:['/selected.webp'],imageUrl:'/selected.webp',preferredVariantId:'v',isSampleSale:true,badges:[{label:'Sale'}],variants:[{id:'v',moyskladId:'variant',characteristics:[],images:[{src:'/extra.webp'}]}],imageSrcSets:{'/selected.webp':'selected 500w, selected-large 1000w','/extra.webp':'extra 500w, extra-large 1000w'}};
   const home=homeProductCard(product);
   for(const key of ['id','slug','name','price','priceOld','images','imageUrl','preferredVariantId','isSampleSale','badges']) assert.equal(home[key],product[key]);
   assert.equal(home.badgeMoyskladId,'variant');

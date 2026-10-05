@@ -14,6 +14,7 @@ import { useCartStore } from "@/lib/cart/cartStore";
 import type { CartItem } from "@/lib/cart/cartStore";
 
 import type { CatalogProductPreview, CatalogVariant } from "@/lib/api/catalog/types";
+import { sortColorVariants } from "@/lib/catalog/color-order";
 
 import styles from "./ProductCard.module.css";
 
@@ -104,7 +105,11 @@ function sumWidths(widths: number[], gap: number): number {
   return widths.reduce((total, width) => total + width, 0) + gap * (widths.length - 1);
 }
 
-export default function ProductCard({ product, colorMap = {} }: ProductCardProps) {
+export default function ProductCard({ product: sourceProduct, colorMap = {} }: ProductCardProps) {
+  const product = useMemo(() => ({
+    ...sourceProduct,
+    variants: sortColorVariants(sourceProduct.variants),
+  }), [sourceProduct]);
   const uniqueImages = useMemo(() => buildUniqueImages(product), [product]);
   const initialVariant =
     product.variants.find((variant) => variant.id === product.preferredVariantId) ??
