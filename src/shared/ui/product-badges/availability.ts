@@ -1,7 +1,7 @@
 import type { ProductBadge } from "@/lib/api/catalog/types";
 
 export const AUTOMATIC_AVAILABILITY_BADGE: ProductBadge = {
-  id: -1, label: "НЕТ В НАЛИЧИИ", backgroundColor: "#6B7280", textColor: "#FFFFFF",
+  id: -1, label: "ЖДЕМ ПОСТАВКУ", backgroundColor: "#6B7280", textColor: "#FFFFFF",
 };
 
 export function reconcileAvailabilityBadges(badges: ProductBadge[], unavailable: boolean | undefined) {
