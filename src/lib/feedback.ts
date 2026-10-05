@@ -1,6 +1,6 @@
 import { getStrapiUrl } from "./api/strapi/client";
 
-export type FeedbackPayload = { requestId: string; message: string; email: string; page: string };
+export type FeedbackPayload = { requestId: string; message: string; email: string; page: string; consent: { accepted: true; version: string } };
 
 export async function sendFeedback(payload: FeedbackPayload): Promise<void> {
   let response: Response;
@@ -16,5 +16,6 @@ export async function sendFeedback(payload: FeedbackPayload): Promise<void> {
   const body = await response.json().catch(() => null);
   if (response.ok && body?.ok === true && body.requestId === payload.requestId) return;
   if (response.status === 429) throw new Error("Слишком много обращений подряд. Подождите 10 минут и попробуйте ещё раз.");
+  if (body?.error === "consent_required") throw new Error("Для нового обращения нужно отдельное согласие на обработку данных. Если флажок не отображается, сохраните текст и обновите страницу.");
   throw new Error("Не удалось отправить сообщение. Попробуйте ещё раз или напишите нам на Cocktaildesign@yandex.ru.");
 }

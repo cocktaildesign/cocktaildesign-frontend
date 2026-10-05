@@ -18,6 +18,7 @@ import { getNavigation } from "@/lib/api/navigation";
 import { YANDEX_REVIEWS_URL } from "@/lib/reviews";
 
 import styles from "./Footer.module.css";
+import AnalyticsSettings from "@/components/analytics/AnalyticsSettings";
 
 type FooterLink = {
   label: string;
@@ -79,7 +80,11 @@ export const footerDeliveryPaymentLinks: FooterLink[] = [
   { label: "Способы доставки", href: "/shipping" },
 ];
 
-export const footerLegalLinks: FooterLink[] = [{ label: "Правовая информация", href: "/legal" }];
+export const footerLegalLinks: FooterLink[] = [
+  { label: "Правовая информация", href: "/legal" },
+  { label: "Обработка персональных данных", href: "/legal/privacy-policy" },
+  { label: "Согласие для обратной связи", href: "/legal/consent" },
+];
 
 export const footerCustomLinks: FooterLink[] = [{ label: "Брендинг и Гравировка", href: "/branding" }];
 
@@ -434,15 +439,13 @@ export default async function Footer() {
           <div className={styles.footerBottomGrid}>
             <div className={styles.footerBottomLeft}>
               <p className={styles.footerBottomText}>
-                Изображения и характеристики товаров приведены справочно; производитель может изменять комплектацию и
-                внешний вид без уведомления. Информация на сайте не является публичной офертой (ст. 437 ГК РФ). Оформляя
-                заказ, вы принимаете условия:{" "}
+                Условия розничной покупки описаны в{" "}
                 <Link href="/legal/offer" className={styles.footerInlineLink}>
-                  Публичная оферта
+                  Публичной оферте
                 </Link>
-                ,{" "}
+                . Заказы организаций и ИП согласовываются отдельно. Подробнее об использовании данных — в{" "}
                 <Link href="/legal/privacy-policy" className={styles.footerInlineLink}>
-                  Политика конфиденциальности
+                  Политике обработки персональных данных
                 </Link>
                 .
               </p>
@@ -459,6 +462,7 @@ export default async function Footer() {
               </p>
             </div>
           </div>
+          <AnalyticsSettings />
         </Container>
       </section>
     </footer>

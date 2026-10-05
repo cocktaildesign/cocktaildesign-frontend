@@ -26,8 +26,14 @@ const CARDS: LegalCard[] = [
   },
   {
     href: "/legal/privacy-policy",
-    title: "Политика конфиденциальности",
+    title: "Политика обработки персональных данных",
     description: "Какие данные мы собираем, как используем и как храним.",
+    imageSrc: "/images/legal/privacy-policy.png",
+  },
+  {
+    href: "/legal/consent",
+    title: "Согласие на обработку данных",
+    description: "Отдельное согласие для формы обратной связи и порядок его отзыва.",
     imageSrc: "/images/legal/privacy-policy.png",
   },
   {

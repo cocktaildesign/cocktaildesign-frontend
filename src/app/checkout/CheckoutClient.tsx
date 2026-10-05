@@ -436,6 +436,12 @@ export default function CheckoutClient() {
 
           {hasEngraving && <EngravingFiles disabled={submitStatus === "loading"} />}
           {attachmentError && <p className={styles.errorText} role="alert">{attachmentError}</p>}
+          <p className={styles.legalNote}>
+            {buyerType === "individual"
+              ? <>Нажимая «Оформить заказ», вы принимаете условия <Link href="/legal/offer" target="_blank" rel="noopener noreferrer">Публичной оферты</Link>.</>
+              : <>Нажимая «Оформить заказ», вы направляете заявку на согласование условий покупки для организации или ИП.</>}
+            {" "}Данные обрабатываются по <Link href="/legal/privacy-policy" target="_blank" rel="noopener noreferrer">Политике обработки персональных данных</Link>.
+          </p>
           <button
             type="button"
             className={styles.submitButton}

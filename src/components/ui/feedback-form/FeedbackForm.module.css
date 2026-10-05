@@ -136,3 +136,8 @@
     font-size: var(--text-sm);
   }
 }
+.consent { font-size: 14px; line-height: 1.6; color: var(--color-dark-blue); }
+.consent label { display: flex; align-items: flex-start; gap: 10px; cursor: pointer; }
+.consent input { width: 18px; height: 18px; margin-top: 3px; flex-shrink: 0; accent-color: var(--color-dark-blue); }
+.consent input:focus-visible { outline: 2px solid var(--color-dark-blue); outline-offset: 3px; }
+.consent > a { margin-left: 28px; }

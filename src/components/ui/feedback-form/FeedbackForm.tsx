@@ -4,6 +4,7 @@ import type { FormEvent } from "react";
 import { useRef, useState } from "react";
 
 import { sendFeedback } from "@/lib/feedback";
+import { FEEDBACK_CONSENT_TEXT, LEGAL_VERSION } from "@/lib/legal/company";
 
 import styles from "./FeedbackForm.module.css";
 
@@ -16,12 +17,13 @@ export default function FeedbackForm(props: FeedbackFormProps) {
 
   const [message, setMessage] = useState("");
   const [email, setEmail] = useState("");
+  const [consent, setConsent] = useState(false);
   const [status, setStatus] = useState<"idle" | "sending" | "success" | "error">("idle");
   const [error, setError] = useState("");
   const inFlight = useRef(false);
   const attempt = useRef<{ content: string; requestId: string } | null>(null);
 
-  const canSubmit = message.trim().length > 0;
+  const canSubmit = message.trim().length > 0 && consent;
 
   async function handleSubmit(event: FormEvent) {
     event.preventDefault();
@@ -30,13 +32,15 @@ export default function FeedbackForm(props: FeedbackFormProps) {
     inFlight.current = true;
     setStatus("sending");
     setError("");
-    const payload = { message: message.trim(), email: email.trim(), page: window.location.pathname };
+    const payload = { message: message.trim(), email: email.trim(), page: window.location.pathname,
+      consent: { accepted: true as const, version: LEGAL_VERSION } };
     const content = JSON.stringify(payload);
     try {
       if (attempt.current?.content !== content) attempt.current = { content, requestId: crypto.randomUUID() };
       await sendFeedback({ ...payload, requestId: attempt.current.requestId });
       setMessage("");
       setEmail("");
+      setConsent(false);
       attempt.current = null;
       setStatus("success");
       onSuccess?.();
@@ -84,6 +88,12 @@ export default function FeedbackForm(props: FeedbackFormProps) {
         />
       </label>
 
+      <div className={styles.consent}>
+        <label><input type="checkbox" checked={consent} onChange={e => setConsent(e.target.checked)} required disabled={status === "sending"} />
+          <span>{FEEDBACK_CONSENT_TEXT}</span></label>
+        <a href="/legal/consent" target="_blank" rel="noopener noreferrer" className={styles.link}>Текст согласия</a>
+      </div>
+
       <button className={styles.submit} type="submit" disabled={!canSubmit || status === "sending"}>
         {status === "sending" ? "Отправляем…" : "Отправить"}
       </button>
@@ -92,9 +102,9 @@ export default function FeedbackForm(props: FeedbackFormProps) {
       {status === "error" && <p className={styles.error} role="alert">{error}</p>}
 
       <p className={styles.note}>
-        Нажимая «Отправить», вы соглашаетесь с{" "}
+        О том, как мы используем данные, — в{" "}
         <a className={styles.link} href="/legal/privacy-policy" target="_blank" rel="noopener noreferrer">
-          политикой конфиденциальности
+          Политике обработки персональных данных
         </a>
         .
       </p>
