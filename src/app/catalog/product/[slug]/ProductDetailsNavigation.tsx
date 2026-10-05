@@ -21,7 +21,7 @@ export default function ProductDetailsNavigation({
     () =>
       [
         hasDescription ? { href: "#product-description", label: "Описание" } : null,
-        hasComposition ? { href: "#product-composition", label: "Состав комплекта" } : null,
+        hasComposition ? { href: "#product-composition", label: "Товары из набора" } : null,
         hasSpecifications ? { href: "#product-specifications", label: "Характеристики" } : null,
         hasRelatedProducts ? { href: "#product-related", label: "Товары из категории" } : null,
       ].filter(Boolean) as { href: string; label: string }[],

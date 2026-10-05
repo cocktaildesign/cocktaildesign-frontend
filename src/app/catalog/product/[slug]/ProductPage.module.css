@@ -422,7 +422,7 @@
 
 /* ==========================================================================
    COMPOSITION
-   Блок "Комплектация" — список после характеристик
+   Переход к карточкам составляющих набора
    ========================================================================== */
 
 .compositionSummary {
@@ -442,32 +442,6 @@
 
 .compositionSection {
   min-width: 0;
-}
-
-.productCompositionList {
-  margin: 0;
-  padding: 0;
-  list-style: none;
-  max-width: 860px;
-}
-
-.productCompositionItem {
-  display: flex;
-  justify-content: space-between;
-  gap: 16px;
-  padding: 10px 0;
-  border-bottom: 1px solid var(--color-light);
-  overflow-wrap: anywhere;
-  color: var(--color-black);
-  font-size: 14px;
-  font-weight: 300;
-  line-height: 1.4;
-}
-
-.compositionQuantity {
-  flex-shrink: 0;
-  white-space: nowrap;
-  color: var(--color-gray);
 }
 
 /* ==========================================================================
