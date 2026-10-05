@@ -4,12 +4,14 @@
 // Показывается после характеристик, только если поле composition
 // заполнено в Strapi. Если пусто — блок не появляется вообще.
 
+import Link from "next/link";
+import type { CompositionLine } from "@/lib/catalog/bundle-display";
 import styles from "./ProductPage.module.css";
 
 type ProductCompositionProps = {
   // Список пунктов комплектации
   // Каждая строка из Strapi становится отдельным <li>
-  items: string[];
+  items: CompositionLine[];
 };
 
 export default function ProductComposition({ items }: ProductCompositionProps) {
@@ -19,16 +21,13 @@ export default function ProductComposition({ items }: ProductCompositionProps) {
   }
 
   return (
-    <div className={styles.productComposition}>
-      <h3 className={styles.productCompositionTitle}>Комплектация</h3>
-
       <ul className={styles.productCompositionList}>
-        {items.map((item, index) => (
-          <li key={index} className={styles.productCompositionItem}>
-            {item}
+        {items.map((item) => (
+          <li key={item.id} className={styles.productCompositionItem}>
+            <span>{item.href ? <Link href={item.href} className={styles.specLink}>{item.name}</Link> : item.name}</span>
+            {item.quantity !== null && <span className={styles.compositionQuantity}>× {item.quantity.toLocaleString("ru-RU")}</span>}
           </li>
         ))}
       </ul>
-    </div>
   );
 }

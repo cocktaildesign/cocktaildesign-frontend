@@ -561,10 +561,12 @@ export function mapBundleItems(raw: StrapiBundleItem[] | undefined): CatalogBund
 
     result.push({
       id: String(item.id),
+      name: item.name?.trim() || cp?.name?.trim() || "Составляющая комплекта",
       quantity: typeof item.quantity === "number" && item.quantity > 0 ? item.quantity : 1,
       componentProduct: cp
         ? {
             id: String(cp.id),
+            variantId: cp.variantId ? String(cp.variantId) : null,
             name: cp.name ?? "",
             slug: cp.slug ?? "",
             price: typeof cp.price === "number" && cp.price > 0 ? cp.price : 0,
@@ -624,6 +626,7 @@ export function mapProductDetail(
     priceOld,
     description,
     composition,
+    hideBundleContents: source.hideBundleContents === true,
     images,
     specifications,
     engravingEnabled,

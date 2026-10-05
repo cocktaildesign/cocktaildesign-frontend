@@ -6,12 +6,14 @@ import styles from "./ProductPage.module.css";
 
 type ProductDetailsNavigationProps = {
   hasDescription: boolean;
+  hasComposition?: boolean;
   hasSpecifications: boolean;
   hasRelatedProducts: boolean;
 };
 
 export default function ProductDetailsNavigation({
   hasDescription,
+  hasComposition = false,
   hasSpecifications,
   hasRelatedProducts,
 }: ProductDetailsNavigationProps) {
@@ -19,10 +21,11 @@ export default function ProductDetailsNavigation({
     () =>
       [
         hasDescription ? { href: "#product-description", label: "Описание" } : null,
+        hasComposition ? { href: "#product-composition", label: "Состав комплекта" } : null,
         hasSpecifications ? { href: "#product-specifications", label: "Характеристики" } : null,
         hasRelatedProducts ? { href: "#product-related", label: "Товары из категории" } : null,
       ].filter(Boolean) as { href: string; label: string }[],
-    [hasDescription, hasSpecifications, hasRelatedProducts],
+    [hasDescription, hasComposition, hasSpecifications, hasRelatedProducts],
   );
 
   const defaultActiveHref = links[0]?.href ?? "";
