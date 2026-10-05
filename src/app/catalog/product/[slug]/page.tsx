@@ -10,8 +10,7 @@ import Image from "next/image";
 import PageLayout from "@/components/layout/PageLayout";
 import ProductsSlider from "@/components/ui/products-slider/ProductsSlider";
 import BundleItems from "./bundle/BundleItems";
-import ProductComposition from "./ProductComposition";
-import { productComposition, productDisplaySpecifications } from "@/lib/catalog/bundle-display";
+import { productBundleCards, productDisplaySpecifications } from "@/lib/catalog/bundle-display";
 import VariantSelector from "./VariantSelector";
 import ProductDetailsNavigation from "./ProductDetailsNavigation";
 
@@ -141,7 +140,7 @@ export default async function ProductPage({ params, searchParams }: PageProps) {
   }
   const variants = data.variants ?? [];
   const specifications = productDisplaySpecifications(product);
-  const composition = productComposition(product);
+  const bundleCards = productBundleCards(product);
 
   const hasDescription = Boolean(product.description?.trim());
   const hasSpecifications = specifications.length > 0;
@@ -226,7 +225,7 @@ export default async function ProductPage({ params, searchParams }: PageProps) {
           {/* Якорная навигация по нижним блокам */}
           <ProductDetailsNavigation
             hasDescription={hasDescription}
-            hasComposition={composition.length > 0}
+            hasComposition={bundleCards.length > 0}
             hasSpecifications={hasSpecifications}
             hasRelatedProducts={hasRelatedProducts}
           />
@@ -239,13 +238,12 @@ export default async function ProductPage({ params, searchParams }: PageProps) {
             </section>
           ) : null}
 
-          {/* Полный список характеристик */}
-          {composition.length > 0 && (
+          {/* Состав уже описан выше; здесь только карточки для покупки по отдельности. */}
+          {bundleCards.length > 0 && (
             <section id="product-composition" className={`${styles.productFullSpecifications} ${styles.compositionSection}`}>
-              <h2 className={styles.productFullSpecificationsTitle}>Состав комплекта</h2>
+              <h2 className={styles.productFullSpecificationsTitle}>Товары из набора</h2>
               <div className={styles.compositionContent}>
-                <ProductComposition items={composition} />
-                <BundleItems items={product.bundleItems} />
+                <BundleItems items={bundleCards} />
               </div>
             </section>
           )}

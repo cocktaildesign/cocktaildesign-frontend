@@ -1,7 +1,6 @@
 // src/app/catalog/product/[slug]/BundleItems.tsx
 //
-// Блок "Состав комплекта" — показывается только для bundle-товаров.
-// Layout: слева — карточка с заголовком и ценой, справа — карточки товаров.
+// Карточки составляющих, доступных для покупки по отдельности.
 
 import Link from "next/link";
 import Image from "next/image";
@@ -23,7 +22,7 @@ export default function BundleItems({ items }: BundleItemsProps) {
 
   return (
     <div className={styles.bundleItems}>
-      <h3 className={styles.bundleItemsTitle}>Можно купить отдельно</h3>
+      <p className={styles.bundleItemsTitle}>Можно купить отдельно</p>
       <div className={styles.bundleItemsInner} role="region" aria-label="Товары из комплекта" tabIndex={0}>
         {/* Карточки товаров */}
         {validItems.map((item, index) => {
@@ -41,11 +40,11 @@ export default function BundleItems({ items }: BundleItemsProps) {
 
                 {/* Название */}
                 <p className={styles.bundleItemCardName}>{cp.name}</p>
+                <p className={styles.bundleItemCardQty}>В наборе: {item.quantity.toLocaleString("ru-RU")} шт.</p>
 
                 {/* Цена + количество */}
                 <div className={styles.bundleItemCardBottom}>
-                  <span className={styles.bundleItemCardPrice}>{cp.price.toLocaleString("ru-RU")} ₽</span>
-                  {item.quantity > 1 && <span className={styles.bundleItemCardQty}>× {item.quantity}</span>}
+                  <span className={styles.bundleItemCardPrice}>{cp.price.toLocaleString("ru-RU")} ₽ / шт.</span>
                 </div>
               </Link>
 
