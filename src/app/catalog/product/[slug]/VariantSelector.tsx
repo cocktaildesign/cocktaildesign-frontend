@@ -13,7 +13,7 @@ import ProductBadges from "@/shared/ui/product-badges/ProductBadges";
 import type { CatalogProductDetail, CatalogProductSpecification, CatalogVariant } from "@/lib/api/catalog/types";
 import { sortColorVariants } from "@/lib/catalog/color-order";
 
-import ProductComposition from "./ProductComposition";
+import { productComposition } from "@/lib/catalog/bundle-display";
 import ProductGallery from "./ProductGallery";
 import ProductPurchaseControls from "./ProductPurchaseControls";
 import ScrollToDescriptionButton from "./ScrollToDescriptionButton";
@@ -379,7 +379,11 @@ export default function VariantSelector({ product, variants: sourceVariants, spe
           </div>
         )}
 
-        <ProductComposition items={product.composition} />
+        {productComposition(product).length > 0 && (
+          <a href="#product-composition" className={styles.compositionSummary}>
+            Посмотреть состав комплекта <ArrowRightIcon className={styles.allSpecificationsLinkIcon} />
+          </a>
+        )}
 
         <Link href="/discounts" className={styles.buttonSale}>
           <div className={styles.buttonSaleImageWrapper}>

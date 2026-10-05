@@ -89,6 +89,7 @@ export type StrapiProductAttributes = {
   priceOld?: number | null;
   description?: string | null;
   composition?: string | null;
+  hideBundleContents?: boolean | null;
   engravingEnabled?: boolean | null;
   discountExcluded?: boolean | null;
   specifications?: StrapiProductSpecification[] | null;
@@ -227,9 +228,11 @@ export type StrapiCatalogCollectionsResponse = {
 // Один компонент комплекта — как приходит из Strapi
 export type StrapiBundleItem = {
   id: number;
+  name?: string | null;
   quantity?: number | null;
   componentProduct?: {
     id: number;
+    variantId?: number | null;
     name?: string | null;
     slug?: string | null;
     price?: number | null;
@@ -376,6 +379,7 @@ export type CatalogProductSpecification = {
 // Один товар внутри комплекта (domain тип для UI)
 export type CatalogBundleComponentProduct = {
   id: string;
+  variantId: string | null;
   name: string;
   slug: string;
   price: number;
@@ -385,6 +389,7 @@ export type CatalogBundleComponentProduct = {
 // Один элемент состава комплекта (domain тип для UI)
 export type CatalogBundleItem = {
   id: string;
+  name: string;
   quantity: number;
   componentProduct: CatalogBundleComponentProduct | null;
 };
@@ -399,6 +404,7 @@ export type CatalogProductDetail = {
   priceOld: number;
   description: string | null;
   composition: string[];
+  hideBundleContents: boolean;
   images: CatalogProductImage[];
   specifications: CatalogProductSpecification[];
   engravingEnabled: boolean;

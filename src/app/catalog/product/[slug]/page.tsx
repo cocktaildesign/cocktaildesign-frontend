@@ -10,6 +10,8 @@ import Image from "next/image";
 import PageLayout from "@/components/layout/PageLayout";
 import ProductsSlider from "@/components/ui/products-slider/ProductsSlider";
 import BundleItems from "./bundle/BundleItems";
+import ProductComposition from "./ProductComposition";
+import { productComposition, productDisplaySpecifications } from "@/lib/catalog/bundle-display";
 import VariantSelector from "./VariantSelector";
 import ProductDetailsNavigation from "./ProductDetailsNavigation";
 
@@ -138,7 +140,8 @@ export default async function ProductPage({ params, searchParams }: PageProps) {
     permanentRedirect(withQuery(`/catalog/product/${product.slug}`, await searchParams));
   }
   const variants = data.variants ?? [];
-  const specifications = product.specifications ?? [];
+  const specifications = productDisplaySpecifications(product);
+  const composition = productComposition(product);
 
   const hasDescription = Boolean(product.description?.trim());
   const hasSpecifications = specifications.length > 0;
@@ -220,12 +223,10 @@ export default async function ProductPage({ params, searchParams }: PageProps) {
           {/* Галерея, варианты, короткие характеристики и блок покупки */}
           <VariantSelector product={product} variants={variants} specifications={specifications} colorMap={colorMap} />
 
-          {/* Состав комплекта */}
-          {product.bundleItems.length > 0 && <BundleItems items={product.bundleItems} bundlePrice={product.price} />}
-
           {/* Якорная навигация по нижним блокам */}
           <ProductDetailsNavigation
             hasDescription={hasDescription}
+            hasComposition={composition.length > 0}
             hasSpecifications={hasSpecifications}
             hasRelatedProducts={hasRelatedProducts}
           />
@@ -239,6 +240,15 @@ export default async function ProductPage({ params, searchParams }: PageProps) {
           ) : null}
 
           {/* Полный список характеристик */}
+          {composition.length > 0 && (
+            <section id="product-composition" className={`${styles.productFullSpecifications} ${styles.compositionSection}`}>
+              <h2 className={styles.productFullSpecificationsTitle}>Состав комплекта</h2>
+              <div className={styles.compositionContent}>
+                <ProductComposition items={composition} />
+                <BundleItems items={product.bundleItems} />
+              </div>
+            </section>
+          )}
           <ProductFullSpecifications specifications={specifications} />
 
           {/* Товары из этой категории */}
