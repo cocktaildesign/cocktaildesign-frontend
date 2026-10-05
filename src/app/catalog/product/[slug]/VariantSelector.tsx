@@ -1,7 +1,7 @@
 // src/app/catalog/product/[slug]/VariantSelector.tsx
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
@@ -11,6 +11,7 @@ import CopyButton from "@/components/ui/copy-button/CopyButton";
 import ProductBadges from "@/shared/ui/product-badges/ProductBadges";
 
 import type { CatalogProductDetail, CatalogProductSpecification, CatalogVariant } from "@/lib/api/catalog/types";
+import { sortColorVariants } from "@/lib/catalog/color-order";
 
 import ProductComposition from "./ProductComposition";
 import ProductGallery from "./ProductGallery";
@@ -47,7 +48,8 @@ function ProductSpecificationValue({ spec }: { spec: CatalogProductSpecification
   return spec.value;
 }
 
-export default function VariantSelector({ product, variants, specifications, colorMap }: VariantSelectorProps) {
+export default function VariantSelector({ product, variants: sourceVariants, specifications, colorMap }: VariantSelectorProps) {
+  const variants = useMemo(() => sortColorVariants(sourceVariants), [sourceVariants]);
   const router = useRouter();
   const searchParams = useSearchParams();
   const requestedVariantId = searchParams.get("variant");
