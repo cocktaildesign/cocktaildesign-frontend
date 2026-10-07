@@ -1,111 +1,12 @@
-/* ==========================================================================
-   Обёртка: слайдер + точки под ним
-   ========================================================================== */
-
-.wrapper {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  width: 100%;
-	margin-bottom: 15px;
-}
-
-/* ==========================================================================
-   Корневой контейнер слайдера
-   ========================================================================== */
-
-.slider {
-  position: relative;
-  width: 100%;
-  /* Пропорция десктопной картинки: 1360 / 280 */
-  aspect-ratio: 1360 / 280;
-  overflow: hidden;
-  background-color: #e0e7ef;
-  border-radius: 12px;
-}
-
-/* ==========================================================================
-   Слайды
-   ========================================================================== */
-
-.slides {
-  position: relative;
-  width: 100%;
-  height: 100%;
-}
-
-.slide {
-  position: absolute;
-  inset: 0;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 400ms ease;
-}
-
-.slideActive {
-  opacity: 1;
-  pointer-events: auto;
-}
-
-/* ==========================================================================
-   Картинки внутри слайда
-   ========================================================================== */
-
-.image {
-  display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-  object-position: center;
-}
-
-/* ==========================================================================
-   Точки под слайдером
-   ========================================================================== */
-
-.dots {
-  display: flex;
-  justify-content: center;
-  gap: 8px;
-}
-
-.dot {
-  width: 8px;
-  height: 8px;
-  padding: 0;
-  border: none;
-  border-radius: 50%;
-  background-color: rgba(0, 0, 0, 0.2);
-  cursor: pointer;
-  transition: background-color 200ms ease;
-}
-
-.dot:hover {
-  background-color: rgba(0, 0, 0, 0.4);
-}
-
-.dotActive {
-  background-color: rgba(0, 0, 0, 0.7);
-}
-
-/* ==========================================================================
-   Мобильная и планшетная версия (до 1023px)
-   ========================================================================== */
-
-@media (max-width: 1023px) {
-  .slider {
-    /* Пропорция мобильной картинки: 800 / 600 */
-    aspect-ratio: 800 / 600;
-  }
-
-}
-
-/* ==========================================================================
-   Маленькие телефоны (до 600px)
-   ========================================================================== */
-
-@media (max-width: 600px) {
-  .wrapper {
-    gap: 12px;
-  }
-}
+.wrapper { width:100%; margin-bottom:15px; }
+.slider { position:relative; width:100%; aspect-ratio:1360 / 280; overflow:hidden; background:#f3f4f5; border-radius:20px; }
+.editorial { min-height:250px; }
+.slides { position:relative; width:100%; height:100%; touch-action:pan-y; }
+.slide { position:absolute; inset:0; display:block; color:inherit; text-decoration:none; opacity:0; pointer-events:none; transition:opacity 350ms ease; }
+.slideActive { opacity:1; pointer-events:auto; z-index:1; }
+.slide > picture { display:block; width:100%; height:100%; }
+.image { display:block; width:100%; height:100%; object-fit:contain; }
+.slideActive:focus-visible { outline:2px solid #111827; outline-offset:-3px; }
+@media (max-width:1023px) { .slider { aspect-ratio:800 / 600; } .editorial { aspect-ratio:auto; height:320px; } }
+@media (max-width:600px) { .editorial { height:400px; } }
+@media (prefers-reduced-motion:reduce) { .slide { transition:none; } }

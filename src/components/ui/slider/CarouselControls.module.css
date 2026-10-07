@@ -1,0 +1,17 @@
+.frame { position: relative; }
+.arrow { position:absolute; top:50%; transform:translateY(-50%); z-index:2; display:grid; place-items:center; width:44px; height:44px; padding:0; border:0; background:transparent; color:#47515e; cursor:pointer; transition:opacity 160ms ease; }
+.previous { left:4px; }
+.next { right:4px; }
+.arrow span { display:grid; place-items:center; width:30px; height:30px; border:1px solid #d9dfe5; border-radius:50%; background:#ffffffe0; }
+.arrow svg { width:17px; height:17px; fill:none; stroke:currentColor; stroke-width:1.7; stroke-linecap:round; stroke-linejoin:round; }
+.arrow:hover span { background:white; color:#111827; }
+.pagination { position:absolute; bottom:8px; left:50%; transform:translateX(-50%); z-index:2; display:flex; align-items:center; }
+.dot { display:grid; place-items:center; width:28px; height:28px; padding:0; border:0; background:transparent; cursor:pointer; }
+.dot::after { content:""; width:6px; height:6px; border-radius:8px; background:#aeb7c2; transition:width 160ms ease, background 160ms ease; }
+.dot[aria-current="true"]::after { width:18px; background:#47515e; }
+.arrow:focus-visible, .dot:focus-visible { outline:2px solid #111827; outline-offset:-3px; border-radius:10px; }
+@media (hover:hover) and (pointer:fine) {
+  .arrow { opacity:0; pointer-events:none; }
+  .frame:hover .arrow, .frame:has(:focus-visible) .arrow { opacity:1; pointer-events:auto; }
+}
+@media (prefers-reduced-motion:reduce) { .arrow, .dot::after { transition:none; } }

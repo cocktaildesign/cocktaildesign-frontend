@@ -1,0 +1,8 @@
+.banner { height:100%; display:grid; grid-template-columns:1.4fr 1fr; align-items:center; gap:24px; padding:24px 5.625% 38px; background:linear-gradient(110deg,#f6f7f8,#eff1f3); color:#111827; }
+.copy { min-width:0; }
+.copy h2 { margin:0; font-size:clamp(26px,2.5vw,34px); line-height:1.2; letter-spacing:-.025em; font-weight:600; white-space:pre-line; overflow-wrap:anywhere; }
+.copy p { margin:12px 0 20px; font-size:18px; line-height:1.4; color:#47515e; white-space:pre-line; overflow-wrap:anywhere; }
+.copy small { display:block; margin-top:8px; font-size:11px; }
+.art { display:block; height:100%; width:100%; min-height:0; object-fit:contain; }
+@media (min-width:601px) and (max-width:1023px) { .banner { padding:24px 54px 38px; grid-template-columns:1.3fr 1fr; gap:12px; } .copy p { font-size:16px; } }
+@media (max-width:600px) { .banner { grid-template-columns:1fr; grid-template-rows:auto minmax(0,1fr); gap:12px; padding:24px 32px 36px; } .copy h2 { font-size:24px; min-height:2.4em; } .copy p { margin:10px 0 16px; font-size:14px; min-height:2.8em; } .art { max-width:85%; justify-self:center; } }
