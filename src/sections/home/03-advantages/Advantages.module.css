@@ -160,6 +160,9 @@
    ========================================================================== */
 
 .promoCard {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -169,10 +172,23 @@
   padding: 26px 26px 22px;
   border-radius: 20px;
 
-  background-image: url("/images/Hero/bg_advantage.webp");
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
+  background:
+    radial-gradient(ellipse at 82% 24%, #252c61 0%, #11142f 42%, #080a19 78%);
+}
+
+/* Real catalogue photo; decorative only, so it cannot intercept the controls. */
+.promoCard::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  top: 0;
+  right: -6px;
+  width: clamp(150px, calc(100% - 190px), 200px);
+  aspect-ratio: 632 / 750;
+  background: url("/images/Hero/discount-stargate-20261007.webp") center / contain no-repeat;
+  transform: translateY(-16%) rotate(90deg);
+  opacity: 0.78;
+  pointer-events: none;
 }
 
 .promoBadge {
@@ -367,5 +383,9 @@
 
   .promoPercent {
     font-size: 56px;
+  }
+
+  .promoCard::before {
+    width: 150px;
   }
 }
