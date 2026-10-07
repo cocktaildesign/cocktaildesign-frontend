@@ -181,9 +181,9 @@
   content: "";
   position: absolute;
   z-index: -1;
-  top: 0;
-  right: -6px;
-  width: clamp(150px, calc(100% - 190px), 200px);
+  top: 16px;
+  right: 14px;
+  width: clamp(110px, calc(100% - 210px), 140px);
   aspect-ratio: 632 / 750;
   background: url("/images/Hero/discount-stargate-20261007.webp") center / contain no-repeat;
   transform: translateY(-16%) rotate(90deg);
@@ -386,6 +386,6 @@
   }
 
   .promoCard::before {
-    width: 150px;
+    width: 110px;
   }
 }
