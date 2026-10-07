@@ -12,6 +12,6 @@
 .arrow:focus-visible, .dot:focus-visible { outline:2px solid #111827; outline-offset:-3px; border-radius:10px; }
 @media (hover:hover) and (pointer:fine) {
   .arrow { opacity:0; pointer-events:none; }
-  .frame:hover .arrow, .frame:focus-within .arrow { opacity:1; pointer-events:auto; }
+  .frame:hover .arrow, .frame:has(:focus-visible) .arrow { opacity:1; pointer-events:auto; }
 }
 @media (prefers-reduced-motion:reduce) { .arrow, .dot::after { transition:none; } }
