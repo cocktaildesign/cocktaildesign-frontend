@@ -1,5 +1,6 @@
 import type { HomepageBanner } from "@/lib/api/homepage-banners/model";
 import { EMPTY_IMAGE } from "@/lib/images/empty-image";
+import button from "./BannerButton.module.css";
 import styles from "./HeroBannerContent.module.css";
 
 export const HERO_ART_SIZES = "(min-width: 1440px) 600px, 46vw";
@@ -12,7 +13,7 @@ export default function HeroBannerContent({ banner, mobile, priority }: {
     <div className={styles.copy}>
       <h2 className={styles.heading}>{copy.heading}</h2>
       <p className={styles.description}>{copy.description}</p>
-      <div className={styles.action}>{banner.href && <span className={styles.button}>{copy.buttonLabel}</span>}</div>
+      <div className={styles.action}>{banner.href && <span className={button.button}>{copy.buttonLabel}</span>}</div>
       <p className={styles.note}>{copy.note}</p>
     </div>
     <picture className={styles.art}>

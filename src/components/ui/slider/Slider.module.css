@@ -5,16 +5,10 @@
 .slideActive { z-index:1; opacity:1; pointer-events:auto; }
 .slide > picture, .slideActive > picture { display:block; width:100%; height:100%; }
 .image { display:block; width:100%; height:100%; object-fit:contain; }
-.hotZoneLeft, .hotZoneRight { position:absolute; top:50%; transform:translateY(-50%); z-index:2; display:grid; place-items:center; width:36px; height:44px; padding:0; border:1px solid #d9dfe5; border-radius:12px; background:#ffffffd9; color:#303b48; cursor:pointer; }
-.hotZoneLeft { left:10px; }
-.hotZoneRight { right:10px; }
-.prevButton, .nextButton { font-size:22px; line-height:1; }
-.hotZoneLeft:hover, .hotZoneRight:hover { background:white; }
-.progressBar { position:absolute; bottom:10px; left:50%; z-index:2; display:flex; align-items:center; gap:4px; transform:translateX(-50%); }
-.progressItem { width:40px; height:28px; padding:0; border:0; background:transparent; cursor:pointer; }
-.progressItem::after { content:""; display:block; height:3px; width:100%; background:#b5bdc6; border-radius:3px; }
-.progressItemActive::after { background:#4a5360; }
-.pauseButton { display:grid; place-items:center; width:32px; height:32px; border:0; border-radius:8px; color:#303b48; background:#ffffffb3; cursor:pointer; }
 .slider button:focus-visible, .slideActive:focus-visible { outline:2px solid #111827; outline-offset:-3px; }
 @media (min-width:601px) and (max-width:1023px) { .editorial { aspect-ratio:auto !important; height:430px; } }
 @media (prefers-reduced-motion:reduce) { .slide, .slideActive { transition:none; } }
+
+.mobile.editorial { height:480px; }
+.mobile { margin:0; }
+.mobile .slides { touch-action:pan-y; }

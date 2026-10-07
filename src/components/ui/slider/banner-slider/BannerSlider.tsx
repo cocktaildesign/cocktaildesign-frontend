@@ -1,6 +1,9 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import useCarousel from "../useCarousel";
+import CarouselControls from "../CarouselControls";
+import controls from "../CarouselControls.module.css";
+import PromoBannerContent from "./PromoBannerContent";
 import Link from "next/link";
 import type { HomepageBanner } from "@/lib/api/homepage-banners/model";
 
@@ -10,32 +13,11 @@ type BannerSliderProps = {
   images: HomepageBanner[];
 };
 
-// Интервал автопрокрутки: 6 секунд
-const AUTOPLAY_INTERVAL = 6000;
-
 export default function BannerSlider({ images }: BannerSliderProps) {
-  const [currentIndex, setCurrentIndex] = useState(0);
-
   const totalSlides = images.length;
-  const hasControls = totalSlides > 1;
-
-  // Автопрокрутка: каждые 6 секунд показываем следующий слайд.
-  // Эффект перезапускается при смене currentIndex — поэтому после
-  // клика на точку таймер сбрасывается и отсчёт начинается заново.
-  useEffect(() => {
-    if (totalSlides <= 1) {
-      return;
-    }
-
-    const timerId = setTimeout(() => {
-      setCurrentIndex((current) => (current + 1) % totalSlides);
-    }, AUTOPLAY_INTERVAL);
-
-    return () => {
-      clearTimeout(timerId);
-    };
-  }, [currentIndex, totalSlides]);
-
+  const carousel = useCarousel(totalSlides);
+  const currentIndex = carousel.index;
+  const editorial = images.some(image => image.editorial);
   if (totalSlides === 0) {
     return null;
   }
@@ -43,14 +25,14 @@ export default function BannerSlider({ images }: BannerSliderProps) {
   return (
     <div className={styles.wrapper}>
       {/* Слайдер */}
-      <div className={styles.slider}>
-        <div className={styles.slides}>
+      <div className={`${styles.slider} ${controls.frame} ${editorial ? styles.editorial : ""}`} role="region" aria-label="Категории товаров" aria-roledescription="карусель" {...carousel.interactions}>
+        <div className={styles.slides} aria-live={carousel.rotating ? "off" : "polite"}>
           {images.map((image, index) => {
             const isActive = index === currentIndex;
             const slideClassName = `${styles.slide} ${isActive ? styles.slideActive : ""}`;
 
             // picture loads only the artwork for this screen size.
-            const picture = (
+            const picture = image.editorial ? <PromoBannerContent banner={image} /> : (
               <picture>
                 <source
                   media="(max-width: 1023px)"
@@ -94,27 +76,9 @@ export default function BannerSlider({ images }: BannerSliderProps) {
             );
           })}
         </div>
+        <CarouselControls labels={images.map(image => image.alt)} index={currentIndex} select={carousel.select} previous={carousel.previous} next={carousel.next} />
       </div>
 
-      {/* Точки под слайдером (показываем только если слайдов больше одного) */}
-      {hasControls && (
-        <div className={styles.dots}>
-          {images.map((image, index) => {
-            const isActiveDot = index === currentIndex;
-            const dotClassName = `${styles.dot} ${isActiveDot ? styles.dotActive : ""}`;
-
-            return (
-              <button
-                key={image.id}
-                type="button"
-                className={dotClassName}
-                onClick={() => setCurrentIndex(index)}
-                aria-label={`Перейти к слайду ${index + 1}`}
-              />
-            );
-          })}
-        </div>
-      )}
     </div>
   );
 }

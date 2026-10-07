@@ -45,17 +45,19 @@ export const DEFAULT_HERO_BANNERS: HomepageBanner[] = [
 export const DEFAULT_PROMO_BANNERS: HomepageBanner[] = [
   {
     id: 1,
-    desktopUrl: "/images/homepage-promo-20261007/barista-desktop.webp",
-    mobileUrl: "/images/homepage-promo-20261007/barista-mobile.webp",
+    desktopUrl: "/images/promo-editorial-20261007/barista.webp",
+    mobileUrl: "/images/promo-editorial-20261007/barista.webp",
     alt: "Всё для бариста — питчеры, темперы и аксессуары для кофе",
     href: "/catalog/ms-c374b866",
+    editorial: {heading: "Всё для бариста", description: "Питчеры, темперы и аксессуары для кофе", buttonLabel: "Смотреть товары", note: ""},
   },
   {
     id: 2,
-    desktopUrl: "/images/homepage-promo-20261007/jiggers-desktop.webp",
-    mobileUrl: "/images/homepage-promo-20261007/jiggers-mobile.webp",
+    desktopUrl: "/images/promo-editorial-20261007/jiggers.webp",
+    mobileUrl: "/images/promo-editorial-20261007/jiggers.webp",
     alt: "Джиггеры и мерники — для точной дозировки и баланса вкуса",
     href: "/catalog/ms-57a775a4",
+    editorial: {heading: "Джиггеры и мерники", description: "Для точной дозировки и баланса вкуса", buttonLabel: "Выбрать джиггер", note: ""},
   },
 ];
 
