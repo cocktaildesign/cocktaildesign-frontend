@@ -32,7 +32,22 @@ export const DEFAULT_HERO_BANNERS: HomepageBanner[] = [
   },
 ];
 
-export const DEFAULT_PROMO_BANNERS: HomepageBanner[] = [];
+export const DEFAULT_PROMO_BANNERS: HomepageBanner[] = [
+  {
+    id: 1,
+    desktopUrl: "/images/homepage-promo-20261007/barista-desktop.webp",
+    mobileUrl: "/images/homepage-promo-20261007/barista-mobile.webp",
+    alt: "Всё для бариста — питчеры, темперы и аксессуары для кофе",
+    href: "/catalog/ms-c374b866",
+  },
+  {
+    id: 2,
+    desktopUrl: "/images/homepage-promo-20261007/jiggers-desktop.webp",
+    mobileUrl: "/images/homepage-promo-20261007/jiggers-mobile.webp",
+    alt: "Джиггеры и мерники — для точной дозировки и баланса вкуса",
+    href: "/catalog/ms-57a775a4",
+  },
+];
 
 function object(value: unknown): Record<string, unknown> {
   return value && typeof value === "object" && !Array.isArray(value) ? value as Record<string, unknown> : {};

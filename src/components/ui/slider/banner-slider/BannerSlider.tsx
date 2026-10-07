@@ -1,21 +1,13 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Image from "next/image";
 import Link from "next/link";
+import type { HomepageBanner } from "@/lib/api/homepage-banners/model";
 
 import styles from "./BannerSlider.module.css";
 
-type BannerImage = {
-  id: number;
-  desktopUrl: string;
-  mobileUrl: string;
-  alt: string;
-  href?: string;
-};
-
 type BannerSliderProps = {
-  images: BannerImage[];
+  images: HomepageBanner[];
 };
 
 // Интервал автопрокрутки: 6 секунд
@@ -27,16 +19,6 @@ export default function BannerSlider({ images }: BannerSliderProps) {
   const totalSlides = images.length;
   const hasControls = totalSlides > 1;
 
-  function showNextSlide() {
-    setCurrentIndex((current) => {
-      const nextIndex = current + 1;
-      if (nextIndex >= totalSlides) {
-        return 0;
-      }
-      return nextIndex;
-    });
-  }
-
   // Автопрокрутка: каждые 6 секунд показываем следующий слайд.
   // Эффект перезапускается при смене currentIndex — поэтому после
   // клика на точку таймер сбрасывается и отсчёт начинается заново.
@@ -46,7 +28,7 @@ export default function BannerSlider({ images }: BannerSliderProps) {
     }
 
     const timerId = setTimeout(() => {
-      showNextSlide();
+      setCurrentIndex((current) => (current + 1) % totalSlides);
     }, AUTOPLAY_INTERVAL);
 
     return () => {
@@ -67,28 +49,28 @@ export default function BannerSlider({ images }: BannerSliderProps) {
             const isActive = index === currentIndex;
             const slideClassName = `${styles.slide} ${isActive ? styles.slideActive : ""}`;
 
-            // Десктопная картинка — показывается на экранах от 1024px
-            const desktopImage = (
-              <Image
-                src={image.desktopUrl}
-                alt={image.alt}
-                width={1360}
-                height={400}
-                sizes="(max-width: 1023px) 0px, 100vw"
-                className={`${styles.image} ${styles.imageDesktop}`}
-              />
-            );
-
-            // Мобильная картинка — показывается на экранах до 1023px
-            const mobileImage = (
-              <Image
-                src={image.mobileUrl}
-                alt={image.alt}
-                width={800}
-                height={600}
-                sizes="(max-width: 1023px) 100vw, 0px"
-                className={`${styles.image} ${styles.imageMobile}`}
-              />
+            // picture loads only the artwork for this screen size.
+            const picture = (
+              <picture>
+                <source
+                  media="(max-width: 1023px)"
+                  srcSet={image.mobileSrcSet || image.mobileUrl}
+                  sizes="100vw"
+                  width={800}
+                  height={600}
+                />
+                <img
+                  src={image.desktopUrl}
+                  srcSet={image.desktopSrcSet}
+                  sizes="(min-width: 1440px) 1360px, 100vw"
+                  alt={image.alt}
+                  width={1360}
+                  height={280}
+                  loading="lazy"
+                  decoding="async"
+                  className={styles.image}
+                />
+              </picture>
             );
 
             // Если есть ссылка — оборачиваем в Link, иначе просто div
@@ -100,16 +82,14 @@ export default function BannerSlider({ images }: BannerSliderProps) {
                   className={slideClassName}
                   aria-hidden={!isActive}
                   tabIndex={isActive ? 0 : -1}>
-                  {desktopImage}
-                  {mobileImage}
+                  {picture}
                 </Link>
               );
             }
 
             return (
               <div key={image.id} className={slideClassName} aria-hidden={!isActive}>
-                {desktopImage}
-                {mobileImage}
+                {picture}
               </div>
             );
           })}

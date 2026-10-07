@@ -52,19 +52,11 @@
    ========================================================================== */
 
 .image {
+  display: block;
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
   object-position: center;
-}
-
-/* На десктопе показываем десктопную картинку, мобильную прячем */
-.imageDesktop {
-  display: block;
-}
-
-.imageMobile {
-  display: none;
 }
 
 /* ==========================================================================
@@ -106,13 +98,6 @@
     aspect-ratio: 800 / 600;
   }
 
-  .imageDesktop {
-    display: none;
-  }
-
-  .imageMobile {
-    display: block;
-  }
 }
 
 /* ==========================================================================
