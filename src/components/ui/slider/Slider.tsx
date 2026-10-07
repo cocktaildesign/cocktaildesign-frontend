@@ -3,21 +3,14 @@
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
+import HeroBannerContent from "./HeroBannerContent";
+import type { HomepageBanner } from "@/lib/api/homepage-banners/model";
 import { EMPTY_IMAGE } from "@/lib/images/empty-image";
 
 import styles from "./Slider.module.css";
 
-type SlideImage = {
-  id: number;
-  desktopUrl: string;
-  desktopSrcSet?: string;
-  mobileUrl: string;
-  alt: string;
-  href?: string;
-};
-
 type SliderProps = {
-  images: SlideImage[];
+  images: HomepageBanner[];
   autoPlayInterval?: number;
 };
 
@@ -37,41 +30,18 @@ export default function Slider({ images, autoPlayInterval = 7000 }: SliderProps)
 
   const [currentIndex, setCurrentIndex] = useState(0);
 
-  const timerIdRef = useRef<number | null>(null);
+  const [paused, setPaused] = useState(false);
+  const [hovered, setHovered] = useState(false);
+  const [focused, setFocused] = useState(false);
+  const [reducedMotion, setReducedMotion] = useState(false);
+  const [hidden, setHidden] = useState(false);
   const touchStartXRef = useRef(0);
+  const editorial = images.some(image => image.editorial);
+  const rotating = hasControls && !paused && !hovered && !focused && !reducedMotion && !hidden;
 
-  // Перезапускаем автоплей после ручного переключения
-  function restartAutoplay() {
-    if (!hasControls) {
-      return;
-    }
-
-    if (timerIdRef.current !== null) {
-      window.clearInterval(timerIdRef.current);
-    }
-
-    timerIdRef.current = window.setInterval(() => {
-      setCurrentIndex((current) => getNextSlideIndex(current, totalSlides));
-    }, autoPlayInterval);
-  }
-
-  function showNextSlide() {
-    if (!hasControls) {
-      return;
-    }
-
-    setCurrentIndex((current) => getNextSlideIndex(current, totalSlides));
-    restartAutoplay();
-  }
-
-  function showPrevSlide() {
-    if (!hasControls) {
-      return;
-    }
-
-    setCurrentIndex((current) => getPrevSlideIndex(current, totalSlides));
-    restartAutoplay();
-  }
+  function selectSlide(index: number) { setCurrentIndex(index); setPaused(true); }
+  function showNextSlide() { if (hasControls) selectSlide(getNextSlideIndex(currentIndex, totalSlides)); }
+  function showPrevSlide() { if (hasControls) selectSlide(getPrevSlideIndex(currentIndex, totalSlides)); }
 
   // Запоминаем точку начала свайпа
   function handleTouchStart(event: React.TouchEvent<HTMLDivElement>) {
@@ -98,31 +68,34 @@ export default function Slider({ images, autoPlayInterval = 7000 }: SliderProps)
     }
   }
 
-  // Автоплей
   useEffect(() => {
-    if (!hasControls) {
-      return;
-    }
+    const motion = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const onMotion = () => setReducedMotion(motion.matches);
+    const onVisibility = () => setHidden(document.hidden);
+    motion.addEventListener("change", onMotion);
+    document.addEventListener("visibilitychange", onVisibility);
+    // Read browser preferences after hydration; no timer is allowed before this check.
+    const frame = requestAnimationFrame(() => { onMotion(); onVisibility(); });
+    return () => { cancelAnimationFrame(frame); motion.removeEventListener("change", onMotion); document.removeEventListener("visibilitychange", onVisibility); };
+  }, []);
 
-    const timerId = window.setInterval(() => {
-      setCurrentIndex((current) => getNextSlideIndex(current, totalSlides));
-    }, autoPlayInterval);
-
-    timerIdRef.current = timerId;
-
-    return () => {
-      if (timerIdRef.current !== null) window.clearInterval(timerIdRef.current);
-      timerIdRef.current = null;
-    };
-  }, [hasControls, totalSlides, autoPlayInterval]);
+  useEffect(() => {
+    if (!rotating || window.matchMedia("(prefers-reduced-motion: reduce)").matches || document.hidden) return;
+    const timer = window.setTimeout(() => setCurrentIndex(current => getNextSlideIndex(current, totalSlides)), autoPlayInterval);
+    return () => window.clearTimeout(timer);
+  }, [rotating, currentIndex, totalSlides, autoPlayInterval]);
 
   if (totalSlides === 0) {
     return null;
   }
 
   return (
-    <div className={styles.slider}>
-      <div className={styles.slides} aria-live="polite" onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}>
+    <div className={`${styles.slider} ${editorial ? styles.editorial : ""}`}
+      style={{aspectRatio: editorial ? "64 / 27" : String(images[0].desktopAspect || 16 / 9)}}
+      role="region" aria-label="Предложения Cocktail Design" aria-roledescription="карусель"
+      onMouseEnter={() => setHovered(true)} onMouseLeave={() => setHovered(false)}
+      onFocusCapture={() => setFocused(true)} onBlurCapture={event => { if (!event.currentTarget.contains(event.relatedTarget)) setFocused(false); }}>
+      <div className={styles.slides} aria-live={rotating ? "off" : "polite"} onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}>
         {images.map((image, index) => {
           const isActive = index === currentIndex;
           const slideClassName = isActive ? styles.slideActive : styles.slide;
@@ -130,8 +103,8 @@ export default function Slider({ images, autoPlayInterval = 7000 }: SliderProps)
 
           if (image.href) {
             return (
-              <Link key={image.id} href={image.href} aria-label={image.alt} aria-hidden={!isActive} tabIndex={isActive ? 0 : -1} className={slideClassName}>
-                <picture>
+              <Link key={image.id} href={image.href} aria-label={image.editorial ? undefined : image.alt} aria-hidden={!isActive} tabIndex={isActive ? 0 : -1} className={slideClassName}>
+                {image.editorial ? <HeroBannerContent banner={image} priority={isLcpSlide} /> : <picture>
                   <source media="not all and (max-width: 600px)" srcSet={image.desktopSrcSet ?? image.desktopUrl} sizes="100vw" />
                 <Image
                   src={EMPTY_IMAGE}
@@ -143,14 +116,14 @@ export default function Slider({ images, autoPlayInterval = 7000 }: SliderProps)
                   fetchPriority={isLcpSlide ? "high" : "auto"}
                   loading={isLcpSlide ? "eager" : "lazy"}
                 />
-                </picture>
+                </picture>}
               </Link>
             );
           }
 
           return (
             <div key={image.id} className={slideClassName} aria-hidden={!isActive}>
-              <picture>
+              {image.editorial ? <HeroBannerContent banner={image} priority={isLcpSlide} /> : <picture>
                 <source media="not all and (max-width: 600px)" srcSet={image.desktopSrcSet ?? image.desktopUrl} sizes="100vw" />
               <Image
                 src={EMPTY_IMAGE}
@@ -162,7 +135,7 @@ export default function Slider({ images, autoPlayInterval = 7000 }: SliderProps)
                 fetchPriority={isLcpSlide ? "high" : "auto"}
                 loading={isLcpSlide ? "eager" : "lazy"}
               />
-              </picture>
+              </picture>}
             </div>
           );
         })}
@@ -182,10 +155,14 @@ export default function Slider({ images, autoPlayInterval = 7000 }: SliderProps)
             </span>
           </button>
 
-          <div className={styles.progressBar} aria-hidden="true">
-            {Array.from({ length: totalSlides }).map((_, index) => (
-              <div key={index} className={index === currentIndex ? styles.progressItemActive : styles.progressItem} />
-            ))}
+          <div className={styles.progressBar} aria-label="Выбор баннера">
+            {images.map((image, index) => <button key={image.id} type="button"
+              className={`${styles.progressItem} ${index === currentIndex ? styles.progressItemActive : ""}`}
+              aria-label={`Баннер ${index + 1}: ${image.alt}`} aria-current={index === currentIndex ? "true" : undefined}
+              onClick={() => selectSlide(index)} />)}
+            {!reducedMotion && <button type="button" className={styles.pauseButton}
+              aria-label={paused ? "Включить автоматическую смену баннеров" : "Остановить автоматическую смену баннеров"}
+              onClick={() => setPaused(value => !value)}><span aria-hidden="true">{paused ? "▶" : "Ⅱ"}</span></button>}
           </div>
         </>
       )}

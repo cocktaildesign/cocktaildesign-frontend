@@ -1,3 +1,5 @@
+import HeroBannerContent from "../HeroBannerContent";
+import type { HomepageBanner } from "@/lib/api/homepage-banners/model";
 import Image from "next/image";
 import Link from "next/link";
 import { EMPTY_IMAGE } from "@/lib/images/empty-image";
@@ -5,17 +7,8 @@ import { EMPTY_IMAGE } from "@/lib/images/empty-image";
 
 import styles from "./MobileSlider.module.css";
 
-type SlideImage = {
-  id: number;
-  desktopUrl: string;
-  mobileUrl: string;
-  mobileSrcSet?: string;
-  alt: string;
-  href?: string;
-};
-
 type MobileSliderProps = {
-  images: SlideImage[];
+  images: HomepageBanner[];
 };
 
 export default function MobileSlider({ images }: MobileSliderProps) {
@@ -29,7 +22,7 @@ export default function MobileSlider({ images }: MobileSliderProps) {
         {images.map((image, index) => {
           // Only the first banner needs priority; the next one peeks into view.
           const isLcpSlide = index === 0;
-          const content = (
+          const content = image.editorial ? <HeroBannerContent banner={image} mobile priority={isLcpSlide} /> : (
             <picture>
               <source media="(max-width: 600px)" srcSet={image.mobileSrcSet ?? image.mobileUrl} sizes="86vw" />
             <Image
@@ -46,11 +39,11 @@ export default function MobileSlider({ images }: MobileSliderProps) {
           );
 
           return image.href ? (
-            <Link key={image.id} href={image.href} className={styles.slide} aria-label={image.alt}>
+            <Link key={image.id} href={image.href} className={`${styles.slide} ${image.editorial ? styles.editorial : ""}`} aria-label={image.editorial ? undefined : image.alt}>
               {content}
             </Link>
           ) : (
-            <div key={image.id} className={styles.slide}>
+            <div key={image.id} className={`${styles.slide} ${image.editorial ? styles.editorial : ""}`}>
               {content}
             </div>
           );
