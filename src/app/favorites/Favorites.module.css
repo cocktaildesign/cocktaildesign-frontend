@@ -216,3 +216,9 @@
     width: 100%;
   }
 }
+
+.recovery { margin: 24px 0; padding: 20px; border: 1px solid var(--color-light-soft); border-radius: 12px; }
+.recovery h2 { font-size: 18px; margin-bottom: 12px; }
+.recovery p { margin-bottom: 16px; }
+.recoveryRow { display: flex; flex-wrap: wrap; gap: 12px; padding: 12px 0; }
+.recovery button { padding: 10px 14px; border: 1px solid #cbd3df; border-radius: 8px; background: #f5f6f8; text-align: left; overflow-wrap: anywhere; cursor: pointer; }

@@ -52,7 +52,7 @@ export default function VariantSelector({ product, variants: sourceVariants, spe
   const variants = useMemo(() => sortColorVariants(sourceVariants), [sourceVariants]);
   const router = useRouter();
   const searchParams = useSearchParams();
-  const requestedVariantId = searchParams.get("variant");
+  const requestedVariantId = searchParams.get("variant") ?? variants.find(v => v.code === searchParams.get("sku"))?.id ?? null;
 
   /*
    * Собираем общую галерею.
@@ -410,7 +410,8 @@ export default function VariantSelector({ product, variants: sourceVariants, spe
         <div className={styles.productPurchase}>
           <ProductPurchaseControls
             key={activeVariant?.id ?? product.id}
-            productId={activeVariant?.id ?? product.id}
+            productId={product.id}
+            variantId={activeVariant?.id ?? null}
             engravingEnabled={product.engravingEnabled}
             price={activePrice}
             priceOld={activePriceOld}

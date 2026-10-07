@@ -10,7 +10,7 @@ import EngravingToggle from "@/components/ui/engraving/EngravingToggle";
 import FavoriteButton from "@/components/ui/favorites/FavoriteButton";
 import ProductBadges from "@/shared/ui/product-badges/ProductBadges";
 
-import { useCartStore } from "@/lib/cart/cartStore";
+import { cartLineKey, useCartStore } from "@/lib/cart/cartStore";
 import type { CartItem } from "@/lib/cart/cartStore";
 
 import type { CatalogProductPreview, CatalogVariant } from "@/lib/api/catalog/types";
@@ -132,13 +132,14 @@ export default function ProductCard({ product: sourceProduct, colorMap = {} }: P
   const isColorVariants = useMemo(() => isColorGroup(variantGroupTitle), [variantGroupTitle]);
 
   const activeItemId = activeVariant?.id ?? product.id;
+  const lineKey = cartLineKey({ id: activeItemId, slug: product.slug, code: activeVariant?.code ?? product.code ?? "" });
 
-  const cartItem = useCartStore((state) => state.items.find((item) => item.id === activeItemId));
+  const cartItem = useCartStore((state) => state.items.find((item) => cartLineKey(item) === lineKey));
 
   const addItem = useCartStore((state) => state.addItem);
   const removeItem = useCartStore((state) => state.removeItem);
 
-  const isInCart = useCartStore((state) => state.items.some((item) => item.id === activeItemId));
+  const isInCart = useCartStore((state) => state.items.some((item) => cartLineKey(item) === lineKey));
 
   const displayQuantity = cartItem?.quantity ?? quantity;
   const displayEngraving = cartItem?.engraving ?? engravingChecked;
@@ -308,6 +309,8 @@ export default function ProductCard({ product: sourceProduct, colorMap = {} }: P
   function handleAddToCart() {
     const cartItemToAdd: CartItem = {
       id: activeItemId,
+      productId: product.id,
+      variantId: activeVariant?.id ?? null,
       name: activeVariant?.name ?? product.name,
       price: activePrice,
       priceOld: activePriceOld,
@@ -397,7 +400,7 @@ export default function ProductCard({ product: sourceProduct, colorMap = {} }: P
 
           {discountPercent !== null && <span className={styles.discountBadge}>-{discountPercent}%</span>}
 
-          <FavoriteButton productId={product.id} className={styles.favoriteButtonOverlay} />
+          <FavoriteButton productId={product.id} slug={product.slug} variantId={activeVariant?.id ?? null} className={styles.favoriteButtonOverlay} />
 
           {uniqueImages.length > 1 && (
             <div className={styles.dots}>
@@ -474,7 +477,7 @@ export default function ProductCard({ product: sourceProduct, colorMap = {} }: P
               onChange={(checked) => {
                 if (isInCart) {
                   const updatedItems = useCartStore.getState().items.map((item) => {
-                    if (item.id !== activeItemId) {
+                    if (cartLineKey(item) !== lineKey) {
                       return item;
                     }
 
@@ -504,12 +507,12 @@ export default function ProductCard({ product: sourceProduct, colorMap = {} }: P
               value={displayQuantity}
               onChange={(next) => {
                 if (next < 1) {
-                  removeItem(activeItemId);
+                  removeItem(lineKey);
                   setQuantity(1);
                   return;
                 }
 
-                useCartStore.getState().updateQuantity(activeItemId, next);
+                useCartStore.getState().updateQuantity(lineKey, next);
               }}
             />
 

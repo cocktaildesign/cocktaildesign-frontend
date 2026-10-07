@@ -128,7 +128,7 @@ function checkout({buyer='individual',promo='',responses=[{ok:true,body:{ok:true
   const mocks={
     'react':{useEffect:()=>{},useRef:value=>({current:value}),useState:()=>[states[stateIndex++],()=>{}]},
     'next/navigation':{useRouter:()=>({replace:url=>navigation.push(url)})},'next/link':{default:'a'},
-    '@/lib/cart/cartStore':{useCartStore:select=>select(cart)},
+    '@/lib/cart/cartStore':{cartLineKey:i=>JSON.stringify([i.slug,i.id,i.code]),useCartStore:select=>select(cart)},
     '@/lib/cart/discountTiers':{useDiscountTiers:()=>({tiers:[],isLoading:false})},
     '@/lib/cart/cartTotals':{calculateCartTotals:()=>({currentTier:{percent:5},activeVolumeDiscount:100,activePromoDiscount:promo?100:0,finalPrice:promo?2250:2350})},
     '@/lib/cart/useCartDiscountPolicy':{useCartDiscountPolicy:()=>({ready:true})},
