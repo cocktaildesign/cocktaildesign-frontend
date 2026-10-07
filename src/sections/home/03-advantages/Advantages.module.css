@@ -384,4 +384,8 @@
   .promoPercent {
     font-size: 56px;
   }
+
+  .promoCard::before {
+    width: 150px;
+  }
 }
