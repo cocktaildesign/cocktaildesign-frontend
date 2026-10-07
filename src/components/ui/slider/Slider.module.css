@@ -6,8 +6,8 @@
 .slider {
   position: relative;
   width: 100%;
-  min-height: 500px;
-  height: calc(100vh - var(--header-height, 178.5px));
+  /* Match the artwork instead of cropping it to the viewport height. */
+  aspect-ratio: 16 / 9;
   overflow: hidden;
   margin-top: 15px;
   margin-bottom: 10px;
@@ -56,7 +56,7 @@
   display: block;
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
 }
 
 /* ==========================================================================

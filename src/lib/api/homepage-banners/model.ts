@@ -11,43 +11,28 @@ export type HomepageBanner = {
 export const DEFAULT_HERO_BANNERS: HomepageBanner[] = [
   {
     id: 1,
-    desktopUrl: "/images/hero-baner/banner1.webp",
-    mobileUrl: "/images/hero-baner/banner1-mobile.webp",
-    alt: "Картинка для перехода в каталог",
+    desktopUrl: "/images/homepage-20261007/catalog-desktop.webp",
+    mobileUrl: "/images/homepage-20261007/catalog-mobile.webp",
+    alt: "Профессиональный барный инвентарь — перейти в каталог",
     href: "/catalog",
   },
   {
     id: 2,
-    desktopUrl: "/images/hero-baner/banner2.webp",
-    mobileUrl: "/images/hero-baner/banner2-mobile.webp",
-    alt: "Товары со скидкой",
-    href: "/catalog/collection/sale",
+    desktopUrl: "/images/homepage-20261007/discounts-desktop.webp",
+    mobileUrl: "/images/homepage-20261007/discounts-mobile.webp",
+    alt: "Ваша формула идеального бара — условия скидок до 20%",
+    href: "/discounts",
   },
   {
     id: 3,
-    desktopUrl: "/images/hero-baner/banner3.webp",
-    mobileUrl: "/images/hero-baner/banner3-mobile.webp",
-    alt: "Новинки",
+    desktopUrl: "/images/homepage-20261007/novinki-desktop.webp",
+    mobileUrl: "/images/homepage-20261007/novinki-mobile.webp",
+    alt: "Новинки барного инвентаря — последние поступления",
     href: "/catalog/collection/novinki",
   },
 ];
 
-export const DEFAULT_PROMO_BANNERS: HomepageBanner[] = [
-  {
-    id: 1,
-    desktopUrl: "/images/Hero/baner-slider/1-desktop.webp",
-    mobileUrl: "/images/Hero/baner-slider/1-mobile.webp",
-    alt: "Картинка для перехода в категорию «Все для бариста»",
-    href: "/catalog/ms-c374b866",
-  },
-  {
-    id: 2,
-    desktopUrl: "/images/Hero/baner-slider/2-desktop.webp",
-    mobileUrl: "/images/Hero/baner-slider/2-mobile.webp",
-    alt: "Картинка для перехода в категорию «Джигеры и мерники»",
-    href: "/catalog/ms-57a775a4",
-  },
-];
+export const DEFAULT_PROMO_BANNERS: HomepageBanner[] = [];
 
 function object(value: unknown): Record<string, unknown> {
   return value && typeof value === "object" && !Array.isArray(value) ? value as Record<string, unknown> : {};
