@@ -38,6 +38,9 @@
    ========================================================================== */
 
 .slide {
+  display: block;
+  color: inherit;
+  text-decoration: none;
   /* Keep embedded text legible and a glimpse of the next banner for swiping. */
   flex: 0 0 86vw;
   aspect-ratio: 4 / 5;
@@ -61,6 +64,9 @@
   height: 100%;
   object-fit: contain;
 }
+
+.editorial { aspect-ratio: auto; height: 480px; }
+.slide:focus-visible { outline: 2px solid #111827; outline-offset: -3px; }
 
 .slide > picture {
   display: block;

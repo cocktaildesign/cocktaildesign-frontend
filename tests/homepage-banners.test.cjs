@@ -65,3 +65,21 @@ test('responsive banner sizes use only real CMS media while keeping original art
   assert.equal(result.href,'/catalog');
   assert.equal(JSON.stringify(source),snapshot);
 });
+
+test('editorial banners use a single responsive photo and preserve plain text; legacy banners stay image-only', () => {
+  const source={...slide(9),useTextLayout:true,heading:' Новинки\nинвентаря ',description:'Описание',buttonLabel:'Смотреть',note:'Условия',productImage:{url:'/uploads/product.webp',width:1000,height:800,formats:{small:{url:'/uploads/product-small.webp',width:500}}}};
+  const before=JSON.stringify(source),out=model.normalizeBanners([source,slide(8)],[],base);
+  assert.equal(out[0].editorial.heading,'Новинки\nинвентаря');
+  assert.equal(out[0].desktopUrl,out[0].mobileUrl);
+  assert.equal(out[0].desktopUrl,base+'/uploads/product.webp');
+  assert.equal(out[0].desktopSrcSet,out[0].mobileSrcSet);
+  assert.equal(out[1].editorial,undefined);
+  assert.equal(JSON.stringify(source),before);
+});
+test('incomplete editorial publication fails safely; optional text and no-link banners are supported', () => {
+ const source={...slide(1),useTextLayout:true,heading:'Заголовок',buttonLabel:'В каталог',productImage:{url:'/uploads/photo.webp'}};
+ for(const change of [{heading:''},{productImage:null},{buttonLabel:''}]) assert.equal(model.normalizeBanners([{...source,...change}],model.DEFAULT_HERO_BANNERS,base),model.DEFAULT_HERO_BANNERS);
+ const out=model.normalizeBanners([{...source,href:'',buttonLabel:''}],[],base)[0];
+ assert.equal(out.href,undefined);assert.equal(out.editorial.note,'');
+ assert.equal(model.normalizeBanners([{...source,isActive:false}],model.DEFAULT_HERO_BANNERS,base).length,0);
+});
