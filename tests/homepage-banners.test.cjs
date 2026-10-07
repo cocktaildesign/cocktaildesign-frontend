@@ -38,10 +38,10 @@ test('banner destinations accept site paths or HTTPS and reject unsafe schemes',
   for(const href of ['javascript:alert(1)','data:text/html,x','//evil.test','/\\evil.test','https://site.test/a b','']) assert.equal(model.safeBannerHref(href),undefined);
   for(const href of ['/catalog','/catalog?a=1#x','https://cocktaildesign.ru/school']) assert.equal(model.safeBannerHref(href),href);
 });
-test('CMS outage preserves both existing sliders; homepage query requests both media pairs', async () => {
+test('CMS outage keeps current hero artwork and retired promo banners hidden; CMS remains editable', async () => {
   const loader=fetchStrapi=>load('index.ts',{'../strapi/client':{fetchStrapi,getStrapiUrl:()=>base},'./model':model});
   const unavailable=await loader(async()=>{throw new Error('offline')}).getHomepageBanners();
-  assert.equal(unavailable.hero.length,3);assert.equal(unavailable.promo.length,2);
+  assert.equal(unavailable.hero.length,3);assert.equal(unavailable.promo.length,0);
   const result=await loader(async(route,params)=>{
     assert.equal(route,'/api/homepage');
     assert.equal(params['populate[heroBanners][populate]'],'*');

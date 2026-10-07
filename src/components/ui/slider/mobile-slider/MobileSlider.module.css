@@ -38,7 +38,8 @@
    ========================================================================== */
 
 .slide {
-  flex: 0 0 42%;
+  /* Keep embedded text legible and a glimpse of the next banner for swiping. */
+  flex: 0 0 86vw;
   aspect-ratio: 4 / 5;
 
   position: relative;
@@ -58,7 +59,7 @@
   display: block;
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  object-fit: contain;
 }
 
 .slide > picture {

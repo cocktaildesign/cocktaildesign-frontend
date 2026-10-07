@@ -27,18 +27,18 @@ export default function MobileSlider({ images }: MobileSliderProps) {
     <div className={styles.slider} aria-label="Мобильные баннеры">
       <div className={styles.track}>
         {images.map((image, index) => {
-          // Two 42%-wide banners are visible on the initial mobile screen.
-          const isLcpSlide = index < 2;
+          // Only the first banner needs priority; the next one peeks into view.
+          const isLcpSlide = index === 0;
           const content = (
             <picture>
-              <source media="(max-width: 600px)" srcSet={image.mobileSrcSet ?? image.mobileUrl} sizes="42vw" />
+              <source media="(max-width: 600px)" srcSet={image.mobileSrcSet ?? image.mobileUrl} sizes="86vw" />
             <Image
               src={EMPTY_IMAGE}
               alt={image.alt}
               className={styles.image}
               width={480}
               height={600}
-              sizes="(max-width: 600px) 42vw, 0px"
+              sizes="(max-width: 600px) 86vw, 0px"
               fetchPriority={isLcpSlide ? "high" : "auto"}
               loading={isLcpSlide ? "eager" : "lazy"}
             />
