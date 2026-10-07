@@ -119,7 +119,7 @@ test('detail selects silver with matching photo, SKU, price and cart ID by defau
   assert.ok(html.indexOf('title="Серебро"') < html.indexOf('title="Золото"'));
   assert.match(html, /aria-pressed="true" aria-label="Серебро"/);
   assert.match(html, /data-image="\/SpSil.webp"/);
-  assert.match(html, /&quot;productId&quot;:&quot;SpSil&quot;/);
+  assert.match(html, /&quot;variantId&quot;:&quot;SpSil&quot;/);
   assert.match(html, /&quot;price&quot;:500/);
 });
 test('explicit variant URLs keep their selected colour and purchase data; stale URLs use silver', () => {
@@ -128,7 +128,7 @@ test('explicit variant URLs keep their selected colour and purchase data; stale 
       product: product([], {images: []}), variants: [copper, gold, silver], specifications: [], colorMap: {},
     }));
     assert.ok(html.includes('data-image="/' + selected.id + '.webp"'));
-    assert.ok(html.includes('&quot;productId&quot;:&quot;' + selected.id + '&quot;'));
+    assert.ok(html.includes('&quot;variantId&quot;:&quot;' + selected.id + '&quot;'));
     assert.ok(html.includes('aria-pressed="true" aria-label="' + selected.characteristics[0].value + '"'));
   }
 });
@@ -144,7 +144,7 @@ test('catalogue renders sorted swatches while preserving the selected promotiona
     '@/components/ui/engraving/EngravingToggle': noop,
     '@/components/ui/favorites/FavoriteButton': noop,
     '@/shared/ui/product-badges/ProductBadges': noop,
-    '@/lib/cart/cartStore': {useCartStore: selector => selector({items: [], addItem: noop, removeItem: noop})},
+    '@/lib/cart/cartStore': {cartLineKey:i=>JSON.stringify([i.slug,i.id,i.code]),useCartStore: selector => selector({items: [], addItem: noop, removeItem: noop})},
     '@/lib/catalog/color-order': order,
     './ProductCard.module.css': {default: new Proxy({}, {get: (_, key) => String(key)})},
   };

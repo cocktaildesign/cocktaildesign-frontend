@@ -64,11 +64,12 @@ test('quantity, removal and selection use the existing persisted-cart actions',(
   const localStorage={getItem:k=>storage.get(k)??null,setItem:(k,v)=>storage.set(k,v),removeItem:k=>storage.delete(k)};
   const store=load('src/lib/cart/cartStore.ts',{localStorage}).useCartStore;
   const totals=()=>calculateCartTotals(store.getState().items,tiers,store.getState());
+  const key=code=>{const i=store.getState().items.find(i=>i.code===code);return JSON.stringify([i.slug,i.id,i.code]);};
   store.getState().addItem(mixed[0]);store.getState().addItem(mixed[1]);
   store.getState().setPromo({code:'MONEY',type:'fixed',discount:1000});assert.equal(totals().finalPrice,13500);
-  store.getState().toggleSelected('REG');assert.equal(totals().finalPrice,13500,'checkboxes select removal/export, not order scope');
-  store.getState().updateQuantity('SALE',2);assert.equal(store.getState().promoCode,'');assert.equal(totals().finalPrice,19500);
+  store.getState().toggleSelected(key('REG'));assert.equal(totals().finalPrice,13500,'checkboxes select removal/export, not order scope');
+  store.getState().updateQuantity(key('SALE'),2);assert.equal(store.getState().promoCode,'');assert.equal(totals().finalPrice,19500);
   store.getState().setPromo({code:'PERCENT',type:'percent',discount:1000,replacesVolumeDiscount:true});
   store.getState().removeSelected();assert.equal(totals().finalPrice,10000);assert.equal(store.getState().promoDiscount,0);
-  store.getState().removeItem('SALE');assert.equal(totals().finalPrice,0);
+  store.getState().removeItem(key('SALE'));assert.equal(totals().finalPrice,0);
 });

@@ -3,7 +3,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useCartStore } from "@/lib/cart/cartStore";
+import { cartLineKey, cartProductHref, useCartStore } from "@/lib/cart/cartStore";
 import QuantityControl from "@/components/ui/quantity/QuantityControl";
 import CloseIcon from "@/components/icons/CloseIcon";
 import FavoriteButton from "@/components/ui/favorites/FavoriteButton";
@@ -26,6 +26,7 @@ function formatPrice(price: number): string {
 }
 
 export default function CartItem({ item, engravingEnabled }: CartItemProps) {
+  const lineKey = cartLineKey(item);
   const updateQuantity = useCartStore((s) => s.updateQuantity);
   const removeItem = useCartStore((s) => s.removeItem);
   const toggleSelected = useCartStore((s) => s.toggleSelected);
@@ -33,7 +34,7 @@ export default function CartItem({ item, engravingEnabled }: CartItemProps) {
   const engravingNoteId = useId();
 
   // Проверяем есть ли id товара в списке выбранных
-  const isSelected = useCartStore((s) => s.selectedIds.includes(item.id));
+  const isSelected = useCartStore((s) => s.selectedIds.includes(lineKey));
 
   return (
     <div className={styles.item}>
@@ -42,7 +43,7 @@ export default function CartItem({ item, engravingEnabled }: CartItemProps) {
         type="checkbox"
         className={styles.itemCheckbox}
         checked={isSelected}
-        onChange={() => toggleSelected(item.id)}
+        onChange={() => toggleSelected(lineKey)}
       />
 
       {/* Картинка */}
@@ -58,7 +59,7 @@ export default function CartItem({ item, engravingEnabled }: CartItemProps) {
 
       {/* Название + гравировка */}
       <div className={styles.info}>
-        <Link href={`/catalog/product/${item.slug}`} className={styles.name}>
+        <Link href={cartProductHref(item)} className={styles.name}>
           {item.name}
         </Link>
         {item.discountExcluded && (
@@ -70,7 +71,7 @@ export default function CartItem({ item, engravingEnabled }: CartItemProps) {
             ariaLabel={`Гравировка: ${item.name}`} describedBy={engravingNoteId}
             onChange={checked => {
               // Removing a saved request is always possible, including while the API is unavailable.
-              if (!checked || engravingEnabled) setEngraving(item.id, checked);
+              if (!checked || engravingEnabled) setEngraving(lineKey, checked);
             }} />
           <p id={engravingNoteId} className={styles.engravingNote}>Стоимость согласует менеджер. Не включена в итог.
             {item.engraving && item.quantity > 1 ? ` Выбрана для всех ${item.quantity} шт. этого товара.` : ""}
@@ -89,15 +90,15 @@ export default function CartItem({ item, engravingEnabled }: CartItemProps) {
       {/* Избранное, удаление, количество */}
       <div className={styles.itemControls}>
         <div className={styles.itemActions}>
-          <FavoriteButton productId={item.id} />
-          <button type="button" className={styles.remove} onClick={() => removeItem(item.id)}>
+          <FavoriteButton productId={item.productId} slug={item.slug} variantId={item.variantId} code={item.code} />
+          <button type="button" className={styles.remove} onClick={() => removeItem(lineKey)}>
             <CloseIcon />
           </button>
         </div>
         <div className={styles.quantity}>
           <QuantityControl
             value={item.quantity}
-            onChange={(newQuantity) => updateQuantity(item.id, newQuantity)}
+            onChange={(newQuantity) => updateQuantity(lineKey, newQuantity)}
             className={styles.quantitySmall}
           />
         </div>

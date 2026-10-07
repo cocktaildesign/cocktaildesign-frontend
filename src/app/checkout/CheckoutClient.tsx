@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { useCartStore } from "@/lib/cart/cartStore";
+import { cartLineKey, useCartStore } from "@/lib/cart/cartStore";
 import { useDiscountTiers } from "@/lib/cart/discountTiers";
 import { calculateCartTotals } from "@/lib/cart/cartTotals";
 import PersonIcon from "@/components/icons/payment-tabs/PersonIcon";
@@ -255,7 +255,7 @@ export default function CheckoutClient() {
 
             <div className={styles.orderItems}>
               {items.map((item) => (
-                <div key={item.id} className={styles.orderItem}>
+                <div key={cartLineKey(item)} className={styles.orderItem}>
                   <div className={styles.orderItemMain}>
                     <span className={styles.orderItemName}>{item.name}</span>
 

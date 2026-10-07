@@ -4,6 +4,9 @@
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
 
+export type FavoriteReference = { productId: string; slug: string; variantId?: string | null };
+export const favoriteKey = (productId: string) => `product:${productId}`;
+
 type FavoritesState = {
   // Словарь избранного:
   // ключ = productId, значение = true
@@ -11,6 +14,9 @@ type FavoritesState = {
   // - O(1) проверка "в избранном ли товар"
   // - дешёвый toggle
   ids: Record<string, true>;
+  references: Record<string, FavoriteReference>;
+  save: (reference: FavoriteReference) => void;
+  resolveLegacy: (id: string, reference?: FavoriteReference) => void;
 
   // Флаг: localStorage уже подгрузился в store
   // Нужен, чтобы UI не "мигал" пустым состоянием на первом рендере
@@ -33,6 +39,23 @@ export const useFavoritesStore = create<FavoritesState>()(
     (set, get) => ({
       // Важно: по умолчанию всегда пустой объект, НЕ undefined
       ids: {},
+      references: {},
+      save: (reference) => set(state => {
+        const key = favoriteKey(reference.productId);
+        return { ids: { ...state.ids, [key]: true }, references: { ...state.references, [key]: reference } };
+      }),
+      resolveLegacy: (id, reference) => set(state => {
+        if (!state.ids[id] || id.startsWith("product:")) return state;
+        const ids = { ...state.ids };
+        const references = { ...state.references };
+        delete ids[id];
+        if (reference) {
+          const key = favoriteKey(reference.productId);
+          ids[key] = true;
+          references[key] ??= reference;
+        }
+        return { ids, references };
+      }),
 
       // До hydration считаем, что данные ещё не готовы
       hasHydrated: false,
@@ -54,7 +77,9 @@ export const useFavoritesStore = create<FavoritesState>()(
             next[productId] = true;
           }
 
-          return { ids: next };
+          const references = { ...state.references };
+          if (!next[productId]) delete references[productId];
+          return { ids: next, references };
         });
       },
     }),
@@ -65,7 +90,7 @@ export const useFavoritesStore = create<FavoritesState>()(
       storage: createJSONStorage(() => localStorage),
 
       // В localStorage сохраняем только данные, без функций
-      partialize: (state) => ({ ids: state.ids }),
+      partialize: (state) => ({ ids: state.ids, references: state.references }),
 
       // Когда persist восстановил данные — ставим флаг
       onRehydrateStorage: () => (state) => {

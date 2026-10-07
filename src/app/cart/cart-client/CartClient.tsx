@@ -11,7 +11,7 @@ import CartSummary from "../cart-summary/CartSummary";
 import PrinterIcon from "@/components/icons/cart/PrinterIcon";
 import DownloadIcon from "@/components/icons/cart/DownloadIcon";
 
-import { useCartStore } from "@/lib/cart/cartStore";
+import { cartLineKey, useCartStore } from "@/lib/cart/cartStore";
 import { exportCartToXlsx } from "@/lib/cart/exportToXlsx";
 import { calculateCartTotals } from "@/lib/cart/cartTotals";
 import { useDiscountTiers } from "@/lib/cart/discountTiers";
@@ -158,7 +158,7 @@ export default function CartClient() {
 
           {/* Список товаров */}
           {items.map((item) => (
-            <CartItem key={item.id} item={item} engravingEnabled={policy.engravingByCode[item.code.trim()] === true} />
+            <CartItem key={cartLineKey(item)} item={item} engravingEnabled={policy.engravingByCode[item.code.trim()] === true} />
           ))}
           {items.some(item => item.engraving) && <EngravingFiles />}
         </div>

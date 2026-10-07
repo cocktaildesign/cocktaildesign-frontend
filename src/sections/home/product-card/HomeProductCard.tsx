@@ -96,7 +96,7 @@ export default function ProductCard({ product }: ProductCardProps) {
             className={styles.productBadgesOverlay}
           />
 
-          <FavoriteButton productId={product.id} className={styles.favoriteButtonOverlay} />
+          <FavoriteButton productId={product.id} slug={product.slug} variantId={product.preferredVariantId ?? null} className={styles.favoriteButtonOverlay} />
 
           {imagesCount > 1 && (
             <div className={styles.dots}>

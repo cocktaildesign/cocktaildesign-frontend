@@ -18,6 +18,7 @@ function load(file,globals={}) {
     },...globals});
   vm.runInContext(script,context,{timeout:1000});return module.exports;
 }
+const lineKey=code=>JSON.stringify([code,code,code]);
 function oldCart(type='fixed') {
   const saved={state:{items:[item('REG',1000),item('SALE',500)],promoType:type,promoCode:'SAVED',promoDiscount:100,
     promoReplacesVolumeDiscount:type==='percent',promoBonusMessage:''},version:0};
@@ -27,11 +28,11 @@ function oldCart(type='fixed') {
 }
 test('restores an old cart, updates only policy, preserves money promo and user selections',()=>{
   const store=oldCart();const before=JSON.parse(JSON.stringify(store.getState().items));
-  store.getState().toggleSelected('SALE');
+  store.getState().toggleSelected(lineKey('SALE'));
   store.getState().applyDiscountPolicy({REG:false,SALE:true});
   const state=store.getState();
   assert.equal(state.items[1].discountExcluded,true);assert.equal(state.promoDiscount,100);assert.equal(state.promoCode,'SAVED');
-  assert.deepEqual(JSON.parse(JSON.stringify(state.selectedIds)),['SALE']);
+  assert.deepEqual(JSON.parse(JSON.stringify(state.selectedIds)),[lineKey('SALE')]);
   assert.deepEqual(JSON.parse(JSON.stringify(state.items)),before.map(p=>({...p,discountExcluded:p.code==='SALE'})));
 });
 test('invalidates stale percent preview, but unchanged policy preserves the promo',()=>{
@@ -62,15 +63,15 @@ test('missing products, malformed flags and network failures cannot silently kee
 
 test('engraving toggles one saved row without changing quantities, discounts, promos or selection',()=>{
   for(const type of ['', 'fixed','percent','inventory','startup']) {
-    const store=oldCart(type);store.getState().toggleSelected('REG');
+    const store=oldCart(type);store.getState().toggleSelected(lineKey('REG'));
     const before=JSON.parse(JSON.stringify(store.getState()));
-    store.getState().setEngraving('SALE',false);
+    store.getState().setEngraving(lineKey('SALE'),false);
     const after=JSON.parse(JSON.stringify(store.getState()));
     assert.deepEqual(after,{...before,items:before.items.map(p=>p.id==='SALE'?{...p,engraving:false}:p)});
-    store.getState().setEngraving('SALE',true);
+    store.getState().setEngraving(lineKey('SALE'),true);
     assert.deepEqual(JSON.parse(JSON.stringify(store.getState())),before);
     const identity=store.getState();
-    store.getState().setEngraving('MISSING',true);store.getState().setEngraving('SALE',true);
+    store.getState().setEngraving(lineKey('MISSING'),true);store.getState().setEngraving(lineKey('SALE'),true);
     assert.equal(store.getState(),identity);
   }
 });
@@ -79,7 +80,7 @@ test('engraving state survives reloading an old saved cart',()=>{
   const memory=new Map([['cocktaildesign:cart',JSON.stringify({state:{items:[item('OLD',100)]},version:0})]]);
   const localStorage={getItem:k=>memory.get(k)??null,setItem:(k,v)=>memory.set(k,v),removeItem:k=>memory.delete(k)};
   const store=load('src/lib/cart/cartStore.ts',{localStorage}).useCartStore;
-  store.getState().setEngraving('OLD',false);
+  store.getState().setEngraving(lineKey('OLD'),false);
   const restored=load('src/lib/cart/cartStore.ts',{localStorage}).useCartStore;
   assert.equal(restored.getState().items[0].engraving,false);
   assert.equal(restored.getState().items[0].quantity,2);

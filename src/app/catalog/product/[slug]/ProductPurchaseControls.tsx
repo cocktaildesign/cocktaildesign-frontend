@@ -10,13 +10,14 @@ import ArrowRightIcon from "@/components/icons/ArrowRightIcon";
 import FavoriteButton from "@/components/ui/favorites/FavoriteButton";
 import CdekIcon from "@/components/icons/product-page/CdekIcon";
 import FreeDeliveryIcon from "@/components/icons/product-page/FreeDeliveryIcon";
-import { useCartStore } from "@/lib/cart/cartStore";
+import { cartLineKey, useCartStore } from "@/lib/cart/cartStore";
 import type { CartItem } from "@/lib/cart/cartStore";
 
 import styles from "./ProductPage.module.css";
 
 type ProductPurchaseControlsProps = {
   productId: string;
+  variantId: string | null;
   engravingEnabled: boolean;
   price: number;
   priceOld: number;
@@ -47,6 +48,7 @@ function getSavingsAmount(price: number, priceOld: number): number | null {
 
 export default function ProductPurchaseControls({
   productId,
+  variantId,
   engravingEnabled,
   price,
   priceOld,
@@ -60,8 +62,11 @@ export default function ProductPurchaseControls({
   const [quantity, setQuantity] = useState<number>(1);
   const [engravingChecked, setEngravingChecked] = useState<boolean>(false);
 
+  const itemId = variantId ?? productId;
+  const lineKey = cartLineKey({ id: itemId, slug, code: code ?? "" });
+
   // Берём товар из корзины (если он там есть)
-  const cartItem = useCartStore((s) => s.items.find((i) => i.id === productId));
+  const cartItem = useCartStore((s) => s.items.find((i) => cartLineKey(i) === lineKey));
 
   // Actions из store
   const addItem = useCartStore((s) => s.addItem);
@@ -84,7 +89,9 @@ export default function ProductPurchaseControls({
 
   function handleAddToCart() {
     const item: CartItem = {
-      id: productId,
+      id: itemId,
+      productId,
+      variantId,
       name: name,
       price: price,
       imageUrl: imageUrl,
@@ -103,14 +110,14 @@ export default function ProductPurchaseControls({
   function handleQuantityChange(next: number) {
     // Ноль или меньше — удаляем товар из корзины
     if (next < 1) {
-      removeItem(productId);
+      removeItem(lineKey);
       setQuantity(1);
       return;
     }
 
     // Товар в корзине — обновляем количество в store
     if (isInCart) {
-      updateQuantity(productId, next);
+      updateQuantity(lineKey, next);
       return;
     }
 
@@ -122,7 +129,7 @@ export default function ProductPurchaseControls({
   function handleEngravingChange(checked: boolean) {
     if (isInCart) {
       const updatedItems = useCartStore.getState().items.map((i) => {
-        if (i.id !== productId) return i;
+        if (cartLineKey(i) !== lineKey) return i;
         return { ...i, engraving: checked };
       });
       useCartStore.setState({ items: updatedItems });
@@ -141,7 +148,7 @@ export default function ProductPurchaseControls({
 
   const stickyFavorite = (
     <div className={styles.mobileStickyFavorite}>
-      <FavoriteButton productId={productId} className={styles.mobileStickyFavoriteButton} />
+      <FavoriteButton productId={productId} slug={slug} variantId={variantId} className={styles.mobileStickyFavoriteButton} />
     </div>
   );
 
@@ -210,7 +217,7 @@ export default function ProductPurchaseControls({
           )}
 
           <div className={styles.favoriteButton}>
-            <FavoriteButton productId={productId} />
+            <FavoriteButton productId={productId} slug={slug} variantId={variantId} />
           </div>
         </div>
       </div>

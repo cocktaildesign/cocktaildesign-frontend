@@ -7,6 +7,8 @@ import { persist, createJSONStorage } from "zustand/middleware";
 // CartItem - один товар в корзине
 export type CartItem = {
   id: string;
+  productId?: string;
+  variantId?: string | null;
   name: string;
   price: number;
   priceOld: number;
@@ -18,6 +20,19 @@ export type CartItem = {
   discountExcluded: boolean;
   code: string;
 };
+
+// Old saved rows already contain these three fields. Keep their data intact and
+// namespace the entity ID by its parent and literal SKU (including / versus \).
+export function cartLineKey(item: Pick<CartItem, "id" | "slug" | "code">): string {
+  return JSON.stringify([item.slug, item.id, item.code]);
+}
+
+export function cartProductHref(item: Pick<CartItem, "slug" | "code" | "variantId">): string {
+  const base = `/catalog/product/${item.slug}`;
+  if (item.variantId) return `${base}?variant=${encodeURIComponent(item.variantId)}`;
+  // A legacy row has no entity type; never guess a variant from its numeric ID.
+  return item.variantId === undefined && item.code ? `${base}?sku=${encodeURIComponent(item.code)}` : base;
+}
 
 // CartState — всё состояние корзины + все actions (действия).
 type CartState = {
@@ -88,8 +103,8 @@ export const useCartStore = create<CartState>()(
       // A manager-priced request only: do not change quantities, prices, promos or selected rows.
       setEngraving: (id, engraving) => {
         const items = get().items;
-        if (!items.some(item => item.id === id && item.engraving !== engraving)) return;
-        set({ items: items.map(item => item.id === id ? { ...item, engraving } : item) });
+        if (!items.some(item => cartLineKey(item) === id && item.engraving !== engraving)) return;
+        set({ items: items.map(item => cartLineKey(item) === id ? { ...item, engraving } : item) });
       },
 
       applyDiscountPolicy: (policy) => {
@@ -109,13 +124,15 @@ export const useCartStore = create<CartState>()(
       },
 
       addItem: (item) => {
-        const existingItem = get().items.find((i) => i.id === item.id);
+        const existingItem = get().items.find((i) => cartLineKey(i) === cartLineKey(item));
 
         if (existingItem) {
           const updatedItems = get().items.map((i) => {
-            if (i.id !== item.id) return i;
+            if (cartLineKey(i) !== cartLineKey(item)) return i;
             return {
               ...i,
+              productId: item.productId,
+              variantId: item.variantId,
               name: item.name,
               price: item.price,
               priceOld: item.priceOld,
@@ -138,10 +155,10 @@ export const useCartStore = create<CartState>()(
 
       removeItem: (id) => {
         const currentItems = get().items;
-        const hasItem = currentItems.some((i) => i.id === id);
+        const hasItem = currentItems.some((i) => cartLineKey(i) === id);
         if (!hasItem) return;
 
-        const itemsWithoutRemoved = currentItems.filter((i) => i.id !== id);
+        const itemsWithoutRemoved = currentItems.filter((i) => cartLineKey(i) !== id);
         set({ items: itemsWithoutRemoved, ...promoResetState });
       },
 
@@ -152,12 +169,12 @@ export const useCartStore = create<CartState>()(
         }
 
         const currentItems = get().items;
-        const currentItem = currentItems.find((i) => i.id === id);
+        const currentItem = currentItems.find((i) => cartLineKey(i) === id);
         if (!currentItem) return;
         if (currentItem.quantity === quantity) return;
 
         const updatedItems = currentItems.map((i) => {
-          if (i.id !== id) return i;
+          if (cartLineKey(i) !== id) return i;
           return { ...i, quantity };
         });
 
@@ -209,7 +226,7 @@ export const useCartStore = create<CartState>()(
       },
 
       selectAll: () => {
-        const allIds = get().items.map((item) => item.id);
+        const allIds = get().items.map(cartLineKey);
         set({ selectedIds: allIds });
       },
 
@@ -220,7 +237,7 @@ export const useCartStore = create<CartState>()(
       removeSelected: () => {
         const selectedIds = get().selectedIds;
         if (selectedIds.length === 0) return;
-        const remainingItems = get().items.filter((item) => !selectedIds.includes(item.id));
+        const remainingItems = get().items.filter((item) => !selectedIds.includes(cartLineKey(item)));
         set({ items: remainingItems, selectedIds: [], ...promoResetState });
       },
     }),
