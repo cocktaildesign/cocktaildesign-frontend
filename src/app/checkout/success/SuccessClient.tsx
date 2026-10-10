@@ -45,7 +45,7 @@ export default function SuccessClient() {
           </a>
 
           <a
-            href="https://t.me/Cocktail_Design_official"
+            href="https://t.me/Manager_cocktail_design"
             target="_blank"
             rel="noopener noreferrer"
             className={styles.successContact}>
