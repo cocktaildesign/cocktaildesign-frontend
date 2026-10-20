@@ -28,10 +28,12 @@ export async function fetchStrapi<T>(path: string, params?: Record<string, strin
     }
   }
 
-  const response = await fetch(url.toString(), {
-    // На клиенте будет проигнорировано — ок
-    next: { revalidate: 60 },
-  });
+  // A hidden product returns 404. Background fetch revalidation can retain the
+  // old successful response on 404, so product visibility must be read fresh.
+  // Keep caching lists/navigation; identical detail reads still dedupe per render.
+  const response = await fetch(url.toString(), path === "/api/catalog/product"
+    ? { cache: "no-store" }
+    : { next: { revalidate: 60 } });
 
   if (!response.ok) {
     const body = await response.text();
