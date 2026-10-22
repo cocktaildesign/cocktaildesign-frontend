@@ -39,3 +39,6 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# Optimized pilot media is supplied as a checked release bundle, not Git binaries.
+/public/product-videos/
