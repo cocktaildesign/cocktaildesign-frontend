@@ -1,0 +1,102 @@
+[
+  {
+    "moyskladId": "92877a23-0c33-11ed-0a80-02690037f665",
+    "code": "StCDMng",
+    "slug": "ms-92877a23",
+    "name": "Стрейнер-хоторн Cocktail Design Monogram под гравировку",
+    "videos": [
+      {
+        "id": "monogram",
+        "src": "/product-videos/monogram-18697985bebf.mp4",
+        "poster": "/product-videos/monogram-e17d1ef2c4f8.webp",
+        "thumbnail": "/product-videos/monogram-thumb-61cced26b245.webp",
+        "label": "Короткий видеообзор",
+        "duration": 6.033333,
+        "width": 960,
+        "height": 952
+      }
+    ]
+  },
+  {
+    "moyskladId": "10bb0cb2-97e6-11ec-0a80-0ff30018bdea",
+    "code": "StFCDCL",
+    "slug": "ms-10bb0cb2",
+    "name": "Файн стрейнер Cocktail Design Classic",
+    "videos": [
+      {
+        "id": "classic",
+        "src": "/product-videos/classic-53e7a8cd7068.mp4",
+        "poster": "/product-videos/classic-264cba0f5c3b.webp",
+        "thumbnail": "/product-videos/classic-thumb-a8daeaaac71b.webp",
+        "label": "Короткий видеообзор",
+        "duration": 2.266667,
+        "width": 540,
+        "height": 960
+      }
+    ]
+  },
+  {
+    "moyskladId": "f77ad119-ff3e-11f0-0a80-10a900f63ce2",
+    "code": "SpCDEcEsPO2",
+    "slug": "ms-f77ad119",
+    "name": "Барная Ложка Cocktail Design 40 см Echo Eyes",
+    "videos": [
+      {
+        "id": "echo",
+        "src": "/product-videos/echo-d4f7287f08ff.mp4",
+        "poster": "/product-videos/echo-263a4cf27e6a.webp",
+        "thumbnail": "/product-videos/echo-thumb-1a6fc78a57b8.webp",
+        "label": "Короткий видеообзор",
+        "duration": 2.0,
+        "width": 540,
+        "height": 960
+      }
+    ]
+  },
+  {
+    "moyskladId": "9278b4ed-0c33-11ed-0a80-02690037f65f",
+    "code": "StCDVrs",
+    "slug": "ms-9278b4ed",
+    "name": "Стрейнер-хоторн Cocktail Design Virus под гравировку",
+    "videos": [
+      {
+        "id": "virus-short",
+        "src": "/product-videos/virus-short-c4adcead4289.mp4",
+        "poster": "/product-videos/virus-short-3092acaac7ea.webp",
+        "thumbnail": "/product-videos/virus-short-thumb-e67c712a19f6.webp",
+        "label": "Короткий видеообзор",
+        "duration": 8.0,
+        "width": 720,
+        "height": 714
+      },
+      {
+        "id": "virus",
+        "src": "/product-videos/virus-b785f951ab17.mp4",
+        "poster": "/product-videos/virus-0a57616f60ef.webp",
+        "thumbnail": "/product-videos/virus-thumb-06ed00066784.webp",
+        "label": "Полный видеообзор",
+        "duration": 32.533333,
+        "width": 720,
+        "height": 714
+      }
+    ]
+  },
+  {
+    "moyskladId": "100b9aa5-97e6-11ec-0a80-0ff30018bd3b",
+    "code": "StJCDFl",
+    "slug": "ms-100b9aa5",
+    "name": "Джулеп стрейнер Cocktail Design Flower",
+    "videos": [
+      {
+        "id": "flower",
+        "src": "/product-videos/flower-6c47dfe22ead.mp4",
+        "poster": "/product-videos/flower-c460ef9b6377.webp",
+        "thumbnail": "/product-videos/flower-thumb-90bf3be7448f.webp",
+        "label": "Короткий видеообзор",
+        "duration": 5.366667,
+        "width": 548,
+        "height": 960
+      }
+    ]
+  }
+]

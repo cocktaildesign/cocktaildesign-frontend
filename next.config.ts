@@ -2,6 +2,12 @@ import type { NextConfig } from "next";
 import legacyRedirects from "./src/lib/seo/legacy-redirects.json";
 
 const nextConfig: NextConfig = {
+  async headers() {
+    return [{
+      source: "/product-videos/:path*",
+      headers: [{ key: "Cache-Control", value: "public, max-age=31536000, immutable" }],
+    }];
+  },
   async redirects() {
     return Object.entries(legacyRedirects).map(([source, destination]) => ({
       source, destination, permanent: true,
