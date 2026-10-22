@@ -12,6 +12,7 @@ import ProductBadges from "@/shared/ui/product-badges/ProductBadges";
 
 import type { CatalogProductDetail, CatalogProductSpecification, CatalogVariant } from "@/lib/api/catalog/types";
 import { sortColorVariants } from "@/lib/catalog/color-order";
+import type { ProductVideo } from "@/lib/catalog/product-videos";
 
 import { productBundleCards } from "@/lib/catalog/bundle-display";
 import ProductGallery from "./ProductGallery";
@@ -34,6 +35,7 @@ type VariantSelectorProps = {
   variants: CatalogVariant[];
   specifications: CatalogProductSpecification[];
   colorMap: Record<string, string>;
+  videos?: ProductVideo[];
 };
 
 function ProductSpecificationValue({ spec }: { spec: CatalogProductSpecification }) {
@@ -48,7 +50,7 @@ function ProductSpecificationValue({ spec }: { spec: CatalogProductSpecification
   return spec.value;
 }
 
-export default function VariantSelector({ product, variants: sourceVariants, specifications, colorMap }: VariantSelectorProps) {
+export default function VariantSelector({ product, variants: sourceVariants, specifications, colorMap, videos = [] }: VariantSelectorProps) {
   const variants = useMemo(() => sortColorVariants(sourceVariants), [sourceVariants]);
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -266,7 +268,8 @@ export default function VariantSelector({ product, variants: sourceVariants, spe
 
   return (
     <>
-      <ProductGallery images={galleryImages} activeIndex={activeImageIndex} onImageChange={handleImageChange} />
+      <ProductGallery key={`${product.moyskladId}:${activeVariantId ?? "base"}`} images={galleryImages}
+        activeIndex={activeImageIndex} onImageChange={handleImageChange} videos={videos} />
 
       <div className={styles.productInfo}>
         <h1 className={styles.productPageTitleMobile}>{product.name}</h1>
