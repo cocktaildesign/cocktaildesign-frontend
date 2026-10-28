@@ -6,6 +6,7 @@ import controls from "./CarouselControls.module.css";
 import Image from "next/image";
 import Link from "next/link";
 import HeroBannerContent from "./HeroBannerContent";
+import StartupBannerContent from "./StartupBannerContent";
 import type { HomepageBanner } from "@/lib/api/homepage-banners/model";
 import { EMPTY_IMAGE } from "@/lib/images/empty-image";
 
@@ -27,7 +28,7 @@ export default function Slider({ images, autoPlayInterval = 7000, mobile = false
   }
 
   return (
-    <div className={`${styles.slider} ${controls.frame} ${editorial ? styles.editorial : ""} ${mobile ? styles.mobile : ""}`}
+    <div className={`${styles.slider} ${controls.frame} ${editorial ? styles.editorial : ""} ${mobile ? styles.mobile : ""} ${images[currentIndex]?.editorial?.presentation === "startup" ? styles.startup : ""}`}
       style={{aspectRatio: mobile ? (editorial ? undefined : "4 / 5") : editorial ? "64 / 27" : String(images[0].desktopAspect || 16 / 9)}}
       role="region" aria-label={mobile ? "Мобильные баннеры" : "Предложения Cocktail Design"} aria-roledescription="карусель"
       {...carousel.interactions}>
@@ -36,6 +37,12 @@ export default function Slider({ images, autoPlayInterval = 7000, mobile = false
           const isActive = index === currentIndex;
           const slideClassName = isActive ? styles.slideActive : styles.slide;
           const isLcpSlide = index === 0;
+
+          if (image.editorial?.presentation === "startup") {
+            return <div key={image.id} className={slideClassName} aria-hidden={!isActive} inert={!isActive}>
+              <StartupBannerContent banner={image} mobile={mobile} priority={isLcpSlide} />
+            </div>;
+          }
 
           if (image.href) {
             return (
