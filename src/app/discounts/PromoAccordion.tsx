@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect, useRef } from "react";
 import { Discounts, DiscountsBlock } from "./types";
 import styles from "./PromoAccordion.module.css";
 
@@ -14,8 +14,39 @@ interface PromoAccordionProps {
  */
 export default function PromoAccordion({ discount }: PromoAccordionProps) {
   const [isOpen, setIsOpen] = useState(false);
+  const [anchorRequest, setAnchorRequest] = useState(0);
+  const promoRef = useRef<HTMLDivElement>(null);
+  const lastScrolledRequest = useRef(0);
   const promoCode = findPromoCode(discount.blocks);
   const isFeatured = discount.id === "2";
+
+  useEffect(() => {
+    if (!isFeatured) return;
+
+    function openFromAnchor() {
+      if (window.location.hash !== "#startup") return;
+      setIsOpen(true);
+      setAnchorRequest((request) => request + 1);
+    }
+
+    const initialFrame = window.requestAnimationFrame(openFromAnchor);
+    window.addEventListener("hashchange", openFromAnchor);
+    return () => {
+      window.cancelAnimationFrame(initialFrame);
+      window.removeEventListener("hashchange", openFromAnchor);
+    };
+  }, [isFeatured]);
+
+  useEffect(() => {
+    if (!isOpen || anchorRequest === lastScrolledRequest.current) return;
+
+    // Scroll after the expanded conditions are committed, only for a new deep link.
+    const frame = window.requestAnimationFrame(() => {
+      promoRef.current?.scrollIntoView({ block: "start" });
+      lastScrolledRequest.current = anchorRequest;
+    });
+    return () => window.cancelAnimationFrame(frame);
+  }, [anchorRequest, isOpen]);
 
   const toggle = useCallback(() => {
     setIsOpen((prev) => !prev);
@@ -26,6 +57,8 @@ export default function PromoAccordion({ discount }: PromoAccordionProps) {
 
   return (
     <div
+      id={isFeatured ? "startup" : undefined}
+      ref={promoRef}
       className={`${styles.promo} ${isOpen ? styles.promoOpen : ""} ${
         isFeatured ? styles.promoFeatured : ""
       }`}

@@ -1,14 +1,16 @@
 .slider { position:relative; width:100%; overflow:hidden; margin:15px 0 10px; border-radius:20px; background:#f3f4f5; }
+.startup { --carousel-dot:#777a7e; --carousel-dot-active:#fff; --carousel-focus:#fff; }
 .slides { position:relative; width:100%; height:100%; }
 .slide, .slideActive { position:absolute; inset:0; display:block; opacity:0; transition:opacity 350ms ease; color:inherit; text-decoration:none; }
 .slide { pointer-events:none; }
 .slideActive { z-index:1; opacity:1; pointer-events:auto; }
 .slide > picture, .slideActive > picture { display:block; width:100%; height:100%; }
 .image { display:block; width:100%; height:100%; object-fit:contain; }
-.slider button:focus-visible, .slideActive:focus-visible { outline:2px solid #111827; outline-offset:-3px; }
+.slider button:focus-visible, .slideActive:focus-visible { outline:2px solid var(--carousel-focus, #111827); outline-offset:-3px; }
 @media (min-width:601px) and (max-width:1023px) { .editorial { aspect-ratio:auto !important; height:430px; } }
 @media (prefers-reduced-motion:reduce) { .slide, .slideActive { transition:none; } }
 
 .mobile.editorial { height:480px; }
+.mobile.startup { --carousel-arrow-top:80%; }
 .mobile { margin:0; }
 .mobile .slides { touch-action:pan-y; }

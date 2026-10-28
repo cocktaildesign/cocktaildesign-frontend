@@ -1,0 +1,47 @@
+.banner {
+  position: relative;
+  isolation: isolate;
+  container-type: inline-size;
+  height: 100%;
+  overflow: hidden;
+  background: #080a0b;
+  color: #f9f9fa;
+}
+.art { position: absolute; inset: 0; z-index: -1; display: block; }
+.art img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: center; }
+.copy { position: absolute; left: 5.625%; top: 8%; width: 44%; }
+.eyebrow { margin: 0 0 10px; font-size: clamp(11px, 1.18cqw, 16px); line-height: 1.3; letter-spacing: .12em; font-weight: 500; color: #bfc2c5; }
+.heading { margin: 0; font-weight: 400; }
+.offer { display: block; font-size: clamp(58px, 7.5cqw, 102px); line-height: .95; letter-spacing: -.055em; }
+.title { display: block; margin: 6px 0 17px; font-size: clamp(22px, 2.7cqw, 37px); line-height: 1.15; letter-spacing: -.02em; white-space: pre-line; }
+.description { margin: 0; font-size: clamp(14px, 1.7cqw, 23px); line-height: 1.4; color: #d0d1d4; white-space: pre-line; }
+.note { display: flex; align-items: center; gap: 9px; margin: 14px 0 17px; font-size: clamp(12px, 1.22cqw, 17px); line-height: 1.4; color: #bfc2c5; white-space: pre-line; }
+.note strong { font-weight: 600; color: #f4f5f6; letter-spacing: .02em; }
+.copyButton { flex: none; min-width: 30px; min-height: 30px; padding: 4px; border-radius: 5px; color: #ced2d8; --color-accent-strong: #f9f9fa; }
+.copyButton svg { width: 17px; height: 17px; }
+.cta { display: inline-flex; align-items: center; justify-content: center; width: clamp(210px, 23cqw, 313px); min-height: clamp(42px, 4.35cqw, 59px); padding: 8px 12px; border-radius: 11px; background: #f7f8fa; color: #111827; font-size: clamp(15px, 1.55cqw, 21px); line-height: 1.2; font-weight: 600; text-align: center; text-decoration: none; transition: background 150ms ease; }
+.cta:hover { background: #e4e7ee; }
+.description + .cta { margin-top: 18px; }
+.cta:focus-visible, .copyButton:focus-visible { outline: 2px solid white; outline-offset: 3px; }
+.copy { overflow-wrap: anywhere; }
+
+@media (min-width: 601px) and (max-width: 1023px) {
+  .copy { top: 9%; left: 54px; width: calc(50% - 48px); }
+  .offer { font-size: 64px; }
+  .title { font-size: 25px; margin-bottom: 14px; }
+  .description { font-size: 16px; }
+  .note { margin: 10px 0 14px; font-size: 13px; }
+  .art img { object-fit: contain; object-position: center; }
+  .cta { width: 100%; max-width: 270px; font-size: 16px; min-height: 44px; }
+}
+.mobile .art { top: auto; height: 190px; }
+.mobile .art img { object-position: right bottom; }
+.mobile .art::after { content: ""; position: absolute; inset: 0; background: linear-gradient(#080a0b, transparent 25%, transparent 85%, #080a0b80); }
+.mobile .copy { top: 23px; left: 23px; right: 23px; width: auto; }
+.mobile .eyebrow { font-size: 12px; margin-bottom: 11px; }
+.mobile .offer { font-size: 68px; }
+.mobile .title { font-size: 25px; margin: 5px 0 12px; }
+.mobile .description { font-size: 15px; line-height: 1.45; }
+.mobile .note { font-size: 13px; margin: 9px 0 10px; gap: 8px; }
+.mobile .cta { width: 100%; min-height: 44px; font-size: 16px; }
+@media (prefers-reduced-motion: reduce) { .cta { transition: none; } }
