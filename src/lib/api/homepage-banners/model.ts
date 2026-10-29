@@ -8,6 +8,7 @@ export type HomepageBanner = {
   href?: string;
   desktopAspect?: number;
   editorial?: {
+    presentation?: "startup";
     heading: string;
     description: string;
     buttonLabel: string;
@@ -18,27 +19,35 @@ export type HomepageBanner = {
 export const DEFAULT_HERO_BANNERS: HomepageBanner[] = [
   {
     id: 1,
-    desktopUrl: "/images/hero-editorial-20261007/catalog.webp",
-    mobileUrl: "/images/hero-editorial-20261007/catalog.webp",
-    alt: "Профессиональный барный инвентарь — перейти в каталог",
-    href: "/catalog",
-    editorial: {heading: "Барный инвентарь\nдля профессионалов", description: "Шейкеры, джиггеры, стрейнеры\nи аксессуары для вашего бара.", buttonLabel: "Перейти в каталог", note: ""},
+    desktopUrl: "/images/hero-startup-20261029/fleur.webp",
+    mobileUrl: "/images/hero-startup-20261029/fleur.webp",
+    alt: "StartUp",
+    href: "/discounts#startup",
+    editorial: {presentation: "startup", heading: "−20%\nна первый заказ", description: "При заказе от 20 000 ₽\nПодарок на выбор", buttonLabel: "Условия акции", note: "Промокод STARTCD20"},
   },
   {
     id: 2,
-    desktopUrl: "/images/hero-editorial-20261007/discounts.webp",
-    mobileUrl: "/images/hero-editorial-20261007/discounts.webp",
-    alt: "Ваша формула идеального бара — условия скидок до 20%",
-    href: "/discounts",
-    editorial: {heading: "Скидки\nдо 20%", description: "Чем больше сумма заказа,\nтем выше ваша скидка.", buttonLabel: "Условия скидок", note: "Действуют условия и исключения.\nПодробнее — в разделе скидок."},
+    desktopUrl: "/images/hero-editorial-20261007/catalog.webp",
+    mobileUrl: "/images/hero-editorial-20261007/catalog.webp",
+    alt: "Собственное производство Cocktail Design в Санкт-Петербурге",
+    href: "/catalog/collection/nashe-proizvodstvo",
+    editorial: {heading: "Сделано\nв Санкт-Петербурге", description: "Барный инвентарь\nCocktail Design", buttonLabel: "Смотреть изделия", note: ""},
   },
   {
     id: 3,
+    desktopUrl: "/images/hero-editorial-20261007/discounts.webp",
+    mobileUrl: "/images/hero-editorial-20261007/discounts.webp",
+    alt: "Гравировка и брендирование барного инвентаря",
+    href: "/branding",
+    editorial: {heading: "Инвентарь\nс вашим логотипом", description: "Гравировка и брендирование\nдля вашего заведения.", buttonLabel: "Смотреть варианты", note: ""},
+  },
+  {
+    id: 4,
     desktopUrl: "/images/hero-editorial-20261007/novinki.webp",
     mobileUrl: "/images/hero-editorial-20261007/novinki.webp",
     alt: "Новинки барного инвентаря — последние поступления",
     href: "/catalog/collection/novinki",
-    editorial: {heading: "Новинки барного\nинвентаря", description: "Последние поступления\nдля профессиональной миксологии.", buttonLabel: "Смотреть новинки", note: ""},
+    editorial: {heading: "Новинки барного\nинвентаря", description: "Новые изделия и коллекции\nдля вашего бара.", buttonLabel: "Смотреть новинки", note: ""},
   },
 ];
 
@@ -110,6 +119,9 @@ export function normalizeBanners(value: unknown, fallback: HomepageBanner[], bas
         desktopSrcSet: mediaSrcSet(slide.productImage, base), mobileSrcSet: mediaSrcSet(slide.productImage, base),
         alt: typeof slide.title === "string" ? slide.title : heading, href,
         editorial: {heading, buttonLabel,
+          // Reserved CMS list title selects the StartUp layout without changing the Strapi schema.
+          // All offer text, photo and destination still come from the existing editable fields.
+          ...(slide.title === "StartUp" ? {presentation: "startup" as const} : {}),
           description: typeof slide.description === "string" ? slide.description.trim() : "",
           note: typeof slide.note === "string" ? slide.note.trim() : ""}}];
     }

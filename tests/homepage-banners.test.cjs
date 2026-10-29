@@ -41,7 +41,12 @@ test('banner destinations accept site paths or HTTPS and reject unsafe schemes',
 test('CMS outage keeps current hero and promo artwork; CMS remains editable', async () => {
   const loader=fetchStrapi=>load('index.ts',{'../strapi/client':{fetchStrapi,getStrapiUrl:()=>base},'./model':model});
   const unavailable=await loader(async()=>{throw new Error('offline')}).getHomepageBanners();
-  assert.equal(unavailable.hero.length,3);assert.equal(unavailable.promo.length,2);
+  assert.equal(unavailable.hero.length,4);assert.equal(unavailable.promo.length,2);
+  assert.equal(JSON.stringify(unavailable.hero.map(banner=>banner.href)),JSON.stringify([
+    '/discounts#startup','/catalog/collection/nashe-proizvodstvo','/branding','/catalog/collection/novinki',
+  ]));
+  assert.equal(unavailable.hero[0].editorial.presentation,'startup');
+  assert.equal(unavailable.hero[0].desktopUrl,'/images/hero-startup-20261029/fleur.webp');
   const result=await loader(async(route,params)=>{
     assert.equal(route,'/api/homepage');
     assert.equal(params['populate[heroBanners][populate]'],'*');
@@ -82,4 +87,17 @@ test('incomplete editorial publication fails safely; optional text and no-link b
  const out=model.normalizeBanners([{...source,href:'',buttonLabel:''}],[],base)[0];
  assert.equal(out.href,undefined);assert.equal(out.editorial.note,'');
  assert.equal(model.normalizeBanners([{...source,isActive:false}],model.DEFAULT_HERO_BANNERS,base).length,0);
+});
+
+test('only the reserved editorial CMS title selects StartUp while retaining editable copy and photo', () => {
+ const source={...slide(1),title:'StartUp',useTextLayout:true,heading:'−15%\nна первый заказ',description:'Условия из CMS',buttonLabel:'Подробнее',note:'Промокод UPDATED15',href:'/discounts#startup',productImage:{url:'/uploads/replacement.webp'}};
+ const before=JSON.stringify(source);
+ const out=model.normalizeBanners([source,{...source,id:2,title:'startup'},{...source,id:3,useTextLayout:false}],[],base);
+ assert.equal(out[0].editorial.presentation,'startup');
+ for(const field of ['heading','description','buttonLabel','note']) assert.equal(out[0].editorial[field],source[field]);
+ assert.equal(out[0].href,source.href);
+ assert.equal(out[0].desktopUrl,base+'/uploads/replacement.webp');
+ assert.equal(out[1].editorial.presentation,undefined);
+ assert.equal(out[2].editorial,undefined);
+ assert.equal(JSON.stringify(source),before);
 });

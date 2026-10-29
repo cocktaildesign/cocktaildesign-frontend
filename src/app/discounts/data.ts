@@ -23,7 +23,7 @@ export const discounts: Discounts[] = [
       {
         id: "2-3",
         type: "text",
-        content: "Для всех, кто делает первый заказ от 10 000 ₽:",
+        content: "Для всех, кто делает первый заказ от 20 000 ₽:",
       },
       {
         id: "2-4",
