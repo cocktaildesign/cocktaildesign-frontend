@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useId, useState, type FocusEvent, type KeyboardEvent, type MouseEvent, type PointerEvent } from "react";
+import { useId, useState, type FocusEvent, type KeyboardEvent } from "react";
 import { useRouter } from "next/navigation";
 
 import CatalogIcon from "@/components/icons/CatalogIcon";
@@ -40,10 +40,6 @@ export default function CatalogMenu({ categories, collections }: CatalogMenuProp
     setIsOpen(true);
   }
 
-  function toggleMenu() {
-    setIsOpen((currentValue) => !currentValue);
-  }
-
   function closeMenu() {
     setIsOpen(false);
   }
@@ -78,35 +74,20 @@ export default function CatalogMenu({ categories, collections }: CatalogMenuProp
     }
   }
 
-  function handleCatalogPointerDown(event: PointerEvent<HTMLButtonElement>) {
-    if (event.pointerType === "touch" || event.pointerType === "pen") {
-      event.preventDefault();
-      toggleMenu();
-    }
-  }
-
-  function handleCatalogClick(event: MouseEvent<HTMLButtonElement>) {
-    // Клик с клавиатуры у button приходит с detail === 0.
-    // Мышь не трогаем: на десктопе открытие/закрытие остаётся через hover.
-    if (event.detail === 0) {
-      toggleMenu();
-    }
-  }
-
   return (
     <div className={styles.catalogMenu} onMouseLeave={closeMenu} onFocus={openMenu} onBlur={handleBlur}>
-      {/* Кнопка открытия каталога */}
-      <button
-        type="button"
+      {/* Наведение открывает меню, переход ведёт в полный каталог. */}
+      <Link
+        href="/catalog"
         className={styles.buttonCta}
         onMouseEnter={openMenu}
-        onPointerDown={handleCatalogPointerDown}
-        onClick={handleCatalogClick}
+        onClick={closeMenu}
+        aria-label="Каталог"
         aria-expanded={isOpen}
         aria-controls={menuId}>
         <CatalogIcon className={styles.catalogIcon} />
         <span className={styles.buttonCtaText}>Каталог</span>
-      </button>
+      </Link>
 
       {/* Выпадающая панель */}
       {isOpen && (
