@@ -13,7 +13,6 @@ import Banners from "@/sections/home/05-banners/Banners";
 import SocialLinks from "@/sections/home/06-social-links/SocialLinks";
 import AboutCompany from "@/sections/home/07-about-company/AboutCompany";
 import MobileCatalogShortcuts from "@/sections/home/mobile-catalog-shortcuts/MobileCatalogShortcuts";
-import FeedbackNotice from "@/sections/home/feedback-notice/FeedbackNotice";
 
 import { pageMetadata } from "@/lib/seo/metadata";
 import { getHomepageCollectionsFromStrapi, getWeeklyProductBlock } from "@/lib/api/catalog";
@@ -40,7 +39,6 @@ export default async function HomePage() {
   return (
     <main className={styles.homePage}>
       <HeroSection weeklyProduct={weeklyProduct} banners={banners.hero} />
-      <FeedbackNotice />
       <MobileCatalogShortcuts items={homeShortcuts} />
       <CategoryProductShelves collection={homepageCollections.collectionAfterShortcuts} />
       <Advantages />
