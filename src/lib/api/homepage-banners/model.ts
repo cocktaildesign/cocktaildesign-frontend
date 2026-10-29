@@ -23,7 +23,7 @@ export const DEFAULT_HERO_BANNERS: HomepageBanner[] = [
     mobileUrl: "/images/hero-startup-20261029/fleur.webp",
     alt: "StartUp",
     href: "/discounts#startup",
-    editorial: {presentation: "startup", heading: "−20%\nна первый заказ", description: "При заказе от 20 000 ₽\nПодарок на выбор", buttonLabel: "Условия акции", note: "Промокод STARTCD20"},
+    editorial: {presentation: "startup", heading: "−20%\nи подарок на выбор", description: "На первый заказ от 20 000 ₽", buttonLabel: "Условия акции", note: "Промокод STARTCD20"},
   },
   {
     id: 2,

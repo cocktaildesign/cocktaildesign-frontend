@@ -46,7 +46,7 @@ test('StartUp renders editable text with separate CTA and copy button; hidden sl
   const anchors=[...html.matchAll(/<a\b([^>]*)>([\s\S]*?)<\/a>/g)];
   assert.equal(anchors.length,4);
   assert.ok(anchors.every(([, ,body])=>!body.includes('<button')),'Buttons must not be nested in links');
-  assert.match(html,/<a class="cta" href="\/discounts#startup">Условия акции<\/a>/);
+  assert.match(html,/<a class="cta" href="\/discounts#startup">Условия акции<span aria-hidden="true"> →<\/span><\/a>/);
   assert.match(html,/aria-label="Скопировать: Промокод"/);
   assert.match(html,/<strong>STARTCD20<\/strong>/);
   assert.match(html,/<span class="offer">−20%<\/span>/);
