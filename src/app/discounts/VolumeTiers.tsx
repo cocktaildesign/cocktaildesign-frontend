@@ -70,7 +70,7 @@ export default function VolumeTiers() {
   }
 
   return (
-    <section className={styles.section}>
+    <section className={styles.section} data-discount-tiers-loading={isLoading}>
       <div className={styles.calculator}>
         {isLoading && <p>Загружаем условия скидок…</p>}
 
