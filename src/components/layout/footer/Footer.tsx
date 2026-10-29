@@ -166,9 +166,9 @@ export default async function Footer() {
       ariaLabel: "Сервис и поддержка",
     },
     {
-      title: "Получение и оплата",
+      title: "Доставка и оплата",
       links: footerDeliveryPaymentLinks,
-      ariaLabel: "Получение и оплата",
+      ariaLabel: "Доставка и оплата",
     },
     {
       title: "Документы",
@@ -193,6 +193,23 @@ export default async function Footer() {
 
       <section className={styles.footerSection}>
         <Container>
+          <section className={styles.contactStrip} aria-label="Контакты Cocktail Design">
+            <div className={styles.contactItem}>
+              <h3 className={styles.contactLabel}>Телефон</h3>
+              <a className={styles.contactLink} href="tel:+79956226202">+7 (995) 622-62-02</a>
+            </div>
+            <div className={styles.contactItem}>
+              <h3 className={styles.contactLabel}>Email</h3>
+              <a className={styles.contactLink} href="mailto:cocktaildesign@yandex.ru">cocktaildesign@yandex.ru</a>
+            </div>
+            <div className={styles.contactItem}>
+              <h3 className={styles.contactLabel}>Часы работы, МСК</h3>
+              <div className={styles.contactHours}>
+                <span>Пн–Пт: 10:00–18:00</span>
+                <span>Сб–Вс: 10:00–17:00</span>
+              </div>
+            </div>
+          </section>
           <div className={styles.footerGrid}>
             <div className={styles.footerColumn}>
               <Logo color="white" className={styles.logo} />
@@ -260,11 +277,6 @@ export default async function Footer() {
                 </div>
               </div>
 
-              <div className={styles.footerPhone}>
-                <a className={styles.footerPhoneLink} href="tel:+79956226202" aria-label="Позвонить 8 995 622-62-02">
-                  <span className={styles.footerPhoneText}>8 995 622-62-02</span>
-                </a>
-              </div>
             </div>
 
             <div className={styles.footerColumn}>
@@ -301,8 +313,8 @@ export default async function Footer() {
                 <FooterLinksList links={footerSupportLinks} />
               </nav>
 
-              <nav className={styles.footerNav} aria-label="Получение и оплата">
-                <h3 className={styles.footerTitle}>Получение и оплата</h3>
+              <nav className={styles.footerNav} aria-label="Доставка и оплата">
+                <h3 className={styles.footerTitle}>Доставка и оплата</h3>
                 <FooterLinksList links={footerDeliveryPaymentLinks} />
               </nav>
 

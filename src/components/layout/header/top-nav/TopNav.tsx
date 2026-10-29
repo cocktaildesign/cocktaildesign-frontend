@@ -18,9 +18,8 @@ type TopNavItem = NavLink & {
 
 // Ссылки верхнего меню
 const TOP_NAV_ITEMS: TopNavItem[] = [
-  { label: "Знания", href: "/knowledge" },
   {
-    label: "Получение и оплата",
+    label: "Доставка и оплата",
     href: "/shipping",
     children: [
       { label: "Способы оплаты", href: "/payment-methods" },
@@ -28,6 +27,7 @@ const TOP_NAV_ITEMS: TopNavItem[] = [
     ],
   },
   { label: "Брендинг", href: "/branding" },
+  { label: "Знания", href: "/knowledge" },
   { label: "Система скидок", href: "/discounts" },
   {
     label: "О нас",

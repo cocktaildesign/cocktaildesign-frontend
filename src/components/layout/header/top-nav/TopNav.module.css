@@ -10,9 +10,9 @@
 .topNavList {
   display: flex;
   align-items: center;
-  gap: 24px;
+  gap: clamp(12px, 1.6vw, 24px);
   margin: 0;
-  padding: 0;
+  padding: 4px 0;
   list-style: none;
 }
 
@@ -40,7 +40,7 @@
 
 /* Базовый стиль текста */
 .linkBase {
-  color: var(--color-black);
+  color: #586170;
   font-size: var(--text-sm);
   font-weight: 440;
   transition: color var(--dur) var(--ease);
@@ -51,7 +51,9 @@
 }
 
 .linkBase:focus-visible {
-  outline: none;
+  outline: 2px solid var(--color-dark-blue);
+  outline-offset: 4px;
+  border-radius: 2px;
 }
 
 /* Иконка стрелки */
@@ -94,6 +96,7 @@
 
   /* Закрытое состояние */
   opacity: 0;
+  visibility: hidden;
   pointer-events: none;
   transform: translateY(-6px);
 
@@ -105,8 +108,14 @@
 /* Открытое состояние */
 .topNavItemOpen .dropdown {
   opacity: 1;
+  visibility: visible;
   pointer-events: auto;
   transform: translateY(0);
+}
+
+.topNavItem:last-child .dropdown {
+  left: auto;
+  right: 0;
 }
 
 /* Список ссылок внутри dropdown */

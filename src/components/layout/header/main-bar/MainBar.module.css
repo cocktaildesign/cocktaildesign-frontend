@@ -116,6 +116,8 @@
 }
 
 @media (max-width: 768px) {
+  .actionText { display: none; }
+  .mainBarRight { gap: 16px; }
 }
 
 /* ==========================================================================
