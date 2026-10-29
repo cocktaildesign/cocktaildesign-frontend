@@ -43,8 +43,8 @@ export default async function HomePage() {
       <FeedbackNotice />
       <MobileCatalogShortcuts items={homeShortcuts} />
       <CategoryProductShelves collection={homepageCollections.collectionAfterShortcuts} />
-      <PopularCategories />
       <Advantages />
+      <PopularCategories />
       <Telegram />
       <SaleProductsShelf collection={homepageCollections.saleCollectionAfterTelegram} />
       <KnowledgePreview />
