@@ -4,6 +4,7 @@ import Link from "next/link";
 import Container from "@/components/layout/Container";
 import styles from "./NavBar.module.css";
 import { getNavigation } from "@/lib/api/navigation";
+import PriorityCategoryLinks from "./PriorityCategoryLinks";
 
 const NOVINKI_SLUG = "novinki";
 const UTSENKA_SLUG = "utsenka";
@@ -24,8 +25,8 @@ export default async function NavBar() {
   // Получаем навигацию из Strapi
   const navigation = await getNavigation();
 
-  // novinki и utsenka закреплены слева — из списка Strapi убираем, чтобы не было дублей.
-  const pinnedSlugs = new Set([NOVINKI_SLUG, UTSENKA_SLUG]);
+  // These collections stay visible even when there is no room for categories.
+  const pinnedSlugs = new Set([NOVINKI_SLUG, UTSENKA_SLUG, "sale"]);
   const headerItems = navigation.header
     .filter((item) => !pinnedSlugs.has(hrefCollectionSlug(item.href)))
     // В этой строке вместо винной категории показываем подборку собственного производства.
@@ -40,27 +41,12 @@ export default async function NavBar() {
     <nav className={styles.navBar} aria-label="Категории товаров">
       <Container>
         <div className={styles.inner}>
-          <Link className={styles.newLink} href={collectionHref(NOVINKI_SLUG)}>
-            Новинки
-          </Link>
-
-          <Link className={styles.utsenkaLink} href={collectionHref(UTSENKA_SLUG)}>
-            Уценка
-          </Link>
-
-          <ul className={styles.categoryList}>
-            {headerItems.map((item) => (
-              <li key={item.href} className={styles.categoryItem}>
-                <Link className={styles.categoryLink} href={item.href}>
-                  {item.label}
-                </Link>
-              </li>
-            ))}
+          <PriorityCategoryLinks items={headerItems} />
+          <ul className={styles.collections} aria-label="Подборки товаров">
+            <li><Link className={styles.categoryLink} href={collectionHref(NOVINKI_SLUG)}>Новинки</Link></li>
+            <li><Link className={styles.categoryLink} href="/catalog/collection/sale">Скидки</Link></li>
+            <li><Link className={styles.categoryLink} href={collectionHref(UTSENKA_SLUG)}>Уценка</Link></li>
           </ul>
-
-          <Link className={styles.sale} href="/catalog/collection/sale">
-            % Товары со скидкой
-          </Link>
         </div>
       </Container>
     </nav>

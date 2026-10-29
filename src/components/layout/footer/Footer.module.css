@@ -229,11 +229,52 @@
   color: #a6b1c2;
 }
 
-.footerPhoneLink {
-  color: var(--color-white);
-  font-weight: 450;
+.contactStrip {
+  display: grid;
+  grid-template-columns: 1fr 1.2fr 1fr;
+  gap: 24px;
+  padding-bottom: 28px;
+  margin-bottom: 32px;
+  border-bottom: 1px solid rgba(183, 185, 191, 0.25);
+}
+
+.contactItem {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  min-width: 0;
+}
+
+.contactLabel {
+  color: #b7b9bf;
   font-size: 14px;
-  display: none;
+  font-weight: 450;
+}
+
+.contactLink {
+  color: #fff;
+  font-size: clamp(14px, 1.3vw, 18px);
+  font-weight: 500;
+  overflow-wrap: anywhere;
+}
+
+.contactLink:hover {
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+.contactLink:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 4px;
+}
+
+.contactHours {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  color: #fff;
+  font-size: 14px;
 }
 
 /* ==========================================================================
@@ -662,7 +703,14 @@
     font-size: 13px;
   }
 
-  .footerPhoneLink {
-    display: block;
+  .contactStrip {
+    grid-template-columns: 1fr;
+    gap: 20px;
+    padding-bottom: 24px;
+    margin-bottom: 24px;
+  }
+
+  .contactLink {
+    font-size: 16px;
   }
 }

@@ -5,7 +5,6 @@ import { useEffect, useState } from "react";
 import ContainerHeader from "@/components/layout/ContainerNoPaddingMobil";
 import TopNav from "@/components/layout/header/top-nav/TopNav";
 import MainBar from "@/components/layout/header/main-bar/MainBar";
-import InfoIcon from "@/components/icons/InfoIcon";
 import TelegramIcon from "@/components/icons/TelegramIcon";
 import MaxBrandIcon from "@/components/icons/MaxIcon";
 import PhoneIcon from "@/components/icons/header/PhoneIcon";
@@ -45,11 +44,12 @@ export default function HeaderClient({ categories, collections }: HeaderClientPr
       <ContainerHeader>
         {/* Верхняя строка хедера */}
         <div className={styles.topBar}>
-          {/* Левая часть: текст и соцсети */}
-          <div className={styles.topBarLeft}>
-            <span className={styles.topBarLeftText}>Написать нам</span>
+          <TopNav />
 
-            <div className={styles.topBarLeftSocial}>
+          <div className={styles.contacts}>
+            <span className={styles.contactLabel}>Написать</span>
+
+            <div className={styles.messengers}>
               <a
                 className="icon"
                 href="https://t.me/Manager_cocktail_design"
@@ -68,40 +68,9 @@ export default function HeaderClient({ categories, collections }: HeaderClientPr
                 <MaxBrandIcon />
               </a>
             </div>
-          </div>
-
-          {/* Верхнее меню */}
-          <TopNav />
-
-          {/* Контакты и график работы */}
-          <address className={styles.topBarContact}>
-            <div className={styles.infoTooltip}>
-              <InfoIcon className={styles.infoIcon} title="Часы работы" />
-
-              <div className={styles.infoDropdown}>
-                <div className={styles.infoDropdownContent}>
-                  <p className={styles.infoDropdownText}>Часы работы:</p>
-
-                  <ul className={styles.infoDropdownSchedule}>
-                    <li>
-                      Пн–Пт: <time>10:00–18:00</time>
-                    </li>
-                    <li>
-                      Сб–Вс: <time>10:00–17:00</time>
-                    </li>
-                  </ul>
-
-                  <p className={styles.infoDropdownTitle}>Email</p>
-
-                  <a href="mailto:cocktaildesign@yandex.ru" className={styles.infoDropdownEmail}>
-                    cocktaildesign@yandex.ru
-                  </a>
-                </div>
-              </div>
-            </div>
 
             <a
-              className={`${styles.linkBase} ${styles.phoneLink}`}
+              className={styles.phoneLink}
               href="tel:+79956226202"
               aria-label="Позвонить +7 (995) 622-62-02">
               <span className={styles.phoneText}>+7 (995) 622-62-02</span>
@@ -110,7 +79,7 @@ export default function HeaderClient({ categories, collections }: HeaderClientPr
                 <PhoneIcon />
               </span>
             </a>
-          </address>
+          </div>
         </div>
 
         {/* Основная строка хедера */}

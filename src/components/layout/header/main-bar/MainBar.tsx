@@ -87,7 +87,7 @@ export default function MainBar({ categories, collections }: MainBarProps) {
 
       {/* Избранное и корзина */}
       <div className={styles.mainBarRight}>
-        <Link href="/favorites" className={styles.actionLink}>
+        <Link href="/favorites" className={styles.actionLink} aria-label="Избранное">
           <div className={styles.iconWrapper}>
             <HeartIcon className={styles.actionIcon} />
             {favoritesCount > 0 && <span className={styles.badge}>{favoritesCount}</span>}
@@ -95,7 +95,7 @@ export default function MainBar({ categories, collections }: MainBarProps) {
           <span className={styles.actionText}>Избранное</span>
         </Link>
 
-        <Link href="/cart" className={styles.actionLink}>
+        <Link href="/cart" className={styles.actionLink} aria-label="Корзина">
           <div className={styles.iconWrapper}>
             <CartIcon className={styles.actionIcon} />
             {cartCount > 0 && <span className={styles.badge}>{cartCount}</span>}

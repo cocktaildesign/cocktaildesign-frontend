@@ -1,154 +1,73 @@
-/* ==========================================================================
-   NAV BAR
-   Полоса с категориями под хедером.
-   Не sticky — уходит при скролле как обычный контент.
-   ========================================================================== */
 .navBar {
   width: 100%;
   background: var(--color-white);
   border-bottom: 1px solid var(--color-light);
-
-  height: 56px;
 }
-
-/* ==========================================================================
-   INNER
-   Внутренняя строка: список категорий + кнопка акций.
-   ========================================================================== */
 .inner {
   display: flex;
   align-items: center;
   gap: 24px;
-  width: 100%;
-  flex-wrap: nowrap;
-  white-space: nowrap;
-  padding: 10px 0 15px;
+  min-height: 54px;
+  padding: 4px 0 8px;
 }
-
-/* ==========================================================================
-   NEW LINK
-   Постоянная ссылка «Новинки» перед списком категорий.
-   ========================================================================== */
-.newLink {
-  flex-shrink: 0;
-  text-decoration: none;
-  white-space: nowrap;
-  font-size: var(--text-sm);
-  font-weight: 450;
-  color: var(--color-dark-blue);
+.categories {
+  flex: 1 1 0;
+  min-width: 0;
+  position: relative;
+  overflow: clip;
 }
-
-@media (min-width: 1150px) {
-  .newLink {
-    font-weight: 600;
-  }
-}
-
-/* ==========================================================================
-   UTSENKA LINK
-   Закреплённая ссылка «Уценка» сразу после «Новинки».
-   ========================================================================== */
-.utsenkaLink {
-  flex-shrink: 0;
-  text-decoration: none;
-  white-space: nowrap;
-  font-size: var(--text-sm);
-  font-weight: 600;
-  color: #f26a21;
-  background: none;
-  border: none;
-  transition: color var(--dur) var(--ease);
-}
-
-.utsenkaLink:hover {
-  color: #d85a16;
-}
-
-.utsenkaLink:focus-visible {
-  outline: 2px solid var(--color-accent-strong);
-  outline-offset: 2px;
-}
-
-/* ==========================================================================
-   CATEGORY LIST
-   Список ссылок на категории.
-   ========================================================================== */
-.categoryList {
+.categoryList, .measure, .collections {
   display: flex;
   align-items: center;
-  justify-content: flex-start;
+  gap: 24px;
   list-style: none;
-  flex: 1 1 auto;
-  margin: 0;
   padding: 0;
-  gap: 20px;
-  overflow: hidden;
+  margin: 0;
 }
-
-.categoryItem {
+.categoryList { min-height: 40px; }
+.categoryList li, .collections li { flex: 0 0 auto; }
+.measure {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: max-content;
+  visibility: hidden;
+  pointer-events: none;
+}
+.collections {
   flex: 0 0 auto;
+  padding-left: 24px;
+  border-left: 1px solid var(--color-light);
 }
-
 .categoryLink {
   display: inline-flex;
   align-items: center;
-  text-decoration: none;
+  min-height: 40px;
+  white-space: nowrap;
   font-size: var(--text-sm);
   font-weight: 450;
-  color: var(--color-black);
-  transition: color var(--dur) var(--ease);
-}
-
-.categoryLink:hover {
   color: var(--color-gray);
-}
-
-/* ==========================================================================
-   SALE BUTTON
-   Кнопка "Акции".
-   ========================================================================== */
-.sale {
-  flex: 0 0 auto;
-  display: flex;
-  align-items: center;
-  font-weight: 650;
   text-decoration: none;
-  color: var(--color-light-soft);
-  background-color: var(--color-dark-blue);
-  border-radius: var(--radius);
-  padding: 8px 18px;
-  font-size: var(--text-xs);
-  cursor: pointer;
-  transition: background-color var(--dur) var(--ease);
 }
-
-.sale:hover {
-  background-color: var(--color-dark-blue-hover);
+.categoryLink:hover {
+  color: var(--color-dark-blue);
+  text-decoration: underline;
+  text-underline-offset: 5px;
 }
-
-.sale:focus-visible {
-  outline: 2px solid var(--color-accent-strong);
-  outline-offset: 2px;
+.categoryLink:focus-visible {
+  outline: 2px solid var(--color-dark-blue);
+  outline-offset: -2px;
+  border-radius: 3px;
 }
-
-/* ==========================================================================
-   TABLET
-   Планшетная версия
-   ========================================================================== */
-
-@media (max-width: 1024px) {
-}
-
-@media (max-width: 768px) {
-}
-
-/* ==========================================================================
-   MOBILE
-   Мобильная версия
-   ========================================================================== */
-
 @media (max-width: 600px) {
-  .navBar {
-    display: none;
+  .inner { min-height: 46px; padding: 0; }
+  .categories { display: none; }
+  .collections {
+    flex: 1;
+    justify-content: space-between;
+    border: 0;
+    padding: 0;
+    gap: 12px;
   }
+  .categoryLink { min-height: 44px; }
 }
