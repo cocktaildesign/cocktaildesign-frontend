@@ -101,8 +101,8 @@
   opacity: 0.5;
   pointer-events: none;
 
-  /* Маленький размер */
-  width: 80px;
+  /* Keep the brandbook lettering readable in the hero. */
+  width: 112px;
   height: auto;
 }
 
