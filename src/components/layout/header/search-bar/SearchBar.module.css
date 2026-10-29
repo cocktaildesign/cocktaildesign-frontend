@@ -6,6 +6,7 @@
 .searchContainer {
   position: relative;
   flex: 1;
+  min-width: 0;
 }
 
 /* ==========================================================================
@@ -47,7 +48,7 @@
   gap: 8px;
 
   width: 100%;
-  border: 1px solid var(--color-gray);
+  border: 1px solid #929baa;
   border-radius: var(--radius);
   background-color: var(--color-white);
 }
@@ -92,7 +93,11 @@
 }
 
 .input::placeholder {
-  color: var(--color-gray-light);
+  color: #687181;
+}
+
+.search:focus-within {
+  border-color: var(--color-dark-blue);
 }
 
 .input::-webkit-search-cancel-button {
@@ -125,7 +130,13 @@
    ========================================================================== */
 
 .button {
-  padding: 10 16px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 36px;
+  width: 36px;
+  height: 36px;
+  padding: 7px;
   border: 0;
   border-radius: 9px;
 

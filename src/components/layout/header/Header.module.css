@@ -1,221 +1,78 @@
-/* ==========================================================================
-   HEADER
-   Корневой контейнер хедера
-   ========================================================================== */
-
 .header {
   position: sticky;
   top: 0;
   z-index: 9000;
   width: 100%;
   background: var(--color-white);
-  transition:
-    border-bottom var(--dur) var(--ease),
-    background-color var(--dur) var(--ease);
 }
-
-.headerScrolled {
-  border-bottom: 1px solid var(--color-light);
-}
-
-/* ==========================================================================
-   LINK BASE
-   Базовые стили ссылок в верхней строке
-   ========================================================================== */
-
-.linkBase {
-  font-size: var(--text-sm);
-  font-weight: 440;
-  color: var(--color-black);
-  transition: color var(--dur) var(--ease);
-}
-
-.linkBase:hover {
-  color: var(--color-gray);
-}
-
-/* ==========================================================================
-   TOP BAR
-   Верхняя строка хедера
-   ========================================================================== */
-
+.headerScrolled { border-bottom: 1px solid var(--color-light); }
 .topBar {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 24px;
   padding-top: 8px;
+  min-height: 36px;
 }
-
-/* Левая часть верхней строки */
-.topBarLeft {
+.contacts {
   display: flex;
   align-items: center;
-  gap: 12px;
-}
-
-.topBarLeftText {
-  display: block;
+  flex: 0 0 auto;
+  gap: 10px;
   font-size: var(--text-sm);
-  font-weight: 450;
 }
-
-.topBarLeftSocial {
-  display: flex;
-  gap: 6px;
-}
-
-/* Правая часть верхней строки */
-.topBarContact {
-  display: flex;
+.contactLabel { color: #586170; }
+.messengers { display: flex; align-items: center; gap: 8px; }
+.messengers a {
+  display: inline-flex;
   align-items: center;
-  gap: 6px;
-  font-size: var(--text-sm);
-  font-style: normal;
+  justify-content: center;
+  min-width: 28px;
+  min-height: 32px;
 }
-
 .phoneLink {
-  font-size: var(--text-sm);
-  font-weight: 450;
-  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 32px;
+  margin-left: 12px;
+  color: var(--color-dark-blue);
+  font-weight: 500;
   white-space: nowrap;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  text-decoration: none;
 }
-.phoneIcon {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 4px;
-  width: 20px;
-  height: 20px;
-  display: none;
-  background-color: var(--color-light-soft);
+.phoneLink:hover { text-decoration: underline; text-underline-offset: 4px; }
+.contacts a:focus-visible {
+  outline: 2px solid var(--color-dark-blue);
+  outline-offset: 3px;
   border-radius: 3px;
 }
-
-/* ==========================================================================
-   INFO TOOLTIP
-   Иконка с графиком работы и email
-   ========================================================================== */
-
-.infoTooltip {
-  position: relative;
-  display: flex;
-  align-items: center;
+.phoneIcon { display: none; }
+@media (max-width: 1100px) {
+  .contactLabel { display: none; }
+  .topBar { gap: 16px; }
+  .phoneLink { margin-left: 4px; }
 }
-
-.infoIcon {
-  width: 11px;
-  color: var(--color-gray);
-  cursor: pointer;
-}
-
-/* Буфер между иконкой и tooltip */
-.infoTooltip::after {
-  content: "";
-  position: absolute;
-  top: 100%;
-  left: 0;
-  width: 100%;
-  height: 8px;
-}
-
-/* Выпадающий блок */
-.infoDropdown {
-  position: absolute;
-  top: calc(100% + 8px);
-  left: 50%;
-  z-index: 9011;
-  min-width: 240px;
-  padding: 12px;
-  background: #fff;
-  border-radius: var(--radius);
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.14);
-
-  opacity: 0;
-  pointer-events: none;
-  transform: translateX(-50%) translateY(-6px);
-  transition:
-    opacity var(--dur) var(--ease),
-    transform var(--dur) var(--ease);
-}
-
-.infoTooltip:hover .infoDropdown,
-.infoTooltip:focus-within .infoDropdown {
-  opacity: 1;
-  pointer-events: auto;
-  transform: translateX(-50%) translateY(0);
-}
-
-/* Контент внутри tooltip */
-.infoDropdownContent {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.infoDropdownText {
-  margin: 0;
-  font-size: 14px;
-  font-weight: 500;
-}
-
-.infoDropdownSchedule {
-  display: flex;
-  flex-direction: column;
-  font-size: 12px;
-}
-
-.infoDropdownTitle {
-  margin: 0;
-  font-size: 14px;
-  font-weight: 500;
-}
-
-.infoDropdownEmail {
-  font-size: 12px;
-}
-
-/* ==========================================================================
-   TABLET
-   Планшетная версия
-   ========================================================================== */
-
-@media (max-width: 1024px) {
-  .topBarLeftText {
-    display: none;
-  }
-}
-
-@media (max-width: 768px) {
-  .infoTooltip {
-    display: none;
-  }
+@media (max-width: 900px) {
+  .phoneText { display: none; }
   .phoneIcon {
     display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
   }
-
-  .phoneText {
-    display: none;
-  }
+  .phoneIcon svg { width: 22px; height: 22px; }
+  .contacts, .messengers { gap: 4px; }
+}
+@media (min-width: 601px) and (max-width: 700px) {
+  .topBar { flex-wrap: wrap; gap: 0; }
+  .topBar > nav { flex: 1 0 100%; }
+  .contacts { margin-left: auto; }
+  .phoneText { display: inline; }
+  .phoneIcon { display: none; }
 }
 
-/* ==========================================================================
-   MOBILE
-   Мобильная версия
-   ========================================================================== */
-
 @media (max-width: 600px) {
-  .header {
-    background: transparent;
-  }
-  .headerScrolled {
-    border-bottom: 1px solid transparent;
-  }
-
-  .topBar {
-    display: none;
-  }
+  .topBar { display: none; }
+  .headerScrolled { border-bottom: 0; }
 }
