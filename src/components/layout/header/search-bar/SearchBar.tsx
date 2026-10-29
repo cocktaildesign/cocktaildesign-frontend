@@ -201,7 +201,7 @@ function buildChips(query: string, products: Product[]): string[] {
 }
 
 export default function SearchBar({
-  placeholder = "Поиск в CocktailDesign",
+  placeholder = "Поиск по каталогу",
   categories,
   onOpenChange,
   closeSignal,
