@@ -12,15 +12,20 @@
 .contactCard { padding: 26px; border: 1px solid var(--footer-line); border-radius: 20px; background: #191f27; min-width: 0; }
 .logoLink { display: inline-flex; max-width: 100%; }
 .logo { display: block; width: 200px; max-width: 100%; }
-.contactDetails { margin-top: 30px; }
+.contactDetails { margin-top: 24px; }
 .smallLabel { color: var(--footer-muted); font-size: 13px; font-weight: 400; line-height: 1.5; margin: 0; }
 .phone { display: block; color: var(--footer-text); margin: 10px 0 8px; font-size: 22px; font-weight: 500; line-height: 1.4; white-space: nowrap; letter-spacing: -0.025em; }
 .email { display: inline-block; color: var(--footer-text); font-size: 14px; line-height: 1.6; overflow-wrap: anywhere; }
-.hours { display: flex; flex-direction: column; gap: 3px; margin: 24px 0 14px; color: var(--footer-muted); font-size: 13px; line-height: 1.6; }
+.managerLinks { display: flex; align-items: center; flex-wrap: wrap; column-gap: 12px; font-size: 13px; line-height: 1.5; }
+.managerLinks > span { color: var(--footer-muted); }
+.managerLinks a { display: inline-flex; align-items: center; min-height: 44px; color: var(--footer-text); text-decoration: underline; text-underline-offset: 4px; text-decoration-color: #697583; }
+.hours { display: flex; flex-direction: column; gap: 3px; margin: 12px 0 14px; color: var(--footer-muted); font-size: 13px; line-height: 1.6; }
 .hours h3 { margin-bottom: 5px; }
+.contactActions { display: flex; flex-direction: column; align-items: flex-start; }
+.reviewShort { display: none; }
 .actionLink { display: inline-flex; align-items: center; gap: 10px; min-height: 40px; color: var(--footer-text); font-size: 14px; font-weight: 450; line-height: 1.5; text-decoration: none; }
 .actionLink svg { flex: 0 0 18px; }
-.reviews { display: flex; align-items: center; gap: 8px; padding-top: 18px; margin-top: 16px; border-top: 1px solid var(--footer-line); color: var(--footer-muted); font-size: 12px; line-height: 1.5; text-decoration: none; }
+.reviews { display: flex; align-items: center; gap: 8px; padding-top: 16px; margin-top: 12px; border-top: 1px solid var(--footer-line); color: var(--footer-muted); font-size: 12px; line-height: 1.5; text-decoration: none; width: 100%; }
 .reviews > svg { flex-shrink: 0; }
 .yandexIcon { width: 21px; height: 21px; }
 .desktopNavigation { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 28px; padding-top: 10px; }
@@ -28,7 +33,7 @@
 .sectionTitle { margin: 0 0 20px; color: var(--footer-text); font-size: 16px; font-weight: 500; line-height: 1.5; }
 .footerList, .collections, .socialList, .marketplaceList, .legalLinks { margin: 0; padding: 0; list-style: none; }
 .footerList { display: flex; flex-direction: column; gap: 4px; }
-.footerLink { display: inline-block; padding: 5px 0; color: var(--footer-muted); font-size: 14px; line-height: 1.5; text-decoration: none; }
+.footerLink { display: inline-block; padding: 5px 0; color: var(--footer-muted); font-size: 15px; line-height: 1.5; text-decoration: none; }
 .collections { display: flex; flex-wrap: wrap; gap: 0 12px; margin: 16px 0 4px; padding-top: 12px; border-top: 1px solid var(--footer-line); }
 .collections a { display: inline-flex; align-items: center; min-height: 36px; font-size: 13px; line-height: 1.5; color: var(--footer-text); }
 .socialNav { margin-top: 26px; }
@@ -36,7 +41,7 @@
 .socialLink { display: flex; align-items: center; justify-content: center; width: 40px; height: 44px; color: var(--footer-muted); border-radius: 8px; }
 .socialLink svg { width: 26px; height: 26px; }
 .mobileNavigation { display: none; }
-.secondaryRow { display: flex; align-items: center; justify-content: space-between; gap: 32px; margin-top: 40px; padding: 28px 0; border-top: 1px solid var(--footer-line); border-bottom: 1px solid var(--footer-line); }
+.secondaryRow { display: flex; align-items: center; justify-content: space-between; gap: 32px; margin-top: 32px; padding: 24px 0; border-top: 1px solid var(--footer-line); border-bottom: 1px solid var(--footer-line); }
 .secondaryTitle { margin: 0; font-size: 14px; font-weight: 500; line-height: 1.5; }
 .marketplaces { min-width: 0; }
 .marketplaceList { display: flex; flex-wrap: wrap; gap: 6px 24px; margin-top: 14px; }
@@ -49,10 +54,11 @@
 .telegram p { margin: 6px 0 4px; font-size: 13px; color: var(--footer-muted); line-height: 1.6; }
 .qr { width: 96px; flex: 0 0 96px; }
 .qr img { display: block; width: 96px; height: 96px; }
-.bottom { padding-top: 22px; color: var(--footer-muted); }
+.bottom { padding-top: 16px; color: var(--footer-muted); }
+.analytics > div { padding: 12px 0; }
 .legalLinks { display: flex; flex-wrap: wrap; gap: 0 28px; }
 .legalLinks a { display: inline-block; padding: 8px 0; font-size: 13px; line-height: 1.5; color: var(--footer-muted); }
-.legalNote { margin: 12px 0 0; font-size: 12px; line-height: 1.65; }
+.legalNote { margin: 8px 0 0; font-size: 12px; line-height: 1.65; }
 .legalNote a { color: inherit; text-decoration: underline; text-underline-offset: 3px; }
 .bottomLine { display: flex; justify-content: space-between; align-items: flex-end; gap: 24px; padding-top: 6px; }
 .bottomLine p { font-size: 12px; line-height: 1.65; margin: 0; }
@@ -60,7 +66,7 @@
 .developer span { color: #d9dee5; }
 @media (hover: hover) {
   .footer :is(.footerLink, .collections a, .reviews, .marketplaceLink, .legalLinks a, .developer):hover { color: #fff; text-decoration: underline; text-underline-offset: 4px; }
-  .footer :is(.phone, .email, .actionLink):hover { text-decoration: underline; text-underline-offset: 4px; }
+  .footer :is(.phone, .email, .actionLink, .managerLinks a):hover { text-decoration: underline; text-underline-offset: 4px; text-decoration-color: currentColor; }
   .socialLink:hover { color: #fff; background: #ffffff0d; }
 }
 @media (max-width: 1199px) {
@@ -86,15 +92,23 @@
 @media (max-width: 700px) {
   .footer { padding: 28px 0 calc(90px + env(safe-area-inset-bottom)); border-radius: 22px 22px 0 0; }
   .mainGrid { grid-template-columns: minmax(0, 1fr); gap: 24px; }
-  .contactCard { padding: 24px; }
-  .logo { width: 190px; }
-  .contactDetails { margin-top: 24px; }
-  .phone { font-size: 24px; margin-top: 8px; }
-  .email { font-size: 15px; padding: 5px 0; }
-  .hours { font-size: 14px; margin-top: 18px; }
+  .contactCard { padding: 18px; }
+  .logo { width: 144px; }
+  .contactDetails { margin-top: 14px; }
+  .contactHeading, .hoursLabel { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+  .phone { font-size: 24px; margin: 0; min-height: 40px; }
+  .email { font-size: 14px; padding: 4px 0; min-height: 32px; }
+  .managerLinks { font-size: 14px; column-gap: 16px; }
+  .hours { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 2px 12px; font-size: 13px; margin: 8px 0 0; }
+  .hours h3 { grid-column: 2; grid-row: 1 / span 2; margin: 0; font-size: 12px; }
+  .hours > span { grid-column: 1; }
   .smallLabel { font-size: 14px; }
   .actionLink { min-height: 44px; font-size: 15px; }
-  .reviews { font-size: 13px; padding-top: 16px; margin-top: 12px; }
+  .contactActions { flex-direction: row; align-items: center; justify-content: space-between; flex-wrap: wrap; column-gap: 12px; padding-top: 8px; margin-top: 12px; border-top: 1px solid var(--footer-line); }
+  .contactActions .actionLink { font-size: 14px; gap: 6px; }
+  .reviews { width: auto; min-height: 44px; font-size: 13px; padding: 0; margin: 0; border: 0; gap: 6px; }
+  .reviewFull { display: none; }
+  .reviewShort { display: inline; }
   .desktopNavigation { display: none; }
   .mobileNavigation { display: block; }
   .accordion { border-bottom: 1px solid var(--footer-line); }
@@ -124,7 +138,7 @@
   .developer { min-height: 32px; }
 }
 @media (max-width: 360px) {
-  .contactCard { padding: 20px; }
+  .contactCard { padding: 16px; }
   .phone { font-size: 22px; }
   .email { font-size: 14px; }
 }

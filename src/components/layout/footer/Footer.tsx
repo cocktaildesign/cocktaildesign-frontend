@@ -168,21 +168,33 @@ export default async function Footer() {
         <section className={styles.contactCard} aria-label="Контакты Cocktail Design">
           <Logo color="white" className={styles.logo} linkClassName={styles.logoLink} />
           <div className={styles.contactDetails}>
-            <h2 className={styles.smallLabel}>Контакты</h2>
+            <h2 className={`${styles.smallLabel} ${styles.contactHeading}`}>Контакты</h2>
             <a className={styles.phone} href="tel:+79956226202">+7 (995) 622-62-02</a>
             <a className={styles.email} href="mailto:cocktaildesign@yandex.ru">cocktaildesign@yandex.ru</a>
+            <nav className={styles.managerLinks} aria-label="Написать менеджеру Cocktail Design">
+              <span>Написать:</span>
+              <a href="https://t.me/Manager_cocktail_design" target="_blank" rel="noopener noreferrer"
+                aria-label="Написать менеджеру в Telegram, открыть в новой вкладке">Telegram</a>
+              <a href="https://max.ru/u/f9LHodD0cOLWKnOz-T53SpORKXEy2ENCK_4sq882r9L9MRQzWWDdeYS4daM"
+                target="_blank" rel="noopener noreferrer"
+                aria-label="Написать менеджеру в MAX, открыть в новой вкладке">MAX</a>
+            </nav>
             <div className={styles.hours}>
-              <h3 className={styles.smallLabel}>Часы работы, МСК</h3>
+              <h3 className={styles.smallLabel}><span className={styles.hoursLabel}>Часы работы, </span>МСК</h3>
               <span>Пн–Пт: 10:00–18:00</span>
               <span>Сб–Вс: 10:00–17:00</span>
             </div>
-            <Link href="/contacts" className={styles.actionLink}>Все контакты <Arrow /></Link>
           </div>
-          <a className={styles.reviews} href={YANDEX_REVIEWS_URL} target="_blank" rel="noopener noreferrer"
-            aria-label="Отзывы на Яндексе: открыть в новой вкладке">
-            <YandexIcon className={styles.yandexIcon} aria-hidden="true" />
-            Отзывы на Яндексе <Arrow external />
-          </a>
+          <div className={styles.contactActions}>
+            <Link href="/contacts" className={styles.actionLink}>Все контакты <Arrow /></Link>
+            <a className={styles.reviews} href={YANDEX_REVIEWS_URL} target="_blank" rel="noopener noreferrer"
+              aria-label="Отзывы на Яндексе: открыть в новой вкладке">
+              <YandexIcon className={styles.yandexIcon} aria-hidden="true" />
+              <span className={styles.reviewFull}>Отзывы на Яндексе</span>
+              <span className={styles.reviewShort} aria-hidden="true">Отзывы</span>
+              <Arrow external />
+            </a>
+          </div>
         </section>
 
         <div className={styles.desktopNavigation}>
@@ -239,7 +251,7 @@ export default async function Footer() {
         </ul></nav>
         <p className={styles.legalNote}>Условия розничной покупки описаны в <Link href="/legal/offer">Публичной оферте</Link>.
           {" "}Заказы организаций и ИП согласовываются отдельно.</p>
-        <AnalyticsSettings />
+        <div className={styles.analytics}><AnalyticsSettings /></div>
         <div className={styles.bottomLine}>
           <p>© 2015—{new Date().getFullYear()}. Cocktail Design. Все права защищены.<br />
             При полном или частичном использовании материалов с сайта ссылка на источник обязательна.</p>
