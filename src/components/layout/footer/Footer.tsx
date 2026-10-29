@@ -70,8 +70,7 @@ const legalLinks: FooterLink[] = [
 // The complete category tree remains available through “Весь каталог”.
 const categoryHrefs = [
   "/catalog/ms-35c38c23", "/catalog/ms-ba57d348", "/catalog/ms-c374b866",
-  "/catalog/ms-ffa19e3a", "/catalog/ms-80609292", "/catalog/ms-50e5160e",
-  "/catalog/ms-ad31a2a1", "/catalog/ms-e8de1bd2",
+  "/catalog/ms-ffa19e3a", "/catalog/ms-ad31a2a1", "/catalog/ms-e8de1bd2",
 ];
 
 const footerKnowledgeLinks: FooterLink[] = [
@@ -123,7 +122,7 @@ function FooterLinksList({ links }: { links: FooterLink[] }) {
 
 function SocialLinks() {
   return <nav className={styles.socialNav} aria-label="Каналы Cocktail Design в соцсетях">
-    <p className={styles.smallLabel}>Мы в соцсетях</p>
+    <h2 className={styles.secondaryTitle}>Мы в соцсетях</h2>
     <ul className={styles.socialList}>
       {footerSocialLinks.map(item => <li key={item.href}>
         <a href={item.href} target="_blank" rel="noopener noreferrer"
@@ -190,9 +189,7 @@ export default async function Footer() {
             <a className={styles.reviews} href={YANDEX_REVIEWS_URL} target="_blank" rel="noopener noreferrer"
               aria-label="Отзывы на Яндексе: открыть в новой вкладке">
               <YandexIcon className={styles.yandexIcon} aria-hidden="true" />
-              <span className={styles.reviewFull}>Отзывы на Яндексе</span>
-              <span className={styles.reviewShort} aria-hidden="true">Отзывы</span>
-              <Arrow external />
+              <span>Отзывы</span>
             </a>
           </div>
         </section>
@@ -203,7 +200,6 @@ export default async function Footer() {
               <h2 className={styles.sectionTitle}>{section.title}</h2>
               <SectionContent section={section} />
             </nav>
-            {section.title === "Знания" && <SocialLinks />}
           </div>)}
         </div>
         <div className={styles.mobileNavigation}>
@@ -213,11 +209,11 @@ export default async function Footer() {
               <SectionContent section={section} />
             </nav>
           </details>)}
-          <SocialLinks />
         </div>
       </div>
 
       <div className={styles.secondaryRow}>
+        <SocialLinks />
         <nav aria-label="Магазины Cocktail Design на маркетплейсах" className={styles.marketplaces}>
           <h2 className={styles.secondaryTitle}>Мы на маркетплейсах</h2>
           <ul className={styles.marketplaceList}>
