@@ -39,6 +39,7 @@
   font-family: var(--font-display);
   font-size: var(--text-sm);
   font-weight: 500;
+  text-decoration: none;
   cursor: pointer;
 
   transition:
