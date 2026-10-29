@@ -52,19 +52,19 @@ export default function HeaderClient({ categories, collections }: HeaderClientPr
             <div className={styles.topBarLeftSocial}>
               <a
                 className="icon"
-                href="https://t.me/Cocktail_Design_official"
+                href="https://t.me/Manager_cocktail_design"
                 target="_blank"
                 rel="noopener noreferrer"
-                aria-label="Telegram">
+                aria-label="Написать нам в Telegram">
                 <TelegramIcon />
               </a>
 
               <a
                 className="icon"
-                href="https://max.ru/join/QQKS8__nbdrJTvRVrRSCdMBqinbSTzi34ReNX1TJw80"
+                href="https://max.ru/u/f9LHodD0cOLWKnOz-T53SpORKXEy2ENCK_4sq882r9L9MRQzWWDdeYS4daM"
                 target="_blank"
                 rel="noopener noreferrer"
-                aria-label="MAX">
+                aria-label="Написать нам в MAX">
                 <MaxBrandIcon />
               </a>
             </div>
