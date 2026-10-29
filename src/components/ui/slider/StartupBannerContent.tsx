@@ -25,7 +25,6 @@ export default function StartupBannerContent({ banner, mobile, priority }: {
         loading={priority ? "eager" : "lazy"} fetchPriority={priority ? "high" : "auto"} decoding="async" />
     </picture>
     <div className={styles.copy}>
-      <p className={styles.eyebrow}>{banner.alt}</p>
       <h2 className={styles.heading}>
         <span className={styles.offer}>{offer}</span>
         {headingLines.length > 0 && <span className={styles.title}>{headingLines.join("\n")}</span>}
@@ -33,8 +32,11 @@ export default function StartupBannerContent({ banner, mobile, priority }: {
       <p className={styles.description}>{copy.description}</p>
       {copy.note && <div className={styles.note}>
         {promoCode ? <>
-          <span>Промокод <strong>{promoCode}</strong></span>
-          <CopyButton value={promoCode} label="Промокод" className={styles.copyButton} />
+          <span className={styles.promoLabel}>Введите промокод при оформлении</span>
+          <div className={styles.codeRow}>
+            <strong>{promoCode}</strong>
+            <CopyButton value={promoCode} label="Промокод" className={styles.copyButton} />
+          </div>
         </> : copy.note}
       </div>}
       {banner.href && <Link className={styles.cta} href={banner.href}>{copy.buttonLabel}</Link>}
