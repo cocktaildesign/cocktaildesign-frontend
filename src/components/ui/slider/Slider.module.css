@@ -11,6 +11,6 @@
 @media (prefers-reduced-motion:reduce) { .slide, .slideActive { transition:none; } }
 
 .mobile.editorial { height:480px; }
-.mobile.startup { --carousel-arrow-top:80%; }
+.mobile.startup { --carousel-arrow-top:82%; }
 .mobile { margin:0; }
 .mobile .slides { touch-action:pan-y; }
