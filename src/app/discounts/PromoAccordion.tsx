@@ -38,14 +38,58 @@ export default function PromoAccordion({ discount }: PromoAccordionProps) {
   }, [isFeatured]);
 
   useEffect(() => {
-    if (!isOpen || anchorRequest === lastScrolledRequest.current) return;
-
-    // Scroll after the expanded conditions are committed, only for a new deep link.
-    const frame = window.requestAnimationFrame(() => {
-      promoRef.current?.scrollIntoView({ block: "start" });
+    if (!isOpen) {
       lastScrolledRequest.current = anchorRequest;
-    });
-    return () => window.cancelAnimationFrame(frame);
+      return;
+    }
+    if (anchorRequest === lastScrolledRequest.current) return;
+
+    const tiersSection = document.querySelector("[data-discount-tiers-loading]");
+    let frame: number | undefined;
+    let cancelled = false;
+    const observer = new MutationObserver(scrollWhenReady);
+
+    function cleanup() {
+      cancelled = true;
+      observer.disconnect();
+      if (frame !== undefined) window.cancelAnimationFrame(frame);
+      window.removeEventListener("wheel", cancelPending);
+      window.removeEventListener("touchstart", cancelPending);
+      window.removeEventListener("hashchange", cancelOtherAnchor);
+    }
+
+    function cancelPending() {
+      lastScrolledRequest.current = anchorRequest;
+      cleanup();
+    }
+
+    function cancelOtherAnchor() {
+      if (window.location.hash !== "#startup") cancelPending();
+    }
+
+    function scrollWhenReady() {
+      if (cancelled || frame !== undefined || tiersSection?.getAttribute("data-discount-tiers-loading") === "true") return;
+      frame = window.requestAnimationFrame(() => {
+        frame = undefined;
+        if (cancelled) return;
+        if (window.location.hash !== "#startup") {
+          cancelPending();
+          return;
+        }
+        if (tiersSection?.getAttribute("data-discount-tiers-loading") === "true") return;
+        // The calculator and expanded conditions now have their final layout.
+        promoRef.current?.scrollIntoView({ block: "start" });
+        lastScrolledRequest.current = anchorRequest;
+        cleanup();
+      });
+    }
+
+    if (tiersSection) observer.observe(tiersSection, { attributes: true, attributeFilter: ["data-discount-tiers-loading"] });
+    window.addEventListener("wheel", cancelPending, { passive: true });
+    window.addEventListener("touchstart", cancelPending, { passive: true });
+    window.addEventListener("hashchange", cancelOtherAnchor);
+    scrollWhenReady();
+    return cleanup;
   }, [anchorRequest, isOpen]);
 
   const toggle = useCallback(() => {
