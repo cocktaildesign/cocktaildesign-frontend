@@ -205,7 +205,7 @@ function CatalogPanel({ categories, collections, triggerRef }: CatalogMenuProps 
       </div>
       <div ref={mobileBodyRef} className={styles.mobileBody}>
         <nav aria-label={current?.name ?? "Разделы каталога"}>
-          {mobileItems.map((item) => (!current || hasChildren(item)) ? (
+          {mobileItems.map((item) => hasChildren(item) ? (
             <button type="button" key={item.id} className={styles.mobileRow} onClick={() => setTrail((items) => [...items, item])}>
               {!current && <CategoryIcon name={item.name} />}<span>{item.name}</span><span aria-hidden="true">›</span>
             </button>
@@ -215,7 +215,6 @@ function CatalogPanel({ categories, collections, triggerRef }: CatalogMenuProps 
             </Link>
           ))}
         </nav>
-        {current && !hasChildren(current) && <CategoryProducts key={current.id} slug={current.slug} onNavigate={() => close()} />}
         {!current && collectionLinks}
       </div>
       <Link prefetch={false} className={styles.mobileAll} href={current ? `/catalog/${current.slug}` : "/catalog"} onClick={() => close()}>
@@ -251,9 +250,11 @@ function CatalogPanel({ categories, collections, triggerRef }: CatalogMenuProps 
       </div>
       <div ref={contentRef} id={`${menuId}-content`} className={styles.content}>
         {(active || activeCollection) && <>
-          <div className={styles.heading}>
+          <div className={`${styles.heading} ${!sections.length ? styles.previewHeading : ""}`}>
             <h2>{activeName}</h2>
-            <Link prefetch={false} className={styles.viewAll} href={activeHref} onClick={() => close()}>Все товары раздела <span aria-hidden="true">→</span></Link>
+            <Link prefetch={false} className={!sections.length ? styles.sectionCta : styles.viewAll} href={activeHref} onClick={() => close()}>
+              {sections.length ? "Все товары раздела" : "Смотреть все товары"} <span aria-hidden="true">→</span>
+            </Link>
           </div>
           {grouped.length > 0 && <div className={styles.groups}>{grouped.map((section) => <section key={section.id} className={styles.groupCard}>
             <h3><Link prefetch={false} href={`/catalog/${section.slug}`} onClick={() => close()}>{section.name}</Link></h3>

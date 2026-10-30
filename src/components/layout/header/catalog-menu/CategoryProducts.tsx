@@ -46,9 +46,11 @@ export default function CategoryProducts({ slug, collection = false, onNavigate 
     return () => { disposed = true; clearTimeout(timeout); controller.abort(); };
   }, [key, slug, collection]);
 
-  if (result.status === "error") return <p className={styles.previewMessage}>Не удалось загрузить примеры товаров. Откройте раздел целиком по ссылке «Все товары раздела».</p>;
+  if (result.status === "error") return <p className={styles.previewMessage}>Не удалось загрузить примеры товаров. Нажмите «Смотреть все товары», чтобы открыть раздел.</p>;
   if (result.status === "ready" && !result.items.length) return <p className={styles.previewMessage}>Посмотрите актуальный ассортимент на странице раздела.</p>;
-  return <div className={styles.productPreview} aria-busy={result.status === "loading"}>
+  return <section aria-label="Примеры товаров раздела">
+    <h3 className={styles.previewLabel}>Несколько товаров из раздела</h3>
+    <div className={styles.productPreview} aria-busy={result.status === "loading"}>
     {result.status === "loading" ? <>
       <span className={styles.srOnly} role="status">Загружаем товары</span>
       {[0, 1, 2, 3].map((id) => <div key={id} className={styles.productSkeleton} aria-hidden="true" />)}
@@ -60,5 +62,6 @@ export default function CategoryProducts({ slug, collection = false, onNavigate 
       </div>
       <span>{product.name}</span>
     </Link>)}
-  </div>;
+    </div>
+  </section>;
 }
