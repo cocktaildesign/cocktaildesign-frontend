@@ -3,7 +3,6 @@ import type { ReactNode } from "react";
 import Container from "./Container";
 import styles from "./Page.module.css";
 import Breadcrumbs from "../ui/breadcrumbs/Breadcrumbs";
-import GridOverlay from "./GridOverlay";
 
 type Crumb = { href: string; label: string };
 
@@ -21,7 +20,6 @@ export default function PageLayout({ children, showBreadcrumbs = true, breadcrum
         {showBreadcrumbs && <Breadcrumbs items={breadcrumbsItems} />}
         {children}
       </Container>
-      {/* <GridOverlay /> */}
     </main>
   );
 }

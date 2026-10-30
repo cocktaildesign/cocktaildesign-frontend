@@ -23,11 +23,11 @@ const { articleJsonLd, knowledgeImage } = load('lib/seo/knowledge.ts', { './poli
 
 test('header retains collection order, destinations and visibility without shipping unused products', async () => {
   const categories=[{id:'c',slug:'category',children:[]}];
-  const products=[{id:'p',price:450,variants:[{id:'v',price:760}]}];
+  const products=[]; // Metadata-only API; product loading is covered in homepage-collections.test.cjs.
   const collections=[{id:'1',slug:'sale',title:'Sale',isHiddenInMenu:false,products},{id:'2',slug:'hidden',title:'Hidden',isHiddenInMenu:true,products}];
   const Header=load('components/layout/header/Header.tsx',{
     './HeaderClient':{default:'HeaderClient'},
-    '@/lib/api/catalog':{getCatalogTreeFromStrapi:async()=>categories,getCatalogCollectionsWithProductsFromStrapi:async()=>collections},
+    '@/lib/api/catalog':{getCatalogTreeFromStrapi:async()=>categories,getCatalogMenuCollectionsFromStrapi:async()=>collections},
   }).default;
   const view=await Header();
   assert.equal(view.props.categories,categories);
