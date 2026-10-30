@@ -14,7 +14,9 @@
 .benefitHeading { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 6px 18px; }
 .benefit h3 { margin: 0; font-size: 17px; font-weight: 500; line-height: 1.5; }
 .benefit p { margin: 6px 0 0; color: var(--color-gray); font-size: 15px; line-height: 1.6; }
-.link { display: inline; padding: 0; border: 0; background: transparent; color: var(--color-dark-blue); font-size: 15px; line-height: 1.6; text-decoration: underline; text-underline-offset: 4px; text-align: left; cursor: pointer; }
+.link { display: inline-flex; max-width: 100%; gap: 8px; align-items: baseline; padding: 0; border: 0; background: transparent; color: var(--color-dark-blue); font-size: 16px; line-height: 1.5; text-decoration: none; text-align: left; cursor: pointer; }
+.linkText { min-width: 0; text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 4px; }
+.linkArrow { flex-shrink: 0; text-decoration: none; }
 .benefit .link { flex-shrink: 0; }
 .info { margin: 0 0 24px; }
 .info > div { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.3fr); gap: 24px; padding: 18px 0; border-bottom: 1px solid var(--color-light); }
@@ -27,7 +29,7 @@
 .list li { padding-left: 4px; }
 .contacts { display: flex; flex-wrap: wrap; gap: 12px 24px; padding-top: 22px; border-top: 1px solid var(--color-light); }
 .contacts a { color: var(--color-dark-blue); font-size: 16px; line-height: 1.6; text-decoration: underline; text-underline-offset: 4px; overflow-wrap: anywhere; }
-.link:hover, .contacts a:hover { text-decoration-thickness: 2px; }
+.link:hover .linkText, .contacts a:hover { text-decoration-thickness: 2px; }
 .link:focus-visible, .contacts a:focus-visible { outline: 2px solid var(--color-dark-blue); outline-offset: 4px; }
 @media (min-width: 701px) and (max-width: 1050px) {
   .title { font-size: 25px; }

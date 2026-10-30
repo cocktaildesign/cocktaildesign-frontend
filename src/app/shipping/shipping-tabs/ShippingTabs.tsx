@@ -43,7 +43,10 @@ export default function DeliveryTabs() {
           <div className={styles.benefit}>
             <div className={styles.benefitHeading}>
               <h3>Бесплатная доставка по России от 5 000 ₽</h3>
-              <button type="button" className={styles.link} onClick={() => select("discounts")}>Условия <span aria-hidden="true">→</span></button>
+              <button type="button" className={styles.link} onClick={() => select("discounts")}>
+                <span className={styles.linkText}>Условия</span>
+                <span className={styles.linkArrow} aria-hidden="true">→</span>
+              </button>
             </div>
             <p>Для крупногабаритных заказов и отдалённых регионов — скидка 350 ₽ за каждые 5 000 ₽.</p>
           </div>
@@ -72,7 +75,10 @@ export default function DeliveryTabs() {
             <div><dt>Скидка 350 ₽ за каждые 5 000 ₽</dt><dd>Для крупногабаритных заказов, доставки в отдалённые регионы России, а также в Казахстан, Беларусь и Армению.</dd></div>
             <div><dt>Экспресс-доставка по Петербургу</dt><dd>В остальные районы — скидка 350 ₽ за каждые 7 000 ₽ в заказе.</dd></div>
           </dl>
-          <button type="button" className={styles.link} onClick={() => select("spb")}>Все условия доставки по Петербургу <span aria-hidden="true">→</span></button>
+          <button type="button" className={styles.link} onClick={() => select("spb")}>
+            <span className={styles.linkText}>Все условия доставки по Петербургу</span>
+            <span className={styles.linkArrow} aria-hidden="true">→</span>
+          </button>
         </>;
         case "returns": return <>
           <h2 className={styles.title}>Условия возврата</h2>

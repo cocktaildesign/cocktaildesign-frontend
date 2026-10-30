@@ -7,7 +7,7 @@ import PaymentTabs from "./payment-tabs/PaymentTabs";
 export const metadata = pageMetadata({
   title: "Способы оплаты | CocktailDesign",
   description:
-    "Способы оплаты в CocktailDesign: по счёту для организаций и ИП, банковской картой и наличными для частных покупателей.",
+    "Способы оплаты в CocktailDesign для юридических и физических лиц: по счёту, банковской картой и наличными.",
   canonical: "/payment-methods",
 });
 
