@@ -17,7 +17,7 @@ export default function PaymentTabs() {
         <p className={styles.subtitle}>Выставим счёт для оплаты по реквизитам.</p>
         <ol className={styles.steps}>
           <li><span className={styles.number} aria-hidden="true">1</span><div>
-            <h3>Оформите заказ</h3><p>Менеджер свяжется с вами и уточнит детали.</p>
+            <h3>Оформите заказ</h3><p>Укажите ИНН организации или ИП при оформлении.</p>
           </div></li>
           <li><span className={styles.number} aria-hidden="true">2</span><div>
             <h3>Получите счёт</h3><p>Выставим счёт после согласования заказа.</p>
@@ -33,13 +33,10 @@ export default function PaymentTabs() {
       <>
         <h2 className={styles.title}>Оплата покупки</h2>
         <div className={styles.methods}>
-          <section><h3>Банковской картой</h3><p>Доступный способ оплаты картой уточните у менеджера.</p></section>
-          <section><h3>Наличными</h3><p>В Санкт-Петербурге. Условия оплаты согласуйте с менеджером.</p></section>
+          <section><h3>Банковской картой</h3><p>Онлайн — по ссылке на оплату после подтверждения заказа. В офисе — через терминал.</p></section>
+          <section><h3>Наличными</h3><p>В нашем офисе в Санкт-Петербурге. После оплаты выдаём кассовый чек.</p></section>
         </div>
-        <p className={styles.note}>Для оплаты из-за рубежа свяжитесь с менеджером — уточним возможность и способ оплаты.</p>
-        <a href="https://t.me/Manager_cocktail_design" target="_blank" rel="noopener noreferrer" className={styles.link}>
-          Написать менеджеру <span aria-hidden="true">↗</span>
-        </a>
+        <Link href="/contacts" className={styles.link}>Адрес и часы работы офиса <span aria-hidden="true">→</span></Link>
       </>
     )} />;
 }

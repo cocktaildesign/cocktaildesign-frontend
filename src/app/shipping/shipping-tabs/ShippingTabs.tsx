@@ -38,12 +38,14 @@ export default function DeliveryTabs() {
               <div><dt>Средняя стоимость</dt><dd>400–650 ₽</dd></div>
               <div><dt>Ориентировочный срок</dt><dd>3–5 дней</dd></div>
             </dl>
+            <p className={styles.dispatch}>Отправка — в течение 1–2 дней после оплаты заказа.</p>
           </div>
-          <p className={styles.dispatch}>Отправка — в течение 1–2 дней после оплаты заказа.</p>
           <div className={styles.benefit}>
-            <h3>Бесплатная доставка по России от 5 000 ₽</h3>
-            <p>Для крупногабаритных заказов и отдалённых регионов действуют отдельные условия.</p>
-            <button type="button" className={styles.link} onClick={() => select("discounts")}>Условия и скидки на доставку <span aria-hidden="true">→</span></button>
+            <div className={styles.benefitHeading}>
+              <h3>Бесплатная доставка по России от 5 000 ₽</h3>
+              <button type="button" className={styles.link} onClick={() => select("discounts")}>Условия <span aria-hidden="true">→</span></button>
+            </div>
+            <p>Для крупногабаритных заказов и отдалённых регионов — скидка 350 ₽ за каждые 5 000 ₽.</p>
           </div>
         </>;
         case "spb": return <>

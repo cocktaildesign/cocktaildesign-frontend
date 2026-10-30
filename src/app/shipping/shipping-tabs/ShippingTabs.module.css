@@ -1,20 +1,21 @@
-.title { margin: 0 0 24px; font-family: var(--font-display); font-size: 28px; font-weight: 500; line-height: 1.25; }
+.title { margin: 0 0 20px; font-family: var(--font-display); font-size: 28px; font-weight: 500; line-height: 1.25; }
 .routes { width: 100%; border-collapse: collapse; table-layout: fixed; text-align: left; }
-.routes thead th { padding: 0 0 8px; color: var(--color-gray); font-size: 14px; font-weight: 400; line-height: 1.5; }
-.routes tbody th, .routes td { padding: 14px 0; border-bottom: 1px solid var(--color-light); vertical-align: top; font-size: 18px; font-weight: 400; line-height: 1.5; }
+.routes thead th { padding: 0 0 6px; color: var(--color-gray); font-size: 14px; font-weight: 400; line-height: 1.5; }
+.routes tbody th, .routes td { padding: 10px 0; border-bottom: 1px solid var(--color-light); vertical-align: top; font-size: 18px; font-weight: 400; line-height: 1.5; }
 .routes th:first-child { padding-right: 28px; }
-.delivery { padding: 22px 0; border-bottom: 1px solid var(--color-light); }
-.delivery h3 { margin: 0 0 14px; color: var(--color-gray); font-size: 16px; font-weight: 400; line-height: 1.5; }
+.delivery { padding-top: 16px; }
+.delivery h3 { margin: 0 0 10px; color: var(--color-gray); font-size: 16px; font-weight: 400; line-height: 1.5; }
 .metrics { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; margin: 0; }
 .metrics div { display: flex; flex-direction: column; }
 .metrics dt { order: 1; margin-top: 4px; color: var(--color-gray); font-size: 15px; line-height: 1.5; }
 .metrics dd { margin: 0; font-family: var(--font-display); font-size: 32px; font-weight: 500; line-height: 1.25; }
-.dispatch { margin: 18px 0 0; color: var(--color-gray); font-size: 16px; line-height: 1.65; }
-.benefit { margin-top: 26px; padding-top: 22px; border-top: 1px solid var(--color-light); }
+.dispatch { margin: 12px 0 0; color: var(--color-gray); font-size: 16px; line-height: 1.65; }
+.benefit { margin-top: 18px; padding-top: 16px; border-top: 1px solid var(--color-light); }
+.benefitHeading { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 6px 18px; }
 .benefit h3 { margin: 0; font-size: 17px; font-weight: 500; line-height: 1.5; }
 .benefit p { margin: 6px 0 0; color: var(--color-gray); font-size: 15px; line-height: 1.6; }
 .link { display: inline; padding: 0; border: 0; background: transparent; color: var(--color-dark-blue); font-size: 15px; line-height: 1.6; text-decoration: underline; text-underline-offset: 4px; text-align: left; cursor: pointer; }
-.benefit .link { display: inline-block; margin-top: 12px; }
+.benefit .link { flex-shrink: 0; }
 .info { margin: 0 0 24px; }
 .info > div { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.3fr); gap: 24px; padding: 18px 0; border-bottom: 1px solid var(--color-light); }
 .info > div:first-child { padding-top: 0; }
