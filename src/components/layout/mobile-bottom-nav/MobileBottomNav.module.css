@@ -355,3 +355,9 @@
     line-height: 1.25;
   }
 }
+.catalogButton {
+  border: 0;
+  background: transparent;
+  font-family: inherit;
+  cursor: pointer;
+}

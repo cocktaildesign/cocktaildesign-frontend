@@ -18,6 +18,7 @@ import DialogueIcon from "@/components/icons/DialogueIcon";
 import { useFavoritesStore } from "@/lib/favorites/favoritesStore";
 import { useCartStore } from "@/lib/cart/cartStore";
 import { Modal } from "@/components/ui/modal/Modal";
+import { useCatalogMenu } from "@/components/layout/header/catalog-menu/CatalogMenuProvider";
 
 export type MobileBottomNavMenuItem = {
   title: string;
@@ -31,6 +32,7 @@ type Props = {
 
 export default function MobileBottomNav({ menuItems }: Props) {
   const pathname = usePathname();
+  const catalogMenu = useCatalogMenu();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const favoritesHasHydrated = useFavoritesStore((state) => state.hasHydrated);
@@ -56,12 +58,13 @@ export default function MobileBottomNav({ menuItems }: Props) {
           <span className={styles.label}>Главная</span>
         </Link>
 
-        <Link href="/catalog" className={`${styles.item} ${pathname.startsWith("/catalog") ? styles.active : ""}`}>
+        <button type="button" className={`${styles.item} ${styles.catalogButton} ${catalogMenu.isOpen || pathname.startsWith("/catalog") ? styles.active : ""}`}
+          aria-label="Каталог" aria-expanded={catalogMenu.isOpen} aria-controls={catalogMenu.menuId} onClick={(event) => catalogMenu.toggle(event.currentTarget)}>
           <span className={styles.icon}>
             <CatalogIcon />
           </span>
           <span className={styles.label}>Каталог</span>
-        </Link>
+        </button>
 
         {/* Кнопка меню */}
         <button type="button" className={`${styles.item} ${styles.menuItem}`} onClick={() => setIsMenuOpen(true)}>
