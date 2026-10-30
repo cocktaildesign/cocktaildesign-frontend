@@ -1,42 +1,21 @@
 import type { ReactNode } from "react";
 import Link from "next/link";
 import Image from "next/image";
-
 import Container from "../Container";
-// import FooterFeedback from "./FooterFeedback";
 import Logo from "@/components/ui/logo/Logo";
-
-import StarIcon from "@/components/icons/StarIcon";
 import YandexIcon from "@/components/icons/YandexIcon";
 import TelegramIcon from "@/components/icons/social-network/TelegramIcon";
-import TelegramIconFon from "@/components/icons/social-network/TelegramIconFon";
 import VKIcon from "@/components/icons/social-network/VKIcon";
 import MaxIcon from "@/components/icons/social-network/MaxIcon";
 import YouTubeIcon from "@/components/icons/social-network/YouTubeIcon";
-
+import AnalyticsSettings from "@/components/analytics/AnalyticsSettings";
 import { getNavigation } from "@/lib/api/navigation";
 import { YANDEX_REVIEWS_URL } from "@/lib/reviews";
-
 import styles from "./Footer.module.css";
-import AnalyticsSettings from "@/components/analytics/AnalyticsSettings";
 
-type FooterLink = {
-  label: string;
-  href: string;
-  external?: boolean;
-};
-
-type FooterSocialLink = {
-  label: string;
-  href: string;
-  icon: ReactNode;
-};
-
-type MobileFooterSection = {
-  title: string;
-  links: FooterLink[];
-  ariaLabel: string;
-};
+type FooterLink = { label: string; href: string };
+type FooterSocialLink = FooterLink & { icon: ReactNode };
+type FooterSection = { title: string; links: FooterLink[] };
 
 const footerMarketplaceLinks = [
   {
@@ -57,38 +36,44 @@ const footerMarketplaceLinks = [
   },
 ];
 
-export const footerCompanyLinks: FooterLink[] = [
+
+const companyLinks: FooterLink[] = [
   { label: "О нас", href: "/about" },
-  { label: "Отзывы на Яндексе", href: YANDEX_REVIEWS_URL, external: true },
+  { label: "Наше производство", href: "/catalog/collection/nashe-proizvodstvo" },
+  { label: "Брендинг и гравировка", href: "/branding" },
   { label: "Реквизиты", href: "/legal/requisites" },
-  { label: "Каталог", href: "/catalog" },
+];
+
+const buyerLinks: FooterLink[] = [
+  { label: "Доставка", href: "/shipping" },
+  { label: "Оплата", href: "/payment-methods" },
+  { label: "Возврат и гарантия", href: "/legal/returns" },
   { label: "Для баров и ресторанов", href: "/prof-oborudovanie-dlya-restoranov-i-kafe" },
-];
-
-export const footerPromosLinks: FooterLink[] = [
   { label: "Система скидок", href: "/discounts" },
-  { label: "Товары со скидкой", href: "/catalog/collection/sale" },
-];
-
-export const footerSupportLinks: FooterLink[] = [
   { label: "Обратная связь", href: "/support/feedback" },
-  { label: "Контакты", href: "/contacts" },
 ];
 
-export const footerDeliveryPaymentLinks: FooterLink[] = [
-  { label: "Способы оплаты", href: "/payment-methods" },
-  { label: "Способы доставки", href: "/shipping" },
+const collectionLinks: FooterLink[] = [
+  { label: "Новинки", href: "/catalog/collection/novinki" },
+  { label: "Скидки", href: "/catalog/collection/sale" },
+  { label: "Уценка", href: "/catalog/collection/utsenka" },
 ];
 
-export const footerLegalLinks: FooterLink[] = [
-  { label: "Правовая информация", href: "/legal" },
+const legalLinks: FooterLink[] = [
+  { label: "Публичная оферта", href: "/legal/offer" },
   { label: "Обработка персональных данных", href: "/legal/privacy-policy" },
   { label: "Согласие для обратной связи", href: "/legal/consent" },
+  { label: "Правовая информация", href: "/legal" },
 ];
 
-export const footerCustomLinks: FooterLink[] = [{ label: "Брендинг и Гравировка", href: "/branding" }];
+// A short selection from the existing CMS navigation; hidden categories stay hidden.
+// The complete category tree remains available through “Весь каталог”.
+const categoryHrefs = [
+  "/catalog/ms-35c38c23", "/catalog/ms-ba57d348", "/catalog/ms-c374b866",
+  "/catalog/ms-ffa19e3a", "/catalog/ms-ad31a2a1", "/catalog/ms-e8de1bd2",
+];
 
-export const footerKnowledgeLinks: FooterLink[] = [
+const footerKnowledgeLinks: FooterLink[] = [
   { label: "Техники и фишки", href: "/knowledge?tab=techniques" },
   { label: "Обучение", href: "/knowledge?tab=education" },
   { label: "Подкасты и интервью", href: "/knowledge?tab=podcasts" },
@@ -96,7 +81,7 @@ export const footerKnowledgeLinks: FooterLink[] = [
   { label: "Материалы и ресурсы", href: "/knowledge?tab=resources" },
 ];
 
-export const footerSocialLinks: FooterSocialLink[] = [
+const footerSocialLinks: FooterSocialLink[] = [
   {
     label: "Telegram",
     href: "https://t.me/Cocktail_Design_official",
@@ -119,364 +104,158 @@ export const footerSocialLinks: FooterSocialLink[] = [
   },
 ];
 
+
+function Arrow({ external = false }: { external?: boolean }) {
+  return <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+    strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" focusable="false">
+    <path d={external ? "M7 17 17 7M7 7h10v10" : "M4 12h15m-6-6 6 6-6 6"} />
+  </svg>;
+}
+
 function FooterLinksList({ links }: { links: FooterLink[] }) {
-  return (
-    <ul className={styles.footerList}>
-      {links.map((link) => (
-        <li key={link.href} className={styles.footerItem}>
-          {link.external ? (
-            <a href={link.href} className={styles.footerLink} target="_blank" rel="noopener noreferrer"
-              aria-label={`${link.label}: открыть в новой вкладке`}>
-              {link.label}
-            </a>
-          ) : (
-            <Link href={link.href} className={styles.footerLink}>
-              {link.label}
-            </Link>
-          )}
-        </li>
-      ))}
+  return <ul className={styles.footerList}>
+    {links.map(link => <li key={link.href}>
+      <Link href={link.href} className={styles.footerLink}>{link.label}</Link>
+    </li>)}
+  </ul>;
+}
+
+function SocialLinks() {
+  return <nav className={styles.socialNav} aria-label="Каналы Cocktail Design в соцсетях">
+    <h2 className={styles.secondaryTitle}>Мы в соцсетях</h2>
+    <ul className={styles.socialList}>
+      {footerSocialLinks.map(item => <li key={item.href}>
+        <a href={item.href} target="_blank" rel="noopener noreferrer"
+          aria-label={item.label + ": канал Cocktail Design, открыть в новой вкладке"} className={styles.socialLink}>
+          {item.icon}
+        </a>
+      </li>)}
     </ul>
-  );
+  </nav>;
+}
+
+function SectionContent({ section }: { section: FooterSection }) {
+  return <>
+    <FooterLinksList links={section.links} />
+    {section.title === "Каталог" && <>
+      <ul className={styles.collections} aria-label="Подборки товаров">
+        {collectionLinks.map(link => <li key={link.href}>
+          <Link href={link.href}>{link.label}</Link>
+        </li>)}
+      </ul>
+      <Link href="/catalog" className={styles.actionLink}>Весь каталог <Arrow /></Link>
+    </>}
+  </>;
 }
 
 export default async function Footer() {
   const navigation = await getNavigation();
-  const currentYear = new Date().getFullYear();
-
-  const mobileSections: MobileFooterSection[] = [
-    {
-      title: "Категории",
-      links: navigation.footer,
-      ariaLabel: "Категории",
-    },
-    {
-      title: "Компания",
-      links: footerCompanyLinks,
-      ariaLabel: "Компания",
-    },
-    {
-      title: "Акции",
-      links: footerPromosLinks,
-      ariaLabel: "Акции",
-    },
-    {
-      title: "Сервис и поддержка",
-      links: footerSupportLinks,
-      ariaLabel: "Сервис и поддержка",
-    },
-    {
-      title: "Доставка и оплата",
-      links: footerDeliveryPaymentLinks,
-      ariaLabel: "Доставка и оплата",
-    },
-    {
-      title: "Документы",
-      links: footerLegalLinks,
-      ariaLabel: "Документы",
-    },
-    {
-      title: "Наше производство",
-      links: footerCustomLinks,
-      ariaLabel: "Наше производство",
-    },
-    {
-      title: "Знания",
-      links: footerKnowledgeLinks,
-      ariaLabel: "Знания",
-    },
+  const categoryLinks = categoryHrefs.flatMap(href => {
+    const category = navigation.footer.find(item => item.href === href);
+    return category ? [category] : [];
+  });
+  const sections: FooterSection[] = [
+    { title: "Каталог", links: categoryLinks },
+    { title: "Покупателям", links: buyerLinks },
+    { title: "Компания", links: companyLinks },
+    { title: "Знания", links: footerKnowledgeLinks },
   ];
 
-  return (
-    <footer className={styles.footer}>
-      {/* <FooterFeedback /> */}
-
-      <section className={styles.footerSection}>
-        <Container>
-          <section className={styles.contactStrip} aria-label="Контакты Cocktail Design">
-            <div className={styles.contactItem}>
-              <h3 className={styles.contactLabel}>Телефон</h3>
-              <a className={styles.contactLink} href="tel:+79956226202">+7 (995) 622-62-02</a>
-            </div>
-            <div className={styles.contactItem}>
-              <h3 className={styles.contactLabel}>Email</h3>
-              <a className={styles.contactLink} href="mailto:cocktaildesign@yandex.ru">cocktaildesign@yandex.ru</a>
-            </div>
-            <div className={styles.contactItem}>
-              <h3 className={styles.contactLabel}>Часы работы, МСК</h3>
-              <div className={styles.contactHours}>
-                <span>Пн–Пт: 10:00–18:00</span>
-                <span>Сб–Вс: 10:00–17:00</span>
-              </div>
-            </div>
-          </section>
-          <div className={styles.footerGrid}>
-            <div className={styles.footerColumn}>
-              <Logo color="white" className={styles.logo} />
-
-              <a
-                className={styles.footerRating}
-                href={YANDEX_REVIEWS_URL}
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="Отзывы на Яндексе: открыть в новой вкладке">
-                <YandexIcon className={styles.footerYandexIcon} />
-
-                <div className={styles.footerRatingContent}>
-                  <span className={styles.footerRatingContentText}>Отзывы на Яндексе</span>
-
-                  <span className={styles.starRow} aria-hidden="true">
-                    <StarIcon className={styles.footerRatingIcon} />
-                    <StarIcon className={styles.footerRatingIcon} />
-                    <StarIcon className={styles.footerRatingIcon} />
-                    <StarIcon className={styles.footerRatingIcon} />
-                    <StarIcon className={styles.footerRatingIcon} />
-                  </span>
-                </div>
-              </a>
-
-              <div className={styles.footerMarketplaces}>
-                <p className={styles.footerMarketplacesTitle}>Мы на маркетплейсах</p>
-
-                <div className={styles.footerMarketplacesList}>
-                  {footerMarketplaceLinks.map((marketplace) => (
-                    <a
-                      key={marketplace.label}
-                      className={styles.footerMarketplacesItem}
-                      href={marketplace.href}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      aria-label={`${marketplace.label}: открыть наш магазин в новой вкладке`}>
-                      <span className={styles.footerMarketplaceIcon}>
-                        <Image
-                          className={marketplace.imageClassName}
-                          src={marketplace.image}
-                          alt=""
-                          width={40}
-                          height={40}
-                          loading="lazy"
-                        />
-                      </span>
-                      <span className={styles.footerMarketplaceLabel}>{marketplace.label}</span>
-                      <svg
-                        className={styles.footerMarketplaceArrow}
-                        width="16"
-                        height="16"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="1.75"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        aria-hidden="true"
-                        focusable="false">
-                        <path d="M6 18 18 6M6 6h12v12" />
-                      </svg>
-                    </a>
-                  ))}
-                </div>
-              </div>
-
-            </div>
-
-            <div className={styles.footerColumn}>
-              <nav className={styles.footerNav} aria-label="Категории">
-                <h3 className={styles.footerTitle}>Категории</h3>
-
-                <ul className={styles.footerList}>
-                  {navigation.footer.map((category) => (
-                    <li key={category.href} className={styles.footerItem}>
-                      <Link href={category.href} className={styles.footerLink}>
-                        {category.label}
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
-              </nav>
-            </div>
-
-            <div className={styles.footerColumn}>
-              <nav className={styles.footerNav} aria-label="Компания">
-                <h3 className={styles.footerTitle}>Компания</h3>
-                <FooterLinksList links={footerCompanyLinks} />
-              </nav>
-
-              <nav className={styles.footerNav} aria-label="Акции">
-                <h3 className={styles.footerTitle}>Акции</h3>
-                <FooterLinksList links={footerPromosLinks} />
-              </nav>
-            </div>
-
-            <div className={styles.footerColumn}>
-              <nav className={styles.footerNav} aria-label="Сервис и поддержка">
-                <h3 className={styles.footerTitle}>Сервис и поддержка</h3>
-                <FooterLinksList links={footerSupportLinks} />
-              </nav>
-
-              <nav className={styles.footerNav} aria-label="Доставка и оплата">
-                <h3 className={styles.footerTitle}>Доставка и оплата</h3>
-                <FooterLinksList links={footerDeliveryPaymentLinks} />
-              </nav>
-
-              <nav className={styles.footerNav} aria-label="Документы">
-                <h3 className={styles.footerTitle}>Документы</h3>
-                <FooterLinksList links={footerLegalLinks} />
-              </nav>
-
-              <nav className={styles.footerNav} aria-label="Наше производство">
-                <h3 className={styles.footerTitle}>Наше производство</h3>
-                <FooterLinksList links={footerCustomLinks} />
-              </nav>
-            </div>
-
-            <div className={styles.footerColumn}>
-              <nav className={styles.footerNav} aria-label="Знания">
-                <h3 className={styles.footerTitle}>Знания</h3>
-                <FooterLinksList links={footerKnowledgeLinks} />
-              </nav>
-            </div>
-
-            <div className={styles.footerColumnSocial}>
-              <nav className={styles.footerNav} aria-label="Наши соцсети">
-                <h3 className={styles.footerTitle}>Наши соцсети</h3>
-
-                <ul className={styles.socialList}>
-                  {footerSocialLinks.map((item) => (
-                    <li key={item.href} className={styles.socialItem}>
-                      <a
-                        href={item.href}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        aria-label={`${item.label}: открыть в новой вкладке`}
-                        className={styles.socialLink}>
-                        {item.icon}
-                      </a>
-                    </li>
-                  ))}
-                </ul>
-              </nav>
-
-              <aside className={styles.tgCard} aria-label="Подписка на Telegram-канал">
-                <div className={styles.tgHeader}>
-                  <h3 className={styles.tgHeaderTitle}>Telegram</h3>
-                  <p className={styles.tgHeaderSubTitle}>Подписывайтесь и будьте в курсе последних событий</p>
-                </div>
-
-                <div className={styles.tgQr} aria-hidden="true">
-                  <Image
-                    src="/images/qr/tgQr.png"
-                    alt=""
-                    width={180}
-                    height={180}
-                    loading="lazy"
-                    sizes="(max-width: 768px) 0px, 180px"
-                  />
-                </div>
-
-                <div className={styles.tgActions}>
-                  <a
-                    href="https://t.me/Cocktail_Design_official"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className={styles.tgButton}
-                    aria-label="Открыть Telegram-канал Cocktail Design в новой вкладке">
-                    <span className={styles.tgButtonIcon} aria-hidden="true">
-                      <TelegramIconFon />
-                    </span>
-                    <span className={styles.tgButtonText}>Открыть канал</span>
-                  </a>
-                </div>
-              </aside>
-            </div>
-          </div>
-
-          <div className={styles.footerMobileSocial}>
-            <nav className={styles.footerNav} aria-label="Наши соцсети">
-              <h3 className={styles.footerTitle}>Наши соцсети</h3>
-
-              <ul className={styles.socialList}>
-                {footerSocialLinks.map((item) => (
-                  <li key={item.href} className={styles.socialItem}>
-                    <a
-                      href={item.href}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      aria-label={`${item.label}: открыть в новой вкладке`}
-                      className={styles.socialLink}>
-                      {item.icon}
-                    </a>
-                  </li>
-                ))}
-              </ul>
+  return <footer className={styles.footer}>
+    <Container>
+      <div className={styles.mainGrid}>
+        <section className={styles.contactCard} aria-label="Контакты Cocktail Design">
+          <Logo color="white" className={styles.logo} linkClassName={styles.logoLink} />
+          <div className={styles.contactDetails}>
+            <h2 className={`${styles.smallLabel} ${styles.contactHeading}`}>Контакты</h2>
+            <a className={styles.phone} href="tel:+79956226202">+7 (995) 622-62-02</a>
+            <a className={styles.email} href="mailto:cocktaildesign@yandex.ru">cocktaildesign@yandex.ru</a>
+            <nav className={styles.managerLinks} aria-label="Написать менеджеру Cocktail Design">
+              <span>Написать:</span>
+              <a href="https://t.me/Manager_cocktail_design" target="_blank" rel="noopener noreferrer"
+                aria-label="Написать менеджеру в Telegram, открыть в новой вкладке">Telegram</a>
+              <a href="https://max.ru/u/f9LHodD0cOLWKnOz-T53SpORKXEy2ENCK_4sq882r9L9MRQzWWDdeYS4daM"
+                target="_blank" rel="noopener noreferrer"
+                aria-label="Написать менеджеру в MAX, открыть в новой вкладке">MAX</a>
             </nav>
-          </div>
-
-          <div className={styles.footerMobileAccordion}>
-            {mobileSections.map((section) => (
-              <details key={section.title} className={styles.footerAccordion}>
-                <summary className={styles.footerAccordionSummary}>{section.title}</summary>
-
-                <nav className={styles.footerAccordionBody} aria-label={section.ariaLabel}>
-                  <FooterLinksList links={section.links} />
-                </nav>
-              </details>
-            ))}
-          </div>
-
-          <div className={styles.footerMobileTelegram}>
-            <aside className={styles.tgCard} aria-label="Подписка на Telegram-канал">
-              <div className={styles.tgHeader}>
-                <h3 className={styles.tgHeaderTitle}>Telegram</h3>
-                <p className={styles.tgHeaderSubTitle}>Подписывайтесь и будьте в курсе последних событий</p>
-              </div>
-
-              <div className={styles.tgActions}>
-                <a
-                  href="https://t.me/Cocktail_Design_official"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className={styles.tgButton}
-                  aria-label="Открыть Telegram-канал Cocktail Design в новой вкладке">
-                  <span className={styles.tgButtonIcon} aria-hidden="true">
-                    <TelegramIconFon />
-                  </span>
-                  <span className={styles.tgButtonText}>Открыть канал</span>
-                </a>
-              </div>
-            </aside>
-          </div>
-
-          <span className={styles.line} />
-
-          <div className={styles.footerBottomGrid}>
-            <div className={styles.footerBottomLeft}>
-              <p className={styles.footerBottomText}>
-                Условия розничной покупки описаны в{" "}
-                <Link href="/legal/offer" className={styles.footerInlineLink}>
-                  Публичной оферте
-                </Link>
-                . Заказы организаций и ИП согласовываются отдельно. Подробнее об использовании данных — в{" "}
-                <Link href="/legal/privacy-policy" className={styles.footerInlineLink}>
-                  Политике обработки персональных данных
-                </Link>
-                .
-              </p>
+            <div className={styles.hours}>
+              <h3 className={styles.smallLabel}><span className={styles.hoursLabel}>Часы работы, </span>МСК</h3>
+              <span>Пн–Пт: 10:00–18:00</span>
+              <span>Сб–Вс: 10:00–17:00</span>
             </div>
+          </div>
+          <div className={styles.contactActions}>
+            <Link href="/contacts" className={styles.actionLink}>Все контакты <Arrow /></Link>
+            <a className={styles.reviews} href={YANDEX_REVIEWS_URL} target="_blank" rel="noopener noreferrer"
+              aria-label="Отзывы на Яндексе: открыть в новой вкладке">
+              <YandexIcon className={styles.yandexIcon} aria-hidden="true" />
+              <span>Отзывы</span>
+            </a>
+          </div>
+        </section>
 
-            <div className={styles.footerBottomRight}>
-              <a className={styles.footerDev} href="https://t.me/mazalovalex" target="_blank" rel="noopener noreferrer">
-                Разработка сайта <span className={styles.footerDevName}>MazalovAlex</span>
+        <div className={styles.desktopNavigation}>
+          {sections.map(section => <div key={section.title} className={styles.navigationColumn}>
+            <nav aria-label={section.title + " в подвале"}>
+              <h2 className={styles.sectionTitle}>{section.title}</h2>
+              <SectionContent section={section} />
+            </nav>
+          </div>)}
+        </div>
+        <div className={styles.mobileNavigation}>
+          {sections.map(section => <details key={section.title} className={styles.accordion}>
+            <summary>{section.title}<span className={styles.chevron} aria-hidden="true" /></summary>
+            <nav className={styles.accordionBody} aria-label={section.title + " в подвале"}>
+              <SectionContent section={section} />
+            </nav>
+          </details>)}
+        </div>
+      </div>
+
+      <div className={styles.secondaryRow}>
+        <SocialLinks />
+        <nav aria-label="Магазины Cocktail Design на маркетплейсах" className={styles.marketplaces}>
+          <h2 className={styles.secondaryTitle}>Мы на маркетплейсах</h2>
+          <ul className={styles.marketplaceList}>
+            {footerMarketplaceLinks.map(item => <li key={item.label}>
+              <a href={item.href} className={styles.marketplaceLink} target="_blank" rel="noopener noreferrer"
+                aria-label={item.label + ": открыть наш магазин в новой вкладке"}>
+                <span className={styles.marketplaceIcon}>
+                  <Image src={item.image} className={item.imageClassName} alt="" width={32} height={32} loading="lazy" />
+                </span>
+                {item.label}<Arrow external />
               </a>
-
-              <p className={styles.footerCopyright}>
-                © 2015—{currentYear}. Cocktail Design. Все права защищены. При полном или частичном использовании
-                материалов с сайта ссылка на источник обязательна.
-              </p>
-            </div>
+            </li>)}
+          </ul>
+        </nav>
+        <aside aria-label="Подписка на Telegram-канал" className={styles.telegram}>
+          <div>
+            <h2 className={styles.secondaryTitle}>Telegram Cocktail Design</h2>
+            <p>Новинки, производство и жизнь бренда.</p>
+            <a className={styles.actionLink} href="https://t.me/Cocktail_Design_official" target="_blank" rel="noopener noreferrer"
+              aria-label="Открыть Telegram-канал Cocktail Design в новой вкладке">Открыть канал <Arrow /></a>
           </div>
-          <AnalyticsSettings />
-        </Container>
-      </section>
-    </footer>
-  );
+          <div className={styles.qr} aria-hidden="true">
+            <Image src="/images/qr/tgQr.png" alt="" width={96} height={96} loading="lazy" sizes="96px" />
+          </div>
+        </aside>
+      </div>
+
+      <div className={styles.bottom}>
+        <nav aria-label="Правовые документы"><ul className={styles.legalLinks}>
+          {legalLinks.map(link => <li key={link.href}><Link href={link.href}>{link.label}</Link></li>)}
+        </ul></nav>
+        <p className={styles.legalNote}>Условия розничной покупки описаны в <Link href="/legal/offer">Публичной оферте</Link>.
+          {" "}Заказы организаций и ИП согласовываются отдельно.</p>
+        <div className={styles.analytics}><AnalyticsSettings /></div>
+        <div className={styles.bottomLine}>
+          <p>© 2015—{new Date().getFullYear()}. Cocktail Design. Все права защищены.<br />
+            При полном или частичном использовании материалов с сайта ссылка на источник обязательна.</p>
+          <a href="https://t.me/mazalovalex" target="_blank" rel="noopener noreferrer" className={styles.developer}>
+            Разработка сайта <span>MazalovAlex</span>
+          </a>
+        </div>
+      </div>
+    </Container>
+  </footer>;
 }
