@@ -26,7 +26,6 @@ export default function PaymentTabs() {
             <h3>Оплатите счёт</h3><p>После поступления оплаты подготовим заказ к отправке.</p>
           </div></li>
         </ol>
-        <p className={styles.note}>Для изделий на заказ после оплаты запускаем производство. Срок изготовления согласуем отдельно.</p>
         <Link href="/legal/requisites" className={styles.link}>
           <span className={styles.linkText}>Смотреть реквизиты</span>
           <span className={styles.linkArrow} aria-hidden="true">→</span>
