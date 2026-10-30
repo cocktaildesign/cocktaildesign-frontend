@@ -29,17 +29,16 @@ export default function VolumeTiers() {
   return (
     <section className={`${styles.card} ${styles.volume}`} aria-labelledby="volume-title">
       <h2 id="volume-title" className={styles.cardTitle}>Скидка за объём заказа</h2>
-      <p className={styles.body}>На один заказ</p>
       <table className={styles.tiers}>
         <caption className={styles.srOnly}>Скидки в зависимости от суммы одного заказа</caption>
-        <thead><tr><th scope="col">Сумма заказа</th><th scope="col">Скидка</th></tr></thead>
+        <thead><tr><th scope="col">Сумма одного заказа</th><th scope="col">Скидка</th></tr></thead>
         <tbody>{displayTiers.map((tier) => (
           <tr key={tier.id} className={available && amount > 0 && current?.id === tier.id ? styles.activeTier : undefined}>
             <th scope="row">от {money(tier.minAmount)}</th><td>{tier.percent}%</td>
           </tr>
         ))}</tbody>
       </table>
-      <p className={styles.note}>Есть исключения по товарам — перечень уточняйте у менеджера. Скидка за объём не суммируется с другими акциями.</p>
+      <p className={styles.note}>Есть исключения по товарам. Не суммируется с другими акциями.</p>
       <details className={`${styles.details} ${styles.calculator}`}>
         <summary>Рассчитать скидку <span className={styles.plus} aria-hidden="true" /></summary>
         <div className={styles.detailsBody}>

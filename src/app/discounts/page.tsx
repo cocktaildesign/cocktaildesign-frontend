@@ -11,11 +11,11 @@ export const metadata = pageMetadata({
 
 export default function DiscountsPage() {
   return (
-    <PageLayout>
+    <PageLayout className={styles.layout}>
       <div className={styles.page}>
         <header className={styles.hero}>
           <h1 className={styles.pageTitle}>Система скидок</h1>
-          <p className={styles.description}>Выгодные условия для первого заказа и следующих покупок.</p>
+          <p className={styles.description}>Для первого заказа и следующих покупок.</p>
         </header>
         <DiscountOffers />
       </div>

@@ -21,7 +21,7 @@ function OfferIcon({ name }: { name: "truck" | "gift" | "copy" | "arrow" | "chec
   );
 }
 
-function PromoCode({ code, hint }: { code: string; hint: string }) {
+function PromoCode({ code }: { code: string }) {
   const [status, setStatus] = useState<"idle" | "copied" | "error">("idle");
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -42,7 +42,7 @@ function PromoCode({ code, hint }: { code: string; hint: string }) {
     <div className={styles.promo}>
       <div className={styles.promoBox}>
         <div className={styles.promoText}>
-          <span className={styles.promoLabel}>Промокод</span>
+          <span className={styles.promoLabel}>Промокод для корзины</span>
           <strong className={styles.promoValue}>{code}</strong>
         </div>
         <button type="button" onClick={copy} className={styles.copyButton} aria-label={`Скопировать промокод ${code}`}>
@@ -50,9 +50,9 @@ function PromoCode({ code, hint }: { code: string; hint: string }) {
           <span>{status === "copied" ? "Скопировано" : "Копировать"}</span>
         </button>
       </div>
-      <p className={styles.promoHint} role="status" aria-live="polite" aria-atomic="true">
+      <p className={status === "error" ? styles.promoHint : styles.srOnly} role="status" aria-live="polite" aria-atomic="true">
         {status === "copied" ? "Скопировано. Вставьте код при оформлении заказа."
-          : status === "error" ? `Не удалось скопировать. Выделите код ${code} и скопируйте вручную.` : hint}
+          : status === "error" ? `Не удалось скопировать. Выделите код ${code} и скопируйте вручную.` : ""}
       </p>
     </div>
   );
@@ -86,13 +86,15 @@ export default function DiscountOffers() {
       <div className={styles.offers}>
         <section ref={startup} id="startup" className={`${styles.card} ${styles.startup}`} aria-labelledby="startup-title">
           <h2 id="startup-title" className={styles.cardTitle}>Скидка на первый заказ</h2>
-          <p className={styles.discount}>−20%</p>
-          <p className={styles.startupIntro}>Для новых покупателей при заказе от&nbsp;20&nbsp;000&nbsp;₽</p>
+          <div className={styles.startupLead}>
+            <p className={styles.discount}>−20%</p>
+            <p className={styles.startupIntro}>Для новых покупателей<br />при заказе от&nbsp;20&nbsp;000&nbsp;₽</p>
+          </div>
           <ul className={styles.benefits}>
             <li><OfferIcon name="truck" /><span>Бесплатная доставка по всей России</span></li>
-            <li><OfferIcon name="gift" /><span>Один подарок на выбор<small>Клише, гравировка, изделие или −10% на следующий заказ</small></span></li>
+            <li><OfferIcon name="gift" /><span>Один подарок на выбор</span></li>
           </ul>
-          <PromoCode code="STARTCD20" hint="Введите код в корзине или сообщите менеджеру." />
+          <PromoCode code="STARTCD20" />
           <div className={styles.startupActions}>
             <Link href="/catalog" className={`${styles.button} ${styles.lightButton}`}>В каталог <OfferIcon name="arrow" /></Link>
             <button type="button" className={styles.giftsToggle} aria-expanded={giftsOpen}
@@ -106,10 +108,10 @@ export default function DiscountOffers() {
               <ul className={styles.giftList}>
                 {gifts?.type === "list" && gifts.items.map((gift) => <li key={gift}>{gift}</li>)}
               </ul>
-              <p>При оформлении укажите промокод STARTCD20. Менеджер свяжется с вами и поможет выбрать подарок.</p>
+              <p>Введите промокод STARTCD20 в корзине или сообщите менеджеру. Менеджер свяжется с вами и поможет выбрать подарок.</p>
             </div>
           </div>
-          <p className={styles.note}>Кроме партнёрских товаров и позиций по акции. Подробности уточняйте у менеджера.</p>
+          <p className={styles.note}>Кроме партнёрских товаров и позиций по акции.</p>
         </section>
 
         <VolumeTiers />
@@ -120,7 +122,7 @@ export default function DiscountOffers() {
           <p className={styles.body}>По России, кроме отдалённых регионов.</p>
           <div className={styles.deliveryTerms}>
             <p>В отдалённые регионы РФ, Казахстан, Беларусь и Армению — скидка <strong>350&nbsp;₽</strong> на доставку за каждые <strong>5&nbsp;000&nbsp;₽</strong> в чеке.</p>
-            <p className={styles.note}>Конечную стоимость доставки рассчитает менеджер после оформления заказа.</p>
+            <p>Стоимость доставки подтвердит менеджер после оформления заказа.</p>
           </div>
           <Link href="/shipping" className={styles.textLink}><span>Подробнее о доставке</span><OfferIcon name="arrow" /></Link>
         </section>
@@ -129,8 +131,8 @@ export default function DiscountOffers() {
           <h2 id="birthday-title" className={styles.cardTitle}>Скидка ко дню рождения</h2>
           <p className={styles.offerValue}>−10%</p>
           <p className={styles.body}>За 3 дня до и 3 дня после даты рождения.</p>
-          <PromoCode code="DRCD" hint="Укажите код при оформлении и сообщите менеджеру о дне рождения." />
-          <p className={styles.note}>Менеджер применит скидку после подтверждения даты рождения. Кроме партнёрских товаров и позиций по акции.</p>
+          <PromoCode code="DRCD" />
+          <p className={styles.note}>После подтверждения даты рождения менеджером. Кроме партнёрских товаров и позиций по акции.</p>
         </section>
       </div>
 
