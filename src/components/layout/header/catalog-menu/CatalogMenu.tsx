@@ -6,6 +6,7 @@ import { useCallback, useEffect, useLayoutEffect, useRef, useState, useSyncExter
 import type { CatalogCategoryPreview, CatalogCollection } from "@/lib/api/catalog/types";
 import { useCatalogMenu } from "./CatalogMenuProvider";
 import CategoryIcon from "./CategoryIcon";
+import CategoryProducts from "./CategoryProducts";
 import styles from "./CatalogMenu.module.css";
 
 type CatalogMenuProps = {
@@ -25,6 +26,8 @@ const controls = 'button:not([disabled]), a[href]';
 export default function CatalogMenu({ categories, collections, onOpen }: CatalogMenuProps) {
   const { isOpen, menuId, toggle } = useCatalogMenu();
   const triggerRef = useRef<HTMLButtonElement>(null);
+  const menuCollections = collections.filter((item) => !item.sourceCategorySlug
+    || !categories.some((category) => category.slug === item.sourceCategorySlug));
   return (
     <div className={styles.catalogMenu}>
       <button ref={triggerRef} type="button" className={styles.buttonCta} aria-label="Каталог"
@@ -37,7 +40,7 @@ export default function CatalogMenu({ categories, collections, onOpen }: Catalog
         </svg>
         <span className={styles.buttonCtaText}>Каталог</span>
       </button>
-      {isOpen && <CatalogPanel categories={categories} collections={collections} triggerRef={triggerRef} />}
+      {isOpen && <CatalogPanel categories={categories} collections={menuCollections} triggerRef={triggerRef} />}
     </div>
   );
 }
@@ -53,12 +56,15 @@ function CatalogPanel({ categories, collections, triggerRef }: CatalogMenuProps 
   const mobileHeadingRef = useRef<HTMLHeadingElement>(null);
   const mobileBodyRef = useRef<HTMLDivElement>(null);
   const hoverTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const active = categories.find((item) => item.id === activeId) ?? categories[0];
+  const activeCollection = collections.find((item) => `collection:${item.id}` === activeId);
+  const active = activeCollection ? undefined : categories.find((item) => item.id === activeId) ?? categories[0];
+  const activeName = activeCollection?.title ?? active?.name;
+  const activeHref = activeCollection ? `/catalog/collection/${activeCollection.slug}` : `/catalog/${active?.slug}`;
   const sections = active?.children ?? [];
   const grouped = sections.filter(hasChildren);
   const leaves = sections.filter((item) => !hasChildren(item));
   const current = trail.at(-1);
-  const mobileItems = current?.children ?? categories;
+  const mobileItems = current ? current.children ?? [] : categories;
   const cancelHover = useCallback(() => {
     if (hoverTimer.current) clearTimeout(hoverTimer.current);
     hoverTimer.current = null;
@@ -67,6 +73,11 @@ function CatalogPanel({ categories, collections, triggerRef }: CatalogMenuProps 
     cancelHover();
     setActiveId(id);
     contentRef.current?.scrollTo({ top: 0 });
+  }
+  function previewOnHover(id: string, pointerType: string) {
+    if (pointerType !== "mouse") return;
+    cancelHover();
+    hoverTimer.current = setTimeout(() => selectCategory(id), 300);
   }
 
   useLayoutEffect(() => {
@@ -146,7 +157,22 @@ function CatalogPanel({ categories, collections, triggerRef }: CatalogMenuProps 
 
   const collectionLinks = collections.length > 0 && (
     <nav className={styles.collections} aria-label="Подборки каталога">
-      {collections.map((item) => <Link prefetch={false} key={item.id} href={`/catalog/collection/${item.slug}`} onClick={() => close()}>{item.title}</Link>)}
+      <p className={styles.collectionsLabel}>Подборки</p>
+      {collections.map((item) => <Link prefetch={false} key={item.id} href={`/catalog/collection/${item.slug}`}
+        className={`${styles.rootItem} ${!compact && activeCollection?.id === item.id ? styles.selected : ""}`}
+        aria-controls={!compact ? `${menuId}-content` : undefined}
+        onFocus={() => { if (!compact) selectCategory(`collection:${item.id}`); }}
+        onKeyDown={(event) => {
+          if (!compact && event.key === "ArrowRight") {
+            event.preventDefault();
+            contentRef.current?.querySelector<HTMLElement>("a[href]")?.focus();
+          }
+        }}
+        onPointerEnter={(event) => { if (!compact) previewOnHover(`collection:${item.id}`, event.pointerType); }}
+        onPointerLeave={cancelHover} onClick={() => close()}>
+        <CategoryIcon name={item.title} /><span>{item.title}</span>
+        {!compact && <span className={styles.chevron} aria-hidden="true">›</span>}
+      </Link>)}
     </nav>
   );
 
@@ -179,16 +205,17 @@ function CatalogPanel({ categories, collections, triggerRef }: CatalogMenuProps 
       </div>
       <div ref={mobileBodyRef} className={styles.mobileBody}>
         <nav aria-label={current?.name ?? "Разделы каталога"}>
-          {mobileItems.map((item) => hasChildren(item) ? (
+          {mobileItems.map((item) => (!current || hasChildren(item)) ? (
             <button type="button" key={item.id} className={styles.mobileRow} onClick={() => setTrail((items) => [...items, item])}>
               {!current && <CategoryIcon name={item.name} />}<span>{item.name}</span><span aria-hidden="true">›</span>
             </button>
           ) : (
             <Link prefetch={false} key={item.id} href={`/catalog/${item.slug}`} className={styles.mobileRow} onClick={() => close()}>
-              {!current && <CategoryIcon name={item.name} />}<span>{item.name}</span><span aria-hidden="true">→</span>
+              {!current && <CategoryIcon name={item.name} />}<span>{item.name}</span>
             </Link>
           ))}
         </nav>
+        {current && !hasChildren(current) && <CategoryProducts key={current.id} slug={current.slug} onNavigate={() => close()} />}
         {!current && collectionLinks}
       </div>
       <Link prefetch={false} className={styles.mobileAll} href={current ? `/catalog/${current.slug}` : "/catalog"} onClick={() => close()}>
@@ -204,17 +231,18 @@ function CatalogPanel({ categories, collections, triggerRef }: CatalogMenuProps 
         <div className={styles.categoryScroll}>
           <nav aria-label="Разделы каталога"><ul className={styles.rootList}>
             {categories.map((item) => <li key={item.id}>
-              {hasChildren(item) ? <button type="button" className={`${styles.rootItem} ${active?.id === item.id ? styles.selected : ""}`}
-                aria-pressed={active?.id === item.id} aria-controls={`${menuId}-content`}
-                onClick={() => selectCategory(item.id)} onFocus={() => selectCategory(item.id)}
-                onPointerEnter={(event) => {
-                  if (event.pointerType !== "mouse") return;
-                  cancelHover(); hoverTimer.current = setTimeout(() => selectCategory(item.id), 300);
-                }} onPointerLeave={cancelHover}>
+              <Link prefetch={false} href={`/catalog/${item.slug}`} className={`${styles.rootItem} ${active?.id === item.id ? styles.selected : ""}`}
+                aria-controls={`${menuId}-content`}
+                onClick={() => close()} onFocus={() => selectCategory(item.id)}
+                onKeyDown={(event) => {
+                  if (event.key === "ArrowRight") {
+                    event.preventDefault(); selectCategory(item.id);
+                    contentRef.current?.querySelector<HTMLElement>("a[href]")?.focus();
+                  }
+                }}
+                onPointerEnter={(event) => previewOnHover(item.id, event.pointerType)} onPointerLeave={cancelHover}>
                 <CategoryIcon name={item.name} /><span>{item.name}</span><span className={styles.chevron} aria-hidden="true">›</span>
-              </button> : <Link prefetch={false} href={`/catalog/${item.slug}`} className={styles.rootItem} onClick={() => close()}>
-                <CategoryIcon name={item.name} /><span>{item.name}</span><span className={styles.chevron} aria-hidden="true">→</span>
-              </Link>}
+              </Link>
             </li>)}
           </ul></nav>
           {collectionLinks}
@@ -222,20 +250,22 @@ function CatalogPanel({ categories, collections, triggerRef }: CatalogMenuProps 
         <Link prefetch={false} className={styles.allCatalog} href="/catalog" onClick={() => close()}>Весь каталог <span aria-hidden="true">→</span></Link>
       </div>
       <div ref={contentRef} id={`${menuId}-content`} className={styles.content}>
-        {active && <>
+        {(active || activeCollection) && <>
           <div className={styles.heading}>
-            <h2>{active.name}</h2>
-            <Link prefetch={false} className={styles.viewAll} href={`/catalog/${active.slug}`} onClick={() => close()}>Все товары раздела <span aria-hidden="true">→</span></Link>
+            <h2>{activeName}</h2>
+            <Link prefetch={false} className={styles.viewAll} href={activeHref} onClick={() => close()}>Все товары раздела <span aria-hidden="true">→</span></Link>
           </div>
-          {grouped.length > 0 && <div className={styles.groups}>{grouped.map((section) => <section key={section.id}>
+          {grouped.length > 0 && <div className={styles.groups}>{grouped.map((section) => <section key={section.id} className={styles.groupCard}>
             <h3><Link prefetch={false} href={`/catalog/${section.slug}`} onClick={() => close()}>{section.name}</Link></h3>
             <ul>{section.children?.map((item) => <li key={item.id}><Link prefetch={false} href={`/catalog/${item.slug}`} onClick={() => close()}>{item.name}</Link></li>)}</ul>
           </section>)}</div>}
-          {leaves.length > 0 && <nav className={`${styles.leaves} ${grouped.length ? styles.withDivider : ""}`} aria-label={`Другие категории: ${active.name}`}>
+          {leaves.length > 0 && <nav className={`${styles.leaves} ${grouped.length ? styles.afterGroups : ""}`} aria-label={`Категории: ${activeName}`}>
             {leaves.map((item) => <Link prefetch={false} key={item.id} href={`/catalog/${item.slug}`} onClick={() => close()}>{item.name}</Link>)}
           </nav>}
+          {!sections.length && <CategoryProducts key={activeId} slug={activeCollection?.slug ?? active!.slug}
+            collection={Boolean(activeCollection)} onNavigate={() => close()} />}
         </>}
-        {!active && <Link prefetch={false} href="/catalog" onClick={() => close()}>Перейти в каталог →</Link>}
+        {!active && !activeCollection && <Link prefetch={false} href="/catalog" onClick={() => close()}>Перейти в каталог →</Link>}
       </div>
     </div>
   </>, document.body);
