@@ -32,14 +32,15 @@ export default function StartupBannerContent({ banner, mobile, priority }: {
       <p className={styles.description}>{copy.description}</p>
       {copy.note && <div className={styles.note}>
         {promoCode ? <>
-          <span className={styles.promoLabel}>Введите промокод при оформлении</span>
           <div className={styles.codeRow}>
+            <span className={styles.promoLabel}>Промокод</span>
             <strong>{promoCode}</strong>
-            <CopyButton value={promoCode} label="Промокод" className={styles.copyButton} />
+            <CopyButton value={promoCode} label="Промокод" className={styles.copyButton}
+              successMessage="Скопировано. Вставьте код в корзине" />
           </div>
         </> : copy.note}
       </div>}
-      {banner.href && <Link className={styles.cta} href={banner.href}>{copy.buttonLabel}</Link>}
+      {banner.href && <Link className={styles.cta} href={banner.href}>{copy.buttonLabel}<span aria-hidden="true"> →</span></Link>}
     </div>
   </div>;
 }

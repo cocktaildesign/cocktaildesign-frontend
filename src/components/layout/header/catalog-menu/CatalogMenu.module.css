@@ -1,260 +1,379 @@
-/* ==========================================================================
-   CATALOG MENU
-   Обертка каталога и мостик до панели
-   ========================================================================== */
-
 .catalogMenu {
   position: relative;
+  z-index: var(--z-search-panel);
 }
-
-/* Невидимый мостик между кнопкой и панелью */
-.catalogMenu::after {
-  content: "";
-  position: absolute;
-  left: 0;
-  top: 100%;
-  width: 100%;
-  height: 12px;
-}
-
-/* ==========================================================================
-   BUTTON
-   Кнопка каталога
-   ========================================================================== */
 
 .buttonCta {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 5px;
-
+  gap: 10px;
   width: clamp(110px, 8vw, 135px);
   height: 46px;
-  border: none;
+  border: 0;
   border-radius: var(--radius);
-
-  background-color: var(--color-dark-blue);
-  color: var(--color-white);
-
-  font-family: var(--font-display);
-  font-size: var(--text-sm);
-  font-weight: 500;
-  text-decoration: none;
+  background: var(--color-dark-blue);
+  color: #fff;
+  font: 500 14px var(--font-display);
   cursor: pointer;
-
-  transition:
-    background-color var(--dur) var(--ease),
-    color var(--dur) var(--ease);
 }
 
 .buttonCta:hover {
-  background-color: var(--color-dark-blue-hover);
-  color: var(--color-light-soft);
+  background: var(--color-dark-blue-hover);
 }
 
-.buttonCta:focus-visible {
-  outline: 2px solid var(--color-accent-strong);
+.buttonCta:focus-visible, .panel a:focus-visible, .panel button:focus-visible, .mobileDialog a:focus-visible, .mobileDialog button:focus-visible {
+  outline: 2px solid #537396;
   outline-offset: 2px;
 }
 
-.catalogIcon {
-  color: var(--color-white);
+.backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 8999;
+  background: rgb(16 21 28 / 24%);
 }
-
-/* ==========================================================================
-   PANEL
-   Выпадающая панель
-   ========================================================================== */
 
 .panel {
-  position: absolute;
-  top: calc(100% + 8px);
-  left: 0;
-  z-index: var(--z-search-panel);
-
-  width: 1040px;
-  max-width: min(100vw - 32px, 1040px);
-  padding: 14px;
-  background: var(--color-white);
+  position: fixed;
+  visibility: hidden;
+  display: grid;
+  grid-template-columns: 280px minmax(0, 1fr);
+  height: min(680px, calc(100dvh - var(--catalog-top, 110px) - 20px));
+  grid-template-rows: minmax(0, 1fr);
+  z-index: 9010;
+  border: 1px solid #e0e4e9;
   border-radius: 16px;
-  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.16);
+  background: #fff;
+  box-shadow: 0 20px 60px rgb(16 21 28 / 16%);
+  overflow: hidden;
+  color: var(--color-dark-blue);
+  font-family: var(--font-display);
 }
 
-.columns {
+.sidebar {
   display: flex;
-  align-items: flex-start;
-  gap: 16px;
-  width: 100%;
+  flex-direction: column;
+  min-height: 0;
+  background: #f7f8fa;
+  border-right: 1px solid #e6e9ed;
 }
 
-/* ==========================================================================
-   LEFT COLUMN
-   Категории и коллекции
-   ========================================================================== */
-
-.topList {
-  list-style: none;
-  margin: 0;
-  padding: 0 8px 0 0;
-
-  flex: 0 0 300px;
-  width: 300px;
-  min-width: 300px;
-  max-width: 300px;
-
-  max-height: 70vh;
+.categoryScroll {
+  flex: 1;
+  min-height: 0;
   overflow-y: auto;
-
+  overscroll-behavior: contain;
+  padding: 12px;
   scrollbar-width: thin;
-  scrollbar-color: var(--color-light) transparent;
+  scrollbar-color: #cbd1d9 transparent;
 }
 
-.topListItem {
+.rootList, .groups ul {
   margin: 0;
+  padding: 0;
+  list-style: none;
 }
 
-.topItemButton {
+.rootItem {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-
+  gap: 12px;
   width: 100%;
-  height: 50px;
-  padding: 0 12px;
+  min-height: 46px;
+  padding: 10px;
   border: 0;
-  border-radius: 6px;
-
+  border-radius: 7px;
   background: transparent;
-  cursor: pointer;
+  color: inherit;
   text-align: left;
   text-decoration: none;
-
-  color: var(--color-black);
-  font-size: 14px;
-  font-weight: 500;
-  font-family: var(--font-display);
-
-  transition: background-color var(--dur) var(--ease);
+  font: 500 14px/1.4 var(--font-display);
+  cursor: pointer;
 }
 
-.topItemButton:hover,
-.topItemButton:focus-visible,
-.topItemButtonActive {
-  background: var(--color-light);
-  outline: none;
+.rootItem svg {
+  flex: 0 0 24px;
+  color: #505965;
 }
 
-.topItemTitle {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+.rootItem > span:not(.chevron) {
+  flex: 1;
+}
+
+.rootItem:hover {
+  background: #edf0f4;
+}
+
+.rootItem.selected {
+  background: #e5e9ef;
 }
 
 .chevron {
   flex: 0 0 auto;
-  opacity: 0.55;
+  font-size: 19px;
+  color: #647080;
 }
 
-/* Разделитель между категориями и коллекциями */
-.divider {
-  height: 1px;
-  margin: 8px 12px;
-  background-color: var(--color-light);
+.collections {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-top: 12px;
+  padding: 14px 0 4px;
+  border-top: 1px solid #e0e4e9;
 }
 
-/* ==========================================================================
-   RIGHT ZONE
-   Подкатегории
-   ========================================================================== */
-
-.subPanel {
-  flex: 1 1 0;
-  min-width: 0;
+.collectionsLabel {
+  margin: 0 10px 8px;
+  font-size: 12px;
+  font-weight: 500;
+  color: #647080;
 }
 
-.subGrid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(190px, 1fr));
-  gap: 8px;
+.allCatalog {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-shrink: 0;
+  margin-top: auto;
+  padding: 16px 24px;
+  min-height: 58px;
+  border-top: 1px solid #e0e4e9;
+  color: inherit;
+  text-decoration: none;
+  font-size: 15px;
+  font-weight: 600;
 }
 
-.subSection {
-  min-height: 55px;
-  padding: 20px;
-  border-radius: 6px;
-  background-color: var(--color-light-soft);
-  cursor: pointer;
-  transition: background-color var(--dur) var(--ease);
+.content {
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 24px;
+  scrollbar-width: thin;
 }
 
-.subSection:hover {
-  background-color: var(--color-light);
+.heading {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 8px 24px;
+  margin-bottom: 22px;
 }
 
-.subSectionTitle {
-  display: block;
-  margin-bottom: 5px;
-  color: var(--color-dark-blue);
-  font-family: var(--font-display);
-  font-size: 16px;
-  font-weight: 550;
-}
-
-/* ==========================================================================
-   THIRD LEVEL
-   Список третьего уровня
-   ========================================================================== */
-
-.thirdList {
-  list-style: none;
+.heading h2 {
   margin: 0;
-  padding: 0;
+  font-size: 28px;
+  font-weight: 600;
+  line-height: 1.2;
 }
 
-.thirdListItem {
-  font-size: 14px;
-  border-radius: 6px;
+.viewAll {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 40px;
+  font-size: 13px;
+  white-space: nowrap;
 }
 
-.thirdListLink {
-  display: block;
-  padding: 3px 10px;
-  border-radius: 6px;
-
-  color: var(--color-gray);
+.content a {
+  color: inherit;
   text-decoration: none;
 }
 
-.thirdListLink:hover {
-  background-color: var(--color-gray-light);
-  color: var(--color-dark-blue);
+.panel a:hover, .mobileDialog a:hover {
+  color: #466687;
 }
 
-/* ==========================================================================
-   TABLET
-   Планшетная версия
-   ========================================================================== */
+.groups, .leaves {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
 
-@media (max-width: 1024px) {
+.groupCard, .leaves a {
+  padding: 18px;
+  border: 1px solid #edf0f3;
+  border-radius: 10px;
+  background: #f6f7f9;
+  min-width: 0;
+}
+
+.groups h3 {
+  margin: 0 0 10px;
+  font-size: 17px;
+  font-weight: 600;
+  line-height: 1.35;
+}
+
+.groups li a {
+  display: block;
+  padding: 6px 0;
+  font-size: 14px;
+  line-height: 1.45;
+  color: #4f5969;
+}
+
+.leaves a {
+  display: flex;
+  align-items: center;
+  min-height: 66px;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1.45;
+}
+
+.leaves a:hover {
+  background: #edf0f4;
+  border-color: #dce2e9;
+}
+
+.afterGroups {
+  margin-top: 12px;
+}
+
+.mobileDialog {
+  position: fixed;
+  inset: 0;
+  width: min(520px, 100%);
+  max-width: 100%;
+  height: 100dvh;
+  max-height: 100dvh;
+  margin: 0 0 0 auto;
+  padding: 0;
+  border: 0;
+  background: #fff;
+  color: var(--color-dark-blue);
+  font-family: var(--font-display);
+}
+
+.mobileDialog[open] {
+  display: flex;
+  flex-direction: column;
+}
+
+.mobileDialog::backdrop {
+  background: rgb(16 21 28 / 32%);
+}
+
+.mobileHeader {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+  padding: 14px 18px;
+  border-bottom: 1px solid #e6e9ed;
+}
+
+.mobileHeader h2 {
+  flex: 1;
+  min-width: 0;
+  margin: 0;
+  font-size: 21px;
+  line-height: 1.3;
+  font-weight: 600;
+  outline: none;
+}
+
+.iconButton {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  flex: 0 0 44px;
+  border: 0;
+  border-radius: 8px;
+  background: #f2f4f6;
+  color: inherit;
+  font: 27px var(--font-display);
+  cursor: pointer;
+}
+
+.mobileBody {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 8px 18px 20px;
+}
+
+.mobileRow {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  min-height: 54px;
+  padding: 12px 4px;
+  border: 0;
+  border-bottom: 1px solid #edf0f3;
+  background: transparent;
+  color: inherit;
+  text-decoration: none;
+  text-align: left;
+  font: 500 15px/1.45 var(--font-display);
+  cursor: pointer;
+}
+
+.mobileRow svg {
+  flex: 0 0 24px;
+  color: #505965;
+}
+
+.mobileRow > span:first-of-type {
+  flex: 1;
+}
+
+.mobileRow > span[aria-hidden] {
+  flex: 0 0 auto;
+}
+
+.mobileAll {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: center;
+  min-height: 64px;
+  flex-shrink: 0;
+  padding: 18px 22px calc(18px + env(safe-area-inset-bottom));
+  border-top: 1px solid #e0e4e9;
+  background: #f7f8fa;
+  color: inherit;
+  text-decoration: none;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+@media (max-width: 1150px) {
+  .panel {
+    grid-template-columns: 258px minmax(0, 1fr);
+  }
+  .content {
+    padding: 24px;
+  }
+  .groups, .leaves {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .heading h2 {
+    font-size: 25px;
+  }
 }
 
 @media (max-width: 768px) {
   .buttonCtaText {
     display: none;
   }
-
   .buttonCta {
     width: 50px;
   }
 }
 
-/* ==========================================================================
-   MOBILE
-   Мобильная версия
-   ========================================================================== */
-
 @media (max-width: 600px) {
-  .buttonCta {
+  .catalogMenu {
     display: none;
+  }
+  .mobileDialog {
+    width: 100%;
   }
 }

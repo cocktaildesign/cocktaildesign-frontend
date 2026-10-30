@@ -1,129 +1,47 @@
-// frontend/src/app/payment-methods/payment-tabs/PaymentTabs.tsx
 "use client";
 
-import { useState } from "react";
 import Link from "next/link";
+import ServiceSections from "@/components/service-sections/ServiceSections";
 import styles from "./PaymentTabs.module.css";
 
-type PaymentTab = "legal" | "physical";
+const SECTIONS = [
+  { id: "legal", label: "Юридические лица" },
+  { id: "physical", label: "Физические лица" },
+];
 
-// Экспортируем компонент по умолчанию
 export default function PaymentTabs() {
-  // Состояние активной вкладки:
-  // "legal" = юридические лица
-  // "physical" = физические лица
-  const [activeTab, setActiveTab] = useState<PaymentTab>("legal");
-
-  return (
-    <div className={styles.tabs}>
-      {/* Левая колонка: навигация */}
-      <div className={styles.tabButtons} role="tablist" aria-label="Разделы оплаты">
-        <button
-          type="button"
-          role="tab"
-          aria-selected={activeTab === "legal"}
-          aria-controls="payment-panel-legal"
-          id="payment-tab-legal"
-          className={`${styles.tabButton} ${activeTab === "legal" ? styles.tabButtonActive : ""}`}
-          onClick={() => setActiveTab("legal")}>
-          <span className={styles.tabButtonText}>Юридические лица</span>
-        </button>
-
-        <button
-          type="button"
-          role="tab"
-          aria-selected={activeTab === "physical"}
-          aria-controls="payment-panel-physical"
-          id="payment-tab-physical"
-          className={`${styles.tabButton} ${activeTab === "physical" ? styles.tabButtonActive : ""}`}
-          onClick={() => setActiveTab("physical")}>
-          <span className={styles.tabButtonText}>Физические лица</span>
-        </button>
-      </div>
-
-      {/* Правая колонка: контент */}
-      <div className={styles.tabContent}>
-        {activeTab === "legal" && (
-          <section
-            id="payment-panel-legal"
-            role="tabpanel"
-            aria-labelledby="payment-tab-legal"
-            className={styles.tabPane}>
-            <div className={styles.headerBlock}>
-              <div className={styles.headerText}>
-                <h2 className={styles.pageTitle}>Оплата по счёту</h2>
-                <p className={styles.pageSubtitle}>Выставим счёт. Оплата по реквизитам</p>
-              </div>
-            </div>
-
-            <div className={styles.innerCard}>
-              <h3 className={styles.sectionTitle}>Как происходит оплата</h3>
-
-              <ol className={styles.stepsList}>
-                <li className={styles.stepItem}>
-                  <span className={styles.stepNumber}>1</span>
-
-                  <div className={styles.stepContent}>
-                    <h4 className={styles.stepTitle}>Вы оставляете заявку</h4>
-                    <p className={styles.stepDescription}>Менеджер связывается с вами</p>
-                  </div>
-                </li>
-
-                <li className={styles.stepItem}>
-                  <span className={styles.stepNumber}>2</span>
-
-                  <div className={styles.stepContent}>
-                    <h4 className={styles.stepTitle}>Мы выставляем счёт</h4>
-                    <p className={styles.stepDescription}>Товар резервируется</p>
-                  </div>
-                </li>
-
-                <li className={styles.stepItem}>
-                  <span className={styles.stepNumber}>3</span>
-
-                  <div className={styles.stepContent}>
-                    <h4 className={styles.stepTitle}>Вы производите оплату</h4>
-                    <p className={styles.stepDescription}>Отгрузка товара / Запуск производства</p>
-                  </div>
-                </li>
-              </ol>
-
-              <Link href="/legal/requisites" className={styles.paymentLink}>
-                Смотреть реквизиты
-              </Link>
-            </div>
-          </section>
-        )}
-
-        {activeTab === "physical" && (
-          <section
-            id="payment-panel-physical"
-            role="tabpanel"
-            aria-labelledby="payment-tab-physical"
-            className={styles.tabPane}>
-            <div className={styles.headerBlock}>
-              <div className={styles.headerText}>
-                <h2 className={styles.pageTitle}>Способы оплаты для физических лиц</h2>
-                <p className={styles.pageSubtitle}>Простые и безопасные платежи</p>
-              </div>
-            </div>
-
-            <div className={styles.innerCard}>
-              <div className={styles.physicalCards}>
-                <article className={styles.physicalCard}>
-                  <h3 className={styles.cardTitle}>Оплата наличными</h3>
-                  <p className={styles.cardText}>Возможна оплата наличными при самовывозе в Санкт-Петербурге.</p>
-                </article>
-
-                <article className={styles.physicalCard}>
-                  <h3 className={styles.cardTitle}>Оплата картой</h3>
-                  <p className={styles.cardText}>Картами Visa, MasterCard, Мир. Без комиссии.</p>
-                </article>
-              </div>
-            </div>
-          </section>
-        )}
-      </div>
-    </div>
-  );
+  return <ServiceSections id="payment" label="Разделы оплаты" sections={SECTIONS}
+    renderContent={(id) => id === "legal" ? (
+      <>
+        <h2 className={styles.title}>Оплата по счёту</h2>
+        <p className={styles.subtitle}>Выставим счёт для оплаты по реквизитам.</p>
+        <ol className={styles.steps}>
+          <li><span className={styles.number} aria-hidden="true">1</span><div>
+            <h3>Оформите заказ</h3><p>Укажите ИНН организации.</p>
+          </div></li>
+          <li><span className={styles.number} aria-hidden="true">2</span><div>
+            <h3>Получите счёт</h3><p>Выставим счёт после согласования заказа.</p>
+          </div></li>
+          <li><span className={styles.number} aria-hidden="true">3</span><div>
+            <h3>Оплатите счёт</h3><p>После поступления оплаты подготовим заказ к отправке.</p>
+          </div></li>
+        </ol>
+        <Link href="/legal/requisites" className={styles.link}>
+          <span className={styles.linkText}>Смотреть реквизиты</span>
+          <span className={styles.linkArrow} aria-hidden="true">→</span>
+        </Link>
+      </>
+    ) : (
+      <>
+        <h2 className={styles.title}>Оплата покупки</h2>
+        <div className={styles.methods}>
+          <section><h3>Банковской картой</h3><p>Принимаем оплату банковской картой.</p></section>
+          <section><h3>Наличными</h3><p>Вы можете оплатить заказ наличными в нашем офисе в Санкт-Петербурге.</p></section>
+        </div>
+        <Link href="/contacts" className={styles.link}>
+          <span className={styles.linkText}>Адрес и часы работы офиса</span>
+          <span className={styles.linkArrow} aria-hidden="true">→</span>
+        </Link>
+      </>
+    )} />;
 }

@@ -79,6 +79,7 @@ export default function MainBar({ categories, collections }: MainBarProps) {
       {/* Каталог и поиск */}
       <div className={`${styles.mainBarCenter} ${showBackButton ? styles.mainBarCenterInner : ""}`}>
         <CatalogMenu
+          onOpen={() => setSearchCloseSignal((value) => value + 1)}
           categories={categories}
           collections={collections.filter((collection) => collection.isHiddenInMenu !== true)}
         />

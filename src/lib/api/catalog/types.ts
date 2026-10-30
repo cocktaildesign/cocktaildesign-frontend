@@ -311,6 +311,8 @@ export type CatalogCollection = {
   // Нужно, чтобы скрывать подборку только в большом меню «Каталог».
   isHiddenInMenu?: boolean | null;
   viewAllHref: string | null;
+  // Category-backed collections can repeat an existing root in navigation.
+  sourceCategorySlug?: string | null;
   products: CatalogProductPreview[];
 };
 

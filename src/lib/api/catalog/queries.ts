@@ -557,6 +557,7 @@ export async function getCatalogCollectionsWithProductsFromStrapi(): Promise<Cat
 
       result.push({
         ...base,
+        sourceCategorySlug: selectionMode === "category" ? sourceCategorySlug : null,
         viewAllHref: buildCollectionViewAllHref({
           selectionMode,
           collectionSlug: base.slug,

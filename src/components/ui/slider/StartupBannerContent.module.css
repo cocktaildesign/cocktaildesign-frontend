@@ -12,15 +12,15 @@
 .copy { position: absolute; left: 5.625%; top: 50%; transform: translateY(-50%); width: 44%; }
 .heading { margin: 0; font-weight: 400; }
 .offer { display: block; font-size: clamp(58px, 7.5cqw, 102px); line-height: .95; letter-spacing: -.055em; }
-.title { display: block; margin: 6px 0 17px; font-size: clamp(22px, 2.7cqw, 37px); line-height: 1.15; letter-spacing: -.02em; white-space: pre-line; }
+.title { display: block; margin: 8px 0 20px; font-size: clamp(22px, 2.5cqw, 34px); line-height: 1.2; letter-spacing: -.02em; white-space: pre-line; }
 .description { margin: 0; font-size: clamp(14px, 1.7cqw, 23px); line-height: 1.4; color: #d0d1d4; white-space: pre-line; }
 .note { margin: 14px 0 17px; font-size: clamp(12px, 1.22cqw, 17px); line-height: 1.4; color: #bfc2c5; white-space: pre-line; }
-.promoLabel { display: block; font-size: clamp(12px, 1.1cqw, 15px); }
-.codeRow { display: flex; align-items: center; gap: 8px; }
+.promoLabel { font-size: inherit; }
+.codeRow { display: flex; align-items: center; gap: 8px; white-space: nowrap; }
 .note strong { font-weight: 600; color: #f4f5f6; letter-spacing: .02em; }
 .copyButton { flex: none; min-width: 30px; min-height: 30px; padding: 4px; border-radius: 5px; color: #ced2d8; --color-accent-strong: #f9f9fa; }
 .copyButton svg { width: 17px; height: 17px; }
-.cta { display: inline-flex; align-items: center; justify-content: center; width: clamp(210px, 23cqw, 313px); min-height: clamp(42px, 4.35cqw, 59px); padding: 8px 12px; border-radius: 11px; background: #f7f8fa; color: #111827; font-size: clamp(15px, 1.55cqw, 21px); line-height: 1.2; font-weight: 600; text-align: center; text-decoration: none; transition: background 150ms ease; }
+.cta { display: inline-flex; align-items: center; justify-content: center; gap: 10px; width: clamp(210px, 23cqw, 313px); min-height: clamp(42px, 4.35cqw, 59px); padding: 8px 12px; border-radius: 11px; background: #f7f8fa; color: #111827; font-size: clamp(15px, 1.55cqw, 21px); line-height: 1.2; font-weight: 600; text-align: center; text-decoration: none; transition: background 150ms ease; }
 .cta:hover { background: #e4e7ee; }
 .description + .cta { margin-top: 18px; }
 .cta:focus-visible, .copyButton:focus-visible { outline: 2px solid white; outline-offset: 3px; }
@@ -41,10 +41,11 @@
 .mobile .art::after { content: ""; position: absolute; inset: 0; background: linear-gradient(#080a0b, transparent 18%); pointer-events: none; }
 .mobile .copy { position: relative; inset: auto; transform: none; grid-row: 1; width: auto; padding: 22px 24px 8px; }
 .mobile .offer { font-size: 60px; }
-.mobile .title { font-size: 24px; margin: 5px 0 10px; }
+.mobile .title { font-size: 23px; margin: 6px 0 14px; }
 .mobile .description { font-size: 15px; line-height: 1.45; }
-.mobile .note { font-size: 16px; margin: 10px 0 8px; }
-.mobile .promoLabel { font-size: 12px; }
+.mobile .note { font-size: 15px; margin: 10px 0 8px; }
+.mobile .codeRow { gap: 6px; }
+.mobile .promoLabel { font-size: 14px; }
 .mobile .copyButton { min-width: 44px; min-height: 44px; }
 .mobile .cta { width: 100%; min-height: 44px; font-size: 16px; }
 @media (prefers-reduced-motion: reduce) { .cta { transition: none; } }

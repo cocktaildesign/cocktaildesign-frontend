@@ -5,6 +5,7 @@ import NavBar from "@/components/layout/nav-bar/NavBar";
 import ScrollToTopButton from "@/components/ui/scroll-to-top-button/ScrollToTopButton";
 import MobileBottomNav from "@/components/layout/mobile-bottom-nav/MobileBottomNav";
 import Metrika from "@/components/analytics/Metrika";
+import CatalogMenuProvider from "@/components/layout/header/catalog-menu/CatalogMenuProvider";
 
 export { rootMetadata as metadata, viewport } from "@/lib/seo/metadata";
 import { hikasamiSans, montserrat } from "@/lib/fonts";
@@ -28,12 +29,14 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
     <html lang="ru" className={`${montserrat.variable} ${hikasamiSans.variable}`}>
       <body>
         <Metrika />
-        <Header />
-        <NavBar />
-        {children}
-        <MobileBottomNav menuItems={menuItems} />
-        <Footer />
-        <ScrollToTopButton />
+        <CatalogMenuProvider>
+          <Header />
+          <NavBar />
+          {children}
+          <MobileBottomNav menuItems={menuItems} />
+          <Footer />
+          <ScrollToTopButton />
+        </CatalogMenuProvider>
       </body>
     </html>
   );

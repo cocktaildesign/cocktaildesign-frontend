@@ -7,7 +7,7 @@ import PaymentTabs from "./payment-tabs/PaymentTabs";
 export const metadata = pageMetadata({
   title: "Способы оплаты | CocktailDesign",
   description:
-    "Ознакомьтесь с доступными способами оплаты барного инвентаря и аксессуаров от CocktailDesign — банковские карты, онлайн-платежи и наличные.",
+    "Способы оплаты в CocktailDesign для юридических и физических лиц: по счёту, банковской картой и наличными.",
   canonical: "/payment-methods",
 });
 
@@ -16,10 +16,6 @@ export default function PaymentMethods() {
     <PageLayout>
       <section className={styles.paymentMethodsPage}>
         <h1 className={styles.paymentMethodsPageTitle}>Способы оплаты</h1>
-
-        <p className={styles.paymentMethodsPageDescription}>
-          Выберите удобный способ оплаты — для физических и юридических лиц.
-        </p>
 
         <PaymentTabs />
       </section>
