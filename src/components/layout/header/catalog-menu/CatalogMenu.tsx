@@ -6,7 +6,6 @@ import { useCallback, useEffect, useLayoutEffect, useRef, useState, useSyncExter
 import type { CatalogCategoryPreview, CatalogCollection } from "@/lib/api/catalog/types";
 import { useCatalogMenu } from "./CatalogMenuProvider";
 import CategoryIcon from "./CategoryIcon";
-import CategoryProducts from "./CategoryProducts";
 import styles from "./CatalogMenu.module.css";
 
 type CatalogMenuProps = {
@@ -22,6 +21,20 @@ function subscribeCompact(callback: () => void) {
 }
 const hasChildren = (item: CatalogCategoryPreview) => Boolean(item.children?.length);
 const controls = 'button:not([disabled]), a[href]';
+const sectionTileLabels: Record<string, string> = {
+  "все для бариста": "Все товары для бариста",
+  "все для вина": "Все товары для вина",
+  "аксессуары": "Все аксессуары",
+  "бокалы": "Все бокалы",
+  "бутылочки для биттера": "Все бутылочки для биттера",
+  "сертификаты и подарки": "Все сертификаты и подарки",
+  "технологии для коктейлей": "Все товары раздела",
+  "литература": "Все книги",
+  "серьги, подвески": "Все серьги и подвески",
+  "новинки": "Все новинки",
+  "товары со скидкой": "Все товары со скидкой",
+  "наше производство": "Все изделия нашего производства",
+};
 
 export default function CatalogMenu({ categories, collections, onOpen }: CatalogMenuProps) {
   const { isOpen, menuId, toggle } = useCatalogMenu();
@@ -59,6 +72,7 @@ function CatalogPanel({ categories, collections, triggerRef }: CatalogMenuProps 
   const activeCollection = collections.find((item) => `collection:${item.id}` === activeId);
   const active = activeCollection ? undefined : categories.find((item) => item.id === activeId) ?? categories[0];
   const activeName = activeCollection?.title ?? active?.name;
+  const sectionTileLabel = sectionTileLabels[(activeName ?? "").trim().toLowerCase().replaceAll("ё", "е")] ?? "Все товары раздела";
   const activeHref = activeCollection ? `/catalog/collection/${activeCollection.slug}` : `/catalog/${active?.slug}`;
   const sections = active?.children ?? [];
   const grouped = sections.filter(hasChildren);
@@ -250,11 +264,11 @@ function CatalogPanel({ categories, collections, triggerRef }: CatalogMenuProps 
       </div>
       <div ref={contentRef} id={`${menuId}-content`} className={styles.content}>
         {(active || activeCollection) && <>
-          <div className={`${styles.heading} ${!sections.length ? styles.previewHeading : ""}`}>
+          <div className={styles.heading}>
             <h2>{activeName}</h2>
-            <Link prefetch={false} className={!sections.length ? styles.sectionCta : styles.viewAll} href={activeHref} onClick={() => close()}>
-              {sections.length ? "Все товары раздела" : "Смотреть все товары"} <span aria-hidden="true">→</span>
-            </Link>
+            {sections.length > 0 && <Link prefetch={false} className={styles.viewAll} href={activeHref} onClick={() => close()}>
+              Все товары раздела <span aria-hidden="true">→</span>
+            </Link>}
           </div>
           {grouped.length > 0 && <div className={styles.groups}>{grouped.map((section) => <section key={section.id} className={styles.groupCard}>
             <h3><Link prefetch={false} href={`/catalog/${section.slug}`} onClick={() => close()}>{section.name}</Link></h3>
@@ -263,8 +277,9 @@ function CatalogPanel({ categories, collections, triggerRef }: CatalogMenuProps 
           {leaves.length > 0 && <nav className={`${styles.leaves} ${grouped.length ? styles.afterGroups : ""}`} aria-label={`Категории: ${activeName}`}>
             {leaves.map((item) => <Link prefetch={false} key={item.id} href={`/catalog/${item.slug}`} onClick={() => close()}>{item.name}</Link>)}
           </nav>}
-          {!sections.length && <CategoryProducts key={activeId} slug={activeCollection?.slug ?? active!.slug}
-            collection={Boolean(activeCollection)} onNavigate={() => close()} />}
+          {!sections.length && <nav className={styles.leaves} aria-label={`Товары: ${activeName}`}>
+            <Link prefetch={false} href={activeHref} onClick={() => close()}>{sectionTileLabel}</Link>
+          </nav>}
         </>}
         {!active && !activeCollection && <Link prefetch={false} href="/catalog" onClick={() => close()}>Перейти в каталог →</Link>}
       </div>
