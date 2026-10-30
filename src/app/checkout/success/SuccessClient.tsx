@@ -11,6 +11,7 @@ export default function SuccessClient() {
   // Номер заказа из URL — /checkout/success?order=31391
   const searchParams = useSearchParams();
   const orderName = searchParams.get("order");
+  const received = searchParams.get('received') === '1';
 
   return (
     <div className={styles.successState}>
@@ -21,12 +22,12 @@ export default function SuccessClient() {
         </div>
 
         {/* Заголовок */}
-        <h1 className={styles.successTitle}>Спасибо! Заказ оформлен</h1>
+        <h1 className={styles.successTitle}>{received ? 'Спасибо! Заявка принята' : 'Спасибо! Заказ оформлен'}</h1>
 
         {/* Номер заказа */}
         {orderName && (
           <p className={styles.successOrder}>
-            Ваш заказ: <strong>№{orderName}</strong>
+            {received ? 'Ваша заявка' : 'Ваш заказ'}: <strong>№{orderName}</strong>
           </p>
         )}
 

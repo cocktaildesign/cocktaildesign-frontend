@@ -122,7 +122,7 @@ test('blocked analytics and unavailable/corrupt storage never throw or stop sess
 // Any unexpected endpoint/dependency fails; no live API or network is available.
 function checkout({buyer='individual',promo='',responses=[{ok:true,body:{ok:true,orderId:ID,orderName:'TEST'}}],trackerError=false}={}) {
   const x=environment({trackerError});const requests=[],navigation=[];let clears=0,stateIndex=0;
-  const states=['',buyer,'TEST-PHONE','TEST-CONTACT','TEST-ADDRESS','TEST-COMMENT','TEST-NAME','TEST-COMPANY','TEST-INN','idle',{}];
+  const states=['','',buyer,'TEST-PHONE','TEST-CONTACT','TEST-ADDRESS','TEST-COMMENT','TEST-NAME','TEST-COMPANY','TEST-INN','idle',{}];
   const items=[{id:'a',code:'NORMAL',name:'Normal',slug:'a',price:1000,quantity:2,engraving:true,discountExcluded:false},{id:'b',code:'SALE',name:'Sale',slug:'b',price:450,quantity:1,engraving:false,discountExcluded:true}];
   const cart={items,hasHydrated:true,promoCode:promo?'TEST':'',promoDiscount:100,promoType:promo,promoReplacesVolumeDiscount:['percent','startup'].includes(promo),clearCart:()=>clears++};
   const mocks={
@@ -133,6 +133,7 @@ function checkout({buyer='individual',promo='',responses=[{ok:true,body:{ok:true
     '@/lib/cart/cartTotals':{calculateCartTotals:()=>({currentTier:{percent:5},activeVolumeDiscount:100,activePromoDiscount:promo?100:0,finalPrice:promo?2250:2350})},
     '@/lib/cart/useCartDiscountPolicy':{useCartDiscountPolicy:()=>({ready:true})},
     '@/lib/cart/discountPolicy':{CART_API_BASE:'http://isolated.invalid/api'},
+    '@/lib/cart/checkoutKey':{getCheckoutKey:async()=>ID},
     '@/lib/cart/engraving':{ENGRAVING_PRICE_NOTE:'Manager calculates'},
     '@/components/engraving-files/EngravingFiles':{default:'files'},
     '@/lib/cart/engravingFiles':{useEngravingFiles:Object.assign(select=>select({files:[]}),{getState:()=>({files:[],orderKey:''})}),reconcileEngravingFiles:async()=>true},
@@ -170,4 +171,9 @@ test('failed/unknown orders never count; retry keeps idempotency key and counts 
     await x.submit();assert.equal(x.clears(),1);assert.equal(x.calls.length,1);
     assert.equal(x.requests[0].headers['Idempotency-Key'],x.requests[1].headers['Idempotency-Key']);
   }
+});
+
+test('durably accepted local order clears cart and shows receipt even without CRM confirmation',async()=>{
+ const x=checkout({responses:[{ok:true,body:{ok:true,accepted:true,crmConfirmed:false,journalId:ID,orderId:ID,orderName:'CD-42'}}]});
+ await x.submit();assert.equal(x.clears(),1);assert.deepEqual(x.navigation,['/checkout/success?order=CD-42&received=1']);assert.equal(x.calls.length,1);
 });

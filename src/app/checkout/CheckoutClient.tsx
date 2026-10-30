@@ -14,6 +14,7 @@ import { CART_API_BASE } from "@/lib/cart/discountPolicy";
 import DiscountPolicyNotice from "../cart/cart-summary/DiscountPolicyNotice";
 import { ENGRAVING_PRICE_NOTE } from "@/lib/cart/engraving";
 import { trackAcceptedOrder } from "@/lib/analytics/metrika";
+import { getCheckoutKey } from '@/lib/cart/checkoutKey';
 import EngravingFiles from "@/components/engraving-files/EngravingFiles";
 import { useEngravingFiles, reconcileEngravingFiles } from "@/lib/cart/engravingFiles";
 
@@ -35,6 +36,7 @@ export default function CheckoutClient() {
   const engravingFiles = useEngravingFiles(s => s.files);
   const hasEngraving = items.some(item => item.engraving);
   const [attachmentError, setAttachmentError] = useState("");
+  const [submitError, setSubmitError] = useState("");
 
   const { tiers, isLoading: tiersLoading } = useDiscountTiers();
   const discountPolicy = useCartDiscountPolicy();
@@ -115,23 +117,19 @@ export default function CheckoutClient() {
       return;
     }
 
-    if (!idempotencyKeyRef.current) {
-      idempotencyKeyRef.current = crypto.randomUUID();
-    }
-
     isSubmittingRef.current = true;
     setSubmitStatus("loading");
+    setSubmitError("");
 
     try {
       const attachments = useEngravingFiles.getState();
-      if (attachments.orderKey) idempotencyKeyRef.current = attachments.orderKey;
+      idempotencyKeyRef.current = await getCheckoutKey(attachments.orderKey);
       if (hasEngraving && attachments.files.length) {
         if (!await reconcileEngravingFiles()) {
           setAttachmentError("Не удалось подтвердить загрузку макетов. Попробуйте ещё раз или удалите файлы, чтобы передать их менеджеру позже.");
           setSubmitStatus("idle"); isSubmittingRef.current = false; return;
         }
         // Preserve the request key across browser reloads when files are bound to an order.
-        idempotencyKeyRef.current = attachments.orderKey || idempotencyKeyRef.current;
         useEngravingFiles.setState({ orderKey: idempotencyKeyRef.current! });
       }
       const res = await fetch(`${CART_API_BASE}/orders`, {
@@ -169,6 +167,8 @@ export default function CheckoutClient() {
       const data = await res.json();
 
       if (!res.ok || !data.ok) {
+        if (data.error === 'idempotency_conflict') setSubmitError('Предыдущая заявка уже принята. Свяжитесь с менеджером, чтобы изменить её состав или контакты; повторный заказ не создан.');
+        else if (data.error === 'order_storage_unavailable') setSubmitError('Сейчас не удалось сохранить заявку. Корзина сохранена: попробуйте ещё раз или напишите менеджеру.');
         if (data.error === "engraving_files_unavailable" || data.error === "invalid_engraving_files") setAttachmentError("Макеты не удалось прикрепить. Проверьте файлы или удалите их, чтобы передать менеджеру после заказа.");
         isSubmittingRef.current = false;
         setSubmitStatus("error");
@@ -177,12 +177,12 @@ export default function CheckoutClient() {
 
       const orderName = typeof data.orderName === "string" ? data.orderName : String(data.orderName ?? "");
 
-      const successUrl = orderName ? `/checkout/success?order=${encodeURIComponent(orderName)}` : "/checkout/success";
+      const successUrl = `/checkout/success?order=${encodeURIComponent(orderName)}${data.accepted && !data.crmConfirmed ? '&received=1' : ''}`;
 
       // Сначала ставим флаг, чтобы useEffect пустой корзины не увёл на /cart.
       orderCompletedRef.current = true;
       setSubmitStatus("success");
-      trackAcceptedOrder(data.orderId);
+      trackAcceptedOrder(data.journalId || data.orderId);
       clearCart();
       router.replace(successUrl);
     } catch {
@@ -450,7 +450,7 @@ export default function CheckoutClient() {
             {submitStatus === "loading" ? "Отправляем..." : "Оформить заказ"}
           </button>
 
-          {submitStatus === "error" && <p className={styles.errorText}>Что-то пошло не так. Попробуйте ещё раз.</p>}
+          {submitStatus === "error" && <p className={styles.errorText}>{submitError || 'Не удалось получить подтверждение. Попробуйте отправить ещё раз: повторная отправка этой заявки не создаст второй заказ.'}</p>}
         </section>
       </div>
     </div>
