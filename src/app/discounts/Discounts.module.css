@@ -11,9 +11,7 @@
 
 /* First-order offer uses the same navy, typeface and corners as the shop. */
 .startup { background: var(--color-dark-blue); color: var(--color-white); scroll-margin-top: 12px; }
-.eyebrow { font-size: 13px; line-height: 1.5; letter-spacing: 0.1em; text-transform: uppercase; color: var(--color-light); }
-.startupTitle { display: flex; flex-direction: column; gap: 8px; margin-top: 12px; font-size: clamp(26px, 2.5vw, 34px); font-weight: 550; line-height: 1.2; letter-spacing: -0.035em; }
-.discount { font-size: clamp(64px, 6vw, 76px); font-weight: 600; line-height: 1; letter-spacing: -0.065em; }
+.discount { margin-top: 20px; font-size: clamp(64px, 6vw, 76px); font-weight: 600; line-height: 1; letter-spacing: -0.065em; }
 .startupIntro { margin-top: 12px; font-size: 16px; line-height: 1.6; color: var(--color-light); }
 .benefits { display: grid; gap: 16px; margin: 22px 0; }
 .benefits li { display: flex; gap: 14px; align-items: flex-start; font-size: 16px; line-height: 1.5; }
@@ -110,7 +108,6 @@
   .offers { grid-template-columns: minmax(0, 1fr); }
   .hero { margin-bottom: 24px; }
   .description { font-size: 16px; }
-  .startupTitle { font-size: 30px; }
   .discount { font-size: 72px; }
   .cardTitle { font-size: 24px; }
   .offerValue { font-size: 28px; }
@@ -123,7 +120,6 @@
 }
 @media (max-width: 400px) {
   .card { padding: 20px; }
-  .startupTitle { font-size: 26px; }
   .discount { font-size: 64px; }
   .cardTitle { font-size: 22px; }
   .offerValue { font-size: 26px; }

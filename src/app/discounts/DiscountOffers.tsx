@@ -85,10 +85,8 @@ export default function DiscountOffers() {
     <>
       <div className={styles.offers}>
         <section ref={startup} id="startup" className={`${styles.card} ${styles.startup}`} aria-labelledby="startup-title">
-          <span className={styles.eyebrow}>StartUp</span>
-          <h2 id="startup-title" className={styles.startupTitle}>
-            <span className={styles.discount}>−20%</span><span>На первый заказ</span>
-          </h2>
+          <h2 id="startup-title" className={styles.cardTitle}>Скидка на первый заказ</h2>
+          <p className={styles.discount}>−20%</p>
           <p className={styles.startupIntro}>Для новых покупателей при заказе от&nbsp;20&nbsp;000&nbsp;₽</p>
           <ul className={styles.benefits}>
             <li><OfferIcon name="truck" /><span>Бесплатная доставка по всей России</span></li>
@@ -117,7 +115,7 @@ export default function DiscountOffers() {
         <VolumeTiers />
 
         <section className={`${styles.card} ${styles.secondaryCard}`} aria-labelledby="delivery-title">
-          <h2 id="delivery-title" className={styles.cardTitle}>Доставка</h2>
+          <h2 id="delivery-title" className={styles.cardTitle}>Скидка на доставку</h2>
           <p className={styles.offerValue}>Бесплатно от&nbsp;5&nbsp;000&nbsp;₽</p>
           <p className={styles.body}>По России, кроме отдалённых регионов.</p>
           <div className={styles.deliveryTerms}>
@@ -128,8 +126,8 @@ export default function DiscountOffers() {
         </section>
 
         <section className={`${styles.card} ${styles.secondaryCard}`} aria-labelledby="birthday-title">
-          <h2 id="birthday-title" className={styles.cardTitle}>День рождения</h2>
-          <p className={styles.offerValue}>Скидка 10%</p>
+          <h2 id="birthday-title" className={styles.cardTitle}>Скидка ко дню рождения</h2>
+          <p className={styles.offerValue}>−10%</p>
           <p className={styles.body}>За 3 дня до и 3 дня после даты рождения.</p>
           <PromoCode code="DRCD" hint="Укажите код при оформлении и сообщите менеджеру о дне рождения." />
           <p className={styles.note}>Менеджер применит скидку после подтверждения даты рождения. Кроме партнёрских товаров и позиций по акции.</p>
