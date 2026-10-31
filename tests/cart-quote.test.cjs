@@ -16,6 +16,13 @@ async function exported(body){
 }
 function total(sheet){let result;sheet.eachRow(row=>{if(row.getCell(1).value==='Итого к оплате')result=row.getCell(7).value;});return result;}
 
+test('XLSX product links use the configured storefront instead of the preview domain',async()=>{
+ const {pricing}=snapshot(items);const sheet=await exported({items,pricing});
+ const {siteUrl}=load('src/lib/seo/site');
+ assert.equal(sheet.getCell('A2').value.hyperlink,siteUrl);
+ assert.equal(sheet.getCell('A7').value.hyperlink,siteUrl+'/catalog/product/'+encodeURIComponent(items[0].slug));
+});
+
 test('office example: two sample-sale rows keep price; 5% applies to other three',()=>{
   const {quote}=snapshot(items);
   assert.equal(quote.finalCents,1036100);

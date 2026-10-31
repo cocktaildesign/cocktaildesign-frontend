@@ -39,6 +39,7 @@ type CartState = {
   items: CartItem[];
   selectedIds: string[];
   hasHydrated: boolean;
+  checkoutKey: string;
 
   // Промокод
   promoCode: string;
@@ -90,6 +91,7 @@ export const useCartStore = create<CartState>()(
       items: [],
       selectedIds: [],
       hasHydrated: false,
+      checkoutKey: "",
 
       // Промокод по умолчанию пустой
       promoCode: "",
@@ -205,6 +207,7 @@ export const useCartStore = create<CartState>()(
       clearCart: () => {
         set({
           items: [],
+          checkoutKey: "",
           promoCode: "",
           promoDiscount: 0,
           promoType: "",
@@ -246,6 +249,7 @@ export const useCartStore = create<CartState>()(
       storage: createJSONStorage(() => localStorage),
       partialize: (state) => ({
         items: state.items,
+        checkoutKey: state.checkoutKey,
         promoCode: state.promoCode,
         promoDiscount: state.promoDiscount,
         promoType: state.promoType,

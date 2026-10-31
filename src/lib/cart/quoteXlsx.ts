@@ -1,4 +1,5 @@
 import ExcelJS from "exceljs";
+import { siteUrl } from "../seo/site";
 import { ENGRAVING_PRICE_NOTE } from "./engraving";
 import { type CartQuote, quoteSummaryRows, QUOTE_DELIVERY_NOTE, QUOTE_PRICE_NOTE, QUOTE_ROUNDING_NOTE } from "./cartQuote";
 
@@ -24,7 +25,7 @@ export async function createQuoteWorkbook(quote: CartQuote): Promise<ExcelJS.Wor
   ws.getCell("A1").font = { name: "Calibri", size: 20, bold: true, color: { argb: BLUE } };
   ws.getRow(1).height = 34;
   ws.mergeCells("A2:C2");
-  ws.getCell("A2").value = { text: "Cocktail Design · cocktaildesign.ru", hyperlink: "https://new.cocktaildesign.ru" };
+  ws.getCell("A2").value = { text: "Cocktail Design · cocktaildesign.ru", hyperlink: siteUrl };
   ws.getCell("A2").font = { name: "Calibri", size: 12, color: { argb: BLUE }, underline: true };
   ws.mergeCells("E2:G2");
   ws.getCell("E2").value = `Дата: ${new Intl.DateTimeFormat("ru-RU", { timeZone: "Europe/Moscow" }).format(new Date())}`;
@@ -52,7 +53,7 @@ export async function createQuoteWorkbook(quote: CartQuote): Promise<ExcelJS.Wor
   quote.rows.forEach((item, index) => {
     const row = ws.getRow(7 + index);
     const name = safeText(item.name + (item.engraving ? " (Гравировка — стоимость отдельно)" : ""));
-    row.values = [{ text: name, hyperlink: `https://new.cocktaildesign.ru/catalog/product/${encodeURIComponent(item.slug)}` },
+    row.values = [{ text: name, hyperlink: `${siteUrl}/catalog/product/${encodeURIComponent(item.slug)}` },
       safeText(item.code ?? "—"), item.unitCents / 100, item.unitDiscountCents / 100,
       item.unitFinalCents / 100, item.quantity, item.finalCents / 100];
     const nameLines = name.split("\n").reduce((sum, line) => sum + Math.max(1, Math.ceil(line.length / 43)), 0);

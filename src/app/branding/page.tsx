@@ -2,44 +2,24 @@
 import { pageMetadata } from "@/lib/seo/metadata";
 import PageLayout from "@/components/layout/PageLayout";
 import styles from "./Branding.module.css";
-import Logo from "@/components/ui/logo/Logo";
-import ServiceCards from "./service-cards/ServiceCards";
+import BrandingGuide from "./BrandingGuide";
 
 export const metadata = pageMetadata({
-  title: "Брендинг барного инвентаря и аксессуаров",
+  title: "Брендинг и изготовление на заказ",
   description:
-    "Мы создаём кастомизированный барный инвентарь и аксессуары, которые подчёркивают характер бренда и помогают заведениям выделяться среди конкурентов.",
+    "Лазерная гравировка на барном инвентаре, клише для оттисков и изготовление по вашему дизайну. Примеры работ, цены и условия заказа Cocktail Design.",
   canonical: "/branding",
 });
 
 export default function Branding() {
   return (
-    <PageLayout>
-      <section className={styles.brandingPage}>
-        {/* Верхний промо-блок */}
-        <div className={styles.brandingContainer}>
-          <div className={styles.brandingContainerTextContent}>
-            <h1 className={styles.brandingContainerTitle}>Брендинг барного инвентаря и аксессуаров</h1>
-
-            <p className={styles.brandingContainerDescription}>
-              Мы создаём кастомизированный барный инвентарь и аксессуары, которые подчёркивают характер бренда и
-              помогают заведениям выделяться среди конкурентов.
-            </p>
-          </div>
-
-          <Logo className={styles.logo} />
-        </div>
-
-        {/* Вводный текст перед карточками услуг */}
-        <div className={styles.servicesIntro}>
-          <p className={styles.servicesIntroText}>
-            Мы предлагаем два формата брендинга барного инвентаря, которые позволяют адаптировать изделия под стиль
-            вашего бренда и уровень кастомизации.
-          </p>
-        </div>
-
-        {/* Карточки услуг */}
-        <ServiceCards />
+    <PageLayout className={styles.pageLayout} breadcrumbsItems={[{ href: "/", label: "Главная" }, { href: "/branding", label: "Брендинг" }]}>
+      <section className={styles.page}>
+        <header className={styles.intro}>
+          <h1>Брендинг и изготовление на заказ</h1>
+          <p>Логотип на готовом изделии, клише для оттисков или инструмент по вашему эскизу.</p>
+        </header>
+        <BrandingGuide />
       </section>
     </PageLayout>
   );

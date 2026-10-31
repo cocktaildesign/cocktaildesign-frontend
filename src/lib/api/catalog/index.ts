@@ -11,7 +11,7 @@ export {
   getProductsByIdsFromStrapi,
 
   // Главная — подборки товаров
-  getCatalogCollectionsWithProductsFromStrapi,
+  getCatalogMenuCollectionsFromStrapi,
   getHomepageCollectionsFromStrapi,
 
   // Товар (детальная страница)

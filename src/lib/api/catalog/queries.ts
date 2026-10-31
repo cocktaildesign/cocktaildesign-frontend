@@ -501,12 +501,12 @@ function buildCollectionViewAllHref(params: {
   return null;
 }
 
-export async function getCatalogCollectionsWithProductsFromStrapi(): Promise<CatalogCollection[]> {
+// Navigation needs collection metadata, never product/variant galleries.
+export async function getCatalogMenuCollectionsFromStrapi(): Promise<CatalogCollection[]> {
   const params: Record<string, string> = {
     sort: "sortOrder:asc",
-    "populate[products][populate][image]": "true",
-    "populate[products][populate][variants][populate][image]": "true",
-    "populate[sourceCategory]": "true",
+    "populate[sourceCategory][fields][0]": "slug",
+    "pagination[pageSize]": "100",
   };
 
   try {
@@ -522,38 +522,6 @@ export async function getCatalogCollectionsWithProductsFromStrapi(): Promise<Cat
 
       const selectionMode = normalizeSelectionMode(item.selectionMode);
       const sourceCategorySlug = item.sourceCategory?.slug?.trim() ?? null;
-      const products: CatalogCollection["products"] = [];
-
-      if (selectionMode === "manual") {
-        const rawProducts = Array.isArray(item.products) ? item.products : [];
-
-        for (const product of rawProducts) {
-          const mapped = mapProductPreview(product);
-
-          if (mapped) {
-            products.push(mapped);
-          }
-        }
-      }
-
-      if (selectionMode === "category" && sourceCategorySlug) {
-        const categoryProductsResponse = await getProductsByCategorySlugFromStrapi({
-          categorySlug: sourceCategorySlug,
-          limit: 100,
-          offset: 0,
-        });
-
-        products.push(...categoryProductsResponse.items);
-      }
-
-      if (selectionMode === "discount") {
-        const discountedProductsResponse = await getDiscountedProductsFromStrapi({
-          limit: 100,
-          offset: 0,
-        });
-
-        products.push(...discountedProductsResponse.items);
-      }
 
       result.push({
         ...base,
@@ -563,7 +531,7 @@ export async function getCatalogCollectionsWithProductsFromStrapi(): Promise<Cat
           collectionSlug: base.slug,
           sourceCategorySlug,
         }),
-        products,
+        products: [],
       });
     }
 

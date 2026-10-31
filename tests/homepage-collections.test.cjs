@@ -12,13 +12,45 @@ function queries(fetchStrapi) {
   const imports = {
     '@/lib/api/strapi/client': {fetchStrapi},
     '@/lib/api/strapi/media': {getStrapiMediaUrl: url=>url},
-    './mappers': {mapProductPreview:item=>item},
+    './mappers': {mapProductPreview:item=>item, mapCatalogCollectionBase:item=>item.title && item.slug ? {id:String(item.id),title:item.title,slug:item.slug,isHiddenInMenu:item.isHiddenInMenu} : null},
   };
-  vm.runInNewContext(js,{module:mod,exports:mod.exports,require:id=>{
+  vm.runInNewContext(js,{Error,module:mod,exports:mod.exports,require:id=>{
     assert.ok(id in imports,`Unexpected dependency ${id}`); return imports[id];
   }});
   return mod.exports;
 }
+
+test('menu collections retain navigation metadata without any product-list requests', async () => {
+  const calls=[];
+  const api=queries(async (url,params)=>{
+    calls.push({url,params});
+    assert.equal(url,'/api/catalog-collections');
+    assert.ok(!Object.keys(params).some(key=>key.includes('products')));
+    return {data:[
+      {id:1,title:'Our tools',slug:'own',selectionMode:'category',sourceCategory:{slug:'tools'}},
+      {id:2,title:'Sale',slug:'sale',selectionMode:'discount',sourceCategory:{slug:'ignored'}},
+      {id:3,title:'New',slug:'new',selectionMode:'new'},
+      {id:4,title:'Manual',slug:'manual',selectionMode:'manual',isHiddenInMenu:true,products:[{id:'not-for-menu'}]},
+      {id:5,title:'',slug:'invalid'},
+    ]};
+  });
+  const items=await api.getCatalogMenuCollectionsFromStrapi();
+  assert.equal(calls.length,1,'rendering a header must not load product galleries');
+  assert.deepEqual(Array.from(items,x=>x.slug),['own','sale','new','manual']);
+  assert.equal(items[0].sourceCategorySlug,'tools');
+  assert.equal(items[1].sourceCategorySlug,null);
+  assert.equal(items[3].isHiddenInMenu,true,'visibility still belongs to the menu filter');
+  for(const item of items){assert.equal(item.products.length,0);assert.equal(item.viewAllHref,`/catalog/collection/${item.slug}`);}
+});
+
+test('missing optional collections are tolerated but server failures stay visible', async () => {
+  for(const status of [403,404]){
+    const api=queries(async()=>{throw new Error(`Strapi error: ${status} failure`);});
+    assert.equal((await api.getCatalogMenuCollectionsFromStrapi()).length,0);
+  }
+  const api=queries(async()=>{throw new Error('Strapi error: 500 failure');});
+  await assert.rejects(api.getCatalogMenuCollectionsFromStrapi(),/500/);
+});
 
 test('home previews keep order, prices, variants and full-section links; catalogue pagination is unaffected', async () => {
   const calls=[];
