@@ -136,20 +136,23 @@ function ServicePanel({ service }: { service: BrandingService }) {
   const closeViewer = useCallback(() => setPhotoIndex(null), []);
 
   return <>
-    <header className={styles.panelHeader}>
-      <h2>{service.title}</h2>
-      <p>{service.description}</p>
-    </header>
-    <div className={styles.offer}>
-      <dl className={styles.facts}>
-        {service.facts.map((fact) => <div key={fact.label}>
-          <dt>{fact.label}</dt><dd>{fact.value}</dd>{fact.note && <small>{fact.note}</small>}
-        </div>)}
-      </dl>
+    <div className={styles.overview}>
+      <div>
+        <header className={styles.panelHeader}>
+          <h2>{service.title}</h2>
+          <p>{service.description}</p>
+        </header>
+        <div className={styles.offer}>
+          <dl className={styles.facts}>
+            {service.facts.map((fact) => <div key={fact.label}>
+              <dt>{fact.label}</dt><dd>{fact.value}</dd>{fact.note && <small>{fact.note}</small>}
+            </div>)}
+          </dl>
+        </div>
+        <p className={styles.offerNote}>{service.note}</p>
+      </div>
+      <WorkGallery service={service} onOpen={setPhotoIndex} />
     </div>
-    <p className={styles.offerNote}>{service.note}</p>
-
-    <WorkGallery service={service} onOpen={setPhotoIndex} />
 
     <div className={styles.detailsGrid}>
       <section aria-labelledby={`${service.id}-pricing-title`}>

@@ -1,29 +1,30 @@
-.pageLayout nav[aria-label="Хлебные крошки"] { padding-bottom: 14px; }
+.pageLayout nav[aria-label="Хлебные крошки"] { padding-bottom: 10px; }
 .page { margin-bottom: 36px; color: var(--color-black); }
-.intro { margin: 4px 0 22px; }
+.intro { margin: 4px 0 16px; }
 .intro h1 { margin: 0; font: 500 clamp(28px, 2.6vw, 38px)/1.15 var(--font-display); letter-spacing: -.025em; }
-.intro p { margin: 10px 0 0; color: var(--color-gray); font-size: 17px; line-height: 1.5; }
+.intro p { margin: 6px 0 0; color: var(--color-gray); font-size: 17px; line-height: 1.5; }
 .page .layout { margin-top: 0; }
 .sidebar { position: sticky; top: 126px; }
-.tab { display: flex; align-items: center; }
-.tabText { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+.navigation .tab { display: flex; align-items: center; padding: 12px 20px; }
+.tabText { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
 .tabText strong { font-size: 17px; font-weight: 400; line-height: 1.45; }
 .tab[aria-selected="true"] .tabText strong { font-weight: 500; }
 .shortLabel { display: none; }
 .tabText > span { font-size: 14px; line-height: 1.5; color: var(--color-gray); }
 .panels { min-width: 0; }
-.panel { scroll-margin-top: 124px; }
+.panels .panel { padding: 20px 22px; scroll-margin-top: 124px; }
+.overview > * { min-width: 0; }
 .panelHeader h2 { margin: 0; font: 500 29px/1.2 var(--font-display); letter-spacing: -.02em; }
-.panelHeader > p { margin: 8px 0 0; max-width: 77ch; font-size: 15px; line-height: 1.6; color: var(--color-gray); }
-.offer { display: flex; align-items: flex-start; gap: 20px; margin-top: 22px; }
+.panelHeader > p { margin: 6px 0 0; max-width: 77ch; font-size: 15px; line-height: 1.5; color: var(--color-gray); }
+.offer { display: flex; align-items: flex-start; gap: 20px; margin-top: 14px; }
 .facts { display: grid; grid-template-columns: 1.1fr .9fr 1fr; flex: 1; gap: 18px; margin: 0; }
 .facts > div { min-width: 0; border-right: 1px solid var(--color-light); padding-right: 16px; }
 .facts > div:last-child { border: 0; padding-right: 0; }
 .facts dt { font-size: 13px; line-height: 1.4; color: var(--color-gray); }
-.facts dd { margin: 5px 0 0; font: 500 21px/1.25 var(--font-display); }
-.facts small { display: block; font-size: 12px; line-height: 1.5; color: var(--color-gray); margin-top: 5px; }
-.offerNote { font-size: 12px; line-height: 1.65; margin: 12px 0 0; color: var(--color-gray); }
-.works { margin-top: 22px; }
+.facts dd { margin: 3px 0 0; font: 500 21px/1.25 var(--font-display); }
+.facts small { display: block; font-size: 12px; line-height: 1.5; color: var(--color-gray); margin-top: 3px; }
+.offerNote { font-size: 12px; line-height: 1.5; margin: 8px 0 0; color: var(--color-gray); }
+.works { margin-top: 14px; }
 .panel h3 { margin: 0; font: 500 21px/1.3 var(--font-display); }
 .sectionHeading { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 8px; }
 .galleryControls { display: flex; align-items: center; gap: 4px; flex-shrink: 0; }
@@ -34,34 +35,34 @@
 .gallery { display: grid; grid-auto-flow: column; grid-auto-columns: calc((100% - 24px) / 3); gap: 12px; overflow-x: auto; overscroll-behavior-x: contain; scroll-snap-type: x mandatory; scrollbar-width: none; padding: 4px; margin: -4px 0; }
 .gallery::-webkit-scrollbar { display: none; }
 .gallery figure { min-width: 0; margin: 0; scroll-snap-align: start; scroll-margin-inline: 4px; }
-.photoButton { position: relative; display: block; width: 100%; aspect-ratio: 1.45; padding: 0; border: 0; border-radius: 7px; overflow: hidden; background: var(--color-light-soft); cursor: zoom-in; }
+.photoButton { position: relative; display: block; width: 100%; aspect-ratio: 1.8; padding: 0; border: 0; border-radius: 7px; overflow: hidden; background: var(--color-light-soft); cursor: zoom-in; }
 .photoButton img { object-fit: cover; transition: transform 200ms var(--ease); }
 .photoButton:hover img { transform: scale(1.025); }
-.gallery figcaption { margin-top: 8px; font-size: 12px; line-height: 1.5; color: var(--color-gray); }
+.gallery figcaption { margin-top: 6px; font-size: 12px; line-height: 1.5; color: var(--color-gray); }
 .gallery figcaption small { display: block; font-size: 11px; }
-.detailsGrid { display: grid; grid-template-columns: 1.05fr 1fr; gap: 26px; margin-top: 24px; padding-top: 22px; border-top: 1px solid var(--color-light); }
+.detailsGrid { display: grid; grid-template-columns: 1.05fr 1fr; gap: 24px; margin-top: 18px; padding-top: 16px; border-top: 1px solid var(--color-light); }
 .detailsGrid > section { min-width: 0; }
 .order { padding-left: 25px; border-left: 1px solid var(--color-light); }
 .bodyText { margin: 9px 0; color: var(--color-gray); font-size: 13px; line-height: 1.6; }
-.priceTable { width: 100%; border-collapse: collapse; text-align: left; margin-top: 12px; }
-.priceTable th, .priceTable td { border-bottom: 1px solid var(--color-light); padding: 10px 0; font-size: 14px; line-height: 1.5; font-weight: 400; vertical-align: top; }
+.priceTable { width: 100%; border-collapse: collapse; text-align: left; margin-top: 8px; }
+.priceTable th, .priceTable td { border-bottom: 1px solid var(--color-light); padding: 8px 0; font-size: 14px; line-height: 1.5; font-weight: 400; vertical-align: top; }
 .priceTable thead th { padding-top: 0; font-size: 12px; color: var(--color-gray); }
 .priceTable th:first-child { width: 49%; padding-right: 14px; }
 .priceTable td { font-weight: 500; }
-.finePrint { margin: 11px 0 0; color: var(--color-gray); font-size: 12px; line-height: 1.65; }
-.steps { display: grid; gap: 18px; padding: 0; margin: 16px 0 0; list-style: none; }
+.finePrint { margin: 8px 0 0; color: var(--color-gray); font-size: 12px; line-height: 1.6; }
+.steps { display: grid; gap: 12px; padding: 0; margin: 10px 0 0; list-style: none; }
 .steps li { display: flex; align-items: flex-start; gap: 12px; }
 .stepNumber { display: grid; place-items: center; flex: 0 0 32px; height: 32px; border-radius: 50%; background: var(--color-light-soft); font-size: 13px; color: var(--color-dark-blue); }
 .steps h4 { margin: 0; font-size: 14px; line-height: 1.5; font-weight: 600; }
 .steps p { margin: 3px 0 0; font-size: 13px; line-height: 1.6; color: var(--color-gray); }
-.orderAction { margin: 10px 0 0 44px; font-size: 14px; line-height: 1.6; }
+.orderAction { margin: 6px 0 0 44px; font-size: 14px; line-height: 1.6; }
 .orderAction a { display: inline-flex; align-items: center; min-height: 44px; color: var(--color-dark-blue); text-underline-offset: 4px; text-decoration-thickness: 1px; }
 .orderAction a:hover { text-decoration-thickness: 2px; }
-.faq { margin-top: 24px; }
-.faq h3 { margin-bottom: 10px; }
+.faq { margin-top: 16px; }
+.faq h3 { margin-bottom: 8px; }
 .faq details { border-bottom: 1px solid var(--color-light); }
 .faq details:first-of-type { border-top: 1px solid var(--color-light); }
-.faq summary { display: flex; align-items: center; justify-content: space-between; gap: 20px; min-height: 48px; padding: 12px 0; list-style: none; font-size: 14px; line-height: 1.5; cursor: pointer; }
+.faq summary { display: flex; align-items: center; justify-content: space-between; gap: 20px; min-height: 44px; padding: 10px 0; list-style: none; font-size: 14px; line-height: 1.5; cursor: pointer; }
 .faq summary::-webkit-details-marker { display: none; }
 .plus { position: relative; width: 12px; height: 12px; flex-shrink: 0; }
 .plus::before, .plus::after { content: ""; position: absolute; top: 50%; left: 0; width: 12px; height: 1px; background: currentColor; }
@@ -80,6 +81,16 @@
 .viewerFooter button { flex-shrink: 0; }
 .viewerFooter p { margin: 0; font-size: 14px; line-height: 1.5; text-align: center; }
 .viewerFooter small { display: block; font-size: 12px; color: #c7d0dd; }
+@media (min-width: 1200px) {
+  .overview { display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr); align-items: start; gap: 24px; }
+  .overview .works { margin-top: 0; }
+  .overview .gallery { grid-auto-columns: calc((100% - 12px) / 2); }
+  .overview .photoButton { aspect-ratio: 1.3; }
+  .overview .facts { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px 14px; }
+  .overview .facts > div:nth-child(2) { border-right: 0; }
+  .overview .facts > div:last-child { grid-column: 1 / -1; display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 10px; }
+  .overview .facts > div:last-child dd, .overview .facts > div:last-child small { margin-top: 0; }
+}
 @media (max-width: 1200px) {
   .facts dd { font-size: 22px; }
 }
@@ -89,51 +100,51 @@
   .facts { gap: 12px; }
   .facts > div { padding-right: 8px; }
   .facts dd { font-size: 19px; }
-  .detailsGrid { grid-template-columns: 1fr; gap: 22px; }
-  .order { border-left: 0; padding-left: 0; padding-top: 22px; border-top: 1px solid var(--color-light); }
+  .detailsGrid { grid-template-columns: 1fr; gap: 18px; }
+  .order { border-left: 0; padding-left: 0; padding-top: 16px; border-top: 1px solid var(--color-light); }
   .gallery { grid-auto-columns: calc((100% - 12px) / 2); }
-  .photoButton { aspect-ratio: 1.15; }
+  .photoButton { aspect-ratio: 1.5; }
 }
 @media (max-width: 700px) {
-  .intro { margin: 16px 0 20px; }
+  .intro { margin: 10px 0 14px; }
   .intro h1 { font-size: 28px; }
-  .intro p { font-size: 14px; line-height: 1.65; }
-  .sidebar { position: static; margin-bottom: 20px; }
+  .intro p { font-size: 14px; line-height: 1.5; }
+  .sidebar { position: static; margin-bottom: 14px; }
   .sidebar .navigation { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px; }
   .navigation .tab { align-items: center; justify-content: center; min-height: 54px; height: 100%; padding: 12px 6px; border: 1px solid var(--color-gray-light); border-radius: 8px; text-align: center; }
   .tabText strong { font-size: 14px; font-weight: 500; line-height: 1.5; }
   .fullLabel { display: none; }
   .shortLabel { display: inline; }
   .tabText > span { display: none; }
-  .panels .panel { padding: 20px 0 0; border: 0; border-top: 1px solid var(--color-gray-light); border-radius: 0; }
+  .panels .panel { padding: 16px 0 0; border: 0; border-top: 1px solid var(--color-gray-light); border-radius: 0; }
   .panelHeader h2 { font-size: 25px; }
   .panelHeader > p { font-size: 14px; }
-  .offer { margin-top: 20px; }
-  .facts { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px 12px; }
+  .offer { margin-top: 14px; }
+  .facts { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px 12px; }
   .facts > div { padding-right: 12px; }
   .facts > div:nth-child(2) { border-right: 0; }
   .facts > div:last-child { grid-column: 1 / -1; display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 10px; }
   .facts dd { font-size: 21px; }
   .facts > div:last-child dd { margin-top: 0; font: 500 15px/1.5 var(--font-sans); }
   .facts > div:last-child small { margin-top: 0; }
-  .offerNote { margin-top: 10px; font-size: 12px; }
-  .works { margin-top: 22px; }
+  .offerNote { margin-top: 8px; font-size: 12px; }
+  .works { margin-top: 14px; }
   .gallery { grid-auto-columns: 78%; }
-  .photoButton { aspect-ratio: 1.15; }
+  .photoButton { aspect-ratio: 1.4; }
   .gallery figcaption { font-size: 13px; }
-  .detailsGrid { grid-template-columns: 1fr; gap: 24px; margin-top: 20px; padding-top: 20px; }
-  .order { padding: 22px 0 0; border-left: 0; border-top: 1px solid var(--color-light); }
+  .detailsGrid { grid-template-columns: 1fr; gap: 18px; margin-top: 16px; padding-top: 16px; }
+  .order { padding: 16px 0 0; border-left: 0; border-top: 1px solid var(--color-light); }
   .panel h3 { font-size: 21px; }
   .sectionHeading { gap: 8px; }
   .sectionHeading h3 { font-size: 19px; }
   .galleryControls { gap: 3px; }
   .galleryCount { margin-right: 3px; }
-  .priceTable th, .priceTable td { font-size: 14px; padding: 12px 0; }
+  .priceTable th, .priceTable td { font-size: 14px; padding: 10px 0; }
   .priceTable th:first-child { padding-right: 12px; }
   .priceTable thead th { font-size: 12px; }
   .finePrint { font-size: 13px; }
   .steps p, .bodyText { font-size: 14px; }
-  .faq summary { font-size: 14px; min-height: 52px; }
+  .faq summary { font-size: 14px; min-height: 48px; }
   .viewer { width: calc(100vw - 16px); }
   .viewerImage { height: 65dvh; }
 }
