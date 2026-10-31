@@ -42,7 +42,7 @@ function PhotoViewer({ photos, index, onChange, onClose }: {
     return () => {
       element?.close();
       document.body.style.overflow = previousOverflow;
-      previousFocus?.focus();
+      previousFocus?.focus({ preventScroll: true });
     };
   }, []);
   return <dialog ref={dialog} className={styles.viewer} aria-label="Фотографии работ"
@@ -69,42 +69,88 @@ function PhotoViewer({ photos, index, onChange, onClose }: {
   </dialog>;
 }
 
-function wrapGallery(element: HTMLDivElement, direction: number) {
-  const end = element.scrollWidth - element.clientWidth;
-  if (end <= 1) return false;
-  const target = direction > 0 && end - element.scrollLeft <= 1 ? 0
-    : direction < 0 && element.scrollLeft <= 1 ? end : null;
-  if (target === null) return false;
-  // Wrapping should reveal the next set immediately, not rewind through every photo.
-  element.scrollTo({ left: target, behavior: "instant" });
-  return true;
+function galleryStep(element: HTMLDivElement) {
+  const gap = parseFloat(getComputedStyle(element).columnGap) || 0;
+  return (element.firstElementChild?.getBoundingClientRect().width || 0) + gap;
+}
+
+function centerGallery(element: HTMLDivElement, total: number) {
+  const step = galleryStep(element);
+  const cycle = step * total;
+  if (!element.clientWidth || !cycle) return;
+  // Each copy is visually identical. Rebase only after scrolling has settled,
+  // so crossing the last photo keeps the same direction and smooth animation.
+  // Browsers round fractional snap offsets. Treat either side of a snap point
+  // as that same photo, especially at the boundary between the copies.
+  const snapped = Math.round(element.scrollLeft / step) * step;
+  const position = Math.abs(snapped - element.scrollLeft) < 1.5 ? snapped : element.scrollLeft;
+  const relative = ((position - cycle) % cycle + cycle) % cycle;
+  const target = cycle + relative;
+  if (Math.abs(target - element.scrollLeft) > 1) {
+    element.scrollTo({ left: target, behavior: "instant" });
+  }
 }
 
 function WorkGallery({ service, onOpen }: { service: BrandingService; onOpen: (index: number) => void }) {
   const gallery = useRef<HTMLDivElement>(null);
-  const touchStart = useRef({ x: 0, y: 0, atStart: false, atEnd: false });
-  const wrappedTouch = useRef(false);
+  const total = service.photos.length;
 
   useEffect(() => {
     const element = gallery.current;
     if (!element) return;
-    const onWheel = (event: WheelEvent) => {
-      if (Math.abs(event.deltaX) <= Math.abs(event.deltaY)) return;
-      if (wrapGallery(element, Math.sign(event.deltaX))) event.preventDefault();
+    let settleTimer: ReturnType<typeof setTimeout> | undefined;
+    let previousStep = 0;
+    let currentIndex = 0;
+    const settle = () => {
+      clearTimeout(settleTimer);
+      centerGallery(element, total);
     };
-    element.addEventListener("wheel", onWheel, { passive: false });
-    return () => element.removeEventListener("wheel", onWheel);
-  }, []);
+    const onScroll = () => {
+      // Native scroll snapping may already reposition the strip on resize.
+      // Retain the last logical photo instead of dividing that new offset by
+      // the old slide width.
+      if (previousStep && Math.abs(galleryStep(element) - previousStep) < .1) {
+        currentIndex = Math.round(element.scrollLeft / previousStep) % total;
+      }
+      clearTimeout(settleTimer);
+      // Fallback for browsers without scrollend. Never reset during momentum.
+      settleTimer = setTimeout(settle, 180);
+    };
+    const resize = () => {
+      if (!element.clientWidth) return;
+      const step = galleryStep(element);
+      if (Math.abs(step - previousStep) < .1) return;
+      previousStep = step;
+      element.scrollTo({ left: (total + currentIndex) * step, behavior: "instant" });
+    };
+    const observer = new ResizeObserver(resize);
+    observer.observe(element);
+    resize();
+    element.addEventListener("scroll", onScroll, { passive: true });
+    element.addEventListener("scrollend", settle);
+    return () => {
+      clearTimeout(settleTimer);
+      observer.disconnect();
+      element.removeEventListener("scroll", onScroll);
+      element.removeEventListener("scrollend", settle);
+    };
+  }, [total]);
 
   function move(direction: number) {
     const element = gallery.current;
     if (!element) return;
-    if (wrapGallery(element, direction)) return;
+    centerGallery(element, total);
     const gap = parseFloat(getComputedStyle(element).columnGap) || 0;
-    const step = (element.firstElementChild?.getBoundingClientRect().width || element.clientWidth) + gap;
+    const step = galleryStep(element);
     const count = Math.max(1, Math.floor((element.clientWidth + gap + 1) / step));
     element.scrollBy({ left: direction * step * count,
       behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "instant" : "smooth" });
+  }
+
+  function openPhoto(index: number) {
+    // Only the middle copy participates in keyboard/screen-reader navigation.
+    gallery.current?.querySelector<HTMLButtonElement>(`[data-gallery-copy="1"] [data-photo-index="${index}"]`)?.focus({ preventScroll: true });
+    onOpen(index);
   }
 
   return <section className={styles.works} aria-labelledby={`${service.id}-works-title`}>
@@ -117,33 +163,21 @@ function WorkGallery({ service, onOpen }: { service: BrandingService; onOpen: (i
     </div>
     <div ref={gallery} className={styles.gallery} id={`${service.id}-gallery`} role="region" aria-roledescription="карусель"
       aria-label={`${service.title}: фотографии`} tabIndex={0}
-      onTouchStart={(event) => {
-        const element = event.currentTarget;
-        touchStart.current = { x: event.touches[0].clientX, y: event.touches[0].clientY,
-          atStart: element.scrollLeft <= 1, atEnd: element.scrollWidth - element.clientWidth - element.scrollLeft <= 1 };
-        wrappedTouch.current = false;
-      }}
-      onTouchEnd={(event) => {
-        const dx = touchStart.current.x - event.changedTouches[0].clientX;
-        const dy = touchStart.current.y - event.changedTouches[0].clientY;
-        if (Math.abs(dx) < 40 || Math.abs(dx) <= Math.abs(dy)) return;
-        if ((dx > 0 && touchStart.current.atEnd) || (dx < 0 && touchStart.current.atStart)) {
-          wrappedTouch.current = wrapGallery(event.currentTarget, Math.sign(dx));
-        }
-      }}
-      onClickCapture={(event) => {
-        if (wrappedTouch.current) { event.preventDefault(); event.stopPropagation(); wrappedTouch.current = false; }
-      }}
       onKeyDown={(event) => {
         if (event.target !== event.currentTarget || !["ArrowLeft", "ArrowRight"].includes(event.key)) return;
         event.preventDefault(); move(event.key === "ArrowRight" ? 1 : -1);
       }}>
-      {service.photos.map((photo, index) => <figure key={photo.src} role="group" aria-roledescription="слайд" aria-label={`${index + 1} из ${service.photos.length}`}>
-        <button type="button" className={styles.photoButton} onClick={() => onOpen(index)} aria-label={`Увеличить: ${photo.caption}`}>
+      {/* Two trailing copies leave room for a full-page step even when the
+          gallery has only four photos and three are visible at once. */}
+      {[0, 1, 2, 3].flatMap((copy) => service.photos.map((photo, index) => <figure key={`${copy}-${photo.src}`} data-gallery-copy={copy}
+        role="group" aria-roledescription="слайд" aria-label={`${index + 1} из ${total}`} aria-hidden={copy !== 1 || undefined}>
+        <button type="button" className={styles.photoButton} data-photo-index={index} tabIndex={copy === 1 ? 0 : -1}
+          onMouseDown={copy === 1 ? undefined : (event) => event.preventDefault()}
+          onClick={() => openPhoto(index)} aria-label={`Увеличить: ${photo.caption}`}>
           <Image src={photo.src} alt={photo.alt} fill sizes="(max-width: 700px) 70vw, (max-width: 1050px) 35vw, 310px" style={{ objectPosition: photo.position }} />
         </button>
         <figcaption>{photo.caption}{photo.note && <small>{photo.note}</small>}</figcaption>
-      </figure>)}
+      </figure>))}
     </div>
   </section>;
 }
