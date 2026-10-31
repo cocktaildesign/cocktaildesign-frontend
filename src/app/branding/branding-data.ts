@@ -2,7 +2,7 @@ export type WorkPhoto = { src: string; caption: string; alt: string; note?: stri
 export type BrandingService = {
   id: string; label: string; shortLabel: string; hint: string; title: string; description: string;
   facts: { label: string; value: string; note?: string }[];
-  note: string; action: { label: string; href: string; external?: boolean; note?: string };
+  note: string; orderLink: { label: string; href: string; external?: boolean };
   photos: WorkPhoto[]; galleryTitle?: string;
   pricingTitle: string; pricingIntro?: string; columns: [string, string]; rows: [string, string][];
   pricingNotes: string[]; steps: { title: string; text: string }[];
@@ -18,9 +18,9 @@ export const SERVICES: BrandingService[] = [
     id: "engraving", label: "Гравировка на изделиях", shortLabel: "Гравировка",
     hint: "Логотип или рисунок на готовом инвентаре", title: "Лазерная гравировка",
     description: "Нанесём логотип, надпись или рисунок на металлическое изделие из каталога. Форма самого изделия остаётся прежней.",
-    facts: [{ label: "Стоимость нанесения", value: "От 190 ₽ / шт.", note: "при заказе от 20 штук" }, { label: "Количество", value: "От 1 изделия" }, { label: "Срок", value: "По согласованию" }],
-    note: "Стоимость изделия оплачивается отдельно. Срок подтвердит менеджер после согласования макета.",
-    action: { label: "Выбрать изделие", href: "/catalog" },
+    facts: [{ label: "Стоимость нанесения", value: "От 190 ₽ / шт.", note: "при заказе от 20 штук" }, { label: "Количество", value: "От 1 изделия" }, { label: "Срок", value: "1–3 дня" }],
+    note: "Стоимость изделия оплачивается отдельно.",
+    orderLink: { label: "Изделия в каталоге", href: "/catalog" },
     photos: [
       { ...photo("engraving-jigger", "Логотип на джиггере", "Крупный план логотипа на металлическом джиггере"), position: "50% 25%" },
       { ...photo("engraving-shakers", "Рисунок на комплекте", "Шейкеры с одинаковым рисунком по всей поверхности"), position: "50% 20%" },
@@ -31,10 +31,10 @@ export const SERVICES: BrandingService[] = [
     ],
     pricingTitle: "Стоимость гравировки", columns: ["Количество", "За нанесение на 1 шт."],
     rows: [["1–4 шт.", "400 ₽"], ["5–19 шт.", "280 ₽"], ["От 20 шт.", "190 ₽"]],
-    pricingNotes: ["Цены на нанесение. Цена самого изделия указана в каталоге."],
+    pricingNotes: ["Цены за нанесение. Цена самого изделия указана в каталоге."],
     steps: [
-      { title: "Выберите изделие", text: "Найдите товар с опцией «Гравировка» и добавьте её к заказу." },
-      { title: "Согласуйте макет", text: "Передайте логотип, рисунок или текст. Менеджер уточнит детали и срок." },
+      { title: "Выберите изделие", text: "Выберите товар в каталоге, отметьте «Добавить гравировку» и оформите заказ." },
+      { title: "Согласуйте макет", text: "Менеджер свяжется с вами, уточнит детали и согласует логотип, рисунок или текст." },
       { title: "Получите готовый заказ", text: "После согласования нанесём гравировку и отправим изделия." },
     ],
     questions: [
@@ -50,7 +50,7 @@ export const SERVICES: BrandingService[] = [
     description: "Изготовим латунный штамп: вы сможете оставлять свой логотип на льду, еде, коже и других материалах. Подберём размер и конструкцию под вашу задачу.",
     facts: [{ label: "Клише с ручкой", value: "От 2 500 ₽", note: "размер 3 × 3 см" }, { label: "Количество", value: "От 1 штуки" }, { label: "Изготовление", value: "5–7 раб. дней", note: "обычный срок" }],
     note: "После оплаты и согласования макета. Точная цена зависит от размера и комплектации; доставка рассчитывается отдельно.",
-    action: { label: "Подобрать клише", href: "https://cd-stamp.ru/", external: true, note: "На сайте CD Stamp" },
+    orderLink: { label: "Клише и оттиски в каталоге", href: "/catalog/ms-f2905fa8" },
     galleryTitle: "Клише и результат",
     photos: [
       photo("stamp-catch22", "Catch 22 · само клише", "Латунное клише Catch 22 с рельефным логотипом"),
@@ -79,7 +79,7 @@ export const SERVICES: BrandingService[] = [
     description: "Создадим барный инструмент по вашей идее, эскизу или чертежу — с собственной формой, размерами и деталями. От разработки макета до готовой партии.",
     facts: [{ label: "Стоимость изделия", value: "От 2 800 ₽ / шт.", note: "ориентир для партии от 100 шт." }, { label: "Базовые партии", value: "От 10 штук" }, { label: "Срок", value: "По согласованию" }],
     note: "Цены ориентировочные для стрейнеров, джулепов, файн-стрейнеров и барных ложек. Другие проекты рассчитаем индивидуально.",
-    action: { label: "Обсудить проект", href: MANAGER_URL, external: true },
+    orderLink: { label: "Обсудить проект с менеджером", href: MANAGER_URL, external: true },
     photos: [
       photo("custom-shape", "Стрейнеры необычной формы", "Металлические стрейнеры в форме головы коровы"),
       photo("custom-bix", "Партия для The Bix", "Стрейнеры с прорезным логотипом The Bix Moscow"),

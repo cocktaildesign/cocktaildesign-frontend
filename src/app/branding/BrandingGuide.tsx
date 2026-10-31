@@ -3,7 +3,8 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useCallback, useEffect, useRef, useState, useSyncExternalStore } from "react";
-import { MANAGER_URL, SERVICES, type BrandingService, type WorkPhoto } from "./branding-data";
+import { SERVICES, type BrandingService, type WorkPhoto } from "./branding-data";
+import serviceStyles from "@/components/service-sections/ServiceSections.module.css";
 import styles from "./Branding.module.css";
 
 function subscribe(onChange: () => void) {
@@ -68,12 +69,71 @@ function PhotoViewer({ photos, index, onChange, onClose }: {
   </dialog>;
 }
 
+function WorkGallery({ service, onOpen }: { service: BrandingService; onOpen: (index: number) => void }) {
+  const gallery = useRef<HTMLDivElement>(null);
+  const [position, setPosition] = useState({ first: 1, last: Math.min(3, service.photos.length), atStart: true, atEnd: false });
+
+  const updatePosition = useCallback(() => {
+    const element = gallery.current;
+    if (!element?.clientWidth) return;
+    const gap = parseFloat(getComputedStyle(element).columnGap) || 0;
+    const width = element.firstElementChild?.getBoundingClientRect().width || element.clientWidth;
+    const step = width + gap;
+    const count = Math.max(1, Math.floor((element.clientWidth + gap + 1) / step));
+    const first = Math.min(Math.round(element.scrollLeft / step), Math.max(0, service.photos.length - count)) + 1;
+    const next = { first, last: Math.min(first + count - 1, service.photos.length),
+      atStart: element.scrollLeft <= 1, atEnd: element.scrollWidth - element.clientWidth - element.scrollLeft <= 1 };
+    setPosition((current) => Object.keys(next).every((key) => current[key as keyof typeof next] === next[key as keyof typeof next]) ? current : next);
+  }, [service.photos.length]);
+
+  useEffect(() => {
+    const element = gallery.current;
+    if (!element) return;
+    const observer = new ResizeObserver(updatePosition);
+    observer.observe(element);
+    return () => observer.disconnect();
+  }, [updatePosition]);
+
+  function move(direction: number) {
+    const element = gallery.current;
+    if (!element) return;
+    const gap = parseFloat(getComputedStyle(element).columnGap) || 0;
+    const step = (element.firstElementChild?.getBoundingClientRect().width || element.clientWidth) + gap;
+    const count = Math.max(1, Math.floor((element.clientWidth + gap + 1) / step));
+    element.scrollBy({ left: direction * step * count,
+      behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "instant" : "smooth" });
+  }
+
+  return <section className={styles.works} aria-labelledby={`${service.id}-works-title`}>
+    <div className={styles.sectionHeading}>
+      <h3 id={`${service.id}-works-title`}>{service.galleryTitle || "Примеры работ"}</h3>
+      <div className={styles.galleryControls}>
+        <span className={styles.galleryCount} aria-live="polite" aria-atomic="true">
+          {position.first === position.last ? position.first : `${position.first}–${position.last}`} / {service.photos.length}
+        </span>
+        <button type="button" aria-label="Предыдущие фотографии" aria-controls={`${service.id}-gallery`} disabled={position.atStart} onClick={() => move(-1)}>←</button>
+        <button type="button" aria-label="Следующие фотографии" aria-controls={`${service.id}-gallery`} disabled={position.atEnd} onClick={() => move(1)}>→</button>
+      </div>
+    </div>
+    <div ref={gallery} className={styles.gallery} id={`${service.id}-gallery`} role="region" aria-roledescription="карусель"
+      aria-label={`${service.title}: фотографии`} tabIndex={0} onScroll={updatePosition}
+      onKeyDown={(event) => {
+        if (event.target !== event.currentTarget || !["ArrowLeft", "ArrowRight"].includes(event.key)) return;
+        event.preventDefault(); move(event.key === "ArrowRight" ? 1 : -1);
+      }}>
+      {service.photos.map((photo, index) => <figure key={photo.src} role="group" aria-roledescription="слайд" aria-label={`${index + 1} из ${service.photos.length}`}>
+        <button type="button" className={styles.photoButton} onClick={() => onOpen(index)} aria-label={`Увеличить: ${photo.caption}`}>
+          <Image src={photo.src} alt={photo.alt} fill sizes="(max-width: 700px) 70vw, (max-width: 1050px) 35vw, 310px" style={{ objectPosition: photo.position }} />
+        </button>
+        <figcaption>{photo.caption}{photo.note && <small>{photo.note}</small>}</figcaption>
+      </figure>)}
+    </div>
+  </section>;
+}
+
 function ServicePanel({ service }: { service: BrandingService }) {
-  const [expanded, setExpanded] = useState(false);
   const [photoIndex, setPhotoIndex] = useState<number | null>(null);
   const closeViewer = useCallback(() => setPhotoIndex(null), []);
-  const actionClass = styles.primaryAction;
-  const actionContent = <>{service.action.label}<span aria-hidden="true">{service.action.external ? "↗" : "→"}</span></>;
 
   return <>
     <header className={styles.panelHeader}>
@@ -86,31 +146,10 @@ function ServicePanel({ service }: { service: BrandingService }) {
           <dt>{fact.label}</dt><dd>{fact.value}</dd>{fact.note && <small>{fact.note}</small>}
         </div>)}
       </dl>
-      <div className={styles.actionWrap}>
-        {service.action.external
-          ? <a href={service.action.href} target="_blank" rel="noopener noreferrer" className={actionClass}>{actionContent}</a>
-          : <Link href={service.action.href} className={actionClass}>{actionContent}</Link>}
-        {service.action.note && <small>{service.action.note}</small>}
-      </div>
     </div>
     <p className={styles.offerNote}>{service.note}</p>
 
-    <section className={styles.works} aria-labelledby={`${service.id}-works-title`}>
-      <div className={styles.sectionHeading}>
-        <h3 id={`${service.id}-works-title`}>{service.galleryTitle || "Примеры работ"}</h3>
-        <button type="button" className={styles.textAction} aria-expanded={expanded} aria-controls={`${service.id}-gallery`}
-          onClick={() => setExpanded(!expanded)}>{expanded ? "Свернуть" : `Все ${service.photos.length} фото`}<span aria-hidden="true">{expanded ? "−" : "+"}</span></button>
-      </div>
-      <div className={styles.gallery} id={`${service.id}-gallery`}>
-        {service.photos.map((photo, index) => <figure key={photo.src} hidden={!expanded && index >= 3}>
-          <button type="button" className={styles.photoButton} onClick={() => setPhotoIndex(index)} aria-label={`Увеличить: ${photo.caption}`}>
-            <Image src={photo.src} alt={photo.alt} fill sizes="(max-width: 700px) 65vw, (max-width: 1050px) 25vw, 310px" style={{ objectPosition: photo.position }} />
-            <span className={styles.zoom} aria-hidden="true">↗</span>
-          </button>
-          <figcaption>{photo.caption}{photo.note && <small>{photo.note}</small>}</figcaption>
-        </figure>)}
-      </div>
-    </section>
+    <WorkGallery service={service} onOpen={setPhotoIndex} />
 
     <div className={styles.detailsGrid}>
       <section aria-labelledby={`${service.id}-pricing-title`}>
@@ -128,6 +167,10 @@ function ServicePanel({ service }: { service: BrandingService }) {
           <span className={styles.stepNumber} aria-hidden="true">0{index + 1}</span>
           <div><h4>{step.title}</h4><p>{step.text}</p></div>
         </li>)}</ol>
+        <p className={styles.orderAction}>{service.orderLink.external
+          ? <a href={service.orderLink.href} target="_blank" rel="noopener noreferrer">{service.orderLink.label}</a>
+          : <Link href={service.orderLink.href}>{service.orderLink.label}</Link>}
+        </p>
       </section>
     </div>
 
@@ -156,12 +199,12 @@ export default function BrandingGuide() {
       if (!mobile && panel && panel.getBoundingClientRect().top < 126) panel.scrollIntoView({ block: "start" });
     });
   }
-  return <div className={styles.layout}>
+  return <div className={`${serviceStyles.layout} ${styles.layout}`}>
     <aside className={styles.sidebar}>
-      <div role="tablist" aria-label="Виды брендинга" aria-orientation={mobile ? "horizontal" : "vertical"} className={styles.navigation}>
+      <div role="tablist" aria-label="Виды брендинга" aria-orientation={mobile ? "horizontal" : "vertical"} className={`${serviceStyles.navigation} ${styles.navigation}`}>
         {SERVICES.map((service, index) => <button key={service.id} id={`branding-tab-${service.id}`}
           type="button" role="tab" aria-selected={active === service.id} aria-controls={`branding-panel-${service.id}`}
-          tabIndex={active === service.id ? 0 : -1} className={styles.tab} onClick={() => select(service.id)}
+          tabIndex={active === service.id ? 0 : -1} className={`${serviceStyles.tab} ${styles.tab}`} onClick={() => select(service.id)}
           onKeyDown={(event) => {
             let next = index;
             if (["ArrowDown", "ArrowRight"].includes(event.key)) next = (index + 1) % SERVICES.length;
@@ -172,17 +215,12 @@ export default function BrandingGuide() {
             event.preventDefault(); select(SERVICES[next].id);
           }}>
           <span className={styles.tabText}><strong><span className={styles.fullLabel}>{service.label}</span><span className={styles.shortLabel}>{service.shortLabel}</span></strong><span>{service.hint}</span></span>
-          <span className={styles.chevron} aria-hidden="true">›</span>
         </button>)}
-      </div>
-      <div className={styles.help}>
-        <p>Не уверены, что выбрать?</p>
-        <a href={MANAGER_URL} target="_blank" rel="noopener noreferrer">Напишите менеджеру <span aria-hidden="true">↗</span></a>
       </div>
     </aside>
     <div className={styles.panels}>
       {SERVICES.map((service) => <section key={service.id} id={`branding-panel-${service.id}`} role="tabpanel"
-        aria-labelledby={`branding-tab-${service.id}`} hidden={active !== service.id} tabIndex={0} className={styles.panel}>
+        aria-labelledby={`branding-tab-${service.id}`} hidden={active !== service.id} tabIndex={0} className={`${serviceStyles.panel} ${styles.panel}`}>
         <ServicePanel key={`${service.id}-${active === service.id}`} service={service} />
       </section>)}
     </div>

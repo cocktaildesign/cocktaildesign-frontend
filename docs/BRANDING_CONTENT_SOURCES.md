@@ -7,7 +7,8 @@ Checked on 2026-10-31 for `/branding`. The owner requested a local preview only.
 Engraving and custom manufacturing: https://cocktail-design.ru/brending
 
 - Engraving: 1–4 units at 400 RUB/unit, 5–19 at 280 RUB/unit, 20+ at 190 RUB/unit. Product cost is separate.
-- The source describes black or white engraving on metal. No promise of colour engraving, photo engraving or a numerical lead time was added.
+- The source describes black or white engraving on metal. No promise of colour engraving or photo engraving was added.
+- Owner correction in this chat on 2026-10-31: engraving lead time is **1–3 days**. This direct instruction supersedes the previous unspecified lead time; no unconfirmed qualifier about working days was added.
 - Custom strainers, juleps, fine strainers and bar spoons share the same indicative matrix: 10+ at 5,900; 30+ at 3,500; 50+ at 3,200; 100+ at 2,800 RUB/unit.
 - Final custom pricing depends on complexity and configuration. Projects with full publication, brand-mention and portfolio/social restrictions require an individual quote.
 - Other quantities/products and lead times require agreement; the table is not a universal minimum for every possible project.
@@ -62,3 +63,5 @@ The old site served these custom photos at 600 × 600. No upscaling was performe
 `src/app/branding/branding-data.ts` holds the service definitions, copy, prices and gallery entries. Add an entry with a unique stable `id`, appropriate imagery and verified terms. The menu and content panels use that list. Review mobile navigation when adding further directions.
 
 Direct links: `/branding#engraving`, `/branding#stamps`, `/branding#custom`. The component supports browser Back/Forward, arrow keys, Home/End, native FAQ disclosures and a modal image viewer with Escape, arrows and restored keyboard focus.
+
+Owner review: navigation/panel surfaces reuse the actual `ServiceSections` styles from payment/shipping. No sidebar chevrons, photo overlay arrows or top-of-panel CTAs. Galleries scroll horizontally with previous/next controls and touch scrolling. Quiet links below the ordering steps point to `/catalog`, the verified internal stamps category `/catalog/ms-f2905fa8`, and the existing manager contact for custom projects. No external CD Stamp CTA remains.
