@@ -55,7 +55,7 @@ function PhotoViewer({ photos, index, onChange, onClose }: {
       }
     }}>
     <div className={styles.viewerHeader}>
-      <span aria-live="polite">{index + 1} / {photos.length}</span>
+      <span>Фотографии работ</span>
       <button autoFocus type="button" onClick={onClose} aria-label="Закрыть фотографию">×</button>
     </div>
     <div className={styles.viewerImage}>
@@ -69,34 +69,37 @@ function PhotoViewer({ photos, index, onChange, onClose }: {
   </dialog>;
 }
 
+function wrapGallery(element: HTMLDivElement, direction: number) {
+  const end = element.scrollWidth - element.clientWidth;
+  if (end <= 1) return false;
+  const target = direction > 0 && end - element.scrollLeft <= 1 ? 0
+    : direction < 0 && element.scrollLeft <= 1 ? end : null;
+  if (target === null) return false;
+  // Wrapping should reveal the next set immediately, not rewind through every photo.
+  element.scrollTo({ left: target, behavior: "instant" });
+  return true;
+}
+
 function WorkGallery({ service, onOpen }: { service: BrandingService; onOpen: (index: number) => void }) {
   const gallery = useRef<HTMLDivElement>(null);
-  const [position, setPosition] = useState({ first: 1, last: Math.min(3, service.photos.length), atStart: true, atEnd: false });
-
-  const updatePosition = useCallback(() => {
-    const element = gallery.current;
-    if (!element?.clientWidth) return;
-    const gap = parseFloat(getComputedStyle(element).columnGap) || 0;
-    const width = element.firstElementChild?.getBoundingClientRect().width || element.clientWidth;
-    const step = width + gap;
-    const count = Math.max(1, Math.floor((element.clientWidth + gap + 1) / step));
-    const first = Math.min(Math.round(element.scrollLeft / step), Math.max(0, service.photos.length - count)) + 1;
-    const next = { first, last: Math.min(first + count - 1, service.photos.length),
-      atStart: element.scrollLeft <= 1, atEnd: element.scrollWidth - element.clientWidth - element.scrollLeft <= 1 };
-    setPosition((current) => Object.keys(next).every((key) => current[key as keyof typeof next] === next[key as keyof typeof next]) ? current : next);
-  }, [service.photos.length]);
+  const touchStart = useRef({ x: 0, y: 0, atStart: false, atEnd: false });
+  const wrappedTouch = useRef(false);
 
   useEffect(() => {
     const element = gallery.current;
     if (!element) return;
-    const observer = new ResizeObserver(updatePosition);
-    observer.observe(element);
-    return () => observer.disconnect();
-  }, [updatePosition]);
+    const onWheel = (event: WheelEvent) => {
+      if (Math.abs(event.deltaX) <= Math.abs(event.deltaY)) return;
+      if (wrapGallery(element, Math.sign(event.deltaX))) event.preventDefault();
+    };
+    element.addEventListener("wheel", onWheel, { passive: false });
+    return () => element.removeEventListener("wheel", onWheel);
+  }, []);
 
   function move(direction: number) {
     const element = gallery.current;
     if (!element) return;
+    if (wrapGallery(element, direction)) return;
     const gap = parseFloat(getComputedStyle(element).columnGap) || 0;
     const step = (element.firstElementChild?.getBoundingClientRect().width || element.clientWidth) + gap;
     const count = Math.max(1, Math.floor((element.clientWidth + gap + 1) / step));
@@ -108,15 +111,29 @@ function WorkGallery({ service, onOpen }: { service: BrandingService; onOpen: (i
     <div className={styles.sectionHeading}>
       <h3 id={`${service.id}-works-title`}>{service.galleryTitle || "Примеры работ"}</h3>
       <div className={styles.galleryControls}>
-        <span className={styles.galleryCount} aria-live="polite" aria-atomic="true">
-          {position.first === position.last ? position.first : `${position.first}–${position.last}`} / {service.photos.length}
-        </span>
-        <button type="button" aria-label="Предыдущие фотографии" aria-controls={`${service.id}-gallery`} disabled={position.atStart} onClick={() => move(-1)}>←</button>
-        <button type="button" aria-label="Следующие фотографии" aria-controls={`${service.id}-gallery`} disabled={position.atEnd} onClick={() => move(1)}>→</button>
+        <button type="button" aria-label="Предыдущие фотографии" aria-controls={`${service.id}-gallery`} onClick={() => move(-1)}>←</button>
+        <button type="button" aria-label="Следующие фотографии" aria-controls={`${service.id}-gallery`} onClick={() => move(1)}>→</button>
       </div>
     </div>
     <div ref={gallery} className={styles.gallery} id={`${service.id}-gallery`} role="region" aria-roledescription="карусель"
-      aria-label={`${service.title}: фотографии`} tabIndex={0} onScroll={updatePosition}
+      aria-label={`${service.title}: фотографии`} tabIndex={0}
+      onTouchStart={(event) => {
+        const element = event.currentTarget;
+        touchStart.current = { x: event.touches[0].clientX, y: event.touches[0].clientY,
+          atStart: element.scrollLeft <= 1, atEnd: element.scrollWidth - element.clientWidth - element.scrollLeft <= 1 };
+        wrappedTouch.current = false;
+      }}
+      onTouchEnd={(event) => {
+        const dx = touchStart.current.x - event.changedTouches[0].clientX;
+        const dy = touchStart.current.y - event.changedTouches[0].clientY;
+        if (Math.abs(dx) < 40 || Math.abs(dx) <= Math.abs(dy)) return;
+        if ((dx > 0 && touchStart.current.atEnd) || (dx < 0 && touchStart.current.atStart)) {
+          wrappedTouch.current = wrapGallery(event.currentTarget, Math.sign(dx));
+        }
+      }}
+      onClickCapture={(event) => {
+        if (wrappedTouch.current) { event.preventDefault(); event.stopPropagation(); wrappedTouch.current = false; }
+      }}
       onKeyDown={(event) => {
         if (event.target !== event.currentTarget || !["ArrowLeft", "ArrowRight"].includes(event.key)) return;
         event.preventDefault(); move(event.key === "ArrowRight" ? 1 : -1);
