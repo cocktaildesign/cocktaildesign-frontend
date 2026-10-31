@@ -101,15 +101,18 @@ function WorkGallery({ service, onOpen }: { service: BrandingService; onOpen: (i
     let settleTimer: ReturnType<typeof setTimeout> | undefined;
     let previousStep = 0;
     let currentIndex = 0;
+    let resizeFrame = 0;
+    let resizing = false;
     const settle = () => {
       clearTimeout(settleTimer);
+      if (resizing) return;
       centerGallery(element, total);
     };
     const onScroll = () => {
       // Native scroll snapping may already reposition the strip on resize.
       // Retain the last logical photo instead of dividing that new offset by
       // the old slide width.
-      if (previousStep && Math.abs(galleryStep(element) - previousStep) < .1) {
+      if (!resizing && previousStep && Math.abs(galleryStep(element) - previousStep) < .1) {
         currentIndex = Math.round(element.scrollLeft / previousStep) % total;
       }
       clearTimeout(settleTimer);
@@ -120,8 +123,20 @@ function WorkGallery({ service, onOpen }: { service: BrandingService; onOpen: (i
       if (!element.clientWidth) return;
       const step = galleryStep(element);
       if (Math.abs(step - previousStep) < .1) return;
+      clearTimeout(settleTimer);
+      cancelAnimationFrame(resizeFrame);
+      resizing = true;
       previousStep = step;
-      element.scrollTo({ left: (total + currentIndex) * step, behavior: "instant" });
+      const left = (total + currentIndex) * step;
+      // Prevent native snap anchoring from picking a different repeated photo
+      // while the responsive layout is changing.
+      element.style.scrollSnapType = "none";
+      element.scrollTo({ left, behavior: "instant" });
+      resizeFrame = requestAnimationFrame(() => {
+        element.style.scrollSnapType = "";
+        element.scrollTo({ left, behavior: "instant" });
+        resizing = false;
+      });
     };
     const observer = new ResizeObserver(resize);
     observer.observe(element);
@@ -130,6 +145,8 @@ function WorkGallery({ service, onOpen }: { service: BrandingService; onOpen: (i
     element.addEventListener("scrollend", settle);
     return () => {
       clearTimeout(settleTimer);
+      cancelAnimationFrame(resizeFrame);
+      element.style.scrollSnapType = "";
       observer.disconnect();
       element.removeEventListener("scroll", onScroll);
       element.removeEventListener("scrollend", settle);
