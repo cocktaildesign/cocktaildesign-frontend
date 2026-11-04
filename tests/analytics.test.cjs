@@ -16,6 +16,8 @@ function load(file, globals = {}, mocks = {}) {
   return module.exports;
 }
 const ID='11111111-1111-4111-a111-111111111111';
+const PURCHASE={currency:'RUB',revenue:2250.99,products:[{id:'Jig25/40',name:'Джиггер 25/40 мл',price:900.45,quantity:2},{id:'SALE',name:'Уценка',price:450,quantity:1}]};
+const plain=value=>JSON.parse(JSON.stringify(value));
 function environment({origin='https://cocktaildesign.ru',enabled='true',storageError=false,trackerError=false,legacyCookie=false,legacyStorage=false,cookieError=false}={}) {
   const calls=[],scripts=[],storage=new Map(),cookies=new Map(),listeners=new Map();
   if(legacyCookie)cookies.set('cd_ym_optout','1');if(legacyStorage)storage.set('cd_ym_optout','1');
@@ -176,4 +178,55 @@ test('failed/unknown orders never count; retry keeps idempotency key and counts 
 test('durably accepted local order clears cart and shows receipt even without CRM confirmation',async()=>{
  const x=checkout({responses:[{ok:true,body:{ok:true,accepted:true,crmConfirmed:false,journalId:ID,orderId:ID,orderName:'CD-42'}}]});
  await x.submit();assert.equal(x.clears(),1);assert.deepEqual(x.navigation,['/checkout/success?order=CD-42&received=1']);assert.equal(x.calls.length,1);
+});
+
+test('commerce is configured on the existing counter and uses only server receipt fields',()=>{
+ const x=environment();x.window.cdMetrikaStarted=false;x.api.startMetrika();
+ assert.equal(x.calls.find(c=>c[1]==='init')[2].ecommerce,'dataLayer');x.calls.length=0;
+ x.api.trackAcceptedOrder(ID,{...PURCHASE,phone:'PRIVATE',address:'PRIVATE',products:PURCHASE.products.map(p=>({...p,customer:'PRIVATE'}))});
+ assert.deepEqual(plain(x.window.dataLayer),[{event:'cd_order_accepted',ecommerce:{currencyCode:'RUB',purchase:{actionField:{id:ID,revenue:2250.99},products:PURCHASE.products}}}]);
+ assert.deepEqual(x.calls,[[49125430,'reachGoal','new_shop_order_created']]);
+ assert(!JSON.stringify(x.window.dataLayer).includes('PRIVATE'));
+ x.api.trackAcceptedOrder(ID,PURCHASE);assert.equal(x.window.dataLayer.length,1);
+ const reloaded=load('lib/analytics/metrika.ts',x.globals);reloaded.trackAcceptedOrder(ID,PURCHASE);
+ assert.equal(x.window.dataLayer.length,1);
+});
+
+test('commerce and existing goal deduplicate independently; an old response never fabricates revenue',()=>{
+ const x=environment();x.api.trackAcceptedOrder(ID);assert.equal(x.window.dataLayer.length,0);
+ x.api.trackAcceptedOrder(ID,PURCHASE);assert.equal(x.window.dataLayer.length,1);assert.equal(x.calls.length,1);
+});
+
+test('invalid commerce data is ignored without breaking the existing accepted-order goal',()=>{
+ const bad=[undefined,null,{}, {...PURCHASE,currency:'USD'},{...PURCHASE,revenue:NaN},{...PURCHASE,revenue:-1},
+  {...PURCHASE,products:[]},{...PURCHASE,products:[null]},
+  ...[{id:''},{price:Infinity},{quantity:1.5},{name:null}].map(p=>({...PURCHASE,products:[{...PURCHASE.products[0],...p}]}))];
+ for(const value of bad){const x=environment();x.api.trackAcceptedOrder(ID,value);assert.equal(x.window.dataLayer.length,0);assert.equal(x.calls.length,1);}
+});
+
+test('commerce obeys opt-out/domain guard; disabling while loading removes queued purchases',()=>{
+ for(const config of [{legacyCookie:true},{legacyStorage:true},{origin:'https://new.cocktaildesign.ru'},{enabled:'false'}]) {
+  const x=environment(config);x.api.trackAcceptedOrder(ID,PURCHASE);assert.equal(x.window.dataLayer?.length??0,0);
+ }
+ const x=environment();x.api.trackAcceptedOrder(ID,PURCHASE);assert.equal(x.window.dataLayer.length,1);
+ x.api.setAnalyticsEnabled(false);assert.equal(x.window.dataLayer.length,0);
+ x.api.trackAcceptedOrder(ID,PURCHASE);assert.equal(x.window.dataLayer.length,0);
+ x.scripts[0].onload();assert.equal(x.window.disableYaCounter49125430,true);
+ const y=environment();Object.freeze(y.window.dataLayer);assert.doesNotThrow(()=>y.api.setAnalyticsEnabled(false));
+});
+
+test('checkout sends server purchase after acceptance, including CRM outage, and never submits a second order',async()=>{
+ for(const confirmed of [true,false]) {
+  const x=checkout({responses:[{ok:true,body:{ok:true,accepted:true,crmConfirmed:confirmed,journalId:ID,orderId:'22222222-2222-4222-a222-222222222222',orderName:'CD-42',analytics:PURCHASE}}]});
+  await x.submit();await x.submit();assert.equal(x.requests.length,1);assert.equal(x.clears(),1);
+  assert.equal(x.window.dataLayer.length,1);assert.equal(x.window.dataLayer[0].ecommerce.purchase.actionField.id,ID);
+  assert.equal(x.window.dataLayer[0].ecommerce.purchase.actionField.revenue,2250.99,'No estimated cart total');
+  assert.deepEqual(plain(x.window.dataLayer[0].ecommerce.purchase.products),PURCHASE.products);
+ }
+});
+
+test('analytics blocked or throwing cannot prevent successful checkout, even with purchase metadata',async()=>{
+ const x=checkout({trackerError:true,responses:[{ok:true,body:{ok:true,orderId:ID,orderName:'TEST',analytics:PURCHASE}}]});
+ x.window.dataLayer.push=()=>{throw Error('blocked');};
+ await x.submit();assert.equal(x.clears(),1);assert.deepEqual(x.navigation,['/checkout/success?order=TEST']);
 });

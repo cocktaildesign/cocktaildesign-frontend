@@ -2,13 +2,16 @@ export const METRIKA_ID = 49125430;
 export const ORDER_GOAL = "new_shop_order_created";
 const ORIGIN = "https://cocktaildesign.ru";
 const STORAGE_KEY = "cd:analytics:orders:v1";
+const PURCHASE_STORAGE_KEY = "cd:analytics:purchases:v1";
+const PURCHASE_EVENT = "cd_order_accepted";
 const OPT_OUT_KEY = "cd_ym_optout"; // Same cookie/localStorage key as the existing main site.
 const CHANGE_EVENT = "cd:analytics:change";
 const SCRIPT_ID = "cd-metrika-script";
 const sentOrders = new Set<string>();
+const sentPurchases = new Set<string>();
 type Ym = ((...args: unknown[]) => void) & { a?: unknown[][]; l?: number };
 type AnalyticsWindow = Window & { ym?: Ym; cdMetrikaStarted?: boolean; cdLastPage?: string;
-  disableYaCounter49125430?: boolean; cdAnalyticsSessionDisabled?: boolean };
+  disableYaCounter49125430?: boolean; cdAnalyticsSessionDisabled?: boolean; dataLayer?: unknown[] };
 
 export function analyticsAllowed(site: string | undefined, enabled: string | undefined, origin: string): boolean {
   return enabled === "true" && site?.replace(/\/$/, "") === ORIGIN && origin === ORIGIN;
@@ -48,6 +51,15 @@ function stopMetrika(w: AnalyticsWindow): void {
     if (w.ym?.a) w.ym.a = w.ym.a.filter(args => args[0] !== METRIKA_ID);
     else if (w.cdMetrikaStarted) w.ym?.(METRIKA_ID, "destruct");
   } catch { /* Blocking analytics must not break the interface. */ }
+  // A refusal made while the tag is downloading must also discard our queued purchases.
+  try {
+    if (Array.isArray(w.dataLayer)) {
+      for (let i = w.dataLayer.length - 1; i >= 0; i--) {
+        const entry = w.dataLayer[i] as { event?: unknown } | null;
+        if (entry?.event === PURCHASE_EVENT) w.dataLayer.splice(i, 1);
+      }
+    }
+  } catch { /* A third-party container cannot prevent disabling the counter. */ }
   w.disableYaCounter49125430 = true;
   w.cdMetrikaStarted = false;
   delete w.cdLastPage;
@@ -145,8 +157,9 @@ export function startMetrika(): void {
     const w = activeWindow();
     if (!w || w.cdMetrikaStarted) return;
     w.disableYaCounter49125430 = false;
+    w.dataLayer = w.dataLayer || [];
     w.ym = w.ym || Object.assign((...args: unknown[]) => { w.ym?.a?.push(args); }, { a: [] as unknown[][], l: Date.now() });
-    w.ym(METRIKA_ID, "init", { defer: true, webvisor: false, clickmap: false, trackLinks: false, accurateTrackBounce: true });
+    w.ym(METRIKA_ID, "init", { defer: true, webvisor: false, clickmap: false, trackLinks: false, accurateTrackBounce: true, ecommerce: "dataLayer" });
     w.cdMetrikaStarted = true;
     if (document.getElementById(SCRIPT_ID)) return;
     const script = document.createElement("script");
@@ -171,20 +184,49 @@ export function trackPage(): void {
 }
 
 // Called only after a successful order API response, never on a success-page visit.
-// Counts accepted requests, not payments. No estimated revenue is sent.
-export function trackAcceptedOrder(orderId: unknown): void {
+// Counts accepted requests, not payments. Commerce amounts come only from the
+// server receipt, including its discounts; do not substitute a browser cart total.
+export function trackAcceptedOrder(orderId: unknown, analytics?: unknown): void {
   try {
     const w = activeWindow();
     if (!w?.cdMetrikaStarted || !w.ym || typeof orderId !== "string" ||
         !/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(orderId)) return;
-    let previous: string[] = [];
-    try {
-      const saved: unknown = JSON.parse(w.localStorage.getItem(STORAGE_KEY) ?? "[]");
-      if (Array.isArray(saved)) previous = saved.filter((v): v is string => typeof v === "string").slice(-99);
-    } catch { /* Disabled storage does not affect checkout or this session's deduplication. */ }
-    if (sentOrders.has(orderId) || previous.includes(orderId)) return;
-    w.ym(METRIKA_ID, "reachGoal", ORDER_GOAL);
-    sentOrders.add(orderId);
-    try { w.localStorage.setItem(STORAGE_KEY, JSON.stringify([...previous, orderId])); } catch { /* Optional. */ }
+    sendOnce(w, orderId, STORAGE_KEY, sentOrders, () => w.ym?.(METRIKA_ID, "reachGoal", ORDER_GOAL));
+    const purchase = acceptedPurchase(orderId, analytics);
+    if (purchase && Array.isArray(w.dataLayer)) {
+      sendOnce(w, orderId, PURCHASE_STORAGE_KEY, sentPurchases, () => w.dataLayer!.push(purchase));
+    }
   } catch { /* Fail closed for analytics; never throw into successful checkout. */ }
+}
+
+function sendOnce(w: AnalyticsWindow, id: string, key: string, sent: Set<string>, send: () => void): void {
+  let previous: string[] = [];
+  try {
+    const saved: unknown = JSON.parse(w.localStorage.getItem(key) ?? "[]");
+    if (Array.isArray(saved)) previous = saved.filter((v): v is string => typeof v === "string").slice(-100);
+  } catch { /* This session's deduplication still works if storage is unavailable. */ }
+  if (sent.has(id) || previous.includes(id)) return;
+  try { send(); } catch { return; }
+  sent.add(id);
+  try { w.localStorage.setItem(key, JSON.stringify([...previous.slice(-99), id])); } catch { /* Optional. */ }
+}
+
+function acceptedPurchase(id: string, value: unknown) {
+  if (!value || typeof value !== "object") return;
+  const data = value as Record<string, unknown>;
+  if (data.currency !== "RUB" || typeof data.revenue !== "number" || !Number.isFinite(data.revenue) || data.revenue < 0 ||
+      !Array.isArray(data.products) || data.products.length < 1 || data.products.length > 100) return;
+  const products: { id: string; name: string; price: number; quantity: number }[] = [];
+  for (const raw of data.products) {
+    if (!raw || typeof raw !== "object") return;
+    const item = raw as Record<string, unknown>;
+    if (typeof item.id !== "string" || !item.id.trim() || item.id.length > 255 ||
+        typeof item.name !== "string" || !item.name.trim() || item.name.length > 1000 ||
+        typeof item.price !== "number" || !Number.isFinite(item.price) || item.price < 0 ||
+        typeof item.quantity !== "number" || !Number.isSafeInteger(item.quantity) || item.quantity < 1) return;
+    // Explicit allowlist: never forward the complete order response/customer data.
+    products.push({ id: item.id, name: item.name, price: item.price, quantity: item.quantity });
+  }
+  return { event: PURCHASE_EVENT, ecommerce: { currencyCode: "RUB",
+    purchase: { actionField: { id, revenue: data.revenue }, products } } };
 }
