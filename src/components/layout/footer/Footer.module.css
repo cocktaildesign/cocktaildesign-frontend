@@ -66,7 +66,7 @@
 .qr { width: 96px; flex: 0 0 96px; }
 .qr img { display: block; width: 96px; height: 96px; }
 .bottom { padding-top: 16px; color: var(--footer-muted); }
-.analytics > div { padding: 12px 0; }
+.analytics { margin: 18px 0; }
 .legalLinks { display: flex; flex-wrap: wrap; gap: 0 28px; }
 .legalLinks a { display: inline-block; padding: 8px 0; font-size: 13px; line-height: 1.5; color: var(--footer-muted); }
 .legalNote { margin: 8px 0 0; font-size: 12px; line-height: 1.65; }
