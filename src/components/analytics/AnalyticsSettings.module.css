@@ -1,10 +1,21 @@
-.block { padding: 18px 0; color: #e0e7ef; font-size: 13px; line-height: 1.6; }
-.block p { margin: 0 0 8px; }
-.block a { color: inherit; text-decoration: underline; text-underline-offset: 3px; }
-.details summary { display: list-item; cursor: pointer; width: fit-content; padding: 4px 0; }
-.panel { margin-top: 10px; max-width: 700px; padding: 16px; border: 1px solid #667083; border-radius: 10px; }
-.panel button { display: block; border: 1px solid #b9c4d4; background: transparent; color: inherit; font: inherit; padding: 9px 14px; border-radius: 8px; cursor: pointer; }
-.panel button:hover { background: #ffffff12; }
-.block :is(button, summary, a):focus-visible { outline: 2px solid #fff; outline-offset: 4px; }
-.panel .notice { margin: 8px 0 0; }
+.block { display: flex; align-items: center; justify-content: space-between; gap: 24px 48px; padding: 18px 0; border-block: 1px solid var(--footer-line, #2c343f); color: var(--footer-muted, #b3bac4); font-size: 12px; line-height: 1.65; }
+.copy { min-width: 0; max-width: 780px; }
+.copy h2 { margin: 0 0 5px; color: var(--footer-text, #f3f5f7); font-size: 13px; font-weight: 500; line-height: 1.5; }
+.copy p { margin: 0; }
+.copy .hint { margin-top: 3px; }
+.copy a { color: var(--footer-text, #f3f5f7); text-decoration: underline; text-underline-offset: 3px; white-space: nowrap; }
+.control { flex: 0 0 242px; min-width: 0; }
+.toggle { display: flex; align-items: center; gap: 12px; min-height: 48px; padding: 4px 0; cursor: pointer; }
+.toggle input { flex: 0 0 20px; width: 20px; height: 20px; margin: 0; accent-color: #d2dfd7; cursor: pointer; }
+.toggle:has(input:disabled), .toggle input:disabled { cursor: default; }
+.name, .state { display: block; }
+.name { color: var(--footer-text, #f3f5f7); font-size: 13px; font-weight: 500; }
+.state { margin-top: 2px; }
+.notice { margin: 5px 0 0 32px; }
 .notice:empty { display: none; }
+.block :is(input, a):focus-visible { outline: 2px solid #fff; outline-offset: 5px; border-radius: 3px; }
+@media (hover: hover) { .copy a:hover { color: #fff; } .toggle:hover .name { text-decoration: underline; text-underline-offset: 3px; } }
+@media (max-width: 700px) {
+  .block { align-items: stretch; flex-direction: column; gap: 12px; padding: 18px 0; }
+  .control { flex: auto; }
+}

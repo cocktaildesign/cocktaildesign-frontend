@@ -23,7 +23,7 @@ export default function LegalDocument({ id }: { id: LegalDocumentId }) {
   return <PageLayout><article className={styles.document}>
     <BackButton />
     <h1>{doc.title}</h1>
-    <p className={styles.revision}>Редакция от 5 октября 2026 года</p>
+    <p className={styles.revision}>Редакция от {"revision" in doc ? doc.revision : "5 октября 2026 года"}</p>
     <div className={styles.intro}>{doc.intro.map((text, i) => <p key={i}><Text text={text} /></p>)}</div>
     <nav className={styles.contents} aria-label="Содержание документа">
       <h2>Содержание</h2>
