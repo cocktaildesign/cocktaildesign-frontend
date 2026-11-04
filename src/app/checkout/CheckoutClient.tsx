@@ -182,7 +182,7 @@ export default function CheckoutClient() {
       // Сначала ставим флаг, чтобы useEffect пустой корзины не увёл на /cart.
       orderCompletedRef.current = true;
       setSubmitStatus("success");
-      trackAcceptedOrder(data.journalId || data.orderId);
+      trackAcceptedOrder(data.journalId || data.orderId, data.analytics);
       clearCart();
       router.replace(successUrl);
     } catch {
