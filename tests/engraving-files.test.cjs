@@ -6,7 +6,7 @@ function fixture(handler,saved){
  process:{env:{NEXT_PUBLIC_API_URL:'http://isolated.invalid/api'}},fetch:async(url,opts)=>{assert(url.startsWith('http://isolated.invalid/api/engraving-files'));requests.push({url,opts});return handler(url,opts);}};
  function load(file){file=path.resolve(root,file);if(cache.has(file))return cache.get(file).exports;const module={exports:{}};cache.set(file,module);
  const js=ts.transpileModule(fs.readFileSync(file,'utf8'),{compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022}}).outputText;
- vm.runInNewContext('(function(require,module,exports){'+js+'\n})',globals)(id=>{if(['zustand','zustand/middleware'].includes(id))return require(id);assert(id.startsWith('.'));return load(path.resolve(path.dirname(file),id+'.ts'));},module,module.exports);return module.exports;}
+ vm.runInNewContext('(function(require,module,exports){'+js+'\n})',globals)(id=>{if(['zustand','zustand/middleware'].includes(id))return require(id);if(id==='@/lib/analytics/metrika')return load('src/lib/analytics/metrika.ts');assert(id.startsWith('.'));return load(path.resolve(path.dirname(file),id+'.ts'));},module,module.exports);return module.exports;}
  return {...load('src/lib/cart/engravingFiles.ts'),cart:load('src/lib/cart/cartStore.ts').useCartStore,requests,memory};
 }
 const pause=()=>new Promise(resolve=>setImmediate(resolve));

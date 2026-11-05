@@ -4,6 +4,7 @@ const ORIGIN = "https://cocktaildesign.ru";
 const STORAGE_KEY = "cd:analytics:orders:v1";
 const PURCHASE_STORAGE_KEY = "cd:analytics:purchases:v1";
 const PURCHASE_EVENT = "cd_order_accepted";
+const COMMERCE_EVENT = "cd_product_action";
 const OPT_OUT_KEY = "cd_ym_optout"; // Same cookie/localStorage key as the existing main site.
 const CHANGE_EVENT = "cd:analytics:change";
 const SCRIPT_ID = "cd-metrika-script";
@@ -51,12 +52,12 @@ function stopMetrika(w: AnalyticsWindow): void {
     if (w.ym?.a) w.ym.a = w.ym.a.filter(args => args[0] !== METRIKA_ID);
     else if (w.cdMetrikaStarted) w.ym?.(METRIKA_ID, "destruct");
   } catch { /* Blocking analytics must not break the interface. */ }
-  // A refusal made while the tag is downloading must also discard our queued purchases.
+  // Discard our queued commerce events if consent changes while the tag downloads.
   try {
     if (Array.isArray(w.dataLayer)) {
       for (let i = w.dataLayer.length - 1; i >= 0; i--) {
         const entry = w.dataLayer[i] as { event?: unknown } | null;
-        if (entry?.event === PURCHASE_EVENT) w.dataLayer.splice(i, 1);
+        if (entry?.event === PURCHASE_EVENT || entry?.event === COMMERCE_EVENT) w.dataLayer.splice(i, 1);
       }
     }
   } catch { /* A third-party container cannot prevent disabling the counter. */ }
@@ -181,6 +182,40 @@ export function trackPage(): void {
     w.ym(METRIKA_ID, "hit", url, { referer: w.cdLastPage ?? analyticsUrl(document.referrer), title: document.title });
     w.cdLastPage = url;
   } catch { /* Tracking is optional. */ }
+}
+
+// Product-page views and actual cart changes only. No requests, storage writes or
+// timers here; the existing SDK consumes the container. Purchase stays separate.
+export function trackProductAction(
+  action: "detail" | "add" | "remove",
+  product: { code?: string | null; name: string; price: number },
+  quantity = 1,
+): void {
+  try {
+    if (!["detail", "add", "remove"].includes(action) ||
+        typeof product.code !== "string" || !product.code.trim() || product.code.length > 255 ||
+        typeof product.name !== "string" || !product.name.trim() || product.name.length > 1000 ||
+        !Number.isFinite(product.price) || product.price < 0 ||
+        !Number.isSafeInteger(quantity) || quantity < 1) return;
+    const w = activeWindow();
+    if (!w) return;
+    startMetrika();
+    if (!w.cdMetrikaStarted || !w.ym || !Array.isArray(w.dataLayer)) return;
+    // Match the literal SKU used by the server's purchase receipt. Never forward
+    // the cart object (which can carry engraving or other unrelated fields).
+    const entry = { event: COMMERCE_EVENT, ecommerce: { currencyCode: "RUB",
+      [action]: { products: [{ id: product.code, name: product.name, price: product.price, quantity }] } } };
+    if (JSON.stringify(entry).length > 8000) return; // Metrika's 8192-character limit.
+    // Bound only our non-purchase history, including when the SDK is blocked.
+    // Do not remove accepted orders or another integration's container entries.
+    let kept = 0;
+    for (let i = w.dataLayer.length - 1; i >= 0; i--) {
+      if ((w.dataLayer[i] as { event?: unknown } | null)?.event === COMMERCE_EVENT && ++kept >= 100) {
+        w.dataLayer.splice(i, 1);
+      }
+    }
+    w.dataLayer.push(entry);
+  } catch { /* Analytics failure must never interrupt shopping. */ }
 }
 
 // Called only after a successful order API response, never on a success-page visit.
