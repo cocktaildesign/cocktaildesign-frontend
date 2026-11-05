@@ -15,7 +15,7 @@ export default function AnalyticsSettings() {
   return <section className={styles.block} aria-labelledby={`${id}-title`}>
     <div className={styles.copy}>
       <h2 id={`${id}-title`}>Настройки аналитики</h2>
-      <p>Используем технические cookies для работы магазина и Яндекс Метрику для анализа посещений и заказов.{" "}
+      <p>Яндекс Метрика помогает анализировать посещения и заказы.{" "}
         <Link href="/legal/privacy-policy#section-13">Подробнее</Link></p>
       <p className={styles.hint} id={`${id}-description`}>Корзина и оформление работают и без Метрики.</p>
     </div>
