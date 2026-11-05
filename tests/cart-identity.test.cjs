@@ -4,7 +4,8 @@ const root = path.resolve(__dirname, '..');
 function load(file, localStorage) {
   const module = {exports:{}};
   const code = ts.transpileModule(fs.readFileSync(path.join(root,file),'utf8'), {compilerOptions:{module:ts.ModuleKind.CommonJS,target:ts.ScriptTarget.ES2022}}).outputText;
-  vm.runInNewContext(code,{module,exports:module.exports,require,localStorage,console});
+  vm.runInNewContext(code,{module,exports:module.exports,require:id=>id==='@/lib/analytics/metrika'
+    ?load('src/lib/analytics/metrika.ts',localStorage):require(id),localStorage,console});
   return module.exports;
 }
 const plain = v => JSON.parse(JSON.stringify(v));

@@ -1,7 +1,7 @@
 // src/app/catalog/product/[slug]/ProductPurchaseControls.tsx
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import QuantityControl from "@/components/ui/quantity/QuantityControl";
 import EngravingToggle from "@/components/ui/engraving/EngravingToggle";
@@ -12,6 +12,7 @@ import CdekIcon from "@/components/icons/product-page/CdekIcon";
 import FreeDeliveryIcon from "@/components/icons/product-page/FreeDeliveryIcon";
 import { cartLineKey, useCartStore } from "@/lib/cart/cartStore";
 import type { CartItem } from "@/lib/cart/cartStore";
+import { trackProductAction } from "@/lib/analytics/metrika";
 
 import styles from "./ProductPage.module.css";
 
@@ -64,6 +65,12 @@ export default function ProductPurchaseControls({
 
   const itemId = variantId ?? productId;
   const lineKey = cartLineKey({ id: itemId, slug, code: code ?? "" });
+  const lastViewed = useRef<string | null>(null);
+  useEffect(() => {
+    if (lastViewed.current === lineKey) return;
+    lastViewed.current = lineKey;
+    trackProductAction("detail", { code, name, price });
+  }, [lineKey, code, name, price]);
 
   // Берём товар из корзины (если он там есть)
   const cartItem = useCartStore((s) => s.items.find((i) => cartLineKey(i) === lineKey));

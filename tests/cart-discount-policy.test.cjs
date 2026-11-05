@@ -14,6 +14,7 @@ function load(file,globals={}) {
   }).outputText;
   const context=vm.createContext({module,exports:module.exports,process:{env:{NEXT_PUBLIC_API_URL:'http://127.0.0.1:3006/api'}},
     URLSearchParams,AbortController,console,require:id=>{
+      if(id==='@/lib/analytics/metrika')return load('src/lib/analytics/metrika.ts',globals);
       assert(['zustand','zustand/middleware'].includes(id),'Blocked dependency '+id);return require(id);
     },...globals});
   vm.runInContext(script,context,{timeout:1000});return module.exports;

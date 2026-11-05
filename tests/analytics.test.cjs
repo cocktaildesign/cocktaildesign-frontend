@@ -18,6 +18,18 @@ function load(file, globals = {}, mocks = {}) {
 const ID='11111111-1111-4111-a111-111111111111';
 const PURCHASE={currency:'RUB',revenue:2250.99,products:[{id:'Jig25/40',name:'Джиггер 25/40 мл',price:900.45,quantity:2},{id:'SALE',name:'Уценка',price:450,quantity:1}]};
 const plain=value=>JSON.parse(JSON.stringify(value));
+const PRODUCT={id:'7',productId:'7',variantId:null,code:'SKU/7',name:'Товар',price:950,priceOld:1000,
+  slug:'test-product',quantity:2,engraving:false,discountExcluded:false,imageUrl:null};
+function cartEnvironment(options) {
+ const x=environment(options);
+ const cart=load('lib/cart/cartStore.ts',{...x.globals,localStorage:x.window.localStorage},{
+  'zustand':require('zustand'),'zustand/middleware':require('zustand/middleware'),'@/lib/analytics/metrika':x.api});
+ return {...x,store:cart.useCartStore,key:cart.cartLineKey};
+}
+const actions=x=>plain((x.window.dataLayer??[]).filter(e=>e.event==='cd_product_action').map(e=>{
+ const action=['detail','add','remove'].find(k=>e.ecommerce[k]);
+ return [action,e.ecommerce[action].products[0].id,e.ecommerce[action].products[0].quantity];
+}));
 function environment({origin='https://cocktaildesign.ru',enabled='true',storageError=false,trackerError=false,legacyCookie=false,legacyStorage=false,cookieError=false}={}) {
   const calls=[],scripts=[],storage=new Map(),cookies=new Map(),listeners=new Map();
   if(legacyCookie)cookies.set('cd_ym_optout','1');if(legacyStorage)storage.set('cd_ym_optout','1');
@@ -34,6 +46,84 @@ function environment({origin='https://cocktaildesign.ru',enabled='true',storageE
   if(window.ym) window.ym=(...args)=>{if(trackerError)throw Error('blocked');calls.push(args);};
   return {api,calls,scripts,storage,cookies,window,globals,listeners};
 }
+
+test('cart emits actual add/remove deltas, preserves literal variant SKU, ignores missing/unchanged rows',()=>{
+ const x=cartEnvironment(),s=x.store.getState(),k=x.key(PRODUCT);
+ s.addItem(PRODUCT);s.addItem({...PRODUCT,quantity:1});s.updateQuantity(k,5);s.updateQuantity(k,4);
+ s.updateQuantity(k,4);s.updateQuantity('absent',2);s.removeItem('absent');
+ const variant={...PRODUCT,variantId:'7',slug:'other',code:'SKU\\7',quantity:3};
+ s.addItem(variant);s.updateQuantity(k,0);s.removeItem(x.key(variant));
+ assert.deepEqual(actions(x),[['add','SKU/7',2],['add','SKU/7',1],['add','SKU/7',2],['remove','SKU/7',1],
+  ['add','SKU\\7',3],['remove','SKU/7',4],['remove','SKU\\7',3]]);
+ assert.equal(x.store.getState().items.length,0);
+});
+
+test('bulk removal records each removed quantity; hydration, policy, engraving, promo and checkout clear are silent',()=>{
+ const x=cartEnvironment(),s=x.store.getState();s.addItem(PRODUCT);s.addItem({...PRODUCT,id:'8',code:'BUNDLE',quantity:4});
+ x.window.dataLayer.length=0;
+ s.setEngraving(x.key(PRODUCT),true);s.applyDiscountPolicy({'SKU/7':true});
+ s.setPromo({code:'TEST',type:'fixed',discount:50});s.clearPromo();s.selectAll();s.clearSelected();
+ assert.deepEqual(actions(x),[]);
+ x.store.persist.rehydrate();assert.deepEqual(actions(x),[]);
+ s.selectAll();s.removeSelected();s.removeSelected();
+ assert.deepEqual(actions(x),[['remove','SKU/7',2],['remove','BUNDLE',4]]);
+ s.addItem(PRODUCT);x.window.dataLayer.length=0;s.clearCart();assert.deepEqual(actions(x),[]);
+});
+
+test('disabled/foreign analytics does not alter shopping or replay suppressed cart actions on enabling',()=>{
+ for(const options of [{legacyStorage:true},{legacyCookie:true},{origin:'https://new.cocktaildesign.ru'},{enabled:'false'}]) {
+  const x=cartEnvironment(options);x.api.trackProductAction('detail',PRODUCT);x.store.getState().addItem(PRODUCT);
+  x.store.getState().updateQuantity(x.key(PRODUCT),5);
+  assert.equal(x.store.getState().items[0].quantity,5);assert.deepEqual(actions(x),[]);
+  x.api.setAnalyticsEnabled(true);assert.deepEqual(actions(x),[]);
+ }
+});
+
+test('SDK/container/storage failures never escape an analytics call or prevent a cart mutation',()=>{
+ const x=cartEnvironment();Object.defineProperty(x.window,'dataLayer',{get(){throw Error('blocked');},configurable:true});
+ assert.doesNotThrow(()=>x.store.getState().addItem(PRODUCT));
+ assert.equal(x.store.getState().items[0].quantity,2);
+ assert.doesNotThrow(()=>x.store.getState().updateQuantity(x.key(PRODUCT),4));
+ assert.equal(x.store.getState().items[0].quantity,4);
+ const y=environment({storageError:true});assert.doesNotThrow(()=>y.api.trackProductAction('detail',PRODUCT));
+ assert.deepEqual(actions(y),[]);
+ const z=cartEnvironment();z.window.dataLayer.push=()=>{throw Error('SDK unavailable');};
+ assert.doesNotThrow(()=>z.store.getState().addItem(PRODUCT));assert.equal(z.store.getState().items.length,1);
+});
+
+test('commerce payload uses an allowlist, rejects malformed data, and bounds only its own non-purchase queue',()=>{
+ const x=environment();x.api.trackProductAction('detail',{...PRODUCT,phone:'secret',comment:'private',engravingFile:'upload'});
+ assert.deepEqual(plain(x.window.dataLayer[0]),{event:'cd_product_action',ecommerce:{currencyCode:'RUB',detail:{products:[
+  {id:'SKU/7',name:'Товар',price:950,quantity:1}]}}});
+ for(const value of [{code:''},{code:'x'.repeat(256)},{name:'x'.repeat(1001)},{price:NaN},{price:-1}]) {
+  x.api.trackProductAction('add',{...PRODUCT,...value});
+ }
+ for(const quantity of [0,-1,NaN,Infinity,1.5])x.api.trackProductAction('add',PRODUCT,quantity);
+ assert.equal(x.window.dataLayer.length,1);
+ x.window.dataLayer.push({event:'other_integration'});x.api.trackAcceptedOrder(ID,PURCHASE);
+ for(let i=0;i<150;i++)x.api.trackProductAction('add',PRODUCT,1);
+ assert.equal(actions(x).length,100);assert.equal(x.window.dataLayer.length,102);
+ assert.ok(x.window.dataLayer.every(e=>JSON.stringify(e).length<8192));
+ x.api.setAnalyticsEnabled(false);
+ assert.deepEqual(plain(x.window.dataLayer),[{event:'other_integration'}]);
+});
+
+test('product page emits once per displayed SKU, never for quantity/price rerenders or a Strict Mode effect replay',()=>{
+ const x=environment();let effects=[],refs=[],cursor=0;
+ const react={...require('react'),useState:value=>[value,()=>{}],useRef:value=>refs[cursor++]??(refs[cursor-1]={current:value}),
+  useEffect:effect=>effects.push(effect)};
+ const stub=()=>null,mocks={'react':react,'next/link':stub,'./ProductPage.module.css':{default:{}},
+  '@/lib/cart/cartStore':{cartLineKey:item=>JSON.stringify([item.slug,item.id,item.code]),useCartStore:select=>select({items:[]})},
+  '@/lib/analytics/metrika':x.api};
+ for(const name of ['@/components/ui/quantity/QuantityControl','@/components/ui/engraving/EngravingToggle',
+  '@/components/icons/CartIcon','@/components/icons/ArrowRightIcon','@/components/ui/favorites/FavoriteButton',
+  '@/components/icons/product-page/CdekIcon','@/components/icons/product-page/FreeDeliveryIcon'])mocks[name]=stub;
+ const Component=load('app/catalog/product/[slug]/ProductPurchaseControls.tsx',x.globals,mocks).default;
+ const render=props=>{cursor=0;effects=[];Component({...PRODUCT,engravingEnabled:true,...props});for(const run of effects){run();run();}};
+ render({});render({price:900});render({variantId:'8',code:'VARIANT'});render({});
+ assert.deepEqual(actions(x),[['detail','SKU/7',1],['detail','VARIANT',1],['detail','SKU/7',1]]);
+ refs=[];render({});assert.equal(actions(x).length,4,'A genuinely new page mount counts as a new view');
+});
 test('analytics is off without both explicit flag and exact final HTTPS domain',()=>{
   for(const config of [{enabled:undefined},{enabled:'false'},{origin:'https://new.cocktaildesign.ru'},{origin:'http://cocktaildesign.ru'},{origin:'https://cocktaildesign.ru.evil.test'}]) {
     if(config.enabled===undefined && 'enabled' in config)config.enabled='';

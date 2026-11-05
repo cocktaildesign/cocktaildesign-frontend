@@ -3,6 +3,7 @@
 
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
+import { trackProductAction } from "@/lib/analytics/metrika";
 
 // CartItem - один товар в корзине
 export type CartItem = {
@@ -148,20 +149,23 @@ export const useCartStore = create<CartState>()(
           });
 
           set({ items: updatedItems, ...promoResetState });
+          trackProductAction("add", item, item.quantity);
           return;
         }
 
         const newItems = [...get().items, item];
         set({ items: newItems, ...promoResetState });
+        trackProductAction("add", item, item.quantity);
       },
 
       removeItem: (id) => {
         const currentItems = get().items;
-        const hasItem = currentItems.some((i) => cartLineKey(i) === id);
-        if (!hasItem) return;
+        const removedItem = currentItems.find((i) => cartLineKey(i) === id);
+        if (!removedItem) return;
 
         const itemsWithoutRemoved = currentItems.filter((i) => cartLineKey(i) !== id);
         set({ items: itemsWithoutRemoved, ...promoResetState });
+        trackProductAction("remove", removedItem, removedItem.quantity);
       },
 
       updateQuantity: (id, quantity) => {
@@ -181,6 +185,8 @@ export const useCartStore = create<CartState>()(
         });
 
         set({ items: updatedItems, ...promoResetState });
+        const delta = quantity - currentItem.quantity;
+        trackProductAction(delta > 0 ? "add" : "remove", currentItem, Math.abs(delta));
       },
 
       // Установить промокод со всеми данными
@@ -205,6 +211,7 @@ export const useCartStore = create<CartState>()(
       },
 
       clearCart: () => {
+        // Successful checkout also clears the cart; it is not a customer removal.
         set({
           items: [],
           checkoutKey: "",
@@ -240,8 +247,10 @@ export const useCartStore = create<CartState>()(
       removeSelected: () => {
         const selectedIds = get().selectedIds;
         if (selectedIds.length === 0) return;
+        const removedItems = get().items.filter((item) => selectedIds.includes(cartLineKey(item)));
         const remainingItems = get().items.filter((item) => !selectedIds.includes(cartLineKey(item)));
         set({ items: remainingItems, selectedIds: [], ...promoResetState });
+        for (const item of removedItems) trackProductAction("remove", item, item.quantity);
       },
     }),
     {

@@ -12,6 +12,7 @@ function load(file,globals={}) {
   }).outputText;
   vm.runInNewContext(script,{module,exports:module.exports,process:{env:{}},...globals,require:id=>{
     if(id==='./discountTiers')return load('src/lib/cart/discountTiers.ts');
+    if(id==='@/lib/analytics/metrika')return load('src/lib/analytics/metrika.ts',globals);
     assert(['react','zustand','zustand/middleware'].includes(id),'Unexpected dependency '+id);
     return require(id);
   }},{timeout:1000});return module.exports;
