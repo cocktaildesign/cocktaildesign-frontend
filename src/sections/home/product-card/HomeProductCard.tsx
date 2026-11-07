@@ -86,6 +86,7 @@ export default function ProductCard({ product }: ProductCardProps) {
 
           <ProductBadges
             moyskladId={product.badgeMoyskladId}
+            parentMoyskladId={product.moyskladId}
             isNew={product.isNew}
             noveltyBadgeColor={product.noveltyBadgeColor}
             isSampleSale={product.isSampleSale}

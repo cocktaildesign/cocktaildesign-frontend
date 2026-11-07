@@ -276,6 +276,7 @@ export default function VariantSelector({ product, variants: sourceVariants, spe
 
         <ProductBadges
           moyskladId={activeVariant?.moyskladId ?? product.moyskladId}
+          parentMoyskladId={product.moyskladId}
           isNew={product.isNew}
           noveltyBadgeColor={product.noveltyBadgeColor}
           isSampleSale={product.isSampleSale}
