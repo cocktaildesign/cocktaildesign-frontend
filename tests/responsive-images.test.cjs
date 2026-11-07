@@ -39,6 +39,7 @@ test('home boundary preserves displayed prices, selected variant and stock ident
   const home=homeProductCard(product);
   for(const key of ['id','slug','name','price','priceOld','images','imageUrl','preferredVariantId','isSampleSale','badges']) assert.equal(home[key],product[key]);
   assert.equal(home.badgeMoyskladId,'variant');
+  assert.equal(home.moyskladId,'parent');
   assert.equal(home.imageSrcSets['/selected.webp'],product.imageSrcSets['/selected.webp']);
   assert.equal(home.imageSrcSets['/extra.webp'],undefined);
   assert.equal(home.variants,undefined);

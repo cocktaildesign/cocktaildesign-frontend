@@ -388,6 +388,7 @@ export default function ProductCard({ product: sourceProduct, colorMap = {} }: P
 
           <ProductBadges
             moyskladId={activeVariant?.moyskladId ?? product.moyskladId}
+            parentMoyskladId={product.moyskladId}
             isNew={product.isNew}
             noveltyBadgeColor={product.noveltyBadgeColor}
             isSampleSale={product.isSampleSale}

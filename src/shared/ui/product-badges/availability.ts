@@ -11,6 +11,18 @@ export function reconcileAvailabilityBadges(badges: ProductBadge[], unavailable:
   return badges.filter((badge) => badge.label.trim().replace(/\s+/g, " ").toLowerCase() !== "нет в наличии");
 }
 
+export function visibleAvailabilityBadges(
+  badges: ProductBadge[], unavailable: boolean | undefined, suppressAvailabilityBadge: boolean,
+): ProductBadge[] {
+  if (suppressAvailabilityBadge) {
+    return badges.filter((badge) => !["нет в наличии", "ждем поставку"].includes(
+      badge.label.trim().replace(/\s+/g, " ").toLowerCase().replace(/ё/g, "е"),
+    ));
+  }
+  const manual = reconcileAvailabilityBadges(badges, unavailable);
+  return unavailable === true ? [AUTOMATIC_AVAILABILITY_BADGE, ...manual] : manual;
+}
+
 export function parseAvailabilityStates(value: unknown): Record<string, boolean> | null {
   if (!value || typeof value !== "object" || !("states" in value)) return null;
   const states = value.states;

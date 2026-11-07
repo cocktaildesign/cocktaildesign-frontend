@@ -5,7 +5,7 @@ import { useState } from "react";
 import type { ProductBadge } from "@/lib/api/catalog/types";
 
 import styles from "./ProductBadges.module.css";
-import { AUTOMATIC_AVAILABILITY_BADGE, reconcileAvailabilityBadges } from "./availability";
+import { visibleAvailabilityBadges } from "./availability";
 import { useAvailability } from "./useAvailability";
 
 const NOVELTY_LABEL = "НОВИНКА";
@@ -16,6 +16,7 @@ const MAX_MANUAL_BADGES = 5;
 
 export type ProductBadgesProps = {
   moyskladId?: string;
+  parentMoyskladId?: string;
   isNew: boolean;
   noveltyBadgeColor: string;
   isSampleSale?: boolean;
@@ -138,6 +139,7 @@ function BadgeList({
 
 export default function ProductBadges({
   moyskladId,
+  parentMoyskladId,
   isNew,
   noveltyBadgeColor,
   isSampleSale = false,
@@ -150,9 +152,12 @@ export default function ProductBadges({
 }: ProductBadgesProps) {
   const [mobileExpanded, setMobileExpanded] = useState(false);
 
-  const unavailable = useAvailability(moyskladId);
-  const items = buildBadgeListItems(isSampleSale, isNew, reconcileAvailabilityBadges(badges, unavailable));
-  if (unavailable === true) items.unshift({ kind: "manual", badge: AUTOMATIC_AVAILABILITY_BADGE });
+  const { unavailable, suppressAvailabilityBadge } = useAvailability(moyskladId, parentMoyskladId);
+  const visibleBadges = visibleAvailabilityBadges(badges, unavailable, suppressAvailabilityBadge);
+  // Keep the automatic availability badge before novelty/sale and outside the manual limit.
+  const automatic = visibleBadges.find((badge) => badge.id === -1);
+  const items = buildBadgeListItems(isSampleSale, isNew, visibleBadges.filter((badge) => badge !== automatic));
+  if (automatic) items.unshift({ kind: "manual", badge: automatic });
 
   if (items.length === 0) {
     return null;
