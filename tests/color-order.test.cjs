@@ -146,6 +146,7 @@ test('catalogue renders sorted swatches while preserving the selected promotiona
     '@/shared/ui/product-badges/ProductBadges': noop,
     '@/lib/cart/cartStore': {cartLineKey:i=>JSON.stringify([i.slug,i.id,i.code]),useCartStore: selector => selector({items: [], addItem: noop, removeItem: noop})},
     '@/lib/catalog/color-order': order,
+    '@/lib/catalog/image-swipe': load('lib/catalog/image-swipe.ts'),
     './ProductCard.module.css': {default: new Proxy({}, {get: (_, key) => String(key)})},
   };
   const Card = load('app/catalog/product-card/ProductCard.tsx', imports).default;

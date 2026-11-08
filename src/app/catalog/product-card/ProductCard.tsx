@@ -15,6 +15,7 @@ import type { CartItem } from "@/lib/cart/cartStore";
 
 import type { CatalogProductPreview, CatalogVariant } from "@/lib/api/catalog/types";
 import { sortColorVariants } from "@/lib/catalog/color-order";
+import { createImageSwipe, nextPreviewImage, variantPreviewImages } from "@/lib/catalog/image-swipe";
 
 import styles from "./ProductCard.module.css";
 
@@ -124,6 +125,7 @@ export default function ProductCard({ product: sourceProduct, colorMap = {} }: P
   );
   const [expandedVariants, setExpandedVariants] = useState<boolean>(false);
   const [visibleCount, setVisibleCount] = useState<number>(product.variants.length);
+  const [imageSwipe] = useState(createImageSwipe);
 
   const hasVariants = product.variants.length > 0;
 
@@ -167,14 +169,14 @@ export default function ProductCard({ product: sourceProduct, colorMap = {} }: P
       ? activePriceOldCandidate
       : 0;
 
-  const currentImageIndex =
-    activeImageIndex !== null && activeImageIndex >= 0 && activeImageIndex < uniqueImages.length
-      ? activeImageIndex
-      : null;
-
   const activeVariantImageSrc = activeVariant?.images[0]?.src ?? null;
+  const previewImages = variantPreviewImages(uniqueImages, activeVariantImageSrc, MAX_PREVIEW_IMAGES);
+  const currentImageIndex =
+    activeImageIndex !== null && activeImageIndex >= 0 && activeImageIndex < previewImages.length
+      ? activeImageIndex
+      : Math.max(0, activeVariantImageSrc ? previewImages.indexOf(activeVariantImageSrc) : 0);
 
-  const previewImageSrc = currentImageIndex !== null ? uniqueImages[currentImageIndex] : null;
+  const previewImageSrc = previewImages[currentImageIndex];
 
   const imageSrc =
     previewImageSrc ??
@@ -279,25 +281,46 @@ export default function ProductCard({ product: sourceProduct, colorMap = {} }: P
     };
   }, [expandedVariants, hasVariants, product.variants]);
 
-  function handleMouseMove(event: React.MouseEvent<HTMLDivElement>) {
-    if (uniqueImages.length <= 1) {
+  function handlePointerMove(event: React.PointerEvent<HTMLDivElement>) {
+    if (event.pointerType !== "mouse") {
+      imageSwipe.move(event.pointerId, event.clientX, event.clientY);
       return;
     }
+    if (previewImages.length <= 1) return;
 
     const rect = event.currentTarget.getBoundingClientRect();
     const mouseX = event.clientX - rect.left;
     const fraction = mouseX / rect.width;
 
-    const nextImageIndex = Math.min(Math.floor(fraction * uniqueImages.length), uniqueImages.length - 1);
+    const nextImageIndex = Math.max(0, Math.min(Math.floor(fraction * previewImages.length), previewImages.length - 1));
 
     setActiveImageIndex(nextImageIndex);
   }
 
-  function handleMouseLeave() {
-    setActiveImageIndex(getVariantImageIndex(activeVariant, uniqueImages));
+  function handlePointerLeave(event: React.PointerEvent<HTMLDivElement>) {
+    if (event.pointerType === "mouse") setActiveImageIndex(getVariantImageIndex(activeVariant, previewImages));
+  }
+
+  function advanceImage(direction: -1 | 1) {
+    setActiveImageIndex(nextPreviewImage(currentImageIndex, previewImages.length, direction));
+  }
+
+  function handlePointerDown(event: React.PointerEvent<HTMLDivElement>) {
+    if (event.pointerType === "mouse" || previewImages.length <= 1) return;
+    if (!event.isPrimary) { imageSwipe.cancel(); return; }
+    if ((event.target as Element).closest('button, input, select, textarea, [role="button"]')) return;
+    imageSwipe.begin(event.pointerId, event.clientX, event.clientY);
+    event.currentTarget.setPointerCapture(event.pointerId);
+  }
+
+  function handlePointerUp(event: React.PointerEvent<HTMLDivElement>) {
+    if (event.pointerType === "mouse") return;
+    const direction = imageSwipe.end(event.pointerId, event.clientX, event.clientY);
+    if (direction) advanceImage(direction);
   }
 
   function handleVariantSelect(variant: CatalogVariant) {
+    imageSwipe.cancel();
     setActiveVariant(variant);
     setActiveImageIndex(getVariantImageIndex(variant, uniqueImages));
   }
@@ -373,8 +396,21 @@ export default function ProductCard({ product: sourceProduct, colorMap = {} }: P
 
   return (
     <article className={styles.card}>
-      <Link href={productHref} className={styles.previewLink}>
-        <div className={styles.thumb} onMouseMove={handleMouseMove} onMouseLeave={handleMouseLeave}>
+      <Link href={productHref} className={styles.previewLink}
+        onPointerDownCapture={(event) => { if (event.isPrimary) imageSwipe.resetClickGuard(); }}
+        onClickCapture={(event) => {
+          if (imageSwipe.shouldBlockClick(event.detail)) { event.preventDefault(); event.stopPropagation(); }
+        }}
+        onKeyDown={(event) => {
+          if (event.target !== event.currentTarget || previewImages.length <= 1 || event.altKey || event.ctrlKey || event.metaKey || event.shiftKey) return;
+          if (event.key === "ArrowLeft" || event.key === "ArrowRight") {
+            event.preventDefault(); advanceImage(event.key === "ArrowRight" ? 1 : -1);
+          }
+        }}>
+        <div className={`${styles.thumb} ${previewImages.length > 1 ? styles.swipeable : ""}`}
+          onPointerDown={handlePointerDown} onPointerMove={handlePointerMove}
+          onPointerUp={handlePointerUp} onPointerLeave={handlePointerLeave}
+          onPointerCancel={() => imageSwipe.cancel()} onLostPointerCapture={() => imageSwipe.cancel()}>
           <picture>
             {product.imageSrcSets?.[imageSrc] && <source srcSet={product.imageSrcSets[imageSrc]} sizes="(max-width: 768px) 50vw, (max-width: 1440px) 25vw, 340px" />}
             <Image
@@ -403,9 +439,9 @@ export default function ProductCard({ product: sourceProduct, colorMap = {} }: P
 
           <FavoriteButton productId={product.id} slug={product.slug} variantId={activeVariant?.id ?? null} className={styles.favoriteButtonOverlay} />
 
-          {uniqueImages.length > 1 && (
-            <div className={styles.dots}>
-              {uniqueImages.map((_, index) => (
+          {previewImages.length > 1 && (
+            <div className={styles.dots} aria-hidden="true">
+              {previewImages.map((_, index) => (
                 <span key={index} className={index === currentImageIndex ? styles.dotActive : styles.dot} />
               ))}
             </div>

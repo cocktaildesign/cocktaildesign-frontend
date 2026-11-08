@@ -67,6 +67,10 @@
   border-radius: 14px;
 }
 
+.swipeable {
+  touch-action: pan-y pinch-zoom;
+}
+
 .discountBadge {
   position: absolute;
   left: var(--product-card-media-inset);
@@ -123,6 +127,11 @@
   width: 9px;
   height: 9px;
   border-radius: 50%;
+  transition: background-color 150ms ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dot, .dotActive { transition: none; }
 }
 
 .dot {
