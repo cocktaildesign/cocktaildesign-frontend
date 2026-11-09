@@ -9,6 +9,7 @@ import ProductVideoPlayer from "./ProductVideoPlayer";
 import styles from "./ProductPage.module.css";
 
 const PLACEHOLDER_IMG = "/images/catalog/product-placeholder.webp";
+const PLACEHOLDER_IMAGE = { src: PLACEHOLDER_IMG, alt: "Изображение товара отсутствует" };
 
 type GalleryImage = {
   src: string;
@@ -24,10 +25,10 @@ type ProductGalleryProps = {
 
 export default function ProductGallery({ images, activeIndex, onImageChange, videos = [] }: ProductGalleryProps) {
   const [activeVideoId, setActiveVideoId] = useState<string | null>(null);
-  const safeImages = images.length > 0 ? images : [{ src: PLACEHOLDER_IMG, alt: "Изображение товара отсутствует" }];
+  const safeImages = images.length > 0 ? images : [PLACEHOLDER_IMAGE];
 
-  const safeActiveIndex = activeIndex >= 0 && activeIndex < safeImages.length ? activeIndex : 0;
-  const activeImage = safeImages[safeActiveIndex];
+  const safeActiveIndex = images.length === 0 ? 0 : activeIndex >= 0 && activeIndex < images.length ? activeIndex : -1;
+  const activeImage = safeImages[safeActiveIndex] ?? PLACEHOLDER_IMAGE;
   const activeVideo = videos.find(video => video.id === activeVideoId);
 
   const imageThumbnail = (image: GalleryImage, index: number) => (

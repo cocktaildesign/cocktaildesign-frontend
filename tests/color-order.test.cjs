@@ -105,6 +105,7 @@ function detail(requestedId) {
     'next/navigation': { useRouter: () => ({replace: noop}), useSearchParams: () => new URLSearchParams(requestedId ? {variant: requestedId} : {}) },
     '@/components/icons/ArrowRightIcon': noop, '@/components/ui/copy-button/CopyButton': noop,
     '@/shared/ui/product-badges/ProductBadges': noop, '@/lib/catalog/color-order': order,
+    '@/lib/catalog/variant-gallery': load('lib/catalog/variant-gallery.ts'),
       '@/lib/catalog/bundle-display': { productBundleCards: () => [] }, './ScrollToDescriptionButton': noop,
     './ProductGallery': ({images, activeIndex}) => React.createElement('output', {'data-image': images[activeIndex]?.src}),
     './ProductPurchaseControls': props => React.createElement('output', {'data-purchase': JSON.stringify(props)}),

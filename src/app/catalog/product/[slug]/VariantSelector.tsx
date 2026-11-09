@@ -12,6 +12,7 @@ import ProductBadges from "@/shared/ui/product-badges/ProductBadges";
 
 import type { CatalogProductDetail, CatalogProductSpecification, CatalogVariant } from "@/lib/api/catalog/types";
 import { sortColorVariants } from "@/lib/catalog/color-order";
+import { variantGalleryIndex } from "@/lib/catalog/variant-gallery";
 import type { ProductVideo } from "@/lib/catalog/product-videos";
 
 import { productBundleCards } from "@/lib/catalog/bundle-display";
@@ -89,11 +90,7 @@ export default function VariantSelector({ product, variants: sourceVariants, spe
       ? requestedVariantId
       : firstVariantId;
 
-  const initialVariantImageIndex = initialVariantId
-    ? galleryImages.findIndex((image) => image.variantId === initialVariantId)
-    : 0;
-
-  const initialActiveImageIndex = initialVariantImageIndex >= 0 ? initialVariantImageIndex : 0;
+  const initialActiveImageIndex = variantGalleryIndex(galleryImages, initialVariantId);
 
   const [activeVariantId, setActiveVariantId] = useState<string | null>(initialVariantId);
 
@@ -217,11 +214,7 @@ export default function VariantSelector({ product, variants: sourceVariants, spe
     setActiveVariantId(selectedVariantId);
     updateVariantInUrl(selectedVariantId);
 
-    const variantImageIndex = galleryImages.findIndex((image) => image.variantId === selectedVariantId);
-
-    if (variantImageIndex >= 0) {
-      setActiveImageIndex(variantImageIndex);
-    }
+    setActiveImageIndex(variantGalleryIndex(galleryImages, selectedVariantId));
   }
 
   function handleImageChange(index: number) {
