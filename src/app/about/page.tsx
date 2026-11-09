@@ -1,285 +1,160 @@
-// frontend/src/app/about/page.tsx
-import Image from "next/image";
+import type { ReactNode } from "react";
 import Link from "next/link";
-
 import PageLayout from "@/components/layout/PageLayout";
-import { getTopCategoriesFromTree } from "@/lib/api/catalog";
+import { company } from "@/lib/legal/company";
 import { pageMetadata } from "@/lib/seo/metadata";
-
-import TelegramIcon from "@/components/icons/social-network/TelegramIcon";
-import VKIcon from "@/components/icons/social-network/VKIcon";
-import MaxIcon from "@/components/icons/social-network/MaxIcon";
-import YouTubeIcon from "@/components/icons/social-network/YouTubeIcon";
-
+import { serializeJsonLd } from "@/lib/seo/policy";
+import { siteUrl } from "@/lib/seo/site";
+import AboutPhoto from "./AboutPhoto";
+import { aboutMedia, ownProductsUrl, publications, timeline } from "./about-content";
 import styles from "./AboutPage.module.css";
 
 export const metadata = pageMetadata({
-  title: "О нас",
-  description:
-    "CocktailDesign — производственная компания и интернет-магазин барного инвентаря собственного производства. Премиальные решения для баров, ресторанов и Horeca.",
+  title: "О нас: мастерская барных инструментов",
+  description: "Cocktail Design — барный инвентарь из Санкт-Петербурга. История с 2016 года, собственные разработки, мастерская и награды Barproof. Изделия для баров и индивидуальные проекты.",
   canonical: "/about",
 });
 
-function formatProductsCount(count: number): string {
-  const lastTwo = count % 100;
-  const last = count % 10;
-
-  if (lastTwo >= 11 && lastTwo <= 14) {
-    return `${count} товаров`;
-  }
-
-  if (last === 1) {
-    return `${count} товар`;
-  }
-
-  if (last >= 2 && last <= 4) {
-    return `${count} товара`;
-  }
-
-  return `${count} товаров`;
+function Arrow({ external = false }: { external?: boolean }) {
+  return <span aria-hidden="true" className={styles.arrow}>{external ? "↗" : "→"}</span>;
 }
 
-export default async function AboutPage() {
-  const categories = await getTopCategoriesFromTree();
+function ExternalLink({ href, children }: { href: string; children: ReactNode }) {
+  return <a href={href} target="_blank" rel="noopener noreferrer" className={styles.textLink}>{children}<Arrow external /><span className={styles.srOnly}> (в новой вкладке)</span></a>;
+}
 
+const structuredData = {
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "OnlineStore", "@id": `${siteUrl}/#organization`,
+      name: "Cocktail Design", url: siteUrl, legalName: company.name,
+      description: "Производитель барного инвентаря из Санкт-Петербурга и магазин изделий Cocktail Design и других брендов.",
+      telephone: company.phone, email: company.email,
+      sameAs: ["https://t.me/Cocktail_Design_official", "https://vk.ru/cocktail_design"],
+    },
+    {
+      "@type": "AboutPage", "@id": `${siteUrl}/about#webpage`,
+      url: `${siteUrl}/about`, name: "О Cocktail Design — мастерская барных инструментов",
+      inLanguage: "ru-RU", about: { "@id": `${siteUrl}/#organization` },
+      breadcrumb: { "@id": `${siteUrl}/about#breadcrumbs` },
+    },
+    {
+      "@type": "BreadcrumbList", "@id": `${siteUrl}/about#breadcrumbs`,
+      itemListElement: [
+        { "@type": "ListItem", position: 1, name: "Главная", item: siteUrl },
+        { "@type": "ListItem", position: 2, name: "О нас", item: `${siteUrl}/about` },
+      ],
+    },
+  ],
+};
+
+export default function AboutPage() {
   return (
     <PageLayout>
-      <div className={styles.page}>
-        {/* Hero */}
-        <section className={styles.hero}>
-          <div className={styles.heroInner}>
-            <span className={styles.eyebrow}>О компании</span>
+      <article className={styles.page}>
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: serializeJsonLd(structuredData) }} />
+        <section className={styles.hero} aria-labelledby="about-title">
+          <div className={styles.heroCopy}>
+            <p className={styles.eyebrow}>Cocktail Design · Санкт-Петербург</p>
+            <h1 id="about-title">Барный инвентарь, созданный барменами</h1>
+            <p className={styles.lead}>С 2016 года соединяем опыт работы за баром, дизайн и собственное производство.</p>
+            <p className={styles.heroDescription}>Создаём свои инструменты и выбираем изделия других брендов — для профессионалов и тех, кто увлечён барной культурой.</p>
+            <Link href={ownProductsUrl} className={styles.textLink}>Наши инструменты<Arrow /></Link>
+          </div>
+          <AboutPhoto photo={aboutMedia.hero} priority sizes="(max-width: 760px) calc(100vw - 32px), (max-width: 1408px) 54vw, 720px" className={styles.heroPhoto} />
+        </section>
+        <ul className={styles.facts} aria-label="О Cocktail Design в трёх фактах">
+          <li>С 2016 года</li><li>Санкт-Петербург</li><li>Собственное производство</li>
+        </ul>
 
-            <h1 className={styles.heroTitle}>
-              Cocktail
-              <br />
-              <em>Design</em>
-            </h1>
-
-            <p className={styles.heroLead}>
-              Производственная компания и интернет-магазин барного инвентаря собственного производства. Стильные,
-              функциональные и эргономичные решения для баров, ресторанов и профессионалов индустрии.
-            </p>
+        <section className={styles.section} aria-labelledby="workshop-title">
+          <div className={styles.sectionHeading}>
+            <div><p className={styles.eyebrow}>От идеи к предмету</p><h2 id="workshop-title">Своя мастерская в Петербурге</h2></div>
+            <p>Разрабатываем форму, работаем с металлом и доводим инструмент до готового результата. В производстве сочетаются оборудование и ручная работа.</p>
+          </div>
+          {aboutMedia.video ? (
+            <figure className={`${styles.figure} ${styles.workshopPhoto}`}>
+              <video controls preload="none" poster={aboutMedia.workshop.src} playsInline aria-label={aboutMedia.video.title} width={1440} height={810}>
+                <source src={aboutMedia.video.src} />
+                {aboutMedia.video.captionsSrc && <track kind="captions" src={aboutMedia.video.captionsSrc} srcLang="ru" label="Русский" default />}
+                <a href={aboutMedia.video.src}>Открыть видео «{aboutMedia.video.title}»</a>
+              </video>
+              <figcaption>{aboutMedia.video.title}</figcaption>
+            </figure>
+          ) : <AboutPhoto photo={aboutMedia.workshop} sizes="(max-width: 1408px) calc(100vw - 48px), 1360px" className={styles.workshopPhoto} />}
+          <div className={styles.processNotes}>
+            <p><span>01 / Форма</span>Продумываем инструмент для работы за стойкой.</p>
+            <p><span>02 / Детали</span>Соединяем материал, рисунок и удобство в руке.</p>
+            <p><span>03 / Ваш характер</span>Добавляем гравировку и создаём индивидуальные изделия.</p>
           </div>
         </section>
 
-        {/* Краткий блок */}
-        <div className={styles.taglineBlock}>
-          <p className={styles.taglineText}>
-            Продукцией пользуются сильнейшие представители барной индустрии, лучшие барные амбассадоры мира и
-            алкогольные компании.
-          </p>
-
-          <div className={styles.taglineMeta}>
-            <span className={styles.taglineBadge}>Barproof 2017</span>
-            <span className={styles.taglineBadge}>Barproof 2019</span>
+        <section className={`${styles.section} ${styles.history}`} aria-labelledby="history-title">
+          <div className={styles.historyIntro}>
+            <p className={styles.eyebrow}>Наша история</p><h2 id="history-title">Всё началось за барной стойкой</h2>
+            <p>Опыт основателя Cocktail Design Дмитрия Кравца стал отправной точкой для собственных инструментов — удобных в работе и узнаваемых по форме.</p>
           </div>
-        </div>
-
-        {/* Ассортимент */}
-        <section className={styles.section}>
-          <div className={styles.sectionInner}>
-            <div className={styles.sectionMeta}>
-              <span className={styles.sectionTag}>Ассортимент</span>
-            </div>
-
-            <div className={styles.textBlock}>
-              <p>
-                Компания Cocktail Design предлагает широкий ассортимент барного инвентаря собственного производства. В
-                каталоге нашего интернет-магазина постоянно пополняемый ассортимент барного инвентаря и аксессуаров по
-                конкурентным ценам.
-              </p>
-
-              <p>
-                Обеспечиваем потребителей стильной, функциональной и эргономичной продукцией для комфортной работы
-                сотрудников и качественного обслуживания посетителей заведения. Предлагаем наборы и готовые решения,
-                товары для молекулярной кухни, бариста и многое другое.
-              </p>
-            </div>
+          <div className={styles.historyPortrait}>
+            <AboutPhoto photo={aboutMedia.founder} sizes="(max-width: 760px) calc(100vw - 32px), 440px" className={styles.founderPhoto}>
+              <strong>Дмитрий Кравец</strong><span className={styles.founderRole}>Основатель Cocktail Design</span>
+            </AboutPhoto>
+          </div>
+          <ol className={styles.timeline} aria-label="Как развивался Cocktail Design">
+            {timeline.map((event) => <li key={event.year}>
+              <span className={styles.year}>{event.year}</span>
+              <div className={styles.event}><h3>{event.title}</h3><p>{event.text}</p>
+                {"href" in event && <ExternalLink href={event.href}>{event.source}</ExternalLink>}
+              </div>
+            </li>)}
+          </ol>
+          <div className={styles.historyTool}>
+            <AboutPhoto photo={aboutMedia.earlyTool} sizes="(max-width: 760px) calc(100vw - 32px), 440px" className={styles.earlyToolPhoto} />
+            <p>Одними из первых изделий стали геометрические стрейнеры. С них началась история наших собственных разработок.</p>
           </div>
         </section>
 
-        {/* Репутация */}
-        <section className={styles.highlight}>
-          <span className={styles.highlightTag}>Репутация</span>
-          <h2 className={styles.highlightTitle}>Признание на международном рынке</h2>
-
-          <div className={styles.highlightBadges}>
-            <span className={styles.badge}>Barproof 2017</span>
-            <span className={styles.badge}>Barproof 2019</span>
+        <section className={styles.section} aria-labelledby="team-title">
+          <div className={styles.sectionHeading}>
+            <div><p className={styles.eyebrow}>Люди и общее дело</p><h2 id="team-title">За каждым инструментом — команда</h2></div>
+            <p>Люди, которые разрабатывают, создают и помогают выбрать. Мы обсуждаем идеи с барменами и остаёмся частью профессионального сообщества.</p>
           </div>
-
-          <div className={styles.highlightBody}>
-            <p className={styles.highlightText}>
-              Производственная компания Cocktail Design активно себя зарекомендовала на международном рынке барных
-              продуктов премиального уровня, являясь одним из ведущих производителей эксклюзивного барного инвентаря.
-            </p>
-
-            <p className={styles.highlightText}>
-              Выпускаемой предприятием продукцией пользуются сильнейшие представители барной индустрии, без
-              преувеличения лучшие барные амбассадоры мира и алкогольные компании. Наш продукт признан лучшим по версии
-              Barproof 2017 г. и 2019 г.
-            </p>
+          {aboutMedia.team ? <AboutPhoto photo={aboutMedia.team} sizes="(max-width: 1408px) calc(100vw - 48px), 1360px" className={styles.teamPhoto} /> : (
+            <div className={styles.teamPlaceholder} data-demo="true" role="img" aria-label="Место для будущей фотографии команды Cocktail Design">
+              <span className={styles.placeholderFrame} aria-hidden="true"><span /><span /><span /></span>
+              <strong>Здесь будет наша команда</strong><span>Место для настоящей фотографии · локальный макет</span>
+            </div>
+          )}
+          <div className={styles.communityFooter}>
+            <p>Делимся опытом, пробуем новое и собираем полезные материалы о техниках, инструментах и людях барной индустрии.</p>
+            <Link href="/knowledge" className={styles.textLink}>Знания и интервью<Arrow /></Link>
           </div>
         </section>
 
-        {/* Брендинг */}
-        <section className={styles.section}>
-          <div className={styles.sectionInner}>
-            <div className={styles.sectionMeta}>
-              <span className={styles.sectionTag}>Брендинг</span>
-            </div>
-
-            <div className={styles.textBlock}>
-              <p>
-                Кроме того, мы занимаемся брендингом, проектируя, разрабатывая и производя барный инвентарь, аксессуары
-                и прочую рекламную продукцию для ведущих брендов сегмента Horeca.
-              </p>
-
-              <p>
-                Мастерская оказывает услуги по нанесению логотипа на любые металлические изделия из нашего
-                интернет-магазина, при этом возможно выполнение заказов по проекту клиента.
-              </p>
-            </div>
-          </div>
-        </section>
-
-        {/* Сервис */}
-        <section className={styles.section}>
-          <div className={styles.sectionInner}>
-            <div className={styles.sectionMeta}>
-              <span className={styles.sectionTag}>Сервис</span>
-            </div>
-
-            <div className={styles.servicesGrid}>
-              <article className={styles.serviceCard}>
-                <h3 className={styles.serviceTitle}>Консультация</h3>
-                <p className={styles.serviceText}>
-                  Наши менеджеры всегда готовы оказать помощь в выборе оборудования, дать профессиональные советы по
-                  использованию и уходу выбранных моделей, а также проконсультировать по техническим вопросам.
-                </p>
-              </article>
-
-              <article className={styles.serviceCard}>
-                <h3 className={styles.serviceTitle}>Условия покупки</h3>
-                <p className={styles.serviceText}>
-                  Система скидок, акции и возможность оплаты как наличными, так и посредством платёжных систем сделают
-                  ваши покупки максимально комфортными.
-                </p>
-              </article>
-
-              <article className={styles.serviceCard}>
-                <h3 className={styles.serviceTitle}>Доставка</h3>
-                <p className={styles.serviceText}>
-                  Доставка заказов выполняется из Санкт-Петербурга по всему миру. Мы рассчитаем стоимость и подберём для
-                  вас оптимальный способ доставки.
-                </p>
-              </article>
-            </div>
-          </div>
-        </section>
-
-        {/* Баннер каталога */}
-        <div className={styles.catalogBanner}>
-          <p className={styles.catalogBannerText}>
-            Более 1&nbsp;000 позиций барного инвентаря — для тех, кто создаёт атмосферу в заведении
-          </p>
-        </div>
-
-        {/* Каталог */}
-        <section className={styles.catalogSection}>
-          <div className={styles.catalogHeader}>
-            <span className={styles.sectionTag}>Каталог</span>
-
-            <Link href="/catalog" className={styles.catalogLink}>
-              Смотреть все →
-            </Link>
-          </div>
-
-          <ul className={styles.grid}>
-            {categories.map((category) => (
-              <li key={category.id} className={styles.card}>
-                <Link href={`/catalog/${category.slug}`} className={styles.cardLink}>
-                  <div className={styles.cardText}>
-                    <h3 className={styles.title}>{category.name}</h3>
-                    <span className={styles.count}>{formatProductsCount(category.productsCount)}</span>
-                  </div>
-
-                  <div className={styles.imageWrapper}>
-                    <Image
-                      src={category.imageSrc || "/images/catalog/product-placeholder.webp"}
-                      fill
-                      sizes="(max-width: 768px) 100vw, 33vw"
-                      alt={category.name ? `Категория: ${category.name}` : "Категория"}
-                      className={styles.image}
-                    />
-                  </div>
-                </Link>
-              </li>
-            ))}
+        <section className={styles.section} aria-labelledby="press-title">
+          <div className={styles.pressHeading}><p className={styles.eyebrow}>О нас — в разговоре</p><h2 id="press-title">Интервью и публикации</h2></div>
+          <ul className={styles.pressGrid}>
+            {publications.map((item) => <li key={item.href} className={styles.pressCard}>
+              <p className={styles.pressMeta}>{item.publisher}{item.year && <span> · {item.year}</span>}</p>
+              <h3>{item.title}</h3><p className={styles.pressDescription}>{item.description}</p>
+              <p className={styles.pressKind}>{item.kind}</p><ExternalLink href={item.href}>{item.label}</ExternalLink>
+            </li>)}
           </ul>
         </section>
 
-        {/* Соцсети */}
-        <section className={styles.socialSection}>
-          <div className={styles.socialSectionInner}>
-            <div className={styles.socialSectionLeft}>
-              <span className={styles.sectionTag}>Соцсети</span>
-              <h2 className={styles.socialSectionTitle}>Подписывайтесь и будьте в курсе последних событий</h2>
-
-              <ul className={styles.socialLinksList}>
-                <li>
-                  <a
-                    href="https://t.me/Cocktail_Design_official"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className={styles.socialIconLink}
-                    aria-label="Telegram">
-                    <TelegramIcon />
-                  </a>
-                </li>
-
-                <li>
-                  <a
-                    href="https://vk.ru/cocktail_design"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className={styles.socialIconLink}
-                    aria-label="VK">
-                    <VKIcon />
-                  </a>
-                </li>
-
-                <li>
-                  <a
-                    href="https://max.ru/join/QQKS8__nbdrJTvRVrRSCdMBqinbSTzi34ReNX1TJw80"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className={styles.socialIconLink}
-                    aria-label="MAX">
-                    <MaxIcon />
-                  </a>
-                </li>
-
-                <li>
-                  <a
-                    href="https://youtube.com/@cocktaildesign-d7n?si=xtR34NMhHFghKq02"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className={styles.socialIconLink}
-                    aria-label="YouTube">
-                    <YouTubeIcon />
-                  </a>
-                </li>
-              </ul>
-            </div>
-
-            <div className={styles.socialSectionVisual} aria-hidden="true">
-              <span className={styles.socialSectionVisualText}>Cocktail Design</span>
-            </div>
+        <aside className={styles.support} aria-labelledby="support-title">
+          <h2 id="support-title">Остаёмся на связи</h2>
+          <div><p>Поможем с выбором инструмента, уходом и вопросами по вашим изделиям.</p><Link href="/contacts" className={styles.textLink}>Связаться с нами<Arrow /></Link></div>
+        </aside>
+        <section className={styles.final} aria-labelledby="final-title">
+          <p className={styles.eyebrow}>Продолжение — в ваших руках</p><h2 id="final-title">От нашей мастерской — к вашей стойке</h2>
+          <div className={styles.finalActions}>
+            <Link href={ownProductsUrl} className={styles.primaryLink}>Смотреть наши изделия<Arrow /></Link>
+            <Link href="/branding" className={styles.textLink}>Брендинг и изготовление на заказ<Arrow /></Link>
           </div>
+          <p className={styles.finalNote}>В магазине — изделия Cocktail Design и товары других брендов.</p>
         </section>
-      </div>
+      </article>
     </PageLayout>
   );
 }
