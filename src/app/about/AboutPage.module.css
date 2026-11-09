@@ -25,6 +25,13 @@
 .sectionHeading > p { font-size: 16px; color: var(--color-gray); max-width: 40em; }
 .workshopPhoto img { aspect-ratio: 21 / 9; object-position: center; }
 .workshopPhoto video { aspect-ratio: 16 / 9; object-fit: contain; background: var(--color-black); }
+.videoLink { display: block; position: relative; border-radius: 14px; overflow: hidden; color: white; }
+.videoLink::after { content: ""; position: absolute; inset: 0; background: linear-gradient(transparent 45%, rgba(7, 12, 20, .75)); pointer-events: none; }
+.videoPlay { position: absolute; z-index: 1; left: 50%; top: 50%; transform: translate(-50%, -50%); width: 64px; height: 64px; border-radius: 50%; background: rgba(255,255,255,.95); color: var(--color-dark-blue); display: grid; place-items: center; box-shadow: 0 2px 20px rgba(0,0,0,.12); }
+.videoPlay svg { margin-left: 3px; }
+.videoLink:hover .videoPlay { background: white; }
+.videoOverlay { position: absolute; z-index: 1; bottom: 28px; left: 32px; right: 32px; display: flex; align-items: center; justify-content: space-between; gap: 16px; font-size: 18px; font-weight: 500; line-height: 1.4; }
+.videoOverlay > span:last-child { display: inline-flex; align-items: center; gap: 8px; font-size: 14px; }
 .processNotes { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 40px; margin-top: 24px; }
 .processNotes p { color: var(--color-gray); font-size: 14px; }
 .processNotes span { display: block; color: var(--color-dark-blue); font-size: 15px; font-weight: 500; margin-bottom: 6px; }
@@ -50,12 +57,6 @@
 .earlyToolPhoto img { aspect-ratio: 16 / 9; }
 .historyTool > p { margin-top: 14px; font-size: 14px; color: var(--color-gray); max-width: 38em; }
 .teamPhoto img { aspect-ratio: 16 / 7; }
-.teamPlaceholder { min-height: 300px; border: 1px solid var(--color-light); border-radius: 14px; background: var(--color-light-soft); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; padding: 32px; text-align: center; }
-.teamPlaceholder strong { font-size: 21px; font-weight: 500; letter-spacing: -.02em; }
-.teamPlaceholder > span:last-child { font-size: 13px; color: #596273; }
-.placeholderFrame { display: flex; align-items: flex-end; gap: 7px; margin-bottom: 12px; height: 45px; }
-.placeholderFrame span { display: block; width: 28px; height: 32px; border: 1px solid #99a4b3; border-radius: 20px 20px 4px 4px; }
-.placeholderFrame span:nth-child(2) { height: 42px; }
 .communityFooter { display: flex; align-items: center; justify-content: space-between; gap: 40px; margin-top: 20px; }
 .communityFooter p { max-width: 690px; color: var(--color-gray); font-size: 15px; }
 .communityFooter .textLink { flex-shrink: 0; }
@@ -107,6 +108,10 @@
   .sectionHeading { grid-template-columns: 1fr; gap: 16px; margin-bottom: 24px; }
   .page h2 { font-size: 29px; }
   .workshopPhoto img { aspect-ratio: 16 / 9; }
+  .videoPlay { width: 52px; height: 52px; }
+  .videoOverlay { bottom: 16px; left: 18px; right: 18px; font-size: 15px; }
+  .videoOverlay > span:first-child { display: none; }
+  .videoOverlay > span:last-child { font-size: 13px; }
   .processNotes { gap: 20px; }
   .processNotes p { font-size: 13px; }
   .processNotes span { font-size: 14px; }
@@ -119,8 +124,6 @@
   .event p { font-size: 14px; }
   .historyTool { width: 100%; margin-top: 4px; }
   .earlyToolPhoto img { max-height: 360px; }
-  .teamPlaceholder { min-height: 230px; padding: 24px; }
-  .teamPlaceholder strong { font-size: 19px; }
   .teamPhoto img { aspect-ratio: 4 / 3; }
   .communityFooter { display: block; }
   .communityFooter .textLink { margin-top: 12px; }

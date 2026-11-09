@@ -73,7 +73,16 @@ export default function AboutPage() {
             <div><p className={styles.eyebrow}>От идеи к предмету</p><h2 id="workshop-title">Своя мастерская в Петербурге</h2></div>
             <p>Разрабатываем форму, работаем с металлом и доводим инструмент до готового результата. В производстве сочетаются оборудование и ручная работа.</p>
           </div>
-          {aboutMedia.video ? (
+          {aboutMedia.video?.kind === "external" ? (
+            <a className={styles.videoLink} href={aboutMedia.video.href} target="_blank" rel="noopener noreferrer"
+              aria-label="Смотреть видео Cocktail Design в VK (в новой вкладке)">
+              <AboutPhoto photo={aboutMedia.workshop} sizes="(max-width: 1408px) calc(100vw - 48px), 1360px" className={styles.workshopPhoto} />
+              <span className={styles.videoPlay} aria-hidden="true">
+                <svg viewBox="0 0 24 24" width="24" height="24"><path d="M8 5v14l11-7z" fill="currentColor" /></svg>
+              </span>
+              <span className={styles.videoOverlay}><span>{aboutMedia.video.title}</span><span>Смотреть видео в VK <Arrow external /></span></span>
+            </a>
+          ) : aboutMedia.video?.kind === "file" ? (
             <figure className={`${styles.figure} ${styles.workshopPhoto}`}>
               <video controls preload="none" poster={aboutMedia.workshop.src} playsInline aria-label={aboutMedia.video.title} width={1440} height={810}>
                 <source src={aboutMedia.video.src} />
@@ -119,12 +128,7 @@ export default function AboutPage() {
             <div><p className={styles.eyebrow}>Люди и общее дело</p><h2 id="team-title">За каждым инструментом — команда</h2></div>
             <p>Люди, которые разрабатывают, создают и помогают выбрать. Мы обсуждаем идеи с барменами и остаёмся частью профессионального сообщества.</p>
           </div>
-          {aboutMedia.team ? <AboutPhoto photo={aboutMedia.team} sizes="(max-width: 1408px) calc(100vw - 48px), 1360px" className={styles.teamPhoto} /> : (
-            <div className={styles.teamPlaceholder} data-demo="true" role="img" aria-label="Место для будущей фотографии команды Cocktail Design">
-              <span className={styles.placeholderFrame} aria-hidden="true"><span /><span /><span /></span>
-              <strong>Здесь будет наша команда</strong><span>Место для настоящей фотографии · локальный макет</span>
-            </div>
-          )}
+          <AboutPhoto photo={aboutMedia.team} sizes="(max-width: 1408px) calc(100vw - 48px), 1360px" className={styles.teamPhoto} />
           <div className={styles.communityFooter}>
             <p>Делимся опытом, пробуем новое и собираем полезные материалы о техниках, инструментах и людях барной индустрии.</p>
             <Link href="/knowledge" className={styles.textLink}>Знания и интервью<Arrow /></Link>

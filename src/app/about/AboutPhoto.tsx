@@ -16,7 +16,7 @@ export default function AboutPhoto({ photo, sizes, priority = false, className =
       <img src={photo.src} srcSet={photo.srcSet} sizes={photo.srcSet ? sizes : undefined}
         width={photo.width} height={photo.height} alt={photo.alt}
         loading={priority ? "eager" : "lazy"} fetchPriority={priority ? "high" : undefined} decoding="async" />
-      <figcaption>{children}{photo.caption}</figcaption>
+      {(children || photo.caption) && <figcaption>{children}{photo.caption}</figcaption>}
     </figure>
   );
 }

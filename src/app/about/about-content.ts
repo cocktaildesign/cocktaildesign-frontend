@@ -12,28 +12,31 @@ export type AboutPhoto = {
 };
 
 export const ownProductsUrl = "/catalog/collection/nashe-proizvodstvo";
+type AboutVideo =
+  | { kind: "file"; src: string; title: string; captionsSrc?: string }
+  | { kind: "external"; href: string; title: string };
 export const aboutMedia: {
   hero: AboutPhoto;
   workshop: AboutPhoto;
   founder: AboutPhoto;
   earlyTool: AboutPhoto;
-  team: AboutPhoto | null;
-  video: { src: string; title: string; captionsSrc?: string } | null;
+  team: AboutPhoto;
+  video: AboutVideo | null;
 } = {
   hero: {
     src: "/images/about/hero-demo-960.webp",
     srcSet: "/images/about/hero-demo-640.webp 640w, /images/about/hero-demo-960.webp 960w, /images/about/hero-demo-1440.webp 1440w",
     width: 1440, height: 1080,
-    alt: "Иллюстрация для макета: работа над металлическим барным инструментом",
-    caption: "Иллюстрация для макета · заменим фотографией мастерской",
+    alt: "Работа над металлическим барным инструментом",
+    caption: "",
     isDemo: true, requiresReplacement: true, publicationApproved: false,
   },
   workshop: {
     src: "/images/about/workshop-demo-1440.webp",
     srcSet: "/images/about/workshop-demo-640.webp 640w, /images/about/workshop-demo-960.webp 960w, /images/about/workshop-demo-1440.webp 1440w",
     width: 1440, height: 683,
-    alt: "Иллюстрация для макета: инструменты и детали на рабочем столе",
-    caption: "Иллюстрация для макета · здесь будет фото или видео производства",
+    alt: "Инструменты и детали на рабочем столе",
+    caption: "",
     isDemo: true, requiresReplacement: true, publicationApproved: false,
   },
   founder: {
@@ -48,10 +51,20 @@ export const aboutMedia: {
     caption: "Инструменты Cocktail Design · архив Inshaker, 2019",
     isDemo: false, requiresReplacement: false, publicationApproved: false,
   },
-  team: null,
-  // A local MP4/WebM and optional WebVTT captions enable the native player.
-  // Until a real video is ready, the workshop remains an ordinary photo.
-  video: null,
+  team: {
+    src: "/images/about/team-demo-1440.webp",
+    srcSet: "/images/about/team-demo-640.webp 640w, /images/about/team-demo-960.webp 960w, /images/about/team-demo-1440.webp 1440w",
+    width: 1440, height: 810,
+    alt: "Люди за рабочим столом в мастерской",
+    caption: "",
+    isDemo: true, requiresReplacement: true, publicationApproved: false,
+  },
+  // Owner-provided VK video. Use a direct link until embed access is verified.
+  video: {
+    kind: "external",
+    href: "https://vk.ru/cocktail_design?z=video-72675133_456239330",
+    title: "Видео Cocktail Design",
+  },
 };
 
 export const timeline = [
