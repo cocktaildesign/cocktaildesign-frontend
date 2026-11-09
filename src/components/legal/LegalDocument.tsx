@@ -1,6 +1,5 @@
 import Link from "next/link";
 import PageLayout from "@/components/layout/PageLayout";
-import BackButton from "@/components/ui/back-button/BackButton";
 import documents from "@/lib/legal/documents.json";
 import { legalText } from "@/lib/legal/company";
 import styles from "./LegalDocument.module.css";
@@ -21,7 +20,6 @@ function Text({ text }: { text: string }) {
 export default function LegalDocument({ id }: { id: LegalDocumentId }) {
   const doc = documents[id];
   return <PageLayout><article className={styles.document}>
-    <BackButton />
     <h1>{doc.title}</h1>
     <p className={styles.revision}>Редакция от {"revision" in doc ? doc.revision : "5 октября 2026 года"}</p>
     <div className={styles.intro}>{doc.intro.map((text, i) => <p key={i}><Text text={text} /></p>)}</div>

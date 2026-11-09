@@ -39,9 +39,14 @@ export default function Contacts() {
               </a>
             </div>
 
-            <Link href="/support/feedback" className={styles.feedbackButton}>
-              Обратная связь
-            </Link>
+            <div className={styles.contactActions}>
+              <a href="https://t.me/Manager_cocktail_design" target="_blank" rel="noopener noreferrer" className={styles.contactButton}>
+                Написать в Telegram
+              </a>
+              <a href="https://max.ru/u/f9LHodD0cOLWKnOz-T53SpORKXEy2ENCK_4sq882r9L9MRQzWWDdeYS4daM" target="_blank" rel="noopener noreferrer" className={styles.contactButton}>
+                Написать в MAX
+              </a>
+            </div>
           </div>
 
           {/* Реквизиты */}
