@@ -10,7 +10,6 @@ import { siteUrl } from "@/lib/seo/site";
 import { formatRelativeFromIsoDate } from "@/lib/date/relativeDate";
 
 import PageLayout from "@/components/layout/PageLayout";
-import BackButton from "@/components/ui/back-button/BackButton";
 import ShareButton from "@/components/ui/share-button/ShareButton";
 import TelegramBanner from "@/sections/telegram-cta/TelegramCta";
 
@@ -58,8 +57,6 @@ export default async function KnowledgeMaterialPage({ params }: PageProps) {
       <article className={styles.page}>
         {/* Верхняя строка */}
         <div className={styles.up}>
-          <BackButton />
-
           <p className={styles.meta}>
             Опубликовано:{" "}
             <time dateTime={item.date} title={item.date}>

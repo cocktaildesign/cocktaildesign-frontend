@@ -4,7 +4,6 @@ import { pageMetadata } from "@/lib/seo/metadata";
 import Image from "next/image";
 import styles from "./Requisites.module.css";
 import CopyButton from "@/components/ui/copy-button/CopyButton";
-import BackButton from "@/components/ui/back-button/BackButton";
 import { company } from "@/lib/legal/company";
 
 export const metadata = pageMetadata({
@@ -17,8 +16,6 @@ export default function RequisitesPage() {
   return (
     <PageLayout>
       <section className={styles.section}>
-        <BackButton />
-
         <h1 className={styles.sectionTitle}>Реквизиты</h1>
 
         <div className={styles.card}>

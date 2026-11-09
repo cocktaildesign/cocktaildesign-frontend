@@ -33,7 +33,7 @@
 
 /* ==========================================================================
    CONTACT INFO
-   Телефон, email и кнопка обратной связи.
+   Телефон, email и связь с менеджером.
    ========================================================================== */
 
 .contactInfo {
@@ -53,12 +53,20 @@
   font-size: 14px;
 }
 
-.feedbackButton {
+.contactActions {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-wrap: wrap;
+  align-self: end;
+  gap: 12px;
+}
+
+.contactButton {
   display: flex;
   align-items: center;
   justify-content: center;
   width: fit-content;
-  height: fit-content;
+  min-height: 48px;
   padding: 12px 20px;
   background-color: var(--color-dark-blue);
   border-radius: 12px;
@@ -70,8 +78,13 @@
     color 260ms ease;
 }
 
-.feedbackButton:hover {
+.contactButton:hover {
   background-color: var(--color-dark-blue-hover);
+}
+
+.contactButton:focus-visible {
+  outline: 2px solid var(--color-dark-blue);
+  outline-offset: 3px;
 }
 
 /* ==========================================================================
@@ -263,7 +276,7 @@
     line-height: 1.45;
   }
 
-  .feedbackButton {
+  .contactButton {
     width: 100%;
     min-height: 48px;
   }

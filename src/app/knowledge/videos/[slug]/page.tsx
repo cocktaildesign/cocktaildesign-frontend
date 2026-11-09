@@ -8,7 +8,6 @@ import { knowledgeImage } from "@/lib/seo/knowledge";
 import { videoJsonLd } from "@/lib/seo/video";
 import { serializeJsonLd } from "@/lib/seo/policy";
 import { siteUrl } from "@/lib/seo/site";
-import BackButton from "@/components/ui/back-button/BackButton";
 
 import PageLayout from "@/components/layout/PageLayout";
 import { getKnowledgeVideoBySlugFromStrapi } from "@/lib/api/knowledge";
@@ -61,10 +60,6 @@ export default async function KnowledgeVideoPage({ params }: PageProps) {
         {structuredData && (
           <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: serializeJsonLd(structuredData) }} />
         )}
-        {/* Верхняя часть страницы */}
-        <BackButton />
-
-
           {/* Заголовок и действия */}
           <header className={styles.header}>
             <h1 className={styles.title}>{item.title}</h1>

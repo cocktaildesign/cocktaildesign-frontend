@@ -89,9 +89,14 @@ export default function FeedbackForm(props: FeedbackFormProps) {
       </label>
 
       <div className={styles.consent}>
-        <label><input type="checkbox" checked={consent} onChange={e => setConsent(e.target.checked)} required disabled={status === "sending"} />
-          <span>{FEEDBACK_CONSENT_TEXT}</span></label>
-        <a href="/legal/consent" target="_blank" rel="noopener noreferrer" className={styles.link}>Текст согласия</a>
+        <label>
+          <input type="checkbox" checked={consent} onChange={e => setConsent(e.target.checked)} required disabled={status === "sending"} />
+          <span>{FEEDBACK_CONSENT_TEXT}</span>
+        </label>
+        <div className={styles.consentLinks}>
+          <a href="/legal/consent" target="_blank" rel="noopener noreferrer" className={styles.link}>Текст согласия</a>
+          <a href="/legal/privacy-policy" target="_blank" rel="noopener noreferrer" className={styles.link}>Политика обработки данных</a>
+        </div>
       </div>
 
       <button className={styles.submit} type="submit" disabled={!canSubmit || status === "sending"}>
@@ -100,14 +105,6 @@ export default function FeedbackForm(props: FeedbackFormProps) {
 
       {status === "success" && <p className={styles.success} role="status">Спасибо! Ваше сообщение принято.</p>}
       {status === "error" && <p className={styles.error} role="alert">{error}</p>}
-
-      <p className={styles.note}>
-        О том, как мы используем данные, — в{" "}
-        <a className={styles.link} href="/legal/privacy-policy" target="_blank" rel="noopener noreferrer">
-          Политике обработки персональных данных
-        </a>
-        .
-      </p>
     </form>
   );
 }
