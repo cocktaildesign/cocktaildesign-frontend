@@ -1,4 +1,4 @@
-/** Owner-provided documentary photos. See docs/ABOUT_PAGE_MEDIA.md. Local preview only. */
+/** Documentary photos and video. Sources/permissions: docs/ABOUT_PAGE_MEDIA.md. Local preview only. */
 type ImageSource = { src: string; srcSet?: string; width: number; height: number };
 export type AboutPhoto = ImageSource & {
   alt: string;
@@ -20,9 +20,11 @@ function archive(key: string, widths: number[], width: number, height: number): 
 const approved = { isDemo: false, requiresReplacement: false, publicationApproved: true };
 export const aboutMedia = {
   hero: {
-    ...archive("prototype-detail", [480, 800, 1200, 1600], 1600, 1067), ...approved,
-    alt: "Ручная обработка геометрического стрейнера за домашним столом",
-    caption: "Первые инструменты · домашняя мастерская, 2015–2016",
+    src: "/images/about/current/finished-tools-1440.webp", width: 1440, height: 960,
+    srcSet: [480, 800, 1440].map(w => `/images/about/current/finished-tools-${w}.webp ${w}w`).join(", "),
+    isDemo: false, requiresReplacement: false, publicationApproved: false,
+    alt: "Геометрический стрейнер Cocktail Design рядом с шейкерами и другими инструментами",
+    caption: "Инструменты Cocktail Design · фото Inshaker",
   },
   homeWorkshop: {
     ...archive("home-workshop", [480, 800, 1200, 1600], 1600, 1067), ...approved,
@@ -53,9 +55,18 @@ export const aboutMedia = {
 } satisfies Record<string, AboutPhoto>;
 
 // Owner-supplied video, not a production tour. No third-party embed loads with the page.
-export const aboutVideo = {
+export type AboutVideoMedia = { href: string; title: string; poster: AboutPhoto; file?: string; captions?: string; durationLabel?: string };
+export const aboutVideo: AboutVideoMedia = {
   href: "https://vk.ru/cocktail_design?z=video-72675133_456239330",
-  title: "Cocktail Design в кадре",
+  title: "Эксклюзивный барный инвентарь",
+  durationLabel: "23 секунды",
+  file: "/videos/about/cocktail-design-film-720p.mp4",
+  poster: {
+    src: "/images/about/current/video-poster-1280.webp", width: 1280, height: 720,
+    srcSet: [640, 1280].map(w => `/images/about/current/video-poster-${w}.webp ${w}w`).join(", "),
+    ...approved,
+    alt: "Узорный стрейнер — кадр из ролика Cocktail Design", caption: "",
+  },
 };
 export const awards = [
   { year: "2017", title: "Barproof", text: "Лучший бар-крафтсмен · российская категория", source: "Результаты 2017", href: "https://www.timeout.ru/spb/feature/472543" },
