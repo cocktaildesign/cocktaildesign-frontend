@@ -1,85 +1,71 @@
-/** Editorial content for /about. Replacement instructions: docs/ABOUT_PAGE_MEDIA.md. */
-export type AboutPhoto = {
-  src: string;
-  srcSet?: string;
-  width: number;
-  height: number;
+/** Owner-provided documentary photos. See docs/ABOUT_PAGE_MEDIA.md. Local preview only. */
+type ImageSource = { src: string; srcSet?: string; width: number; height: number };
+export type AboutPhoto = ImageSource & {
   alt: string;
   caption: string;
+  mobile?: ImageSource;
   isDemo: boolean;
   requiresReplacement: boolean;
+  /** Permission to use the photo is separate from permission to publish the page. */
   publicationApproved: boolean;
 };
-
 export const ownProductsUrl = "/catalog/collection/nashe-proizvodstvo";
-type AboutVideo =
-  | { kind: "file"; src: string; title: string; captionsSrc?: string }
-  | { kind: "external"; href: string; title: string };
-export const aboutMedia: {
-  hero: AboutPhoto;
-  workshop: AboutPhoto;
-  founder: AboutPhoto;
-  earlyTool: AboutPhoto;
-  team: AboutPhoto;
-  video: AboutVideo | null;
-} = {
+const base = "/images/about/archive";
+function archive(key: string, widths: number[], width: number, height: number): ImageSource {
+  return {
+    src: `${base}/${key}-${width}.webp`, width, height,
+    srcSet: widths.map(w => `${base}/${key}-${w}.webp ${w}w`).join(", "),
+  };
+}
+const approved = { isDemo: false, requiresReplacement: false, publicationApproved: true };
+export const aboutMedia = {
   hero: {
-    src: "/images/about/hero-demo-960.webp",
-    srcSet: "/images/about/hero-demo-640.webp 640w, /images/about/hero-demo-960.webp 960w, /images/about/hero-demo-1440.webp 1440w",
-    width: 1440, height: 1080,
-    alt: "Работа над металлическим барным инструментом",
-    caption: "",
-    isDemo: true, requiresReplacement: true, publicationApproved: false,
+    ...archive("prototype-detail", [480, 800, 1200, 1600], 1600, 1067), ...approved,
+    alt: "Ручная обработка геометрического стрейнера за домашним столом",
+    caption: "Первые инструменты · домашняя мастерская, 2015–2016",
   },
-  workshop: {
-    src: "/images/about/workshop-demo-1440.webp",
-    srcSet: "/images/about/workshop-demo-640.webp 640w, /images/about/workshop-demo-960.webp 960w, /images/about/workshop-demo-1440.webp 1440w",
-    width: 1440, height: 683,
-    alt: "Инструменты и детали на рабочем столе",
-    caption: "",
-    isDemo: true, requiresReplacement: true, publicationApproved: false,
+  homeWorkshop: {
+    ...archive("home-workshop", [480, 800, 1200, 1600], 1600, 1067), ...approved,
+    alt: "Работа над первым стрейнером под настольной лампой в квартире",
+    caption: "Первое рабочее место — стол в квартире",
   },
-  founder: {
-    src: "/images/about/founder-640.webp", width: 640, height: 457,
-    alt: "Дмитрий Кравец, основатель Cocktail Design",
-    caption: "Архивное фото · Inshaker",
-    isDemo: false, requiresReplacement: false, publicationApproved: false,
+  exhibition: {
+    ...archive("first-exhibition", [480, 720], 720, 960), ...approved,
+    alt: "У стола с первыми инструментами Cocktail Design на выставке",
+    caption: "Moscow Bar Show · Санкт-Петербург, 2016",
   },
-  earlyTool: {
-    src: "/images/about/early-tool-960.webp", width: 960, height: 640,
-    alt: "Геометрические стрейнеры Cocktail Design из архивного интервью",
-    caption: "Инструменты Cocktail Design · архив Inshaker, 2019",
-    isDemo: false, requiresReplacement: false, publicationApproved: false,
+  packaging: {
+    ...archive("first-packaging", [480, 720], 720, 960), ...approved,
+    alt: "Первые стрейнеры Cocktail Design в деревянных коробках",
+    caption: "Первая коллекция и её деревянные коробки",
+  },
+  award: {
+    ...archive("award", [480, 800, 1200], 1200, 800), ...approved,
+    alt: "Вручение премии Barproof: сцена и участники церемонии",
+    caption: "Вручение Barproof · архив Cocktail Design. Фото: @alexsandrboev / Geometria",
   },
   team: {
-    src: "/images/about/team-demo-1440.webp",
-    srcSet: "/images/about/team-demo-640.webp 640w, /images/about/team-demo-960.webp 960w, /images/about/team-demo-1440.webp 1440w",
-    width: 1440, height: 810,
-    alt: "Люди за рабочим столом в мастерской",
-    caption: "",
-    isDemo: true, requiresReplacement: true, publicationApproved: false,
+    ...archive("team", [480, 800, 1200, 1600], 1600, 1067), ...approved,
+    mobile: archive("team-portrait", [480, 800, 1200, 1600], 1600, 2400),
+    alt: "Команда Cocktail Design на совместной фотографии",
+    caption: "Команда Cocktail Design · из архива компании",
   },
-  // Owner-provided VK video. Use a direct link until embed access is verified.
-  video: {
-    kind: "external",
-    href: "https://vk.ru/cocktail_design?z=video-72675133_456239330",
-    title: "Видео Cocktail Design",
-  },
+} satisfies Record<string, AboutPhoto>;
+
+// Owner-supplied video, not a production tour. No third-party embed loads with the page.
+export const aboutVideo = {
+  href: "https://vk.ru/cocktail_design?z=video-72675133_456239330",
+  title: "Cocktail Design в кадре",
 };
-
-export const timeline = [
-  { year: "2015", title: "От идеи к первому инструменту", text: "Опыт работы за баром становится отправной точкой для собственных разработок." },
-  { year: "2016", title: "Запуск Cocktail Design", text: "Первые продажи и начало истории нашей марки." },
-  { year: "2017", title: "Награда Barproof", text: "Лучший бар-крафтсмен, российская категория.", source: "Time Out", href: "https://www.timeout.ru/spb/feature/472543" },
-  { year: "2019", title: "Награда Barproof", text: "Best bar craftsman.", source: "Restoran.ru", href: "https://spb.restoran.ru/spb/news/restoransnewsspb/itogi-barproof-awards-2019/" },
-  { year: "Сегодня", title: "Свои изделия и ваши идеи", text: "Барные инструменты, гравировка, клише и индивидуальные проекты." },
-] as const;
-
+export const awards = [
+  { year: "2017", title: "Barproof", text: "Лучший бар-крафтсмен · российская категория", source: "Результаты 2017", href: "https://www.timeout.ru/spb/feature/472543" },
+  { year: "2019", title: "Barproof", text: "Best bar craftsman", source: "Результаты 2019", href: "https://spb.restoran.ru/spb/news/restoransnewsspb/itogi-barproof-awards-2019/" },
+];
 export const publications = [
   {
     publisher: "Inshaker", year: "2019", kind: "Интервью",
     title: "От работы за баром — к своему производству",
-    description: "Дмитрий Кравец о первых инструментах и истории Cocktail Design.",
+    description: "Первые инструменты и история мастерской в разговоре с основателем.",
     label: "Читать интервью",
     href: "https://ru.inshaker.com/trends/novosti/rabota-rukami-cocktail-design-i-ih-barnyy-inventar",
   },
@@ -93,7 +79,7 @@ export const publications = [
   {
     publisher: "Подкаст Дринкхакера", year: "2019", kind: "Подкаст · выпуск № 2",
     title: "Cocktail Design и барные идеи",
-    description: "Разговор с Дмитрием Кравцом о создании инструментов и визуализации коктейлей.",
+    description: "Разговор с основателем о создании инструментов и визуализации коктейлей.",
     label: "Найти выпуск в архиве",
     href: "https://podcastrepublic.net/podcast/1460457228",
   },
@@ -104,4 +90,4 @@ export const publications = [
     label: "Открыть анонс",
     href: "https://t.me/bar_hub/71",
   },
-] as const;
+];

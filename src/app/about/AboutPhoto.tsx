@@ -11,11 +11,14 @@ export default function AboutPhoto({ photo, sizes, priority = false, className =
 }) {
   return (
     <figure className={`${styles.figure} ${className}`} data-demo={photo.isDemo || undefined}>
-      {/* Next image optimization is disabled in this project; pre-sized WebP srcsets keep mobile downloads small. */}
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img src={photo.src} srcSet={photo.srcSet} sizes={photo.srcSet ? sizes : undefined}
-        width={photo.width} height={photo.height} alt={photo.alt}
-        loading={priority ? "eager" : "lazy"} fetchPriority={priority ? "high" : undefined} decoding="async" />
+      <picture>
+        {photo.mobile && <source media="(max-width: 760px)" srcSet={photo.mobile.srcSet || photo.mobile.src}
+          sizes={sizes} width={photo.mobile.width} height={photo.mobile.height} />}
+        {/* Pre-sized WebP srcsets keep downloads small. */}
+        <img src={photo.src} srcSet={photo.srcSet} sizes={photo.srcSet ? sizes : undefined}
+          width={photo.width} height={photo.height} alt={photo.alt}
+          loading={priority ? "eager" : "lazy"} fetchPriority={priority ? "high" : undefined} decoding="async" />
+      </picture>
       {(children || photo.caption) && <figcaption>{children}{photo.caption}</figcaption>}
     </figure>
   );
