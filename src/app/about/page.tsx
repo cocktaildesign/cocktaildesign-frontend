@@ -26,7 +26,7 @@ const structuredData = {
   "@graph": [
     { "@type": "OnlineStore", "@id": `${siteUrl}/#organization`, name: "Cocktail Design", url: siteUrl, legalName: company.name,
       description: "Производитель барного инвентаря из Санкт-Петербурга и магазин изделий Cocktail Design и других брендов.",
-      telephone: company.phone, email: company.email, sameAs: ["https://t.me/Cocktail_Design_official", "https://vk.ru/cocktail_design"] },
+      telephone: company.phone, email: company.email, founder: { "@type": "Person", name: "Дмитрий Кравец" }, sameAs: ["https://t.me/Cocktail_Design_official", "https://vk.ru/cocktail_design"] },
     { "@type": "AboutPage", "@id": `${siteUrl}/about#webpage`, url: `${siteUrl}/about`, name: "О компании Cocktail Design", inLanguage: "ru-RU",
       about: { "@id": `${siteUrl}/#organization` }, breadcrumb: { "@id": `${siteUrl}/about#breadcrumbs` } },
     { "@type": "BreadcrumbList", "@id": `${siteUrl}/about#breadcrumbs`, itemListElement: [
@@ -71,7 +71,7 @@ export default function AboutPage() {
           <div className={styles.historyIntro}>
             <AboutPhoto photo={aboutMedia.homeWorkshop} sizes="(max-width: 760px) calc(100vw - 32px), 470px" className={styles.archivePhoto} />
             <div className={styles.founderNote}><h3>Всё началось с опыта за баром</h3>
-              <p>Основатель компании Дмитрий искал способ воплотить свои идеи в металле. Первые изделия делал дома, совмещая работу над ними со сменами за стойкой. Со временем к нему присоединилась команда.</p></div>
+              <p>Основатель компании Дмитрий Кравец искал способ воплотить свои идеи в металле. Первые изделия делал дома, совмещая работу над ними со сменами за стойкой. С этого рабочего стола началась история собственной мастерской и команды.</p></div>
           </div>
           <ol className={styles.timeline} aria-label="История Cocktail Design по годам">
             {timeline.map(event => <li key={event.year}><span className={styles.year}>{event.year}</span>
@@ -80,31 +80,29 @@ export default function AboutPage() {
               </div></li>)}
           </ol>
         </div>
-        <div className={styles.fullStory}><p>Первые попытки, выставка, деревянные коробки и люди рядом — сохранили подробный рассказ о том, как всё складывалось.</p>
-          <Link href="/about/history" className={styles.textLink}>Читать полную историю Cocktail Design<Arrow /></Link></div>
+        <div className={styles.fullStory}><div><h3>У каждого инструмента есть история. У нас — тоже.</h3><p>Как идея бармена стала мастерской, а первые заказы — делом целой команды. Рассказываем о людях, находках и решениях, которые создали Cocktail Design.</p></div>
+          <Link href="/about/history" className={styles.storyLink}>Читать историю компании</Link></div>
       </section>
 
       <section id="team" className={styles.team} aria-labelledby="team-title">
         <div className={styles.sectionHeading}><h2 id="team-title">За каждым инструментом — команда</h2><p>Придумываем, изготавливаем, помогаем выбрать и собираем заказы. У каждого своя работа, а внимание к деталям — общее.</p></div>
         <AboutPhoto photo={aboutMedia.team} sizes="(max-width: 1072px) calc(100vw - 32px), 1040px" className={styles.teamPhoto} />
-        <div className={styles.teamFooter}><p>Мы выросли из барного сообщества и остаёмся его частью. Обсуждаем идеи с барменами, делимся опытом и развиваем инструменты вместе с людьми, которые ими работают.</p>
-          <Link href="/knowledge" className={styles.textLink}>Знания и интервью<Arrow /></Link></div>
+        <div className={styles.teamFooter}><p>Мы выросли из барного сообщества и остаёмся его частью. Обсуждаем идеи с барменами, делимся опытом и развиваем инструменты вместе с людьми, которые ими работают.</p></div>
       </section>
 
       <section id="publications" className={styles.pressSection} aria-labelledby="press-title">
         <h2 id="press-title">Интервью и публикации</h2>
-        <ul className={styles.pressGrid}>{publications.map(item => <li key={item.href} className={styles.pressCard}>
-          <p className={styles.pressMeta}>{item.publisher}{item.year && <span> · {item.year}</span>}</p>
-          <h3>{item.title}</h3><p className={styles.pressKind}>{item.kind}</p><ExternalLink href={item.href}>{item.label}</ExternalLink>
+        <ul className={styles.pressList}>{publications.map(item => <li key={item.href}>
+          <a href={item.href} target="_blank" rel="noopener noreferrer" className={styles.pressLink}>
+            <span className={styles.pressMeta}>{item.publisher}{item.year && <span> · {item.year}</span>}</span>
+            <div><h3>{item.title}</h3><p className={styles.pressKind}>{item.kind}</p></div>
+            <span className={styles.srOnly}> (в новой вкладке)</span>
+          </a>
         </li>)}</ul>
       </section>
       <section className={styles.final} aria-labelledby="final-title">
-        <div><h2 id="final-title">От нашей мастерской — к вашей стойке</h2><p>Выбирайте готовые изделия или расскажите нам о своей идее.</p></div>
-        <div className={styles.finalActions}>
-          <Link href={ownProductsUrl} className={styles.primaryLink}>Смотреть наши изделия<Arrow /></Link>
-          <Link href="/branding" className={styles.textLink}>Изготовление на заказ<Arrow /></Link>
-          <Link href="/contacts" className={styles.textLink}>Связаться с нами<Arrow /></Link>
-        </div><p className={styles.finalNote}>В магазине — изделия Cocktail Design и товары других брендов.</p>
+        <div><h2 id="final-title">От нашей мастерской — к вашей стойке</h2><p>Выбирайте готовые инструменты. А если у вас своя идея — поможем с <Link href="/branding">изготовлением на заказ</Link>.</p></div>
+        <Link href={ownProductsUrl} className={styles.primaryLink}>Смотреть наши изделия</Link>
       </section>
     </article>
   </PageLayout>;

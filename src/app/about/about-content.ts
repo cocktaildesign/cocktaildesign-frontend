@@ -27,9 +27,9 @@ export const aboutMedia = {
     caption: "Инструменты Cocktail Design · фото Inshaker",
   },
   homeWorkshop: {
-    ...archive("home-workshop", [480, 800, 1200, 1600], 1600, 1067), ...approved,
-    alt: "Работа над первым стрейнером под настольной лампой в квартире",
-    caption: "Первое рабочее место — стол в квартире",
+    ...archive("prototype-detail", [480, 800, 1200, 1600], 1600, 1067), ...approved,
+    alt: "Обработка геометрического стрейнера ручным инструментом за домашним столом",
+    caption: "Архив, 2015–2016. Ручная обработка одного из первых стрейнеров за домашним столом",
   },
   exhibition: {
     ...archive("first-exhibition", [480, 720], 720, 960), ...approved,
