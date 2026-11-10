@@ -2,6 +2,9 @@
 import { notFound } from "next/navigation";
 import ReadingBody from "@/components/knowledge/ReadingBody";
 import KnowledgeTools from "@/components/knowledge/KnowledgeTools";
+import ArticleVideo from "@/components/knowledge/ArticleVideo";
+import { articleVideoBody } from "@/lib/knowledge/article-video";
+import videoStyles from "@/components/knowledge/ArticleVideo.module.css";
 
 import { pageMetadata } from "@/lib/seo/metadata";
 import { articleJsonLd, knowledgeImage } from "@/lib/seo/knowledge";
@@ -50,6 +53,8 @@ export default async function KnowledgeArticlePage({ params }: PageProps) {
     notFound();
   }
 
+  const body = articleVideoBody(item.blocks, item.coverSrc, item.video);
+
   return (
     <PageLayout
       breadcrumbsItems={[
@@ -60,21 +65,24 @@ export default async function KnowledgeArticlePage({ params }: PageProps) {
       <article className={styles.page}>
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: serializeJsonLd(articleJsonLd(item, siteUrl)) }} />
         {/* Верхняя строка */}
-        <div className={styles.up}>
+        {!item.video && <div className={styles.up}>
           <p className={styles.meta}>
             Опубликовано:{" "}
             <time dateTime={item.date} title={item.date}>
               {formatRelativeFromIsoDate(item.date)}
             </time>
           </p>
-        </div>
+        </div>}
 
         {/* Заголовок статьи */}
-        <header className={styles.header}>
+        <header className={item.video ? `${styles.header} ${videoStyles.header}` : styles.header}>
           <h1 className={styles.title}>{item.title}</h1>
 
           <div className={styles.actions}>
-              <p className={styles.meta}>{item.readTime}</p>
+              <p className={styles.meta}>
+                {item.video && <><time dateTime={item.date}>{formatRelativeFromIsoDate(item.date)}</time>{" · "}</>}
+                {item.readTime}
+              </p>
 
               <ShareButton
                 url={`${siteUrl}/knowledge/articles/${item.slug}`}
@@ -83,7 +91,10 @@ export default async function KnowledgeArticlePage({ params }: PageProps) {
           </div>
         </header>
 
-        <ReadingBody blocks={item.blocks} slug={item.slug} />
+        {item.video && <ArticleVideo title={item.title} coverSrc={item.coverSrc} poster={body.poster} {...item.video} />}
+        {item.video ? <div id="recipe-content" className={videoStyles.recipe}>
+          <ReadingBody blocks={body.blocks} slug={item.slug} />
+        </div> : <ReadingBody blocks={item.blocks} slug={item.slug} />}
         <KnowledgeTools slug={item.slug} />
       </article>
 

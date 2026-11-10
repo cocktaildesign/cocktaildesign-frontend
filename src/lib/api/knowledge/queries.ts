@@ -3,6 +3,7 @@
 // Здесь нет JSX и UI — только загрузка и подготовка данных.
 
 import { fetchStrapi, getStrapiMediaUrl } from "@/lib/api/strapi";
+import { articleVideo } from "@/lib/knowledge/article-video";
 
 import type {
   KnowledgeItemPreview,
@@ -159,6 +160,8 @@ export async function getKnowledgeArticleBySlugFromStrapi(slug: string): Promise
     description: item.description ?? undefined,
 
     readTime: item.readTime ?? "",
+
+    video: articleVideo(item.externalUrl, item.embedUrl),
 
     blocks: mapKnowledgeBlocks(item.blocks),
   };

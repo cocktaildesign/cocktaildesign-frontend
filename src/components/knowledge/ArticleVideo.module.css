@@ -1,0 +1,31 @@
+.header { margin: 16px 0 24px; }
+.header h1 { font-size: clamp(30px, 3.5vw, 42px); margin-bottom: 18px; }
+.section { max-width: 740px; margin: 0 auto 32px; }
+.posterLink { display: block; position: relative; aspect-ratio: 16 / 10; border-radius: 16px; overflow: hidden; background: #10151d; color: #fff; text-decoration: none; }
+.posterLink picture { display: block; height: 100%; }
+.poster { display: block; width: 100%; height: 100%; object-fit: cover; object-position: center; }
+.shade { position: absolute; inset: 0; background: linear-gradient(180deg, rgb(0 0 0 / 22%), transparent 38%, rgb(0 0 0 / 60%)); }
+.badge { position: absolute; top: 20px; left: 20px; padding: 7px 12px; border-radius: 6px; background: rgb(12 17 25 / 80%); font-size: 13px; font-weight: 500; line-height: 1.4; }
+.play { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 76px; height: 76px; border-radius: 50%; display: grid; place-items: center; background: #fff; color: #111827; box-shadow: 0 4px 24px rgb(0 0 0 / 18%); transition: background-color .15s; }
+.watch { position: absolute; bottom: 24px; left: 20px; right: 20px; text-align: center; font-size: 18px; font-weight: 600; line-height: 1.5; }
+.posterLink:hover .play { background: #dfe6ef; }
+.posterLink:focus-visible { outline: 3px solid #fff; outline-offset: -7px; }
+.below { display: flex; align-items: center; justify-content: space-between; gap: 12px 20px; flex-wrap: wrap; margin-top: 14px; color: #596577; font-size: 14px; line-height: 1.6; }
+.below a { text-underline-offset: 4px; }
+.recipeLink { color: #192234; font-weight: 500; }
+.below a:hover { text-decoration: underline; }
+.below a:focus-visible { outline: 2px solid #526279; outline-offset: 5px; border-radius: 3px; }
+.player { position: relative; width: min(100%, 360px); margin: 0 auto; aspect-ratio: 9 / 16; background: #10151d; border-radius: 16px; overflow: hidden; }
+.iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+.recipe { scroll-margin-top: 180px; }
+@media (max-width: 600px) {
+  .header { margin: 18px 0 24px; }
+  .section { margin-bottom: 24px; }
+  .posterLink { aspect-ratio: 1 / 1; border-radius: 12px; }
+  .badge { top: 14px; left: 14px; font-size: 12px; }
+  .play { width: 62px; height: 62px; }
+  .watch { bottom: 18px; font-size: 16px; }
+  .below { font-size: 13px; gap: 8px 16px; }
+  .recipe { scroll-margin-top: 130px; }
+}
+@media (prefers-reduced-motion: reduce) { .play { transition: none; } }

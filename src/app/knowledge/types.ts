@@ -106,6 +106,7 @@ export type KnowledgeVideoDetail = KnowledgeVideoPreview & {
 
 export type KnowledgeArticleDetail = KnowledgeArticlePreview & {
   blocks: KnowledgeContentBlock[];
+  video?: { externalUrl: string; embedUrl?: string };
 };
 
 export type KnowledgeMaterialDetail = KnowledgeMaterialPreview & {

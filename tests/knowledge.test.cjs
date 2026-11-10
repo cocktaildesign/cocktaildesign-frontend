@@ -9,7 +9,8 @@ function load(name, imports) {
   const code = ts.transpileModule(fs.readFileSync(path.resolve(__dirname, '../src/lib/api/knowledge', name), 'utf8'), {
     compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2020 },
   }).outputText;
-  vm.runInNewContext(code, { module: mod, exports: mod.exports, require: id => {
+  vm.runInNewContext(code, { module: mod, exports: mod.exports, URL, require: id => {
+    if (id === '@/lib/knowledge/article-video') return load('../../knowledge/article-video.ts', {});
     assert.ok(id in imports, `Unexpected import ${id}`); return imports[id];
   }});
   return mod.exports;
