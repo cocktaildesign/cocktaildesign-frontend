@@ -10,21 +10,7 @@ import styles from "./CollectionMobileCategoryDrillDown.module.css";
 type CollectionMobileCategoryDrillDownProps = {
   categories: CatalogCategoryPreview[];
   collectionSlug: string;
-  // null/undefined на корне подборки; slug — когда смотрим children категории
-  currentCategorySlug?: string | null;
 };
-
-function buildShowAllHref(collectionSlug: string, currentCategorySlug?: string | null): string {
-  const params = new URLSearchParams();
-
-  if (currentCategorySlug) {
-    params.set("category", currentCategorySlug);
-  }
-
-  params.set("showAll", "true");
-
-  return `/catalog/collection/${collectionSlug}?${params.toString()}`;
-}
 
 function buildCategoryHref(collectionSlug: string, categorySlug: string): string {
   const params = new URLSearchParams();
@@ -35,10 +21,7 @@ function buildCategoryHref(collectionSlug: string, categorySlug: string): string
 export default function CollectionMobileCategoryDrillDown({
   categories,
   collectionSlug,
-  currentCategorySlug,
 }: CollectionMobileCategoryDrillDownProps) {
-  const showAllHref = buildShowAllHref(collectionSlug, currentCategorySlug);
-
   return (
     <ul className={styles.grid}>
       {categories.map((category) => (
@@ -60,26 +43,6 @@ export default function CollectionMobileCategoryDrillDown({
           </Link>
         </li>
       ))}
-
-      <li className={styles.card}>
-        <Link href={showAllHref} className={styles.cardLink}>
-          <div className={styles.cardText}>
-            <span className={styles.title}>Все товары</span>
-          </div>
-
-          <div className={styles.imageWrapperAll}>
-            <span className={styles.allIcon} aria-hidden="true">
-              <Image
-                src="/images/catalog/allProductsImage.webp"
-                alt="Все товары"
-                fill
-                sizes="(max-width: 600px) 33vw"
-                className={styles.image}
-              />
-            </span>
-          </div>
-        </Link>
-      </li>
     </ul>
   );
 }
