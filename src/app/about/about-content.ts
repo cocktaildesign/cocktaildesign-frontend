@@ -1,4 +1,4 @@
-/** Documentary photos and video. Sources/permissions: docs/ABOUT_PAGE_MEDIA.md. Local preview only. */
+/** Documentary photos and video. Sources and owner's publication approval: docs/ABOUT_PAGE_MEDIA.md. */
 type ImageSource = { src: string; srcSet?: string; width: number; height: number };
 export type AboutPhoto = ImageSource & {
   alt: string;
@@ -22,7 +22,7 @@ export const aboutMedia = {
   hero: {
     src: "/images/about/current/finished-tools-1440.webp", width: 1440, height: 960,
     srcSet: [480, 800, 1440].map(w => `/images/about/current/finished-tools-${w}.webp ${w}w`).join(", "),
-    isDemo: false, requiresReplacement: false, publicationApproved: false,
+    isDemo: false, requiresReplacement: false, publicationApproved: true,
     alt: "Геометрический стрейнер Cocktail Design рядом с шейкерами и другими инструментами",
     caption: "Инструменты Cocktail Design · фото Inshaker",
   },
