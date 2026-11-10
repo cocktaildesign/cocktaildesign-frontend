@@ -61,13 +61,12 @@ export async function generateMetadata({ params, searchParams }: PageProps): Pro
 
 export default async function CollectionPage({ params, searchParams }: PageProps) {
   const { slug } = await params;
-  const { category, showAll, page: rawPage } = await searchParams;
+  const { category, page: rawPage } = await searchParams;
   const page = pageNumber(rawPage);
   if (page === null) notFound();
 
   // Категория-фильтр из query param ?category=ms-xxxx
-  const filterCategorySlug = category?.trim() || null;
-  const wantsShowAll = showAll === "true";
+  const requestedCategorySlug = category?.trim() || null;
 
   let collectionTitle = "";
   let collectionSlug = slug;
@@ -93,20 +92,10 @@ export default async function CollectionPage({ params, searchParams }: PageProps
   const sidebarBasePath = `/catalog/collection/${collectionSlug}`;
 
   // Невалидный category slug → как корень (без runtime error)
-  const selectedCategory = filterCategorySlug ? findCategoryInTree(categories, filterCategorySlug) : null;
-  const drillDownCategorySlug = selectedCategory ? filterCategorySlug : null;
-
-  const currentCategories = selectedCategory ? (selectedCategory.children ?? []) : categories;
-  const hasChildren = currentCategories.length > 0;
-
-  // Mobile drill-down: есть children и не нажали «Все товары»
-  const showMobileDrillDown = hasChildren && !wantsShowAll && page === 1;
-
-  // Заголовок секции на mobile: «Категории» на корне / invalid; иначе имя найденной category
-  const mobileSectionTitle = selectedCategory ? selectedCategory.name : "Категории";
-
-  // Leaf / showAll с валидной category — имя над ProductGrid (только mobile через CSS)
-  const showMobileProductsCategoryTitle = !showMobileDrillDown && Boolean(selectedCategory);
+  const selectedCategory = requestedCategorySlug ? findCategoryInTree(categories, requestedCategorySlug) : null;
+  const filterCategorySlug = selectedCategory?.slug;
+  const hasSubcategories = Boolean(selectedCategory?.children?.length);
+  const currentCategories = hasSubcategories ? selectedCategory!.children! : categories;
 
   return (
     <PageLayout
@@ -133,25 +122,29 @@ export default async function CollectionPage({ params, searchParams }: PageProps
           </div>
         </header>
 
-        {/* MOBILE ≤600 — плитки категорий (скрыто на >600 через CSS) */}
-        {showMobileDrillDown && (
-          <div className={styles.mobileDrillDown}>
-            <h2 className={styles.mobileCategoriesTitle}>{mobileSectionTitle}</h2>
-            <CollectionMobileCategoryDrillDown
-              categories={currentCategories}
-              collectionSlug={collectionSlug}
-              currentCategorySlug={drillDownCategorySlug}
-            />
+        {/* Фильтр необязателен: товары подборки видны сразу, включая старые ссылки с showAll. */}
+        {categories.length > 0 && (
+          <details key={`${collectionSlug}:${filterCategorySlug ?? "all"}`} className={styles.mobileCategories}>
+            <summary className={styles.mobileCategoriesToggle}>
+              Выбрать категорию
+              <span className={styles.mobileCategoriesChevron} aria-hidden="true" />
+            </summary>
+            <div className={styles.mobileCategoriesBody}>
+              {selectedCategory && <Link href={sidebarBasePath} className={styles.resetCategory}>Все категории подборки</Link>}
+              {hasSubcategories && <p className={styles.mobileCategoriesTitle}>{selectedCategory!.name}</p>}
+              <CollectionMobileCategoryDrillDown categories={currentCategories} collectionSlug={collectionSlug} />
+            </div>
+          </details>
+        )}
+
+        {selectedCategory && (
+          <div className={styles.selectedCategory}>
+            <h2 className={styles.selectedCategoryTitle}>{selectedCategory.name}</h2>
+            <Link href={sidebarBasePath} className={styles.resetCategory}>Сбросить</Link>
           </div>
         )}
 
-        {/* MOBILE ≤600 — имя category над ProductGrid (leaf / showAll); скрыто на >600 */}
-        {showMobileProductsCategoryTitle && selectedCategory && (
-          <h2 className={styles.mobileProductsCategoryTitle}>{selectedCategory.name}</h2>
-        )}
-
-        {/* Desktop/tablet: sidebar + products. На mobile ≤600 при drill-down products скрыты CSS. */}
-        <div className={`${styles.layout} ${showMobileDrillDown ? styles.layoutHideProductsOnMobile : ""}`}>
+        <div className={styles.layout}>
           <aside className={styles.sidebar} aria-label="Категории">
             {categories.length > 0 ? (
               <CatalogSidebar items={categories} activeSlug={filterCategorySlug ?? ""} basePath={sidebarBasePath} />
@@ -159,7 +152,7 @@ export default async function CollectionPage({ params, searchParams }: PageProps
           </aside>
 
           <section className={styles.content} aria-label="Список товаров">
-            <ProductGrid collectionSlug={collectionSlug} filterCategorySlug={filterCategorySlug ?? undefined} page={page} />
+            <ProductGrid collectionSlug={collectionSlug} filterCategorySlug={filterCategorySlug} page={page} />
           </section>
         </div>
       </section>
