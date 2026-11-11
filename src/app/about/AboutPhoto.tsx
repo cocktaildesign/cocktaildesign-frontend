@@ -10,7 +10,7 @@ export default function AboutPhoto({ photo, sizes, priority = false, className =
   children?: ReactNode;
 }) {
   return (
-    <figure className={`${styles.figure} ${className}`} data-demo={photo.isDemo || undefined}>
+    <figure className={`${styles.figure} ${photo.badge ? styles.badgedFigure : ""} ${className}`} data-demo={photo.isDemo || undefined}>
       <picture>
         {photo.mobile && <source media="(max-width: 760px)" srcSet={photo.mobile.srcSet || photo.mobile.src}
           sizes={sizes} width={photo.mobile.width} height={photo.mobile.height} />}
@@ -19,7 +19,11 @@ export default function AboutPhoto({ photo, sizes, priority = false, className =
           width={photo.width} height={photo.height} alt={photo.alt}
           loading={priority ? "eager" : "lazy"} fetchPriority={priority ? "high" : undefined} decoding="async" />
       </picture>
-      {(children || photo.caption) && <figcaption>{children}{photo.caption}</figcaption>}
+      {(children || photo.caption || photo.badge) && <figcaption>
+        {photo.badge && <span className={styles.photoBadge}>{photo.badge}</span>}
+        {photo.badge && " "}
+        {children}{photo.caption}
+      </figcaption>}
     </figure>
   );
 }

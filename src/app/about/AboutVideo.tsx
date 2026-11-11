@@ -8,8 +8,16 @@ export default function AboutVideo({ media }: { media: AboutVideoMedia }) {
   const [started, setStarted] = useState(false);
   const [failed, setFailed] = useState(false);
   const player = useRef<HTMLVideoElement>(null);
+  const posterButton = useRef<HTMLButtonElement>(null);
+  const restorePosterFocus = useRef(false);
   useEffect(() => {
-    if (!started) return;
+    if (!started) {
+      if (restorePosterFocus.current) {
+        posterButton.current?.focus({ preventScroll: true });
+        restorePosterFocus.current = false;
+      }
+      return;
+    }
     player.current?.focus();
     void player.current?.play().catch(() => { /* Native controls remain available. */ });
   }, [started]);
@@ -21,12 +29,19 @@ export default function AboutVideo({ media }: { media: AboutVideoMedia }) {
   return <div>
     <div className={styles.videoFrame}>
       {media.file ? started ? <video ref={player} src={media.file} controls playsInline preload="none" tabIndex={0}
-        aria-label={media.title} poster={media.poster.src} onError={() => setFailed(true)}>
+        aria-label={media.title} poster={media.poster.src} onError={() => setFailed(true)}
+        onEnded={event => {
+          restorePosterFocus.current = document.activeElement === event.currentTarget;
+          setStarted(false);
+          setFailed(false);
+        }}>
         {media.captions && <track kind="captions" src={media.captions} srcLang="ru" label="Русский" default />}
-      </video> : <button type="button" className={styles.videoPoster} onClick={() => setStarted(true)} aria-label={`Смотреть видео: ${media.title}`}>{cover}</button>
+      </video> : <button ref={posterButton} type="button" className={styles.videoPoster} onClick={() => {
+        setFailed(false);
+        setStarted(true);
+      }} aria-label={`Смотреть видео: ${media.title}`}>{cover}</button>
         : <a className={styles.videoPoster} href={media.href} target="_blank" rel="noopener noreferrer" aria-label={`Смотреть видео: ${media.title} в VK (в новой вкладке)`}>{cover}</a>}
     </div>
-    <div className={styles.videoCaption}><strong>{media.title}</strong><span>{media.durationLabel}{!media.file && " · Смотреть в VK"}</span></div>
     {failed && <p className={styles.videoFallback} role="status">Видео не удалось загрузить. <a href={media.href} target="_blank" rel="noopener noreferrer">Открыть в VK<span className={styles.srOnly}> (в новой вкладке)</span></a></p>}
   </div>;
 }

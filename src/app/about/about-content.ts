@@ -3,6 +3,7 @@ type ImageSource = { src: string; srcSet?: string; width: number; height: number
 export type AboutPhoto = ImageSource & {
   alt: string;
   caption: string;
+  badge?: string;
   mobile?: ImageSource;
   isDemo: boolean;
   requiresReplacement: boolean;
@@ -24,12 +25,13 @@ export const aboutMedia = {
     srcSet: [480, 800, 1440].map(w => `/images/about/current/finished-tools-${w}.webp ${w}w`).join(", "),
     isDemo: false, requiresReplacement: false, publicationApproved: true,
     alt: "Геометрический стрейнер Cocktail Design рядом с шейкерами и другими инструментами",
-    caption: "Инструменты Cocktail Design · фото Inshaker",
+    caption: "",
   },
   homeWorkshop: {
     ...archive("prototype-detail", [480, 800, 1200, 1600], 1600, 1067), ...approved,
     alt: "Обработка геометрического стрейнера ручным инструментом за домашним столом",
-    caption: "Архив, 2015–2016. Ручная обработка одного из первых стрейнеров за домашним столом",
+    badge: "Архив · 2015",
+    caption: "Первые стрейнеры — за столом в съёмной квартире",
   },
   exhibition: {
     ...archive("first-exhibition", [480, 720], 720, 960), ...approved,
@@ -50,16 +52,15 @@ export const aboutMedia = {
     ...archive("team", [480, 800, 1200, 1600], 1600, 1067), ...approved,
     mobile: archive("team-portrait", [480, 800, 1200, 1600], 1600, 2400),
     alt: "Команда Cocktail Design на совместной фотографии",
-    caption: "Команда Cocktail Design · из архива компании",
+    caption: "Команда Cocktail Design, 2020 год",
   },
 } satisfies Record<string, AboutPhoto>;
 
 // Owner-supplied video, not a production tour. No third-party embed loads with the page.
-export type AboutVideoMedia = { href: string; title: string; poster: AboutPhoto; file?: string; captions?: string; durationLabel?: string };
+export type AboutVideoMedia = { href: string; title: string; poster: AboutPhoto; file?: string; captions?: string };
 export const aboutVideo: AboutVideoMedia = {
   href: "https://vk.ru/cocktail_design?z=video-72675133_456239330",
   title: "Эксклюзивный барный инвентарь",
-  durationLabel: "23 секунды",
   file: "/videos/about/cocktail-design-film-720p.mp4",
   poster: {
     src: "/images/about/current/video-poster-1280.webp", width: 1280, height: 720,
@@ -88,14 +89,14 @@ export const publications = [
     href: "https://where2drink.ru/news/partners/vsye-dlya-bara-kastomizatsiya-ot-cocktail-design/",
   },
   {
-    publisher: "Подкаст Дринкхакера", year: "2019", kind: "Подкаст · выпуск № 2",
+    publisher: "Дринкхакер", year: "2019", kind: "Подкаст № 2",
     title: "Cocktail Design и барные идеи",
     description: "Разговор с основателем о создании инструментов и визуализации коктейлей.",
-    label: "Найти выпуск в архиве",
-    href: "https://podcastrepublic.net/podcast/1460457228",
+    label: "Слушать выпуск",
+    href: "https://drinkhacker.mave.digital/ep-2",
   },
   {
-    publisher: "Long Tongue at the Bar", year: "", kind: "Анонс подкаста · выпуск № 2",
+    publisher: "Long Tongue at the Bar", year: "", kind: "Анонс подкаста № 2",
     title: "Бизнес за пределами барной стойки",
     description: "Разговор о том, чем можно заняться в барной индустрии, кроме открытия заведений.",
     label: "Открыть анонс",

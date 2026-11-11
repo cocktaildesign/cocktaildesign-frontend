@@ -16,7 +16,10 @@ export const metadata = pageMetadata({
   canonical: "/about", image: aboutMedia.hero.src,
 });
 function Arrow({ external = false }: { external?: boolean }) {
-  return <span aria-hidden="true" className={styles.arrow}>{external ? "↗" : "→"}</span>;
+  return <svg aria-hidden="true" focusable="false" className={styles.arrow} width="18" height="18" viewBox="0 0 24 24"
+    fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
+    <path d={external ? "M7 17 17 7M7 7h10v10" : "M5 12h14m-6-6 6 6-6 6"} />
+  </svg>;
 }
 function ExternalLink({ href, children }: { href: string; children: ReactNode }) {
   return <a href={href} target="_blank" rel="noopener noreferrer" className={styles.textLink}>{children}<Arrow external /><span className={styles.srOnly}> (в новой вкладке)</span></a>;
@@ -55,7 +58,11 @@ export default function AboutPage() {
         </div>
         <AboutPhoto photo={aboutMedia.hero} priority sizes="(max-width: 760px) calc(100vw - 32px), (max-width: 1408px) 50vw, 700px" className={styles.heroPhoto} />
       </section>
-      <ul className={styles.facts} aria-label="О Cocktail Design в трёх фактах"><li>С 2016 года</li><li>Санкт-Петербург</li><li>Собственное производство</li></ul>
+      <ul className={styles.facts} aria-label="О Cocktail Design в трёх фактах">
+        <li><strong className={styles.factTitle}>С 2016 года</strong><p>Создаём барный инвентарь</p></li>
+        <li><strong className={styles.factTitle}>Своё производство</strong><p>Мастерская в Санкт-Петербурге</p></li>
+        <li><strong className={styles.factTitle}>Пожизненная гарантия</strong><p>На изделия собственного производства</p></li>
+      </ul>
 
       <section id="video" className={styles.workshop} aria-labelledby="workshop-title">
         <div className={styles.sectionHeading}>
@@ -91,11 +98,11 @@ export default function AboutPage() {
       </section>
 
       <section id="publications" className={styles.pressSection} aria-labelledby="press-title">
-        <h2 id="press-title">Интервью и публикации</h2>
+        <h2 id="press-title">Интервью, подкасты и публикации</h2>
         <ul className={styles.pressList}>{publications.map(item => <li key={item.href}>
           <a href={item.href} target="_blank" rel="noopener noreferrer" className={styles.pressLink}>
-            <span className={styles.pressMeta}>{item.publisher}{item.year && <span> · {item.year}</span>}</span>
-            <div><h3>{item.title}</h3><p className={styles.pressKind}>{item.kind}</p></div>
+            <span className={styles.pressMeta}>{item.publisher} · {item.kind}{item.year && <span> · {item.year}</span>}</span>
+            <h3><span className={styles.pressTitle}>{item.title}</span>{"\u00a0"}<Arrow external /></h3>
             <span className={styles.srOnly}> (в новой вкладке)</span>
           </a>
         </li>)}</ul>
