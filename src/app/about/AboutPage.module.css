@@ -9,7 +9,7 @@
 .lead { font-size: 19px; max-width: 30em; margin-bottom: 24px; }
 .textLink { display: inline-flex; align-items: center; gap: 10px; min-height: 44px; max-width: 100%; font-size: 15px; font-weight: 500; line-height: 1.45; color: var(--color-dark-blue); text-decoration: underline; text-decoration-color: #9ba2ad; text-underline-offset: 5px; text-decoration-thickness: 1px; }
 .textLink:hover { text-decoration-color: currentColor; }
-.arrow { display: inline-block; flex-shrink: 0; font-family: Arial, sans-serif; font-size: 21px; line-height: 1; }
+.arrow { display: block; flex-shrink: 0; width: 18px; height: 18px; }
 .figure { margin: 0; min-width: 0; }
 .figure picture { display: block; }
 .figure img { display: block; width: 100%; height: auto; border-radius: 14px; background: var(--color-light-soft); object-fit: cover; }

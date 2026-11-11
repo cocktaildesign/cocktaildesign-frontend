@@ -16,7 +16,10 @@ export const metadata = pageMetadata({
   canonical: "/about", image: aboutMedia.hero.src,
 });
 function Arrow({ external = false }: { external?: boolean }) {
-  return <span aria-hidden="true" className={styles.arrow}>{external ? "↗" : "→"}</span>;
+  return <svg aria-hidden="true" focusable="false" className={styles.arrow} width="18" height="18" viewBox="0 0 24 24"
+    fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round">
+    <path d={external ? "M7 17 17 7M7 7h10v10" : "M5 12h14m-6-6 6 6-6 6"} />
+  </svg>;
 }
 function ExternalLink({ href, children }: { href: string; children: ReactNode }) {
   return <a href={href} target="_blank" rel="noopener noreferrer" className={styles.textLink}>{children}<Arrow external /><span className={styles.srOnly}> (в новой вкладке)</span></a>;
