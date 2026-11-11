@@ -58,7 +58,11 @@ export default function AboutPage() {
         </div>
         <AboutPhoto photo={aboutMedia.hero} priority sizes="(max-width: 760px) calc(100vw - 32px), (max-width: 1408px) 50vw, 700px" className={styles.heroPhoto} />
       </section>
-      <ul className={styles.facts} aria-label="О Cocktail Design в трёх фактах"><li>С 2016 года</li><li>Санкт-Петербург</li><li>Собственное производство</li></ul>
+      <ul className={styles.facts} aria-label="О Cocktail Design в трёх фактах">
+        <li><strong className={styles.factTitle}>С 2016 года</strong><p>Создаём барный инвентарь</p></li>
+        <li><strong className={styles.factTitle}>Своё производство</strong><p>Мастерская в Санкт-Петербурге</p></li>
+        <li><strong className={styles.factTitle}>Пожизненная гарантия</strong><p>На изделия собственного производства</p></li>
+      </ul>
 
       <section id="video" className={styles.workshop} aria-labelledby="workshop-title">
         <div className={styles.sectionHeading}>
