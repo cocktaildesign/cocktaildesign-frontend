@@ -3,6 +3,7 @@ type ImageSource = { src: string; srcSet?: string; width: number; height: number
 export type AboutPhoto = ImageSource & {
   alt: string;
   caption: string;
+  badge?: string;
   mobile?: ImageSource;
   isDemo: boolean;
   requiresReplacement: boolean;
@@ -29,7 +30,8 @@ export const aboutMedia = {
   homeWorkshop: {
     ...archive("prototype-detail", [480, 800, 1200, 1600], 1600, 1067), ...approved,
     alt: "Обработка геометрического стрейнера ручным инструментом за домашним столом",
-    caption: "Архив, 2015–2016. Ручная обработка одного из первых стрейнеров за домашним столом",
+    badge: "Архив · 2015",
+    caption: "Первые стрейнеры — за столом в съёмной квартире",
   },
   exhibition: {
     ...archive("first-exhibition", [480, 720], 720, 960), ...approved,

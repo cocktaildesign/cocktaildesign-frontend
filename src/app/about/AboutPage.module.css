@@ -14,6 +14,8 @@
 .figure picture { display: block; }
 .figure img { display: block; width: 100%; height: auto; border-radius: 14px; background: var(--color-light-soft); object-fit: cover; }
 .figure figcaption { color: #596273; font-size: 12px; line-height: 1.55; margin-top: 9px; }
+.badgedFigure { position: relative; }
+.photoBadge { position: absolute; top: 16px; left: 16px; max-width: calc(100% - 32px); padding: 7px 12px; border-radius: 8px; background: #fff; color: var(--color-dark-blue); font-size: 16px; font-weight: 600; line-height: 1.35; letter-spacing: -.02em; box-shadow: 0 2px 8px rgb(0 0 0 / 12%); pointer-events: none; }
 .heroPhoto img { aspect-ratio: 4 / 3; }
 .facts, .fullStory { background: #f5f6f8; border-radius: 12px; }
 .facts { display: grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap: 32px; margin-top: 32px; padding: 28px 32px; }
