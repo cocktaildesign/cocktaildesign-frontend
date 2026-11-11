@@ -30,9 +30,6 @@
 .videoPoster::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgb(0 0 0 / 8%) 25%, rgb(0 0 0 / 62%)); pointer-events: none; }
 .videoPlay { position: absolute; z-index: 1; top: 50%; left: 50%; transform: translate(-50%,-50%); width: 70px; height: 70px; display: grid; place-items: center; border-radius: 50%; border: 1px solid rgb(255 255 255 / 90%); background: rgb(15 23 42 / 48%); }
 .videoPlay svg { margin-left: 4px; }
-.videoCaption { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; max-width: 1120px; margin: 12px auto 0; }
-.videoCaption strong { font-size: 16px; font-weight: 500; }
-.videoCaption > span { font-size: 13px; color: #596273; flex-shrink: 0; }
 .page .videoPoster:focus-visible { outline: 3px solid white; outline-offset: -8px; }
 .videoFrame video { display: block; width: 100%; height: 100%; background: #10131b; object-fit: contain; }
 .videoFallback { color: #596273; font-size: 13px; margin-top: 10px; }
@@ -113,9 +110,6 @@
   .sectionHeading { margin-bottom: 22px; }
   .sectionHeading p { font-size: 15px; margin-top: 12px; }
   .videoPlay { width: 56px; height: 56px; }
-  .videoCaption { gap: 8px; }
-  .videoCaption strong { font-size: 14px; }
-  .videoCaption > span { font-size: 12px; }
   .historyGrid { grid-template-columns: minmax(0,1fr); gap: 28px; }
   .historyIntro { max-width: none; }
   .figure figcaption { font-size: 11px; }

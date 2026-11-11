@@ -42,7 +42,6 @@ export default function AboutVideo({ media }: { media: AboutVideoMedia }) {
       }} aria-label={`Смотреть видео: ${media.title}`}>{cover}</button>
         : <a className={styles.videoPoster} href={media.href} target="_blank" rel="noopener noreferrer" aria-label={`Смотреть видео: ${media.title} в VK (в новой вкладке)`}>{cover}</a>}
     </div>
-    <div className={styles.videoCaption}><strong>{media.title}</strong><span>{media.durationLabel}{!media.file && " · Смотреть в VK"}</span></div>
     {failed && <p className={styles.videoFallback} role="status">Видео не удалось загрузить. <a href={media.href} target="_blank" rel="noopener noreferrer">Открыть в VK<span className={styles.srOnly}> (в новой вкладке)</span></a></p>}
   </div>;
 }
