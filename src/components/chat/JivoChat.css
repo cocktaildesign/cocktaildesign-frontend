@@ -1,0 +1,11 @@
+/* Stable Jivo launcher hooks; do not target the vendor's generated classes.
+   Only the closed launcher moves. The open chat keeps its own viewport layout. */
+jdiv.__jivoMobileButton {
+  /* The existing channel's "Large" mobile offset is 50px. Jivo adds 20px
+     itself; raise that offset only when a storefront control needs more room. */
+  --jivoMobileOffsetBottom: max(50px, calc(var(--jivo-site-bottom, 0px) - 20px)) !important;
+}
+
+#jvLabelWrap {
+  bottom: var(--jivo-site-bottom, 0px) !important;
+}
