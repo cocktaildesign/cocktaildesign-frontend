@@ -50,7 +50,7 @@ export default function MobileBottomNav({ menuItems }: Props) {
   return (
     <>
       {/* Нижняя мобильная навигация */}
-      <nav className={styles.mobileBottomNav}>
+      <nav className={styles.mobileBottomNav} data-jivo-clearance>
         <Link href="/" className={`${styles.item} ${pathname === "/" ? styles.active : ""}`}>
           <span className={styles.icon}>
             <HomeIcon />

@@ -36,6 +36,10 @@
   pointer-events: auto;
 }
 
+:global(html[data-jivo-ready="true"]) .button {
+  bottom: 80px;
+}
+
 .icon {
   width: 16px;
   height: 16px;
