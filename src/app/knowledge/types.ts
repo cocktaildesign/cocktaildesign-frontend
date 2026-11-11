@@ -1,6 +1,7 @@
 // frontend/src/app/knowledge/types.ts
 // Domain types для knowledge.
 // Эти типы используются во всём UI и возвращаются из API-модуля.
+import type { ArticleVideoSource } from "@/lib/knowledge/article-video";
 
 /* ============================================================
    Перечисления
@@ -106,6 +107,7 @@ export type KnowledgeVideoDetail = KnowledgeVideoPreview & {
 
 export type KnowledgeArticleDetail = KnowledgeArticlePreview & {
   blocks: KnowledgeContentBlock[];
+  video?: ArticleVideoSource;
 };
 
 export type KnowledgeMaterialDetail = KnowledgeMaterialPreview & {
