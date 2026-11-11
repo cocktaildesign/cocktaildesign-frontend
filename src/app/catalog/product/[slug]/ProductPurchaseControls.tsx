@@ -265,6 +265,7 @@ export default function ProductPurchaseControls({
           Sticky bar — только для мобилки
           ========================================================== */}
       <div
+        data-jivo-clearance
         className={`${styles.mobileStickyBar}${engravingEnabled ? ` ${styles.mobileStickyBarWithEngraving}` : ""}`}>
         {engravingEnabled ? (
           <>

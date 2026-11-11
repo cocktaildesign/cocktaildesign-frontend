@@ -5,6 +5,7 @@ import NavBar from "@/components/layout/nav-bar/NavBar";
 import ScrollToTopButton from "@/components/ui/scroll-to-top-button/ScrollToTopButton";
 import MobileBottomNav from "@/components/layout/mobile-bottom-nav/MobileBottomNav";
 import Metrika from "@/components/analytics/Metrika";
+import JivoChat from "@/components/chat/JivoChat";
 import CatalogMenuProvider from "@/components/layout/header/catalog-menu/CatalogMenuProvider";
 
 export { rootMetadata as metadata, viewport } from "@/lib/seo/metadata";
@@ -29,6 +30,7 @@ export default async function RootLayout({ children }: { children: ReactNode }) 
     <html lang="ru" className={`${montserrat.variable} ${hikasamiSans.variable}`}>
       <body>
         <Metrika />
+        <JivoChat />
         <CatalogMenuProvider>
           <Header />
           <NavBar />

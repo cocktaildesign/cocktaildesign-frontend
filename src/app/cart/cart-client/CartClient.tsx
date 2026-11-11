@@ -170,7 +170,7 @@ export default function CartClient() {
       </section>
 
       {/* Sticky bar только для мобилки */}
-      <div className={styles.mobileCheckoutBar} role="region" aria-label="Итог заказа">
+      <div className={styles.mobileCheckoutBar} role="region" aria-label="Итог заказа" data-jivo-clearance>
         <div className={styles.mobileCheckoutInfo}>
           <span className={styles.mobileCheckoutLabel}>
             {discountPolicy.ready ? (items.some(item => item.engraving) ? "Без стоимости гравировки" : "Итого") : discountPolicy.error ? "Нужна проверка скидок" : "Проверяем скидки…"}
