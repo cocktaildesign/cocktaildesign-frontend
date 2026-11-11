@@ -91,7 +91,7 @@ export default async function KnowledgeArticlePage({ params }: PageProps) {
           </div>
         </header>
 
-        {item.video && <ArticleVideo title={item.title} coverSrc={item.coverSrc} poster={body.poster} {...item.video} />}
+        {item.video && <ArticleVideo key={item.slug} title={item.title} coverSrc={item.coverSrc} poster={body.poster} {...item.video} />}
         {item.video ? <div id="recipe-content" className={videoStyles.recipe}>
           <ReadingBody blocks={body.blocks} slug={item.slug} />
         </div> : <ReadingBody blocks={item.blocks} slug={item.slug} />}

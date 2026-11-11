@@ -1,6 +1,16 @@
 .header { margin: 16px 0 24px; }
 .header h1 { font-size: clamp(30px, 3.5vw, 42px); margin-bottom: 18px; }
 .section { max-width: 740px; margin: 0 auto 32px; }
+.localSection { width: min(100%, 340px, 36svh); }
+.localFrame { aspect-ratio: 9 / 16; overflow: hidden; border-radius: 16px; background: #10151d; }
+.localFrame video { display: block; width: 100%; height: 100%; object-fit: contain; }
+.localFrame video:focus-visible { outline: 3px solid #fff; outline-offset: -5px; }
+.localPoster { display: block; position: relative; width: 100%; height: 100%; padding: 0; border: 0; color: #fff; background: #10151d; cursor: pointer; font: inherit; }
+.localPoster picture { display: block; height: 100%; }
+.localPosterImage { display: block; width: 100%; height: 100%; object-fit: contain; }
+.localPoster:hover .play { background: #dfe6ef; }
+.localPoster:focus-visible { outline: 3px solid #fff; outline-offset: -7px; }
+.failure { font-size: 14px; line-height: 1.6; margin: 12px 0 0; color: #596577; }
 .posterLink { display: block; position: relative; aspect-ratio: 16 / 10; border-radius: 16px; overflow: hidden; background: #10151d; color: #fff; text-decoration: none; }
 .posterLink picture { display: block; height: 100%; }
 .poster { display: block; width: 100%; height: 100%; object-fit: cover; object-position: center; }
@@ -20,7 +30,9 @@
 .recipe { scroll-margin-top: 180px; }
 @media (max-width: 600px) {
   .header { margin: 18px 0 24px; }
+  .header h1 { font-size: clamp(24px, 7vw, 30px); line-height: 1.2; text-wrap: pretty; margin-bottom: 14px; }
   .section { margin-bottom: 24px; }
+  .localFrame { border-radius: 12px; }
   .posterLink { aspect-ratio: 1 / 1; border-radius: 12px; }
   .badge { top: 14px; left: 14px; font-size: 12px; }
   .play { width: 62px; height: 62px; }
