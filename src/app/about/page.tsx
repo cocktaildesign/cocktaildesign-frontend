@@ -12,7 +12,7 @@ import styles from "./AboutPage.module.css";
 
 export const metadata = pageMetadata({
   title: "О компании Cocktail Design — барный инвентарь из Петербурга",
-  description: "Собственное производство барного инвентаря в Санкт-Петербурге с 2016 года. Инструменты Cocktail Design, команда, история мастерской, награды и индивидуальные проекты.",
+  description: "Собственное производство барного инвентаря в Санкт-Петербурге с 2015 года. Инструменты Cocktail Design, команда, история мастерской, награды и индивидуальные проекты.",
   canonical: "/about", image: aboutMedia.hero.src,
 });
 function Arrow({ external = false }: { external?: boolean }) {
@@ -53,13 +53,13 @@ export default function AboutPage() {
         <div>
           <p className={styles.eyebrow}>Cocktail Design · Санкт-Петербург</p>
           <h1 id="about-title">Барный инвентарь, созданный барменами</h1>
-          <p className={styles.lead}>С 2016 года соединяем опыт работы за стойкой, дизайн и собственное производство. Создаём инструменты, которыми приятно пользоваться каждый день.</p>
+          <p className={styles.lead}>С 2015 года соединяем опыт работы за стойкой, дизайн и собственное производство. Создаём инструменты, которыми приятно пользоваться каждый день.</p>
           <Link href={ownProductsUrl} className={styles.textLink}>Наши инструменты<Arrow /></Link>
         </div>
         <AboutPhoto photo={aboutMedia.hero} priority sizes="(max-width: 760px) calc(100vw - 32px), (max-width: 1408px) 50vw, 700px" className={styles.heroPhoto} />
       </section>
       <ul className={styles.facts} aria-label="О Cocktail Design в трёх фактах">
-        <li><strong className={styles.factTitle}>С 2016 года</strong><p>Создаём барный инвентарь</p></li>
+        <li><strong className={styles.factTitle}>С 2015 года</strong><p>Создаём барный инвентарь</p></li>
         <li><strong className={styles.factTitle}>Своё производство</strong><p>Мастерская в Санкт-Петербурге</p></li>
         <li><strong className={styles.factTitle}>Пожизненная гарантия</strong><p>На изделия собственного производства</p></li>
       </ul>
