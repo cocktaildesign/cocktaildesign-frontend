@@ -98,11 +98,11 @@ export default function AboutPage() {
       </section>
 
       <section id="publications" className={styles.pressSection} aria-labelledby="press-title">
-        <h2 id="press-title">Интервью и публикации</h2>
+        <h2 id="press-title">Интервью, подкасты и публикации</h2>
         <ul className={styles.pressList}>{publications.map(item => <li key={item.href}>
           <a href={item.href} target="_blank" rel="noopener noreferrer" className={styles.pressLink}>
-            <span className={styles.pressMeta}>{item.publisher}{item.year && <span> · {item.year}</span>}</span>
-            <div><h3>{item.title}</h3><p className={styles.pressKind}>{item.kind}</p></div>
+            <span className={styles.pressMeta}>{item.publisher} · {item.kind}{item.year && <span> · {item.year}</span>}</span>
+            <h3><span className={styles.pressTitle}>{item.title}</span>{"\u00a0"}<Arrow external /></h3>
             <span className={styles.srOnly}> (в новой вкладке)</span>
           </a>
         </li>)}</ul>

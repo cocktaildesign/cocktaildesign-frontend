@@ -89,14 +89,14 @@ export const publications = [
     href: "https://where2drink.ru/news/partners/vsye-dlya-bara-kastomizatsiya-ot-cocktail-design/",
   },
   {
-    publisher: "Подкаст Дринкхакера", year: "2019", kind: "Подкаст · выпуск № 2",
+    publisher: "Дринкхакер", year: "2019", kind: "Подкаст № 2",
     title: "Cocktail Design и барные идеи",
     description: "Разговор с основателем о создании инструментов и визуализации коктейлей.",
     label: "Слушать выпуск",
     href: "https://drinkhacker.mave.digital/ep-2",
   },
   {
-    publisher: "Long Tongue at the Bar", year: "", kind: "Анонс подкаста · выпуск № 2",
+    publisher: "Long Tongue at the Bar", year: "", kind: "Анонс подкаста № 2",
     title: "Бизнес за пределами барной стойки",
     description: "Разговор о том, чем можно заняться в барной индустрии, кроме открытия заведений.",
     label: "Открыть анонс",
