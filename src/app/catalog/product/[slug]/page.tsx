@@ -139,8 +139,8 @@ export default async function ProductPage({ params, searchParams }: PageProps) {
     permanentRedirect(withQuery(`/catalog/product/${product.slug}`, await searchParams));
   }
   const variants = data.variants ?? [];
-  const { getPilotProductVideos } = await import("@/lib/catalog/product-videos");
-  const videos = getPilotProductVideos(product, variants.length, process.env.PRODUCT_VIDEO_PILOT_ENABLED === "true");
+  const { getProductVideos } = await import("@/lib/catalog/product-videos");
+  const { videos, variantVideos } = getProductVideos(product, variants, process.env.PRODUCT_VIDEO_PILOT_ENABLED === "true");
   const specifications = productDisplaySpecifications(product);
   const bundleCards = productBundleCards(product);
 
@@ -222,7 +222,8 @@ export default async function ProductPage({ params, searchParams }: PageProps) {
 
         <div className={styles.productLayout}>
           {/* Галерея, варианты, короткие характеристики и блок покупки */}
-          <VariantSelector product={product} variants={variants} specifications={specifications} colorMap={colorMap} videos={videos} />
+          <VariantSelector product={product} variants={variants} specifications={specifications} colorMap={colorMap}
+            videos={videos} variantVideos={variantVideos} />
 
           {/* Якорная навигация по нижним блокам */}
           <ProductDetailsNavigation

@@ -1,0 +1,589 @@
+[
+  {
+    "moyskladId": "8c00c81f-82b8-11f1-0a80-184800957b6d",
+    "code": "EcoGrnsh",
+    "slug": "ms-8c00c81f",
+    "name": "Ботанические гарниши Eco Garnish 300 мл (Эвкалипт)",
+    "variant": {
+      "moyskladId": "8c0886f9-82b8-11f1-0a80-184800957b7b",
+      "code": "EcoGrnshEucalpts"
+    },
+    "videos": [
+      {
+        "id": "ecogrnsheucalpts-1-afa9a8d288ab",
+        "src": "/product-videos/ecogrnsheucalpts-1-afa9a8d288ab.mp4",
+        "poster": "/product-videos/ecogrnsheucalpts-1-poster-5ce62db8edbd.webp",
+        "thumbnail": "/product-videos/ecogrnsheucalpts-1-thumb-aa1c939d479a.webp",
+        "label": "Видео товара 1",
+        "duration": 4.633333,
+        "width": 960,
+        "height": 946
+      },
+      {
+        "id": "ecogrnsheucalpts-2-88272bcded8b",
+        "src": "/product-videos/ecogrnsheucalpts-2-88272bcded8b.mp4",
+        "poster": "/product-videos/ecogrnsheucalpts-2-poster-6c824549b360.webp",
+        "thumbnail": "/product-videos/ecogrnsheucalpts-2-thumb-40783c8d6013.webp",
+        "label": "Видео товара 2",
+        "duration": 5.6,
+        "width": 960,
+        "height": 946
+      },
+      {
+        "id": "ecogrnsheucalpts-3-b25b6a3573d2",
+        "src": "/product-videos/ecogrnsheucalpts-3-b25b6a3573d2.mp4",
+        "poster": "/product-videos/ecogrnsheucalpts-3-poster-700c8d518d7e.webp",
+        "thumbnail": "/product-videos/ecogrnsheucalpts-3-thumb-0a2f37fda2d0.webp",
+        "label": "Видео товара 3",
+        "duration": 3.533333,
+        "width": 960,
+        "height": 946
+      },
+      {
+        "id": "ecogrnsheucalpts-4-e18a1744ff6a",
+        "src": "/product-videos/ecogrnsheucalpts-4-e18a1744ff6a.mp4",
+        "poster": "/product-videos/ecogrnsheucalpts-4-poster-3f01e9945a41.webp",
+        "thumbnail": "/product-videos/ecogrnsheucalpts-4-thumb-c4a0b0c4d081.webp",
+        "label": "Видео товара 4",
+        "duration": 4.44,
+        "width": 960,
+        "height": 946
+      },
+      {
+        "id": "ecogrnsheucalpts-5-ce474f637987",
+        "src": "/product-videos/ecogrnsheucalpts-5-ce474f637987.mp4",
+        "poster": "/product-videos/ecogrnsheucalpts-5-poster-5426beacd794.webp",
+        "thumbnail": "/product-videos/ecogrnsheucalpts-5-thumb-7ba18b5e7a5a.webp",
+        "label": "Видео товара 5",
+        "duration": 4.4,
+        "width": 960,
+        "height": 946
+      },
+      {
+        "id": "ecogrnsheucalpts-6-8f18dc307e12",
+        "src": "/product-videos/ecogrnsheucalpts-6-8f18dc307e12.mp4",
+        "poster": "/product-videos/ecogrnsheucalpts-6-poster-007292e72de7.webp",
+        "thumbnail": "/product-videos/ecogrnsheucalpts-6-thumb-6f5907ec118b.webp",
+        "label": "Видео товара 6",
+        "duration": 5.866667,
+        "width": 960,
+        "height": 946
+      }
+    ]
+  },
+  {
+    "moyskladId": "73aeee1c-c969-11ed-0a80-09b800101e20",
+    "code": "ShKor",
+    "slug": "ms-73aeee1c",
+    "name": "Шейкер бостон с утяжелителями Koriko 850 мл",
+    "variant": null,
+    "videos": [
+      {
+        "id": "shkor-1-e60d2ef8de8b",
+        "src": "/product-videos/shkor-1-e60d2ef8de8b.mp4",
+        "poster": "/product-videos/shkor-1-poster-8a6ede4fc261.webp",
+        "thumbnail": "/product-videos/shkor-1-thumb-fcea1f3af1d7.webp",
+        "label": "Видео товара 1",
+        "duration": 5.833333,
+        "width": 960,
+        "height": 946
+      },
+      {
+        "id": "shkor-2-92431963355a",
+        "src": "/product-videos/shkor-2-92431963355a.mp4",
+        "poster": "/product-videos/shkor-2-poster-31ab8610ebae.webp",
+        "thumbnail": "/product-videos/shkor-2-thumb-08dafd145067.webp",
+        "label": "Видео товара 2",
+        "duration": 8.4,
+        "width": 960,
+        "height": 946
+      },
+      {
+        "id": "shkor-3-25407a20153b",
+        "src": "/product-videos/shkor-3-25407a20153b.mp4",
+        "poster": "/product-videos/shkor-3-poster-a09b67d4a2e1.webp",
+        "thumbnail": "/product-videos/shkor-3-thumb-106007e606cf.webp",
+        "label": "Видео товара 3",
+        "duration": 8.4,
+        "width": 960,
+        "height": 946
+      },
+      {
+        "id": "shkor-4-f7421107d2b1",
+        "src": "/product-videos/shkor-4-f7421107d2b1.mp4",
+        "poster": "/product-videos/shkor-4-poster-351f97122192.webp",
+        "thumbnail": "/product-videos/shkor-4-thumb-e758ba037e31.webp",
+        "label": "Видео товара 4",
+        "duration": 8.1,
+        "width": 960,
+        "height": 946
+      }
+    ]
+  },
+  {
+    "moyskladId": "7aef5080-8669-11f1-0a80-04e4003f4811",
+    "code": "BagNl20/30",
+    "slug": "ms-7aef5080",
+    "name": "Супербэг нейлоновый 20х30 см (100 мкр)",
+    "variant": {
+      "moyskladId": "8a333e73-8697-11f1-0a80-06a2006b3874",
+      "code": "BagNl20/30-100"
+    },
+    "videos": [
+      {
+        "id": "bagnl20-30-100-1-ab1eb8bba500",
+        "src": "/product-videos/bagnl20-30-100-1-ab1eb8bba500.mp4",
+        "poster": "/product-videos/bagnl20-30-100-1-poster-114f5e3cb8ea.webp",
+        "thumbnail": "/product-videos/bagnl20-30-100-1-thumb-69bc7b91bd22.webp",
+        "label": "Видео товара 1",
+        "duration": 6.233333,
+        "width": 960,
+        "height": 946
+      },
+      {
+        "id": "bagnl20-30-100-2-7b37fbdf3f4c",
+        "src": "/product-videos/bagnl20-30-100-2-7b37fbdf3f4c.mp4",
+        "poster": "/product-videos/bagnl20-30-100-2-poster-10a392005d7f.webp",
+        "thumbnail": "/product-videos/bagnl20-30-100-2-thumb-6d6018941fd1.webp",
+        "label": "Видео товара 2",
+        "duration": 5.933333,
+        "width": 960,
+        "height": 946
+      }
+    ]
+  },
+  {
+    "moyskladId": "347b2108-5b2f-11f0-0a80-026a012769e4",
+    "code": "StrawGlsBlck",
+    "slug": "ms-347b2108",
+    "name": "Трубочка стеклянная черная 20 см, 1 шт",
+    "variant": null,
+    "videos": [
+      {
+        "id": "strawglsblck-1-b57cbddace29",
+        "src": "/product-videos/strawglsblck-1-b57cbddace29.mp4",
+        "poster": "/product-videos/strawglsblck-1-poster-0997b344465a.webp",
+        "thumbnail": "/product-videos/strawglsblck-1-thumb-3adb046591db.webp",
+        "label": "Видео товара 1",
+        "duration": 5.566667,
+        "width": 960,
+        "height": 946
+      },
+      {
+        "id": "strawglsblck-2-57f62b4fddca",
+        "src": "/product-videos/strawglsblck-2-57f62b4fddca.mp4",
+        "poster": "/product-videos/strawglsblck-2-poster-38f589ddf136.webp",
+        "thumbnail": "/product-videos/strawglsblck-2-thumb-1bead2ab769e.webp",
+        "label": "Видео товара 2",
+        "duration": 5.56,
+        "width": 960,
+        "height": 946
+      }
+    ]
+  },
+  {
+    "moyskladId": "082a965c-b26b-11f1-0a80-1df5000a9882",
+    "code": "MixRtm",
+    "slug": "ms-082a965c",
+    "name": "Смесительный стакан CD Концепт Ритм, 500 мл",
+    "variant": null,
+    "videos": [
+      {
+        "id": "mixrtm-1-67129ae997af",
+        "src": "/product-videos/mixrtm-1-67129ae997af.mp4",
+        "poster": "/product-videos/mixrtm-1-poster-a85ac874bee8.webp",
+        "thumbnail": "/product-videos/mixrtm-1-thumb-ba281ea6040c.webp",
+        "label": "Видео товара 1",
+        "duration": 7.766667,
+        "width": 960,
+        "height": 946
+      },
+      {
+        "id": "mixrtm-2-e0e8e6a19732",
+        "src": "/product-videos/mixrtm-2-e0e8e6a19732.mp4",
+        "poster": "/product-videos/mixrtm-2-poster-9102f35793c0.webp",
+        "thumbnail": "/product-videos/mixrtm-2-thumb-1a7488937091.webp",
+        "label": "Видео товара 2",
+        "duration": 6.133333,
+        "width": 960,
+        "height": 946
+      },
+      {
+        "id": "mixrtm-3-6504869766a5",
+        "src": "/product-videos/mixrtm-3-6504869766a5.mp4",
+        "poster": "/product-videos/mixrtm-3-poster-26d8acc5a302.webp",
+        "thumbnail": "/product-videos/mixrtm-3-thumb-d3ec7b7ce609.webp",
+        "label": "Видео товара 3",
+        "duration": 11.966667,
+        "width": 960,
+        "height": 946
+      },
+      {
+        "id": "mixrtm-4-80b885a54286",
+        "src": "/product-videos/mixrtm-4-80b885a54286.mp4",
+        "poster": "/product-videos/mixrtm-4-poster-9495d80dd19e.webp",
+        "thumbnail": "/product-videos/mixrtm-4-thumb-eeb2151367c5.webp",
+        "label": "Видео товара 4",
+        "duration": 7.233333,
+        "width": 960,
+        "height": 946
+      }
+    ]
+  },
+  {
+    "moyskladId": "58ebafbd-82b9-11f1-0a80-18480095e08b",
+    "code": "MldHex",
+    "slug": "ms-58ebafbd",
+    "name": "Силиконовая форма Hex (Hex1)",
+    "variant": {
+      "moyskladId": "58f2d56d-82b9-11f1-0a80-18480095e099",
+      "code": "MldHex1"
+    },
+    "videos": [
+      {
+        "id": "mldhex1-1-d53d3f1cdb6b",
+        "src": "/product-videos/mldhex1-1-d53d3f1cdb6b.mp4",
+        "poster": "/product-videos/mldhex1-1-poster-13b4c5fd72b3.webp",
+        "thumbnail": "/product-videos/mldhex1-1-thumb-7b43727c5b54.webp",
+        "label": "Видео товара 1",
+        "duration": 7.433333,
+        "width": 960,
+        "height": 946
+      },
+      {
+        "id": "mldhex1-2-0212d89fc33b",
+        "src": "/product-videos/mldhex1-2-0212d89fc33b.mp4",
+        "poster": "/product-videos/mldhex1-2-poster-fe20926497cb.webp",
+        "thumbnail": "/product-videos/mldhex1-2-thumb-d8a9bee28222.webp",
+        "label": "Видео товара 2",
+        "duration": 8.0,
+        "width": 960,
+        "height": 946
+      },
+      {
+        "id": "mldhex1-3-52c53343dc18",
+        "src": "/product-videos/mldhex1-3-52c53343dc18.mp4",
+        "poster": "/product-videos/mldhex1-3-poster-5076ba372610.webp",
+        "thumbnail": "/product-videos/mldhex1-3-thumb-d494bf6790af.webp",
+        "label": "Видео товара 3",
+        "duration": 6.966667,
+        "width": 960,
+        "height": 946
+      }
+    ]
+  },
+  {
+    "moyskladId": "8ad2dbf2-82b8-11f1-0a80-1848009579f9",
+    "code": "Clspins",
+    "slug": "ms-8ad2dbf2",
+    "name": "Прищепки барные 100 шт/уп (Прозрачный)",
+    "variant": {
+      "moyskladId": "8b748d7b-82b8-11f1-0a80-184800957ac2",
+      "code": "ClspinsCl"
+    },
+    "videos": [
+      {
+        "id": "clspinscl-1-0197b72329eb",
+        "src": "/product-videos/clspinscl-1-0197b72329eb.mp4",
+        "poster": "/product-videos/clspinscl-1-poster-bcaff24d303d.webp",
+        "thumbnail": "/product-videos/clspinscl-1-thumb-333c0f48d318.webp",
+        "label": "Видео товара 1",
+        "duration": 8.866667,
+        "width": 960,
+        "height": 946
+      },
+      {
+        "id": "clspinscl-2-ae81c9ac1e3f",
+        "src": "/product-videos/clspinscl-2-ae81c9ac1e3f.mp4",
+        "poster": "/product-videos/clspinscl-2-poster-dc84db8e9513.webp",
+        "thumbnail": "/product-videos/clspinscl-2-thumb-84c36b5f7518.webp",
+        "label": "Видео товара 2",
+        "duration": 6.8,
+        "width": 960,
+        "height": 946
+      },
+      {
+        "id": "clspinscl-3-eaba671d0e73",
+        "src": "/product-videos/clspinscl-3-eaba671d0e73.mp4",
+        "poster": "/product-videos/clspinscl-3-poster-a529e88f3ec4.webp",
+        "thumbnail": "/product-videos/clspinscl-3-thumb-d92773845cb2.webp",
+        "label": "Видео товара 3",
+        "duration": 5.933333,
+        "width": 960,
+        "height": 946
+      }
+    ]
+  },
+  {
+    "moyskladId": "17c4ae64-8699-11f1-0a80-0d020150d63a",
+    "code": "MnSrgCDExd",
+    "slug": "ms-17c4ae64",
+    "name": "Моносерьга CD Концепт ИСХОД (Moon)",
+    "variant": {
+      "moyskladId": "17d8ae55-8699-11f1-0a80-0d020150d6ac",
+      "code": "MnSrgCDExdMoon"
+    },
+    "videos": [
+      {
+        "id": "mnsrgcdexdmoon-1-cc4d8d7ca5dc",
+        "src": "/product-videos/mnsrgcdexdmoon-1-cc4d8d7ca5dc.mp4",
+        "poster": "/product-videos/mnsrgcdexdmoon-1-poster-3de75b5aba96.webp",
+        "thumbnail": "/product-videos/mnsrgcdexdmoon-1-thumb-3c327e9ea6be.webp",
+        "label": "Видео товара 1",
+        "duration": 10.533333,
+        "width": 960,
+        "height": 946
+      },
+      {
+        "id": "mnsrgcdexdmoon-2-8c9d69a9f11c",
+        "src": "/product-videos/mnsrgcdexdmoon-2-8c9d69a9f11c.mp4",
+        "poster": "/product-videos/mnsrgcdexdmoon-2-poster-6a56b714f312.webp",
+        "thumbnail": "/product-videos/mnsrgcdexdmoon-2-thumb-4f793d82c4ac.webp",
+        "label": "Видео товара 2",
+        "duration": 9.533333,
+        "width": 960,
+        "height": 946
+      }
+    ]
+  },
+  {
+    "moyskladId": "af507820-dc1d-11f0-0a80-0c0602409d41",
+    "code": "WdSpoonMini",
+    "slug": "ms-af507820",
+    "name": "Ложка для гарниша миниатюрная 9 см",
+    "variant": null,
+    "videos": [
+      {
+        "id": "wdspoonmini-1-043f31765db2",
+        "src": "/product-videos/wdspoonmini-1-043f31765db2.mp4",
+        "poster": "/product-videos/wdspoonmini-1-poster-d78983795203.webp",
+        "thumbnail": "/product-videos/wdspoonmini-1-thumb-87fac4a19fdb.webp",
+        "label": "Видео товара 1",
+        "duration": 6.166667,
+        "width": 960,
+        "height": 946
+      },
+      {
+        "id": "wdspoonmini-2-f55831e4de9a",
+        "src": "/product-videos/wdspoonmini-2-f55831e4de9a.mp4",
+        "poster": "/product-videos/wdspoonmini-2-poster-0803e6b21e60.webp",
+        "thumbnail": "/product-videos/wdspoonmini-2-thumb-414e022fc687.webp",
+        "label": "Видео товара 2",
+        "duration": 5.766667,
+        "width": 960,
+        "height": 946
+      },
+      {
+        "id": "wdspoonmini-3-17672edc864f",
+        "src": "/product-videos/wdspoonmini-3-17672edc864f.mp4",
+        "poster": "/product-videos/wdspoonmini-3-poster-0659a9797db9.webp",
+        "thumbnail": "/product-videos/wdspoonmini-3-thumb-940b1f897199.webp",
+        "label": "Видео товара 3",
+        "duration": 5.8,
+        "width": 960,
+        "height": 946
+      }
+    ]
+  },
+  {
+    "moyskladId": "92f93202-9043-11ee-0a80-09d1001e2096",
+    "code": "SpCDDoom",
+    "slug": "ms-92f93202",
+    "name": "Барная Ложка-вилка Cocktail Design 42 см Doom",
+    "variant": null,
+    "videos": [
+      {
+        "id": "spcddoom-1-f123821717b2",
+        "src": "/product-videos/spcddoom-1-f123821717b2.mp4",
+        "poster": "/product-videos/spcddoom-1-poster-53d577802df7.webp",
+        "thumbnail": "/product-videos/spcddoom-1-thumb-2f5fa5093916.webp",
+        "label": "Видео товара 1",
+        "duration": 5.8,
+        "width": 960,
+        "height": 946
+      },
+      {
+        "id": "spcddoom-2-664c7aa4cf9e",
+        "src": "/product-videos/spcddoom-2-664c7aa4cf9e.mp4",
+        "poster": "/product-videos/spcddoom-2-poster-c781704a97f7.webp",
+        "thumbnail": "/product-videos/spcddoom-2-thumb-09cbf45c5d3c.webp",
+        "label": "Видео товара 2",
+        "duration": 9.966667,
+        "width": 960,
+        "height": 946
+      },
+      {
+        "id": "spcddoom-3-acd9cef8eed2",
+        "src": "/product-videos/spcddoom-3-acd9cef8eed2.mp4",
+        "poster": "/product-videos/spcddoom-3-poster-ec81b9b8e865.webp",
+        "thumbnail": "/product-videos/spcddoom-3-thumb-e3bdd8ce9843.webp",
+        "label": "Видео товара 3",
+        "duration": 7.466667,
+        "width": 960,
+        "height": 946
+      }
+    ]
+  },
+  {
+    "moyskladId": "8afbc1c6-82b8-11f1-0a80-184800957a27",
+    "code": "LeafS100",
+    "slug": "ms-8afbc1c6",
+    "name": "Листья скелетированные 5-7 см, 100 шт/уп (Черный)",
+    "variant": {
+      "moyskladId": "8b25400b-82b8-11f1-0a80-184800957a5f",
+      "code": "LeafBl100"
+    },
+    "videos": [
+      {
+        "id": "leafbl100-1-ad63173cb28d",
+        "src": "/product-videos/leafbl100-1-ad63173cb28d.mp4",
+        "poster": "/product-videos/leafbl100-1-poster-9a7bd6b5fcfb.webp",
+        "thumbnail": "/product-videos/leafbl100-1-thumb-af59ec7182fe.webp",
+        "label": "Видео товара 1",
+        "duration": 7.466667,
+        "width": 960,
+        "height": 946
+      },
+      {
+        "id": "leafbl100-2-e01b5844ee5d",
+        "src": "/product-videos/leafbl100-2-e01b5844ee5d.mp4",
+        "poster": "/product-videos/leafbl100-2-poster-631ee8dc0bd9.webp",
+        "thumbnail": "/product-videos/leafbl100-2-thumb-467d72211b5a.webp",
+        "label": "Видео товара 2",
+        "duration": 5.666667,
+        "width": 960,
+        "height": 946
+      },
+      {
+        "id": "leafbl100-3-a697d15aa580",
+        "src": "/product-videos/leafbl100-3-a697d15aa580.mp4",
+        "poster": "/product-videos/leafbl100-3-poster-86aa0a577672.webp",
+        "thumbnail": "/product-videos/leafbl100-3-thumb-3c6caf7a0e96.webp",
+        "label": "Видео товара 3",
+        "duration": 5.2,
+        "width": 960,
+        "height": 946
+      },
+      {
+        "id": "leafbl100-4-64b42d223085",
+        "src": "/product-videos/leafbl100-4-64b42d223085.mp4",
+        "poster": "/product-videos/leafbl100-4-poster-f94c5e245b2d.webp",
+        "thumbnail": "/product-videos/leafbl100-4-thumb-65bc10de6c00.webp",
+        "label": "Видео товара 4",
+        "duration": 5.8,
+        "width": 960,
+        "height": 946
+      }
+    ]
+  },
+  {
+    "moyskladId": "f1176fe2-84f4-11f1-0a80-0dcd00955f35",
+    "code": "JigAsh",
+    "slug": "ms-f1176fe2",
+    "name": "Джиггер укрепленный CD Концепт Пепел (60/90 мл)",
+    "variant": {
+      "moyskladId": "f14640c3-84f4-11f1-0a80-0dcd00955f72",
+      "code": "JigAsh60/90"
+    },
+    "videos": [
+      {
+        "id": "jigash60-90-1-d2f59d516467",
+        "src": "/product-videos/jigash60-90-1-d2f59d516467.mp4",
+        "poster": "/product-videos/jigash60-90-1-poster-9f2e2ca751b3.webp",
+        "thumbnail": "/product-videos/jigash60-90-1-thumb-10cf1df3c385.webp",
+        "label": "Видео товара 1",
+        "duration": 14.6,
+        "width": 960,
+        "height": 946
+      },
+      {
+        "id": "jigash60-90-2-fae946a1429e",
+        "src": "/product-videos/jigash60-90-2-fae946a1429e.mp4",
+        "poster": "/product-videos/jigash60-90-2-poster-5c69a226b0d2.webp",
+        "thumbnail": "/product-videos/jigash60-90-2-thumb-414cc12c5b59.webp",
+        "label": "Видео товара 2",
+        "duration": 7.0,
+        "width": 960,
+        "height": 946
+      },
+      {
+        "id": "jigash60-90-3-0c0750d1f960",
+        "src": "/product-videos/jigash60-90-3-0c0750d1f960.mp4",
+        "poster": "/product-videos/jigash60-90-3-poster-2ea38a0ef4c7.webp",
+        "thumbnail": "/product-videos/jigash60-90-3-thumb-09250616da11.webp",
+        "label": "Видео товара 3",
+        "duration": 8.0,
+        "width": 960,
+        "height": 946
+      }
+    ]
+  },
+  {
+    "moyskladId": "45d9813c-bc93-11ee-0a80-16e700193d66",
+    "code": "Scls0001",
+    "slug": "ms-45d9813c",
+    "name": "Весы сверхточные 50г/0,001г",
+    "variant": null,
+    "videos": [
+      {
+        "id": "scls0001-1-7ad6cf49cc92",
+        "src": "/product-videos/scls0001-1-7ad6cf49cc92.mp4",
+        "poster": "/product-videos/scls0001-1-poster-f90d747e15e2.webp",
+        "thumbnail": "/product-videos/scls0001-1-thumb-a8db2c02a30e.webp",
+        "label": "Видео товара 1",
+        "duration": 10.8,
+        "width": 960,
+        "height": 946
+      }
+    ]
+  },
+  {
+    "moyskladId": "955c9f11-97e7-11ec-0a80-0c39001eb6b1",
+    "code": "GlsJf",
+    "slug": "ms-955c9f11",
+    "name": "Бокал коктейльная рюмка Jellyfish 150 мл",
+    "variant": null,
+    "videos": [
+      {
+        "id": "glsjf-1-c25da35bb4ec",
+        "src": "/product-videos/glsjf-1-c25da35bb4ec.mp4",
+        "poster": "/product-videos/glsjf-1-poster-edcbf00765cf.webp",
+        "thumbnail": "/product-videos/glsjf-1-thumb-8d2f86e64f4d.webp",
+        "label": "Видео товара 1",
+        "duration": 6.233333,
+        "width": 960,
+        "height": 946
+      },
+      {
+        "id": "glsjf-2-36dc39431be8",
+        "src": "/product-videos/glsjf-2-36dc39431be8.mp4",
+        "poster": "/product-videos/glsjf-2-poster-2755c7d1d0ea.webp",
+        "thumbnail": "/product-videos/glsjf-2-thumb-628d3b7a43a4.webp",
+        "label": "Видео товара 2",
+        "duration": 5.066016,
+        "width": 960,
+        "height": 946
+      },
+      {
+        "id": "glsjf-3-d1264acdf771",
+        "src": "/product-videos/glsjf-3-d1264acdf771.mp4",
+        "poster": "/product-videos/glsjf-3-poster-1de520bd09ac.webp",
+        "thumbnail": "/product-videos/glsjf-3-thumb-9b9c02cf589d.webp",
+        "label": "Видео товара 3",
+        "duration": 5.533333,
+        "width": 960,
+        "height": 946
+      },
+      {
+        "id": "glsjf-4-88d2c1a80e3d",
+        "src": "/product-videos/glsjf-4-88d2c1a80e3d.mp4",
+        "poster": "/product-videos/glsjf-4-poster-3a3683482ce7.webp",
+        "thumbnail": "/product-videos/glsjf-4-thumb-486c0abae5bc.webp",
+        "label": "Видео товара 4",
+        "duration": 6.133008,
+        "width": 960,
+        "height": 946
+      }
+    ]
+  }
+]

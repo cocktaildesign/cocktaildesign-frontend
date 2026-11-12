@@ -45,7 +45,7 @@ export default function ProductGallery({ images, activeIndex, onImageChange, vid
   return (
     <div className={styles.productGallery}>
       <ul className={styles.productGalleryThumbs} aria-label="Фото и видео товара">
-        {imageThumbnail(safeImages[0], 0)}
+        {safeImages.map(imageThumbnail)}
         {videos.map(video => <li key={video.id} className={styles.productGalleryThumbItem}
           data-active={activeVideo?.id === video.id ? "true" : "false"}>
           <button type="button" onClick={() => setActiveVideoId(video.id)}
@@ -57,7 +57,6 @@ export default function ProductGallery({ images, activeIndex, onImageChange, vid
             <span className={styles.productVideoDuration} aria-hidden="true">{Math.round(video.duration)} с</span>
           </button>
         </li>)}
-        {safeImages.slice(1).map((image, index) => imageThumbnail(image, index + 1))}
       </ul>
 
       <div className={styles.productGalleryMain}>
