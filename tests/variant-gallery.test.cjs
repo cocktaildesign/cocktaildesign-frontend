@@ -38,7 +38,7 @@ test('missing own and parent photos never select a different variant photo', () 
   assert.equal(gallery.variantGalleryIndex([], null), -1);
 });
 
-function harness(input = product, requested = '', variants = [yellow, red]) {
+function harness(input = product, requested = '', variants = [yellow, red], media = {}) {
   const slots = []; let cursor = 0, tree, params = new URLSearchParams(requested);
   const noop = () => null;
   const Gallery = noop, Purchase = () => null;
@@ -59,10 +59,11 @@ function harness(input = product, requested = '', variants = [yellow, red]) {
   }).default;
   function all(node) { return Array.isArray(node) ? node.flatMap(all) : node && typeof node === 'object' ? [node, ...all(node.props?.children)] : []; }
   const find = predicate => { const node = all(tree).find(predicate); assert.ok(node); return node; };
-  const render = () => { cursor = 0; tree = Selector({ product: input, variants, specifications: [], colorMap: {} }); };
+  const render = () => { cursor = 0; tree = Selector({ product: input, variants, specifications: [], colorMap: {}, ...media }); };
   render();
   return {
     get gallery() { return find(node => node.type === Gallery).props; },
+    get galleryKey() { return find(node => node.type === Gallery).key; },
     get purchase() { return find(node => node.type === Purchase).props; },
     get image() { return this.gallery.images[this.gallery.activeIndex]?.src; },
     get selected() { return find(node => node.props?.['aria-pressed'] === true).props['aria-label']; },
@@ -83,6 +84,29 @@ test('yellow → red → yellow repeatedly resets photo and keeps purchase ident
       assert.equal(h.urlVariant, v.id);
     }
   }
+});
+
+test('variant video follows only its exact selected variant and switching remounts the gallery', () => {
+  const clip = { id:'red-review', src:'/red.mp4', poster:'/red.webp', thumbnail:'/red-thumb.webp',
+    label:'Обзор', duration:5, width:960, height:960 };
+  const h = harness(product, 'variant=red', [yellow, red], {
+    videos:[{...clip,id:'parent-review'}], variantVideos:{red:[clip]},
+  });
+  const redKey = h.galleryKey;
+  assert.equal(h.gallery.videos[0].id, clip.id);
+  h.thumbnail(0);
+  assert.equal(h.purchase.variantId, 'red');
+  assert.equal(h.gallery.videos[0].id, clip.id);
+  h.select('Желтый');
+  assert.equal(h.gallery.videos.length, 0);
+  assert.notEqual(h.galleryKey, redKey);
+  assert.equal(h.purchase.code, yellow.code);
+  assert.equal(h.purchase.imageUrl, '/yellow.webp');
+  h.select('Красный');
+  assert.equal(h.galleryKey, redKey);
+  assert.equal(h.gallery.videos[0].id, clip.id);
+  assert.equal(h.purchase.code, red.code);
+  assert.equal(h.purchase.imageUrl, '/red.webp');
 });
 
 test('direct variant and SKU links choose their matching image or parent fallback', () => {

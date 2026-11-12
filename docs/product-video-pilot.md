@@ -1,4 +1,23 @@
-# Product video pilot (prepared, not deployed)
+# Product videos
+
+## Product gallery additions, 12 November 2026
+
+`src/lib/catalog/product-videos.json` contains the new media bindings for fourteen
+SKUs. Seven bind to an ordinary product and seven to an exact product variant.
+Both the parent UUID/SKU and variant UUID/SKU must match; Strapi's numeric variant
+ID is resolved from the current API response rather than fixed in the registry.
+The supplied clips retain their numeric order and appear after every existing
+photo. Selecting a video leaves photo indices and purchase identity unchanged;
+changing a variant remounts the gallery and removes its player.
+
+These bindings are independent of the original pilot flag. Keep
+`PRODUCT_VIDEO_PILOT_ENABLED=false`: its five products and `/video-pilot` remain
+hidden. No CMS/CRM fields or environment changes are required. Ship only the
+separate, hash-verified media bundle to `public/product-videos`; the original
+Drive files remain outside Git. Roll back with the previous verified frontend
+release while retaining the added files until rollback is confirmed.
+
+## Original October pilot (hidden since 26 October)
 
 Five products are bound by exact MoySklad UUID and SKU in
 `src/lib/catalog/product-video-pilot.json`. The default is off. Set

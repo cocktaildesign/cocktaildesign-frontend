@@ -37,6 +37,7 @@ type VariantSelectorProps = {
   specifications: CatalogProductSpecification[];
   colorMap: Record<string, string>;
   videos?: ProductVideo[];
+  variantVideos?: Record<string, ProductVideo[]>;
 };
 
 function ProductSpecificationValue({ spec }: { spec: CatalogProductSpecification }) {
@@ -51,7 +52,7 @@ function ProductSpecificationValue({ spec }: { spec: CatalogProductSpecification
   return spec.value;
 }
 
-export default function VariantSelector({ product, variants: sourceVariants, specifications, colorMap, videos = [] }: VariantSelectorProps) {
+export default function VariantSelector({ product, variants: sourceVariants, specifications, colorMap, videos = [], variantVideos = {} }: VariantSelectorProps) {
   const variants = useMemo(() => sortColorVariants(sourceVariants), [sourceVariants]);
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -114,6 +115,7 @@ export default function VariantSelector({ product, variants: sourceVariants, spe
   }, [initialVariantId, initialActiveImageIndex]);
 
   const activeVariant = variants.find((variant) => variant.id === activeVariantId) ?? null;
+  const activeVideos = activeVariant ? variantVideos[activeVariant.id] ?? [] : videos;
 
   const hasActiveVariantPrice =
     activeVariant !== null &&
@@ -262,7 +264,7 @@ export default function VariantSelector({ product, variants: sourceVariants, spe
   return (
     <>
       <ProductGallery key={`${product.moyskladId}:${activeVariantId ?? "base"}`} images={galleryImages}
-        activeIndex={activeImageIndex} onImageChange={handleImageChange} videos={videos} />
+        activeIndex={activeImageIndex} onImageChange={handleImageChange} videos={activeVideos} />
 
       <div className={styles.productInfo}>
         <h1 className={styles.productPageTitleMobile}>{product.name}</h1>
