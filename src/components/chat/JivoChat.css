@@ -1,9 +1,26 @@
-/* Stable Jivo launcher hooks; do not target the vendor's generated classes.
+/* Stable Jivo launcher hooks; avoid the vendor's generated class hashes.
    Only the closed launcher moves. The open chat keeps its own viewport layout. */
 jdiv.__jivoMobileButton {
   /* The existing channel's "Large" mobile offset is 50px. Jivo adds 20px
      itself; raise that offset only when a storefront control needs more room. */
   --jivoMobileOffsetBottom: max(50px, calc(var(--jivo-site-bottom, 0px) - 20px)) !important;
+}
+
+@supports (scale: 1) {
+  /* These semantic child prefixes select only the native circle and icon.
+     Keep the wrapper, badge, invitations and menus at their native size.
+     If Jivo renames a prefix, that element retains its native styling. */
+  jdiv.__jivoMobileButton > jdiv[class^="button__"] {
+    width: 50px;
+    height: 50px;
+  }
+
+  jdiv.__jivoMobileButton > jdiv[class^="button__"] > jdiv[class^="iconWrap__"] {
+    /* Independent scale preserves Jivo's transform animation. Unsupported
+       browsers retain the native button size through the @supports guard. */
+    scale: 0.7692307692;
+    transform-origin: center;
+  }
 }
 
 #jvLabelWrap {
