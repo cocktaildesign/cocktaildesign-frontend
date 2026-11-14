@@ -218,7 +218,8 @@ function CatalogPanel({ categories, collections, triggerRef }: CatalogMenuProps 
         <button type="button" className={styles.iconButton} aria-label="Закрыть каталог" onClick={() => close(true)}>×</button>
       </div>
       <div ref={mobileBodyRef} className={styles.mobileBody}>
-        <nav aria-label={current?.name ?? "Разделы каталога"}>
+        <nav className={!current && collections.length > 0 ? styles.mobileRootCategories : undefined}
+          aria-label={current?.name ?? "Разделы каталога"}>
           {mobileItems.map((item) => hasChildren(item) ? (
             <button type="button" key={item.id} className={styles.mobileRow} onClick={() => setTrail((items) => [...items, item])}>
               {!current && <CategoryIcon name={item.name} />}<span>{item.name}</span><span aria-hidden="true">›</span>
