@@ -321,6 +321,16 @@
   color: #505965;
 }
 
+.mobileRootCategories > .mobileRow:last-child {
+  border-bottom: 0;
+}
+
+.mobileDialog .collections {
+  margin-top: 24px;
+  padding-top: 0;
+  border-top: 0;
+}
+
 .mobileRow > span:first-of-type {
   flex: 1;
 }
