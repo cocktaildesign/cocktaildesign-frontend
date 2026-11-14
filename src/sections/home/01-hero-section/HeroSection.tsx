@@ -3,7 +3,7 @@ import Link from "next/link";
 import { EMPTY_IMAGE } from "@/lib/images/empty-image";
 
 import ContainerNoPaddingMobil from "@/components/layout/ContainerNoPaddingMobil";
-import HeroConceptsPreview from "@/components/ui/slider/concepts-preview/HeroConceptsPreview";
+import DarkHeroSlider from "@/components/ui/slider/dark-hero/DarkHeroSlider";
 import MobileSlider from "@/components/ui/slider/mobile-slider/MobileSlider";
 
 import type { WeeklyProductBlock } from "@/lib/api/catalog/types";
@@ -46,8 +46,8 @@ function calculateDiscount(price: number, priceOld: number): string | null {
 
 export default function HeroSection({ weeklyProduct, banners }: HeroSectionProps) {
   if (!banners.length) return null;
-  const desktopSlider = <HeroConceptsPreview banners={banners} />;
-  // Match the first desktop concept while preserving the existing mobile preload.
+  const desktopSlider = <DarkHeroSlider banners={banners} />;
+  // Match the first desktop banner while preserving the existing mobile preload.
   const preloadBanners = [{
     ...banners[0],
     desktopUrl: "/images/hero-concepts-preview/dark-01-startup.webp",

@@ -8,13 +8,7 @@ import { DEFAULT_HERO_BANNERS, type HomepageBanner } from "@/lib/api/homepage-ba
 import { EMPTY_IMAGE } from "@/lib/images/empty-image";
 import CarouselControls from "../CarouselControls";
 import controls from "../CarouselControls.module.css";
-import styles from "./HeroConceptsPreview.module.css";
-
-const SERIES = [
-  { id: "dark", name: "Тёмные", description: "Тёмная серия", range: "1–4" },
-  { id: "light", name: "Светлые", description: "Светлая серия", range: "5–8" },
-  { id: "atelier", name: "Архитектурный свет", description: "Архитектурный свет", range: "9–12" },
-] as const;
+import styles from "./DarkHeroSlider.module.css";
 
 const TOPICS = [
   { id: "01-startup", name: "StartUp" },
@@ -23,14 +17,11 @@ const TOPICS = [
   { id: "04-new", name: "Новинки" },
 ] as const;
 
-const SLIDES = SERIES.flatMap((series, seriesIndex) => TOPICS.map((topic, topicIndex) => ({
-  series,
-  seriesIndex,
-  topic,
+const SLIDES = TOPICS.map((topic, topicIndex) => ({
   topicIndex,
-  src: `/images/hero-concepts-preview/${series.id}-${topic.id}.webp`,
-  label: `${series.description} · ${topic.name}`,
-})));
+  src: `/images/hero-concepts-preview/dark-${topic.id}.webp`,
+  label: topic.name,
+}));
 
 function BannerCopy({ banner, startup }: { banner: HomepageBanner; startup: boolean }) {
   const copy = banner.editorial!;
@@ -60,9 +51,8 @@ function BannerCopy({ banner, startup }: { banner: HomepageBanner; startup: bool
   </>;
 }
 
-export default function HeroConceptsPreview({ banners }: { banners: HomepageBanner[] }) {
+export default function DarkHeroSlider({ banners }: { banners: HomepageBanner[] }) {
   const [index, setIndex] = useState(0);
-  const selected = SLIDES[index];
   const previous = () => setIndex(value => (value + SLIDES.length - 1) % SLIDES.length);
   const next = () => setIndex(value => (value + 1) % SLIDES.length);
 
@@ -78,33 +68,18 @@ export default function HeroConceptsPreview({ banners }: { banners: HomepageBann
     }
   }
 
-  return <div className={styles.preview} data-hero-concepts-preview="true"
-    role="region" aria-label="Предложения Cocktail Design: 12 вариантов оформления" aria-roledescription="карусель">
-    <div className={styles.toolbar}>
-      <span className={styles.caption}>Варианты оформления</span>
-      <div className={styles.series} role="group" aria-label="Выбрать серию, сохранив тему баннера">
-        {SERIES.map((series, seriesIndex) => <button key={series.id} type="button"
-          aria-pressed={selected.seriesIndex === seriesIndex}
-          onClick={() => setIndex(seriesIndex * TOPICS.length + selected.topicIndex)}>
-          {series.name}<span>{series.range}</span>
-        </button>)}
-      </div>
-      <p className={styles.selection} aria-live="polite" aria-atomic="true">
-        <strong>{index + 1} / {SLIDES.length}</strong>
-        <span>{selected.series.description} · {selected.topic.name}</span>
-      </p>
-    </div>
-
-    <div className={`${styles.frame} ${controls.frame} ${styles[selected.series.id]}`}
+  return <div className={styles.slider} data-dark-hero-slider="true"
+    role="region" aria-label="Предложения Cocktail Design" aria-roledescription="карусель">
+    <div className={`${styles.frame} ${controls.frame}`}
       tabIndex={0} aria-label="Баннеры: листайте стрелками влево и вправо" onKeyDown={handleKeyDown}>
       {SLIDES.map((slide, slideIndex) => {
         const active = slideIndex === index;
-        // All three concepts share the same current homepage copy for each topic.
+        // The four themes retain the current homepage copy and destinations.
         const banner = banners[slide.topicIndex]?.editorial
           ? banners[slide.topicIndex]
           : DEFAULT_HERO_BANNERS[slide.topicIndex];
         return <div key={slide.src}
-          className={`${styles.slide} ${styles[slide.series.id]} ${active ? styles.active : ""}`}
+          className={`${styles.slide} ${active ? styles.active : ""}`}
           role="group" aria-roledescription="слайд" aria-label={`${slideIndex + 1} из ${SLIDES.length}: ${slide.label}`}
           aria-hidden={!active} inert={!active}>
           <picture className={styles.art}>
