@@ -3,7 +3,7 @@ import Link from "next/link";
 import { EMPTY_IMAGE } from "@/lib/images/empty-image";
 
 import ContainerNoPaddingMobil from "@/components/layout/ContainerNoPaddingMobil";
-import Slider from "@/components/ui/slider/Slider";
+import HeroConceptsPreview from "@/components/ui/slider/concepts-preview/HeroConceptsPreview";
 import MobileSlider from "@/components/ui/slider/mobile-slider/MobileSlider";
 
 import type { WeeklyProductBlock } from "@/lib/api/catalog/types";
@@ -46,14 +46,21 @@ function calculateDiscount(price: number, priceOld: number): string | null {
 
 export default function HeroSection({ weeklyProduct, banners }: HeroSectionProps) {
   if (!banners.length) return null;
+  const desktopSlider = <HeroConceptsPreview banners={banners} />;
+  // Match the first desktop concept while preserving the existing mobile preload.
+  const preloadBanners = [{
+    ...banners[0],
+    desktopUrl: "/images/hero-concepts-preview/dark-01-startup.webp",
+    desktopSrcSet: undefined,
+  }, ...banners.slice(1)];
   // Если блок выключен — показываем только слайдер
   if (!weeklyProduct || !weeklyProduct.product) {
     return (
       <section className={styles.hero} data-homepage-banners="hero">
-        <BannerPreloads banners={banners} />
+        <BannerPreloads banners={preloadBanners} />
         <ContainerNoPaddingMobil>
           <div className={styles.desktopSlider}>
-          <Slider key={banners.map(b => b.id).join(",")} images={banners} autoPlayInterval={7000} />
+          {desktopSlider}
           </div>
           <div className={styles.mobileSlider}><MobileSlider images={banners} /></div>
         </ContainerNoPaddingMobil>
@@ -67,11 +74,11 @@ export default function HeroSection({ weeklyProduct, banners }: HeroSectionProps
 
   return (
     <section className={styles.hero} data-homepage-banners="hero">
-      <BannerPreloads banners={banners} />
+      <BannerPreloads banners={preloadBanners} />
       <ContainerNoPaddingMobil>
         {/* Слайдер баннеров */}
         <div className={styles.desktopSlider}>
-          <Slider key={banners.map(b => b.id).join(",")} images={banners} autoPlayInterval={7000} />
+          {desktopSlider}
         </div>
 
         <div className={styles.mobileSlider}>
