@@ -55,19 +55,34 @@ test('initial gallery preserves every photo before all video thumbnails, without
   assert.equal((html.match(/aria-pressed="true"/g)||[]).length,1);
 });
 
-test('new release contains the fourteen requested SKUs and all forty-four ordered clips',()=>{
-  const counts = {EcoGrnshEucalpts:6,ShKor:4,'BagNl20/30-100':2,StrawGlsBlck:2,MixRtm:4,
-    MldHex1:3,ClspinsCl:3,MnSrgCDExdMoon:2,WdSpoonMini:3,SpCDDoom:3,LeafBl100:4,
-    'JigAsh60/90':3,Scls0001:1,GlsJf:4};
+test('reviewed selection keeps one exact clip for each of the fourteen requested SKUs',()=>{
+  const selected = {
+    EcoGrnshEucalpts:'ecogrnsheucalpts-4-e18a1744ff6a',
+    ShKor:'shkor-3-25407a20153b',
+    'BagNl20/30-100':'bagnl20-30-100-1-ab1eb8bba500',
+    StrawGlsBlck:'strawglsblck-1-b57cbddace29',
+    MixRtm:'mixrtm-3-6504869766a5',
+    MldHex1:'mldhex1-1-d53d3f1cdb6b',
+    ClspinsCl:'clspinscl-1-0197b72329eb',
+    MnSrgCDExdMoon:'mnsrgcdexdmoon-2-8c9d69a9f11c',
+    WdSpoonMini:'wdspoonmini-1-043f31765db2',
+    SpCDDoom:'spcddoom-2-664c7aa4cf9e',
+    LeafBl100:'leafbl100-2-e01b5844ee5d',
+    'JigAsh60/90':'jigash60-90-2-fae946a1429e',
+    Scls0001:'scls0001-1-7ad6cf49cc92',
+    GlsJf:'glsjf-2-36dc39431be8',
+  };
   assert.equal(published.length,14);
-  assert.deepEqual(Object.fromEntries(published.map(p=>[p.variant?.code ?? p.code,p.videos.length])),counts);
+  assert.deepEqual(
+    Object.fromEntries(published.map(p=>[p.variant?.code ?? p.code,p.videos.map(v=>v.id)])),
+    Object.fromEntries(Object.entries(selected).map(([sku,id])=>[sku,[id]])),
+  );
   assert.equal(published.filter(p=>p.variant).length,7);
   const ids = published.flatMap(p=>p.videos.map(v=>v.id));
-  assert.equal(ids.length,44);
-  assert.equal(new Set(ids).size,44);
+  assert.equal(ids.length,14);
+  assert.equal(new Set(ids).size,14);
   for(const entry of published) {
-    entry.videos.forEach((video,index)=>{
-      assert.match(video.id,new RegExp(`-${index+1}-[0-9a-f]{12}$`),'clips retain numeric source order');
+    entry.videos.forEach(video=>{
       assert.match(video.src,/^\/product-videos\/[a-z0-9-]+-[0-9a-f]{12}\.mp4$/);
       assert.match(video.poster,/^\/product-videos\/[a-z0-9-]+-[0-9a-f]{12}\.webp$/);
       assert.match(video.thumbnail,/^\/product-videos\/[a-z0-9-]+-[0-9a-f]{12}\.webp$/);
