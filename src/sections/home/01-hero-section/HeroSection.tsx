@@ -47,11 +47,13 @@ function calculateDiscount(price: number, priceOld: number): string | null {
 export default function HeroSection({ weeklyProduct, banners }: HeroSectionProps) {
   if (!banners.length) return null;
   const desktopSlider = <DarkHeroSlider banners={banners} />;
-  // Match the first desktop banner while preserving the existing mobile preload.
+  // Both layouts show the same first photograph; preload only its visible source.
   const preloadBanners = [{
     ...banners[0],
     desktopUrl: "/images/hero-concepts-preview/dark-01-startup.webp",
     desktopSrcSet: undefined,
+    mobileUrl: "/images/hero-concepts-preview/dark-01-startup.webp",
+    mobileSrcSet: undefined,
   }, ...banners.slice(1)];
   // Если блок выключен — показываем только слайдер
   if (!weeklyProduct || !weeklyProduct.product) {
