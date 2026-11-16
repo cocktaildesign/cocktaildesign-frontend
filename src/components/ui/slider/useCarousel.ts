@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 
-export default function useCarousel(total: number, interval = 7000) {
+export default function useCarousel(total: number, interval = 7000, autoplay = true) {
   const [index, setIndex] = useState(0);
   const [revision, setRevision] = useState(0);
   const [hovered, setHovered] = useState(false);
@@ -11,7 +11,7 @@ export default function useCarousel(total: number, interval = 7000) {
   const [hidden, setHidden] = useState(false);
   const start = useRef({x: 0, y: 0});
   const swiped = useRef(false);
-  const rotating = total > 1 && !hovered && !focused && !reducedMotion && !hidden;
+  const rotating = autoplay && total > 1 && !hovered && !focused && !reducedMotion && !hidden;
 
   useEffect(() => {
     const media = window.matchMedia("(prefers-reduced-motion: reduce)");
