@@ -13,11 +13,11 @@ import CartIcon from "@/components/icons/CartIcon";
 import CatalogIcon from "@/components/icons/CatalogIcon";
 import HomeIcon from "@/components/icons/HomeIcon";
 import ArrowBackIcon from "@/components/icons/ArrowBackIcon";
-import DialogueIcon from "@/components/icons/DialogueIcon";
 
 import { useFavoritesStore } from "@/lib/favorites/favoritesStore";
 import { useCartStore } from "@/lib/cart/cartStore";
 import NavigationTile from "@/components/navigation/NavigationTile";
+import NavigationIcon from "@/components/navigation/NavigationIcon";
 import { useCatalogMenu } from "@/components/layout/header/catalog-menu/CatalogMenuProvider";
 
 export type MobileBottomNavMenuItem = {
@@ -143,7 +143,7 @@ function MobileMenuDialog({ id, menuItems, pathname, onClose }: Props & { id: st
           ))}
         </nav>
         <Link href="/support/feedback" className={styles.feedbackLink} onClick={onClose}>
-          <span className={styles.feedbackIcon} aria-hidden="true"><DialogueIcon title="" /></span>
+          <span className={styles.feedbackIcon} aria-hidden="true"><NavigationIcon href="/support/feedback" /></span>
           <span className={styles.feedbackText}>
             <span className={styles.feedbackTitle}>Обратная связь</span>
             <span className={styles.feedbackDescription}>Идеи и замечания о сайте и сервисе</span>

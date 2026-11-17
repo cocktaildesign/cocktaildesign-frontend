@@ -15,6 +15,7 @@ const icons: Record<string, ReactNode> = {
   "/contacts": <path d="M7.4 3.7 9 7.5a1.5 1.5 0 0 1-.3 1.6l-1.5 1.6a14.8 14.8 0 0 0 6.1 6.1l1.6-1.5a1.5 1.5 0 0 1 1.6-.3l3.8 1.6a1.5 1.5 0 0 1 .9 1.7c-.5 2-2 3.2-4 2.8A19 19 0 0 1 2.9 6.8c-.4-2 .8-3.5 2.8-4a1.5 1.5 0 0 1 1.7.9Z" />,
   "/branding": <><path d="m5 16 1-5L16 1a2.8 2.8 0 0 1 4 4L10 15l-5 1Zm9-13 4 4M2 21c3-3 5 2 8 0s5 0 10-1" /></>,
   "/legal/requisites": <><path d="M14 2H5a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V9l-7-7Zm0 0v7h7M7 13h10M7 17h10" /></>,
+  "/support/feedback": <><path d="M5 3h14a3 3 0 0 1 3 3v10a3 3 0 0 1-3 3H9l-5 3v-3a3 3 0 0 1-2-3V6a3 3 0 0 1 3-3Z" /><circle cx="7" cy="11" r="1" fill="currentColor" stroke="none" /><circle cx="12" cy="11" r="1" fill="currentColor" stroke="none" /><circle cx="17" cy="11" r="1" fill="currentColor" stroke="none" /></>,
 };
 
 export default function NavigationIcon({ href }: { href: string }) {
