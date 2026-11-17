@@ -1,56 +1,67 @@
 .slider { padding: 15px; background: var(--color-white); }
 .frame {
-  --hero-art-height: clamp(224px, 62vw, 340px);
-  --carousel-dot: #858585;
-  --carousel-dot-active: #fff;
-  --carousel-focus: #fff;
-  overflow: hidden;
-  border-radius: 18px;
+  --carousel-dot: #d0d0d0;
+  --carousel-dot-active: #191919;
+  --carousel-focus: #111827;
   color: #f9f9fa;
-  background: #121314;
 }
-.slides { display: grid; grid-template-columns: minmax(0, 1fr); touch-action: pan-y; }
-.slides:focus-visible { outline: 2px solid white; outline-offset: -3px; }
+.slides {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  overflow: hidden;
+  border-radius: 16px;
+  background: #111213;
+  touch-action: pan-y;
+}
+.slides:focus-visible { outline: 2px solid #fff; outline-offset: -4px; }
 .slide {
   grid-area: 1 / 1;
   position: relative;
   isolation: isolate;
   min-width: 0;
-  min-height: calc(var(--hero-art-height) + 205px);
-  padding-bottom: calc(var(--hero-art-height) - 24px);
+  min-height: 236px;
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
   transition: opacity 200ms ease;
 }
 .active { z-index: 1; opacity: 1; visibility: visible; pointer-events: auto; }
-.content { position: relative; z-index: 1; padding: 22px 22px 0; overflow-wrap: anywhere; }
-.heading { margin: 0; font-size: 27px; line-height: 1.15; font-weight: 600; letter-spacing: -.035em; white-space: pre-line; }
-.offer { display: block; font: inherit; }
-.gift { display: block; font: inherit; }
-.description { margin: 12px 0 0; font-size: 15px; line-height: 1.4; font-weight: 400; color: #e1e1e3; white-space: pre-line; }
-.note { display: flex; align-items: center; flex-wrap: wrap; gap: 6px; margin: 2px 0 0; font-size: 14px; line-height: 1.4; color: #d5d5d8; }
-.note strong { color: #f9f9fa; font-weight: 600; letter-spacing: .02em; }
-.copyButton { flex: none; min-width: 44px; min-height: 44px; padding: 10px; border-radius: 6px; color: inherit; --color-accent-strong: #fff; }
+.content { position: relative; z-index: 1; width: 63%; padding: 18px 0 16px 16px; overflow-wrap: anywhere; }
+.heading { margin: 0; font-size: 21px; line-height: 1.15; font-weight: 600; letter-spacing: -.035em; white-space: pre-line; }
+.offer { display: block; font-size: 32px; line-height: 1.05; }
+.gift { display: block; margin-top: 3px; font-size: 18px; line-height: 1.15; }
+.description { max-width: 180px; margin: 10px 0 0; font-size: 14px; line-height: 1.35; font-weight: 400; color: #e1e1e3; white-space: pre-line; text-wrap: balance; }
+.cta { display: inline-flex; align-items: center; justify-content: center; gap: 12px; max-width: 100%; min-height: 44px; margin-top: 12px; padding: 10px 13px; border-radius: 10px; background: #f7f8fa; color: #111827; font-size: 14px; line-height: 1.25; font-weight: 600; text-align: center; text-decoration: none; }
+.cta > span { font-size: 21px; line-height: 1; }
+.note { display: flex; align-items: center; flex-wrap: wrap; gap: 5px; width: max-content; max-width: calc(100vw - 62px); margin: 5px 0 -6px; font-size: 14px; line-height: 1.35; color: #dededf; }
+.note strong { color: #fff; font-weight: 600; letter-spacing: -.01em; }
+.copyButton { position: relative; isolation: isolate; flex: none; width: 44px; min-height: 44px; padding: 12px; margin-left: -4px; border-radius: 6px; color: inherit; --color-accent-strong: #fff; }
+.copyButton::before { content: ""; position: absolute; z-index: -1; inset: 8px; border-radius: 5px; background: #101114b8; }
 .copyButton svg { width: 17px; height: 17px; }
-.cta { display: inline-flex; align-items: center; justify-content: center; gap: 14px; max-width: 100%; min-height: 44px; margin-top: 14px; padding: 11px 16px; border-radius: 10px; background: #f7f8fa; color: #111827; font-size: 15px; line-height: 1.25; font-weight: 600; text-align: center; text-decoration: none; }
-.cta > span { font-size: 22px; line-height: 1; }
-.note + .cta { margin-top: 4px; }
-.cta:focus-visible, .copyButton:focus-visible { outline: 2px solid white; outline-offset: 3px; }
-/* Same source photographs as desktop. Only the visible crop changes on a phone. */
-.art { position: absolute; z-index: 0; bottom: 0; left: 0; width: 100%; height: var(--hero-art-height); overflow: hidden; pointer-events: none; }
-.art img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: var(--hero-focus, 100%) center; }
-.art::after { content: ""; position: absolute; inset: 0; background: linear-gradient(#121314 0%, #12131499 3%, transparent 10%); }
-.controls > button { top: auto; bottom: 2px; transform: none; width: 44px; height: 44px; color: #fff; opacity: 1; pointer-events: auto; }
+.cta:focus-visible, .copyButton:focus-visible { outline: 2px solid #fff; outline-offset: 3px; }
+/* The same desktop photograph fills the mobile card; text occupies its dark left side. */
+.art { position: absolute; z-index: 0; inset: 0; overflow: hidden; pointer-events: none; }
+.art img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: var(--hero-focus, 80%) center; }
+.art::after { content: ""; position: absolute; inset: 0; background: linear-gradient(90deg, #090a0be8 0%, #090a0bdd 35%, #090a0ba8 50%, transparent 74%); }
+.controls { position: relative; height: 36px; margin-top: 2px; }
+.controls > button { top: auto; bottom: -4px; transform: none; width: 44px; height: 44px; color: #555b65; opacity: 1; pointer-events: auto; }
 .controls > button span, .controls > button:hover span { border: 0; background: transparent; color: inherit; }
-.controls > div { bottom: 2px; }
-.controls > div > button { width: 40px; height: 44px; }
+.controls > div { bottom: -4px; }
+.controls > div > button { width: 36px; height: 44px; }
+.controls > div > button[aria-current="true"]::after { width: 24px; }
 @media (max-width: 359px) {
-  .slide { padding-bottom: var(--hero-art-height); }
-  .content { padding: 20px 18px 0; }
-  .heading { font-size: 25px; }
-  .description { font-size: 14px; }
-  .note { font-size: 13px; gap: 4px; }
-  .cta { font-size: 14px; padding-inline: 14px; }
+  .content { width: 68%; padding: 16px 0 14px 14px; }
+  .heading { font-size: 20px; }
+  .offer { font-size: 30px; }
+  .gift { font-size: 17px; }
+  .description { max-width: 174px; }
+  .cta { gap: 8px; padding-inline: 11px; }
+}
+@media (min-width: 480px) {
+  .content { width: 57%; padding: 20px 0 18px 20px; }
+  .heading { font-size: 24px; }
+  .gift { font-size: 20px; }
+  .description { max-width: 230px; font-size: 15px; }
+  .cta { font-size: 15px; }
 }
 @media (prefers-reduced-motion: reduce) { .slide { transition: none; } }
