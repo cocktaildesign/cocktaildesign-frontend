@@ -114,6 +114,8 @@
     --home-product-price-direction: column;
     --home-product-price-height: 54px;
 
+    background-image: none;
+    background-color: var(--color-dark-blue);
     margin-top: 0px;
     padding: 20px 0px 24px;
 
