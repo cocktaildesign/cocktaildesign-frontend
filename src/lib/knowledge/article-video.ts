@@ -12,7 +12,7 @@ function trustedUrl(value?: string | null): URL | undefined {
 }
 
 export type LocalArticleVideo = { src: string; poster: string; durationLabel: string };
-export type ArticleVideoSource = { externalUrl: string; embedUrl?: string; local?: LocalArticleVideo };
+export type ArticleVideoSource = { externalUrl?: string; embedUrl?: string; local?: LocalArticleVideo };
 
 // Owner-provided originals, compressed offline. Match the exact clip identity so
 // future articles retain their own source instead of inheriting a recipe video.
@@ -23,9 +23,24 @@ const localVideos: Record<string, LocalArticleVideo> = {
 };
 
 /** Use a publisher-supplied embed only; a public clip link is not an embed code. */
-export function articleVideo(source?: string | null, embed?: string | null): ArticleVideoSource | undefined {
+export function articleVideo(source?: string | null, embed?: string | null, duration?: string | null): ArticleVideoSource | undefined {
   const external = trustedUrl(source);
   const clip = external?.pathname.match(/^\/clip(-?\d+)_(\d+)\/?$/);
+  // Editors can use an owner-hosted recipe without inventing a VK link. Only
+  // our immutable Knowledge asset paths are accepted, never arbitrary embeds.
+  if (embed) {
+    try {
+      const file = new URL(embed);
+      if (file.origin === "https://cocktaildesign.ru" && !file.username && !file.password && !file.port &&
+          !file.search && !file.hash && /^\/videos\/knowledge\/[a-z0-9]+-[a-f0-9]{8}\.mp4$/.test(file.pathname)) {
+        return {
+          externalUrl: external && clip ? `${external.origin}/clip${clip[1]}_${clip[2]}` : undefined,
+          local: { src: file.pathname, poster: file.pathname.replace(/\.mp4$/, "-poster.webp"),
+            durationLabel: duration && /^\d{1,3}:[0-5]\d$/.test(duration) ? duration : "" },
+        };
+      }
+    } catch { /* An invalid CMS URL must not break the existing VK fallback. */ }
+  }
   if (!external || !clip) return undefined;
   const externalUrl = `${external.origin}/clip${clip[1]}_${clip[2]}`;
   const local = localVideos[`${clip[1]}_${clip[2]}`];
@@ -51,7 +66,7 @@ export function articleVideoBody(blocks: KnowledgeContentBlock[], coverSrc: stri
       poster = block;
       return false;
     }
-    return !(block.type === "link" && articleVideo(block.url)?.externalUrl === video.externalUrl);
+    return !(block.type === "link" && video.externalUrl && articleVideo(block.url)?.externalUrl === video.externalUrl);
   });
   return { blocks: remaining, poster };
 }

@@ -161,7 +161,7 @@ export async function getKnowledgeArticleBySlugFromStrapi(slug: string): Promise
 
     readTime: item.readTime ?? "",
 
-    video: articleVideo(item.externalUrl, item.embedUrl),
+    video: articleVideo(item.externalUrl, item.embedUrl, item.duration),
 
     blocks: mapKnowledgeBlocks(item.blocks),
   };

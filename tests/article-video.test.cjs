@@ -59,3 +59,25 @@ test('only the opening exact cover and matching video link move; source records,
   assert.equal(JSON.stringify(blocks),before);
   assert.equal(articleVideoBody(blocks,'/honey.webp').blocks,blocks);
 });
+
+test('owner-hosted recipe works without VK and preserves introduction links',()=>{
+  const video=articleVideo(null,'https://cocktaildesign.ru/videos/knowledge/fernadita-9d61f131.mp4','0:50');
+  assert.equal(video.externalUrl,undefined);
+  assert.equal(video.local.src,'/videos/knowledge/fernadita-9d61f131.mp4');
+  assert.equal(video.local.poster,'/videos/knowledge/fernadita-9d61f131-poster.webp');
+  assert.equal(video.local.durationLabel,'0:50');
+  const blocks=[{type:'link',id:'catalog',title:'Супербэги',url:'/catalog/ms-77980928'},{type:'text',id:'intro',content:'Рецепт'}];
+  assert.equal(articleVideoBody(blocks,'/cover.webp',video).blocks.map(x=>x.id).join(','),'catalog,intro');
+  assert.ok(fs.existsSync(path.join(__dirname,'../public',video.local.src)));
+  assert.ok(fs.existsSync(path.join(__dirname,'../public',video.local.poster)));
+});
+
+test('CMS local media cannot point to another origin, credentials or arbitrary paths',()=>{
+ const source='https://vk.ru/clip-72675133_999';
+ for(const url of ['https://evil.test/videos/knowledge/fernadita-9d61f131.mp4','https://cocktaildesign.ru.evil.test/videos/knowledge/fernadita-9d61f131.mp4','http://cocktaildesign.ru/videos/knowledge/fernadita-9d61f131.mp4','https://x:y@cocktaildesign.ru/videos/knowledge/fernadita-9d61f131.mp4','https://cocktaildesign.ru/videos/knowledge/fernadita-9d61f131.mp4?tracking=1','https://cocktaildesign.ru/videos/knowledge/fernadita-9d61f131.mp4#foo','https://cocktaildesign.ru/uploads/fernadita-9d61f131.mp4','https://cocktaildesign.ru/videos/knowledge/fernadita-9d61f131.webm','javascript:alert(1)']) {
+  assert.equal(articleVideo(null,url),undefined);
+  assert.equal(articleVideo(source,url).local,undefined);
+  assert.equal(articleVideo(source,url).externalUrl,source);
+ }
+ assert.equal(articleVideo(null,'https://cocktaildesign.ru/videos/knowledge/fernadita-9d61f131.mp4','50 seconds').local.durationLabel,'');
+});

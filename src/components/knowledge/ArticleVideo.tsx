@@ -30,7 +30,7 @@ export default function ArticleVideo({ title, coverSrc, poster, externalUrl, emb
           <ContentImage block={{ id: "local-video-poster", type: "image", src: local.poster, alt: "", width: 540, height: 960 }}
             className={styles.localPosterImage} priority sizes="340px" />
           <span className={styles.shade} aria-hidden="true" />
-          <span className={styles.badge}>Видеорецепт · {local.durationLabel}</span>
+          <span className={styles.badge}>Видеорецепт{local.durationLabel && ` · ${local.durationLabel}`}</span>
           <span className={styles.play} aria-hidden="true"><svg viewBox="0 0 24 24" width="28" height="28"><path d="M8 5.5v13L19 12Z" fill="currentColor" /></svg></span>
           <span className={styles.watch}>Смотреть рецепт</span>
         </button>}
@@ -47,9 +47,9 @@ export default function ArticleVideo({ title, coverSrc, poster, externalUrl, emb
       <span className={styles.play} aria-hidden="true"><svg viewBox="0 0 24 24" width="28" height="28"><path d="M8 5.5v13L19 12Z" fill="currentColor" /></svg></span>
       <span className={styles.watch}>Смотреть в VK <span aria-hidden="true">↗</span></span>
     </a>}
-    {failed && <p className={styles.failure} role="status">Не удалось загрузить видео. Можно посмотреть его в VK по ссылке ниже.</p>}
+    {failed && <p className={styles.failure} role="status">Не удалось загрузить видео. Попробуйте открыть его по ссылке ниже.</p>}
     <div className={styles.below}>
-      {local || embedUrl ? <a href={externalUrl} target="_blank" rel="noopener noreferrer" aria-label="Открыть видео в VK в новой вкладке">Открыть в VK ↗</a>
+      {local || embedUrl ? <a href={externalUrl || local?.src} target="_blank" rel="noopener noreferrer" aria-label={externalUrl ? "Открыть видео в VK в новой вкладке" : "Открыть видео в новой вкладке"}>{externalUrl ? "Открыть в VK ↗" : "Открыть видео ↗"}</a>
         : <span>{poster?.caption || "Видео откроется во ВКонтакте"}</span>}
       <a className={styles.recipeLink} href="#recipe-content">Читать рецепт <span aria-hidden="true">↓</span></a>
     </div>
