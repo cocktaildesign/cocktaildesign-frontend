@@ -1,0 +1,57 @@
+.tile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  min-width: 0;
+  min-height: 104px;
+  padding: 12px 8px;
+  border: 1px solid #edf0f3;
+  border-radius: 12px;
+  background: #f6f7f9;
+  color: var(--color-dark-blue);
+  text-align: center;
+  text-decoration: none;
+  transition: background-color var(--dur-fast) var(--ease), border-color var(--dur-fast) var(--ease);
+}
+
+.icon {
+  display: flex;
+  flex: 0 0 32px;
+  align-items: center;
+  justify-content: center;
+}
+
+.icon svg {
+  width: 32px;
+  height: 32px;
+}
+
+.label {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.4em;
+  max-width: 100%;
+  font-family: var(--font-display);
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.2;
+  overflow-wrap: anywhere;
+  text-wrap: balance;
+}
+
+.tile:active {
+  background: #e9edf3;
+}
+
+.tile:focus-visible {
+  outline: 2px solid var(--color-dark-blue);
+  outline-offset: 2px;
+}
+
+.active {
+  border-color: #9caabd;
+  background: #edf0f4;
+}

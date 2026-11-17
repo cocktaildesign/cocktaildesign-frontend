@@ -26,3 +26,13 @@ jdiv.__jivoMobileButton {
 #jvLabelWrap {
   bottom: var(--jivo-site-bottom, 0px) !important;
 }
+
+@media (max-width: 600px) {
+  /* Storefront overlays share this marker. Native dialogs count only while
+     open; nested panels and route unmounts restore the launcher automatically.
+     Hide only the launcher, preserving the widget and an open conversation. */
+  body:has([data-site-overlay="true"]:not(dialog), dialog[data-site-overlay="true"][open]) jdiv.__jivoMobileButton,
+  body:has([data-site-overlay="true"]:not(dialog), dialog[data-site-overlay="true"][open]) #jvLabelWrap {
+    display: none !important;
+  }
+}

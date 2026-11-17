@@ -191,7 +191,7 @@ function CatalogPanel({ categories, collections, triggerRef }: CatalogMenuProps 
   );
 
   if (compact) return createPortal(
-    <dialog ref={dialogRef} id={menuId} className={styles.mobileDialog} aria-labelledby={`${menuId}-title`}
+    <dialog ref={dialogRef} id={menuId} className={styles.mobileDialog} data-site-overlay="true" aria-labelledby={`${menuId}-title`}
       onCancel={(event) => { event.preventDefault(); close(true); }}
       onKeyDown={(event) => {
         if (event.key !== "Tab") return;

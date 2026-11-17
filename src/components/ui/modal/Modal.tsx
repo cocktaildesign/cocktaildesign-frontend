@@ -60,6 +60,7 @@ export function Modal(props: ModalProps) {
         tabIndex={-1}
         role="dialog"
         aria-modal="true"
+        data-site-overlay="true"
         aria-label={title}>
         {!hideCloseButton && (
           <button type="button" className={styles.closeButton} onClick={onClose} aria-label="Закрыть модальное окно">

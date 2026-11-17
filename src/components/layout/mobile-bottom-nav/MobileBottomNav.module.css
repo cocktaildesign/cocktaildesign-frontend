@@ -131,230 +131,160 @@
   font-weight: 400;
 }
 
-/* ==========================================================================
-   MENU CONTENT
-   Контент внутри modal.
-   ========================================================================== */
-
-.menuContent {
-  padding: 8px;
+/* The native dialog contains focus; only the grid area scrolls on short screens. */
+.menuDialog {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  max-width: 100%;
+  height: 100dvh;
+  max-height: 100dvh;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: var(--color-white);
+  color: var(--color-dark-blue);
+  overflow: hidden;
 }
 
-/* ==========================================================================
-   MENU HEADER
-   Стрелка "назад" + заголовок.
-   ========================================================================== */
+.menuDialog[open] {
+  display: flex;
+  flex-direction: column;
+}
+
+:global(body):has(.menuDialog[open]) {
+  overflow: hidden;
+}
+
+.menuDialog::backdrop {
+  background: rgba(15, 23, 42, 0.3);
+}
 
 .menuHeader {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: var(--z-search-panel);
-
   display: grid;
-  grid-template-columns: 30px 1fr 30px;
+  flex: 0 0 auto;
+  grid-template-columns: 44px 1fr 44px;
   align-items: center;
-
-  height: 64px;
-  padding: 0 16px;
-  margin-bottom: 16px;
-
-  background-color: var(--color-light);
-  border-radius: 0 0 12px 12px;
-}
-
-.menuHeader::after {
-  content: "";
-  width: 30px;
-  height: 30px;
+  min-height: 64px;
+  padding: 8px 12px;
+  padding-top: max(8px, env(safe-area-inset-top));
+  border-bottom: 1px solid #edf0f3;
+  background: var(--color-white);
 }
 
 .backButton {
   display: flex;
   align-items: center;
   justify-content: center;
-
-  width: 30px;
-  height: 30px;
+  width: 44px;
+  height: 44px;
   padding: 0;
   border: none;
-  border-radius: 8px;
-
+  border-radius: 10px;
   background: transparent;
   color: var(--color-dark-blue);
   cursor: pointer;
-
-  transition: background-color var(--dur-fast) var(--ease);
 }
 
 .backButton:active {
-  background-color: var(--color-light-soft);
+  background: #edf0f4;
 }
 
 .backButton svg {
-  width: 16px;
-  height: 16px;
+  width: 12px;
+  height: 20px;
 }
 
 .menuTitle {
   margin: 0;
-  padding: 0;
-
-  color: var(--color-dark-blue);
   font-family: var(--font-display);
-  font-size: 24px;
-  font-weight: 450;
-  line-height: 1;
+  font-size: 22px;
+  font-weight: 600;
+  line-height: 1.2;
   text-align: center;
-  white-space: nowrap;
+}
+
+.menuScroll {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 16px 15px max(24px, env(safe-area-inset-bottom));
 }
 
 .menuGrid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 10px;
-  padding: 10px;
-  z-index: 1;
-}
-
-.menuLinks {
-  padding: 74px 10px 0;
 }
 
 .feedbackLink {
   display: flex;
   align-items: center;
-  gap: 10px;
-  min-height: 48px;
-  padding: 12px 14px;
-  border: 1px solid var(--color-light);
-  border-radius: 8px;
+  gap: 12px;
+  min-height: 76px;
+  margin-top: 16px;
+  padding: 14px;
+  border: 1px solid #e3e8ef;
+  border-radius: 12px;
   color: var(--color-dark-blue);
   background: var(--color-white);
-  font-size: 16px;
   text-decoration: none;
 }
 
 .feedbackIcon {
   display: flex;
-  flex: 0 0 22px;
+  flex: 0 0 26px;
 }
 
 .feedbackIcon svg {
-  width: 22px;
-  height: 22px;
+  width: 26px;
+  height: 26px;
+}
+
+.feedbackText {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+
+.feedbackTitle {
+  font-family: var(--font-display);
+  font-size: 17px;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.feedbackDescription {
+  color: #647084;
+  font-size: 12px;
+  line-height: 1.4;
 }
 
 .feedbackArrow {
   margin-left: auto;
+  font-size: 24px;
 }
 
+.backButton:focus-visible,
 .feedbackLink:focus-visible {
   outline: 2px solid var(--color-dark-blue);
-  outline-offset: 3px;
+  outline-offset: 2px;
 }
 
-/* ==========================================================================
-   MENU CARD
-   Карточка пункта меню в стиле Лемана:
-   текст слева сверху, картинка в правом нижнем углу.
-   ========================================================================== */
-
-.menuCard {
-  position: relative;
-
-  display: block;
-  aspect-ratio: 1.5 / 1;
-  padding: 14px;
-  border: 1px solid transparent;
-  border-radius: 8px;
-  overflow: hidden;
-
-  background-color: var(--color-light-soft);
-  color: var(--color-dark-blue);
-  text-decoration: none;
-
-  transition:
-    background-color var(--dur-fast) var(--ease),
-    border-color var(--dur-fast) var(--ease);
+@media (max-width: 359px) {
+  .menuGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 }
-
-.menuCard:active {
-  background-color: var(--color-light);
-}
-
-.menuCardActive {
-  border-color: var(--color-dark-blue);
-}
-
-.menuCardLabel {
-  position: relative;
-  z-index: 1;
-
-  display: block;
-
-  font-family: var(--font-display);
-  font-size: 15px;
-  font-weight: 550;
-  line-height: 1.25;
-  text-wrap: balance;
-}
-
-.menuCardImage {
-  position: absolute;
-  right: 5px;
-  bottom: 0;
-
-  width: 60%;
-  height: 55%;
-}
-
-.menuCardImg {
-  object-fit: contain;
-  object-position: right bottom;
-}
-
-/* ==========================================================================
-   TABLET
-   ========================================================================== */
-
-@media (max-width: 1024px) {
-}
-
-/* ==========================================================================
-   MOBILE
-   Компенсируем padding Modal (24px 16px 18px) через negative margin,
-   чтобы карточки шли от края до края экрана.
-   ========================================================================== */
 
 @media (max-width: 600px) {
   .mobileBottomNav {
     display: flex;
   }
-
-  .menuContent {
-    margin: -24px -16px -18px;
-    padding: 0;
-    height: 100dvh;
-  }
-
-  .menuHeader {
-    margin-bottom: 12px;
-  }
-
-  .menuCard {
-    aspect-ratio: auto;
-    height: 116px;
-  }
-
-  .menuCardLabel {
-    max-width: 58%;
-    font-size: 17px;
-    font-weight: 550;
-    line-height: 1.25;
-  }
 }
+
 .catalogButton {
   border: 0;
   background: transparent;

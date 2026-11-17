@@ -2,9 +2,9 @@
 "use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useCallback, useEffect, useId, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { usePathname } from "next/navigation";
-import Image from "next/image";
 
 import styles from "./MobileBottomNav.module.css";
 
@@ -17,7 +17,7 @@ import DialogueIcon from "@/components/icons/DialogueIcon";
 
 import { useFavoritesStore } from "@/lib/favorites/favoritesStore";
 import { useCartStore } from "@/lib/cart/cartStore";
-import { Modal } from "@/components/ui/modal/Modal";
+import NavigationTile from "@/components/navigation/NavigationTile";
 import { useCatalogMenu } from "@/components/layout/header/catalog-menu/CatalogMenuProvider";
 
 export type MobileBottomNavMenuItem = {
@@ -32,8 +32,14 @@ type Props = {
 
 export default function MobileBottomNav({ menuItems }: Props) {
   const pathname = usePathname();
+  // Route changes unmount the open menu and release its modal/focus lifecycle.
+  return <MobileNavigation key={pathname} menuItems={menuItems} pathname={pathname} />;
+}
+
+function MobileNavigation({ menuItems, pathname }: Props & { pathname: string }) {
   const catalogMenu = useCatalogMenu();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const menuId = useId();
 
   const favoritesHasHydrated = useFavoritesStore((state) => state.hasHydrated);
   const favoritesIds = useFavoritesStore((state) => state.ids);
@@ -43,9 +49,9 @@ export default function MobileBottomNav({ menuItems }: Props) {
   const cartItems = useCartStore((state) => state.items);
   const cartCount = cartHasHydrated ? cartItems.reduce((total, item) => total + item.quantity, 0) : 0;
 
-  function handleCloseMenu() {
+  const handleCloseMenu = useCallback(() => {
     setIsMenuOpen(false);
-  }
+  }, []);
 
   return (
     <>
@@ -67,7 +73,7 @@ export default function MobileBottomNav({ menuItems }: Props) {
         </button>
 
         {/* Кнопка меню */}
-        <button type="button" className={`${styles.item} ${styles.menuItem}`} onClick={() => setIsMenuOpen(true)}>
+        <button type="button" className={`${styles.item} ${styles.menuItem}`} aria-haspopup="dialog" aria-expanded={isMenuOpen} aria-controls={menuId} onClick={() => setIsMenuOpen(true)}>
           <div className={styles.container}>
             <span className={styles.label}>Меню</span>
           </div>
@@ -92,46 +98,60 @@ export default function MobileBottomNav({ menuItems }: Props) {
         </Link>
       </nav>
 
-      {/* Меню внутри modal. hideCloseButton — у нас своя стрелка "назад" */}
-      <Modal isOpen={isMenuOpen} onClose={handleCloseMenu} title="Меню" hideCloseButton>
-        <div className={styles.menuContent}>
-          <div className={styles.menuHeader}>
-            <button type="button" className={styles.backButton} onClick={handleCloseMenu} aria-label="Назад">
-              <ArrowBackIcon />
-            </button>
-            <h2 className={styles.menuTitle}>Меню</h2>
-          </div>
-
-          <div className={styles.menuLinks}>
-            <Link href="/support/feedback" className={styles.feedbackLink} onClick={handleCloseMenu}>
-              <span className={styles.feedbackIcon} aria-hidden="true"><DialogueIcon /></span>
-              Обратная связь
-              <span className={styles.feedbackArrow} aria-hidden="true">→</span>
-            </Link>
-          </div>
-
-          <div className={styles.menuGrid}>
-            {menuItems.map((item) => {
-              const isActive = pathname === item.href;
-
-              let cardClassName = styles.menuCard;
-              if (isActive) {
-                cardClassName = `${styles.menuCard} ${styles.menuCardActive}`;
-              }
-
-              return (
-                <Link key={item.href} href={item.href} className={cardClassName} onClick={handleCloseMenu}>
-                  <span className={styles.menuCardLabel}>{item.title}</span>
-
-                  <div className={styles.menuCardImage}>
-                    <Image src={item.imageUrl} alt={item.title} fill sizes="40vw" className={styles.menuCardImg} />
-                  </div>
-                </Link>
-              );
-            })}
-          </div>
-        </div>
-      </Modal>
+      {isMenuOpen && <MobileMenuDialog id={menuId} menuItems={menuItems} pathname={pathname} onClose={handleCloseMenu} />}
     </>
+  );
+}
+
+function MobileMenuDialog({ id, menuItems, pathname, onClose }: Props & { id: string; pathname: string; onClose: () => void }) {
+  const dialogRef = useRef<HTMLDialogElement>(null);
+  const titleId = useId();
+
+  useEffect(() => {
+    const dialog = dialogRef.current;
+    if (!dialog) return;
+    const previousFocus = document.activeElement instanceof HTMLElement ? document.activeElement : null;
+    const mobileViewport = window.matchMedia("(max-width: 600px)");
+    const closeOnDesktop = () => { if (!mobileViewport.matches) onClose(); };
+
+    dialog.showModal();
+    closeOnDesktop();
+    window.addEventListener("popstate", onClose);
+    mobileViewport.addEventListener("change", closeOnDesktop);
+    return () => {
+      window.removeEventListener("popstate", onClose);
+      mobileViewport.removeEventListener("change", closeOnDesktop);
+      dialog.close();
+      if (previousFocus?.isConnected && previousFocus.getClientRects().length > 0) {
+        previousFocus.focus({ preventScroll: true });
+      }
+    };
+  }, [onClose]);
+
+  return createPortal(
+    <dialog ref={dialogRef} id={id} className={styles.menuDialog} aria-labelledby={titleId} data-site-overlay="true" onCancel={(event) => { event.preventDefault(); onClose(); }} onClose={(event) => { if (!event.currentTarget.open) onClose(); }}>
+      <header className={styles.menuHeader}>
+        <button type="button" className={styles.backButton} onClick={onClose} aria-label="Закрыть меню">
+          <ArrowBackIcon title="" />
+        </button>
+        <h2 id={titleId} className={styles.menuTitle}>Меню</h2>
+      </header>
+      <div className={styles.menuScroll}>
+        <nav className={styles.menuGrid} aria-label="Разделы магазина">
+          {menuItems.map((item) => (
+            <NavigationTile key={item.href} href={item.href} title={item.title} active={pathname === item.href} onClick={onClose} />
+          ))}
+        </nav>
+        <Link href="/support/feedback" className={styles.feedbackLink} onClick={onClose}>
+          <span className={styles.feedbackIcon} aria-hidden="true"><DialogueIcon title="" /></span>
+          <span className={styles.feedbackText}>
+            <span className={styles.feedbackTitle}>Обратная связь</span>
+            <span className={styles.feedbackDescription}>Идеи и замечания о сайте и сервисе</span>
+          </span>
+          <span className={styles.feedbackArrow} aria-hidden="true">→</span>
+        </Link>
+      </div>
+    </dialog>,
+    document.body,
   );
 }

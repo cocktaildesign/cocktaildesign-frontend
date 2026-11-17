@@ -455,6 +455,7 @@ export default function SearchBar({
         id={panelId}
         role="dialog"
         aria-label="Панель поиска"
+        data-site-overlay={isOpen ? "true" : undefined}
         className={isOpen ? styles.searchPanelOpen : styles.searchPanel}>
         <div ref={panelContentRef} className={styles.searchPanelContent}>
           {/* Быстрые подсказки */}

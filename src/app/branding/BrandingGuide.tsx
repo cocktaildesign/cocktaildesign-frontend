@@ -45,7 +45,7 @@ function PhotoViewer({ photos, index, onChange, onClose }: {
       previousFocus?.focus({ preventScroll: true });
     };
   }, []);
-  return <dialog ref={dialog} className={styles.viewer} aria-label="Фотографии работ"
+  return <dialog ref={dialog} className={styles.viewer} data-site-overlay="true" aria-label="Фотографии работ"
     onCancel={onClose}
     onClick={(event) => { if (event.target === event.currentTarget) onClose(); }}
     onKeyDown={(event) => {

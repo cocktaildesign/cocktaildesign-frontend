@@ -1,9 +1,5 @@
-import Link from "next/link";
-import Image from "next/image";
-
 import type { MobileNavigationItem } from "@/lib/api/mobile-navigation";
-import { resolveHomeImageUrl } from "@/lib/api/mobile-navigation";
-
+import NavigationTile from "@/components/navigation/NavigationTile";
 import styles from "./MobileCatalogShortcuts.module.css";
 
 type Props = {
@@ -11,34 +7,15 @@ type Props = {
 };
 
 export default function MobileCatalogShortcuts({ items }: Props) {
-  if (items.length === 0) {
-    return null;
-  }
+  if (items.length === 0) return null;
 
   return (
-    <section className={styles.section}>
+    <nav className={styles.section} aria-label="Разделы магазина">
       <div className={styles.list}>
         {items.map((item) => (
-          <Link key={item.href} href={item.href} className={styles.card}>
-            <div className={styles.media}>
-              <picture>
-              {item.homeImageSrcSet && <source srcSet={item.homeImageSrcSet} sizes="92px" />}
-              <Image
-                src={resolveHomeImageUrl(item.href, item.homeImageUrl)}
-                alt={item.title}
-                fill
-                sizes="92px"
-                className={styles.image}
-              />
-              </picture>
-            </div>
-
-            <div className={styles.caption}>
-              <span className={styles.title}>{item.title}</span>
-            </div>
-          </Link>
+          <NavigationTile key={item.href} href={item.href} title={item.title} />
         ))}
       </div>
-    </section>
+    </nav>
   );
 }

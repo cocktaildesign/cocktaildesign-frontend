@@ -185,7 +185,7 @@ export default function KnowledgeFilters() {
 
       {/* Mobile overlay */}
       {isMobileOpen && (
-        <div className={styles.mobileSheetRoot} role="dialog" aria-modal="true" aria-label="Фильтры базы знаний">
+        <div className={styles.mobileSheetRoot} role="dialog" aria-modal="true" data-site-overlay="true" aria-label="Фильтры базы знаний">
           <button type="button" className={styles.mobileBackdrop} onClick={closeMobileSheet} aria-label="Закрыть" />
 
           <div className={styles.mobileSheet}>
