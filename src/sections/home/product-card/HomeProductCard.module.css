@@ -269,5 +269,6 @@
   .discountBadge {
     bottom: calc(100% + 8px);
     left: 8px;
+    background: #1d7a35;
   }
 }
