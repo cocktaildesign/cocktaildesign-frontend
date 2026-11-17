@@ -90,6 +90,12 @@
     gap: 6px;
   }
 
+  .compactMobile {
+    gap: 10px;
+    padding-inline: 15px;
+    scroll-padding-inline: 15px;
+  }
+
   .buttonPrev {
     display: none;
   }

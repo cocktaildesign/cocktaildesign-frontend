@@ -97,7 +97,7 @@
   .section {
     margin: 0px 0px 12px;
     background-color: var(--color-white);
-    padding: 20px 0px 30px 0px;
+    padding: 20px 0px 24px;
     border-radius: 24px;
   }
 
@@ -106,7 +106,7 @@
   }
 
   .shelf {
-    gap: 20px;
+    gap: 16px;
   }
 
   .title {
@@ -115,15 +115,8 @@
   }
 
   .slide {
-    flex: 0 0 46%;
-  }
-
-  .slide:first-child {
-    padding-left: 15px;
-  }
-
-  /* End spacer: ProductsSlider scroll container недоступен из этого CSS module */
-  .slide:last-child {
-    margin-right: 15px;
+    /* Two complete cards and a visible next card, with equal image widths. */
+    flex: 0 0 calc((100% - 32px) / 2);
+    min-width: 0;
   }
 }

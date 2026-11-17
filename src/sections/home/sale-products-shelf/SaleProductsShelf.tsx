@@ -42,7 +42,7 @@ export default function SaleProductsShelf({ collection }: SaleProductsShelfProps
           </div>
 
           {/* Слайдер с товарами */}
-          <ProductsSlider>
+          <ProductsSlider mobileLayout="compact">
             {collection.products.map((product) => (
               <div key={product.id} className={styles.slide}>
                 <ProductCard product={homeProductCard(product)} />

@@ -6,11 +6,12 @@ import styles from "./ProductsSlider.module.css";
 
 type ProductsSliderProps = {
   children: React.ReactNode;
+  mobileLayout?: "compact";
 };
 
 const SLIDE_GAP = 16;
 
-export default function ProductsSlider({ children }: ProductsSliderProps) {
+export default function ProductsSlider({ children, mobileLayout }: ProductsSliderProps) {
   const sliderRef = useRef<HTMLDivElement | null>(null);
 
   const [canPrev, setCanPrev] = useState(false);
@@ -79,7 +80,7 @@ export default function ProductsSlider({ children }: ProductsSliderProps) {
         </button>
       )}
 
-      <div ref={sliderRef} className={styles.slider} onScroll={updateButtonsState}>
+      <div ref={sliderRef} className={`${styles.slider}${mobileLayout === "compact" ? ` ${styles.compactMobile}` : ""}`} onScroll={updateButtonsState}>
         {children}
       </div>
 

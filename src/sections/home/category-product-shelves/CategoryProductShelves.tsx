@@ -38,7 +38,7 @@ export default function CategoryProductShelves({ collection }: CategoryProductSh
             )}
           </div>
 
-          <ProductsSlider>
+          <ProductsSlider mobileLayout="compact">
             {collection.products.map((product) => (
               <div key={product.id} className={styles.slide}>
                 <ProductCard product={homeProductCard(product)} />

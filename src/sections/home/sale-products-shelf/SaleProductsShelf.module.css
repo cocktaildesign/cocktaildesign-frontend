@@ -109,8 +109,13 @@
 
 @media (max-width: 600px) {
   .section {
+    --home-product-text: #ffffff;
+    --home-product-price-old: #c9ced8;
+    --home-product-price-direction: column;
+    --home-product-price-height: 54px;
+
     margin-top: 0px;
-    padding: 20px 0px 30px 0px;
+    padding: 20px 0px 24px;
 
     border: 1px solid transparent;
     border-radius: 24px;
@@ -123,11 +128,12 @@
   }
 
   .shelf {
-    gap: 20px;
+    gap: 16px;
   }
 
   .slide {
-    flex: 0 0 46%;
+    flex: 0 0 calc((100% - 32px) / 2);
+    min-width: 0;
   }
 
   .header {
@@ -138,12 +144,4 @@
     display: none;
   }
 
-  .slide:first-child {
-    padding-left: 15px;
-  }
-
-  /* End spacer: ProductsSlider scroll container недоступен из этого CSS module */
-  .slide:last-child {
-    margin-right: 15px;
-  }
 }
