@@ -81,7 +81,7 @@ export default function MobileSlider({images}: {images: HomepageBanner[]}) {
           const headingText = index === 1 && copy.heading.replace(/\s+/g, " ").trim() === "Барный инвентарь нашего производства"
             ? "Наше\nпроизводство" : copy.heading;
           const description = index === 2 && copy.description.replace(/\s+/g, " ").trim() === "Гравировка, клише с логотипом и эксклюзивные изделия."
-            ? "Гравировка и клише\nс вашим логотипом." : copy.description;
+            ? "Гравировка\nи клише с вашим\nлоготипом." : copy.description;
           const active = index === carousel.index;
           const [offer, ...heading] = headingText.split("\n");
           const promo = /^Промокод ([A-Z0-9]+)$/.exec(copy.note)?.[1];
